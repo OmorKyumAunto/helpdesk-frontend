@@ -1,0 +1,97 @@
+/*
+@file LoginDesign.css
+@Author Istiak <istiak.m360ict@gmail.com>
+*/
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: rgb(
+    222,
+    236,
+    248
+  ); /*#213f9a
+  background: #e9e9e9; /*#213f9a
+  background-repeat: no-repeat; /* Prevent background image from repeating */
+  background-size: cover; /* Ensure the background covers the entire container */
+  background-position: center; /* Center the background image */
+}
+
+.login-form {
+  width: 50%;
+  border-radius: 8px;
+  padding-top: 160px;
+}
+.login-form-container {
+  max-width: 650px;
+  min-height: 450px;
+  max-height: 450px;
+}
+.login-left-photo {
+  width: 350px;
+  height: 200px;
+  padding-right: 5px;
+}
+.forget-form-container {
+  max-width: 350px;
+  min-height: 400px;
+}
+.registration-form-container {
+  max-width: 550px;
+  min-height: 400px;
+}
+.registration-form {
+  width: 100%;
+  padding: 25px;
+  background: #fff;
+  border-radius: 8px;
+  background-image: url("/src/assets/amchambg.jpg") !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+@media screen and (max-width: 768px) {
+  .login-form {
+    padding: 0px;
+    width: 100%;
+    padding-top: 100px;
+  }
+
+  .registration-form {
+    width: 100%;
+    padding: 25px;
+    background: #fff;
+    border-radius: 8px;
+    background-image: url("/src/assets/amchambg.jpg") !important;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 8px;
+  }
+  .logo-container {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
+  /* .logo-container img {
+    object-fit: contain;
+  } */
+  .login-photo,
+  .hr {
+    display: none;
+  }
+  .login-form {
+    padding-left: 0px;
+  }
+}
+
+.button-container {
+  margin-top: 20px;
+  text-align: center;
+}
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  /* margin-top: 20px; */
+}

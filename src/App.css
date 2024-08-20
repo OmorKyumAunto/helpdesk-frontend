@@ -1,0 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Tapestry&display=swap");
+.upload-btn {
+  width: 100% !important;
+}
+
+.ant-upload-select {
+  width: 100%;
+}
+
+@media only screen and (min-width: 200px) and (max-width: 767px) {
+  .input_member_search {
+    min-width: 230px;
+  }
+}
+
+@media only screen and (min-width: 911px) and (max-width: 1920px) {
+  .input_member_search {
+    min-width: 400px;
+    font-size: 16px;
+  }
+}
+
+.side-bar-logo {
+  font-family: "Tapestry", serif !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  /* color: black; */
+  padding: 8px;
+  transition: "ease-in-out 0.5s";
+}
+.offDay {
+  min-height: 100%;
+  /* font-size: 15px; */
+  font-family: "Exo 2", sans-serif;
+  font-weight: 700 !important;
+  background: #afc4e3 !important;
+  position: relative;
+}
+
+.day-0 {
+  min-height: 100%;
+  /* background: #b3ebff !important; */
+  position: relative;
+}
+.day-1 {
+  min-height: 100%;
+  /* background: #b3ebff !important; */
+  position: relative;
+}
+.day-2 {
+  min-height: 100%;
+  /* background: #b3ebff !important; */
+
+  position: relative;
+}
+.day-3 {
+  min-height: 100%;
+  /* background: #b3ebff !important; */
+
+  position: relative;
+}
+.day-4 {
+  min-height: 100;
+  /* background: #b3ebff !important; */
+
+  position: relative;
+}
+.current-day {
+  min-height: 100% !important;
+  background: rgba(255, 220, 40, 0.15) !important;
+  position: relative;
+}
+.calendar_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.8rem;
+  }
+
+  .title {
+    display: flex;
+    align-self: center;
+  }
+}
+.actions {
+  /* margin: 2rem 0; */
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  border: 1px solid #ddd !important;
+}
+.fc-daygrid-day-number,
+.fc-col-header-cell-cushion {
+  color: rgba(0, 0, 0, 0.75) !important;
+  font-weight: 400;
+}
+
+.fc-event .fc-event-title,
+.fc-event .fc-event-time {
+  /* color: rgba(0, 0, 0, 0.65); */
+  font-weight: 400 !important;
+  font-size: 12px;
+}
+.fc-daygrid-day-number {
+  font-size: 16px !important;
+  font-weight: bold;
+}
+.login-left-photo {
+  width: 350px;
+  height: 200px;
+  padding-right: 5px;
+}
+
+.notification :hover {
+  background: #dae4f1;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* .ant-popover-inner {
+  margin-right: 0px !important;
+} */
+.notification-read {
+  color: gray !important;
+}
+.notification-unread {
+  color: #0c4da2 !important;
+}
