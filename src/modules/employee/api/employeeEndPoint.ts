@@ -31,7 +31,7 @@ export const employeeEndPoint = api.injectEndpoints({
     createEmployee: build.mutation<unknown, { data: ISubmitData }>({
       query: ({ data }) => {
         return {
-          url: `/employee/list`,
+          url: `/employee/add`,
           method: "POST",
           body: data,
         };

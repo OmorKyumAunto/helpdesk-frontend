@@ -1,4 +1,4 @@
-import { Form, Input, Row, Col, Typography, Divider } from "antd";
+import { Form, Input, Row, Col, Typography, Divider, message } from "antd";
 import { LockOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import "./Login.css";
@@ -9,16 +9,26 @@ type IInputs = {
   password: string;
 };
 import SubmitButton from "../../components/submitButton/SubmitButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Login = () => {
+  const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
   const onFinish = (values: IInputs) => {
     const body = {
       email: values.email,
       password: values.password,
     };
-    login(body);
+    if (
+      "aunto10@gmail.com" === values?.email &&
+      "12345678" === values.password
+    ) {
+      navigate("/");
+      message.success("Successfully logged in!");
+    } else {
+      message.error("Email or Password is wrong!");
+    }
+    // login(body);
   };
 
   return (
