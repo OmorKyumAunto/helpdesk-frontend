@@ -5,7 +5,7 @@ import "./Login.css";
 import { useLoginMutation } from "../../app/api/api";
 
 type IInputs = {
-  username: string;
+  email: string;
   password: string;
 };
 import SubmitButton from "../../components/submitButton/SubmitButton";
@@ -15,7 +15,7 @@ export const Login = () => {
   const [login, { isLoading }] = useLoginMutation();
   const onFinish = (values: IInputs) => {
     const body = {
-      username: values.username,
+      email: values.email,
       password: values.password,
     };
     login(body);
@@ -46,18 +46,18 @@ export const Login = () => {
               <Row gutter={6}>
                 <Col xs={24}>
                   <Form.Item
-                    name="username"
-                    label="Username"
+                    name="email"
+                    label="email"
                     rules={[
                       {
                         required: true,
-                        message: "Please input your username!",
+                        message: "Please input your email!",
                       },
                     ]}
                   >
                     <Input
                       prefix={<UserOutlined />}
-                      placeholder="Enter username"
+                      placeholder="Enter email"
                     />
                   </Form.Item>
                 </Col>

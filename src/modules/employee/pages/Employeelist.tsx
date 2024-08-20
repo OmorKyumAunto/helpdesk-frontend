@@ -1,4 +1,4 @@
-import { Card, Col, Row, Table } from "antd";
+import { Card, Col, Row, Space, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
@@ -48,6 +48,23 @@ const EmployeeList = () => {
 
   return (
     <>
+      {/* <div
+        style={{
+          display: "flex",
+          justifyContent: "end",
+          gap: 6,
+          flexWrap: "wrap",
+        }}
+      >
+        <CreateButton name=" Create employee" onClick={showModal} />
+        <CreateButton name=" Create employee" onClick={showModal} />
+        <CreateButton name=" Create employee" onClick={showModal} />
+        <CreateButton name=" Create employee" onClick={showModal} />
+        <CreateButton name=" Create employee" onClick={showModal} />
+        <CreateButton name=" Create employee" onClick={showModal} />
+        <CreateButton name=" Create employee" onClick={showModal} />
+        <CreateButton name=" Create employee" onClick={showModal} />
+      </div> */}
       <div>
         <Card
           title={`Employee List (${data?.total || 0})`}

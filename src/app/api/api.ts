@@ -13,7 +13,7 @@ export const api = createApi({
   endpoints: (builder) => ({
     login: builder.mutation<
       ILoginResponse<IUser>,
-      { username: string; password: string }
+      { email: string; password: string }
     >({
       query: (body) => ({
         url: "/authentication/login",
