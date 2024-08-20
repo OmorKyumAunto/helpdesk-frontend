@@ -35,16 +35,6 @@ const EmployeeList = () => {
       })
     );
   };
-  // const showModalInc = () => {
-  //   dispatch(
-  //     setCommonModal({
-  //       title: "Create Increment",
-  //       content: <CreateIncrement />,
-  //       show: true,
-  //       width: 1000,
-  //     })
-  //   );
-  // };
 
   return (
     <>
@@ -67,7 +57,7 @@ const EmployeeList = () => {
       </div> */}
       <div>
         <Card
-          title={`Employee List (${data?.total || 0})`}
+          title={`Employee List`}
           style={{
             boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
             marginBottom: "1rem",

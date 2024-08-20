@@ -1,4 +1,4 @@
-import { Space, Tag } from "antd";
+import { Button, Popconfirm, Space, Tag } from "antd";
 
 // import { DeleteIcon } from "../../../../common/icon/Icon";
 import { TableProps } from "antd/lib";
@@ -6,10 +6,16 @@ import { IEmployee } from "../types/employeeTypes";
 import dayjs from "dayjs";
 import { useDeleteEmployeeMutation } from "../api/employeeEndPoint";
 import { CustomLink } from "../../../common/CustomLink";
-import { DeleteIcon, EyeIcon } from "../../../common/CommonButton";
+import { DeleteIcon, EditButton, EyeIcon } from "../../../common/CommonButton";
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import UpdateEmployee from "../components/UpdateEmployee";
+import EmployeeDetails from "../pages/EmployeeDetails";
 // import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
   const [deleteEmployee] = useDeleteEmployeeMutation();
+  const dispatch = useDispatch();
   const confirm = (id: number) => {
     if (id) {
       deleteEmployee(id);
@@ -18,15 +24,8 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
   return [
     {
       title: "SL",
-      dataIndex: "id",
-      key: "id",
-      //   render: (text) => <a>{text}</a>,
+      render: (_, __, index) => index + 1,
     },
-    // {
-    //   title: "Code",
-    //   dataIndex: "code",
-    //   key: "code",
-    // },
     {
       title: "Name",
       dataIndex: "name",
@@ -45,8 +44,8 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
     },
     {
       title: "Phone ",
-      dataIndex: "phone_number",
-      key: "phone_number",
+      dataIndex: "contact_no",
+      key: "contact_no",
     },
 
     {
@@ -71,19 +70,49 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
       key: "action",
       render: (record) => (
         <Space size="middle">
-          <CustomLink to={`${record?.id}`}>
-            <EyeIcon />
-          </CustomLink>
-
-          {/* <CommonTooltip title={"History"}>
-            <Button size="small" type="primary">
-              History
-            </Button>
-          </CommonTooltip> */}
-          <DeleteIcon
-            title={"Delete employee"}
+          <Button
+            size="small"
+            type="primary"
+            onClick={() => {
+              dispatch(
+                setCommonModal({
+                  title: "Employee Details",
+                  content: <EmployeeDetails employee={record} />,
+                  show: true,
+                  width: 740,
+                })
+              );
+            }}
+          >
+            <EyeOutlined />
+          </Button>
+          <Button
+            size="small"
+            type="primary"
+            onClick={() => {
+              dispatch(
+                setCommonModal({
+                  title: "Update Employee",
+                  content: <UpdateEmployee employee={record} />,
+                  show: true,
+                  width: 678,
+                })
+              );
+            }}
+          >
+            <EditOutlined />
+          </Button>
+          <Popconfirm
+            title="Delete the employee"
+            description="Are you sure to delete this employee?"
             onConfirm={() => confirm(record?.id)}
-          />
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button danger size="small" type="primary">
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },

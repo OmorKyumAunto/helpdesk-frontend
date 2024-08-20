@@ -2,22 +2,57 @@
 import { Card, Col, Row, Form, Input, Button, Select } from "antd";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
-import { IFromData, ISingleEmployee } from "../types/employeeTypes";
-import TextArea from "antd/es/input/TextArea";
+import { IEmployee, IFromData } from "../types/employeeTypes";
 import { SendOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { useUpdateEmployeeMutation } from "../api/employeeEndPoint";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { validateMobileNumber } from "../../../common/phoneNumberValidator";
-import { BloodGroup } from "../../../common/staticData/staticData";
-import { DateInput, FormFileInput } from "../../../common/formItem/FormItems";
+import { DateInput } from "../../../common/formItem/FormItems";
 const { Option } = Select;
 
-const UpdateEmployee = ({ employee }: { employee: ISingleEmployee }) => {
+const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
+  const {
+    id,
+    employee_id,
+    name,
+    designation,
+    department,
+    email,
+    contact_no,
+    joining_date,
+    unit_name,
+    status,
+  } = employee || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [UpdateEmployee, { isLoading, isSuccess }] =
     useUpdateEmployeeMutation();
+
+  useEffect(() => {
+    form.setFieldsValue({
+      employee_id,
+      name,
+      department,
+      designation,
+      email,
+      contact_no,
+      unit_name,
+      status,
+      joining_date: dayjs(joining_date),
+    });
+  }, [
+    form,
+    employee_id,
+    name,
+    department,
+    designation,
+    email,
+    contact_no,
+    unit_name,
+    status,
+    joining_date,
+  ]);
 
   // const setFileField = (field: string, path: any) => {
   //   if (path) {
@@ -46,7 +81,7 @@ const UpdateEmployee = ({ employee }: { employee: ISingleEmployee }) => {
       }
     }
 
-    UpdateEmployee({ data: formattedData, id: employee.id });
+    UpdateEmployee({ data: formattedData, id });
   };
   useEffect(() => {
     if (isSuccess) {
@@ -57,15 +92,7 @@ const UpdateEmployee = ({ employee }: { employee: ISingleEmployee }) => {
     <>
       <Row justify="center" align="middle" style={{ maxWidth: "auto" }}>
         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-          <Form
-            layout="vertical"
-            form={form}
-            onFinish={onFinish}
-            initialValues={{
-              joining_date: dayjs(),
-              unit: "JTML",
-            }}
-          >
+          <Form layout="vertical" form={form} onFinish={onFinish}>
             <Card
               className="border"
               style={{

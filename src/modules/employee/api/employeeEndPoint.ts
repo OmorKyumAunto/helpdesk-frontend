@@ -47,8 +47,8 @@ export const employeeEndPoint = api.injectEndpoints({
     UpdateEmployee: build.mutation<unknown, { data: ISubmitData; id: number }>({
       query: ({ data, id }) => {
         return {
-          url: `/employee/list/${id}`,
-          method: "PATCH",
+          url: `/employee/update/${id}`,
+          method: "PUT",
           body: data,
         };
       },
@@ -63,7 +63,7 @@ export const employeeEndPoint = api.injectEndpoints({
     deleteEmployee: build.mutation<unknown, number>({
       query: (id) => {
         return {
-          url: `/employee/list/${id}`,
+          url: `/employee/delete/${id}`,
           method: "DELETE",
         };
       },

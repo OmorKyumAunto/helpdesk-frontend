@@ -1,4 +1,4 @@
-import { EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Tooltip } from "antd";
 import { MdDelete } from "react-icons/md";
 
@@ -90,10 +90,7 @@ export const DeleteIcon = ({
       cancelText="No"
       onConfirm={onConfirm}
     >
-      {" "}
-      {/* <Tooltip placement="top" title={title}> */}
-      <Button danger icon={<MdDelete size={20} />} size="small" />{" "}
-      {/* </Tooltip> */}
+      <Button danger icon={<DeleteOutlined />} type="primary" size="small" />
     </Popconfirm>
   );
 };

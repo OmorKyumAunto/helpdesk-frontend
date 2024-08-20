@@ -11,7 +11,7 @@ export const userApi = createApi({
     getMe: builder.query<ILoginResponse<IUser>, void>({
       query() {
         return {
-          url: "/",
+          url: "/profile/me",
           // credentials: "include",
         };
       },

@@ -25,6 +25,7 @@ export const api = createApi({
       onQueryStarted: async (_arg, { dispatch, queryFulfilled }) => {
         asyncWrapper(async () => {
           const { data } = await queryFulfilled;
+          console.log(data);
           dispatch(setToken(data.token!));
           await dispatch(userApi.endpoints.getMe.initiate());
           message.success("Successfully logged in!");

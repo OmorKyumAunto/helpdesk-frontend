@@ -19,16 +19,16 @@ export const Login = () => {
       email: values.email,
       password: values.password,
     };
-    if (
-      "aunto10@gmail.com" === values?.email &&
-      "12345678" === values.password
-    ) {
-      navigate("/");
-      message.success("Successfully logged in!");
-    } else {
-      message.error("Email or Password is wrong!");
-    }
-    // login(body);
+    // if (
+    //   "aunto10@gmail.com" === values?.email &&
+    //   "12345678" === values.password
+    // ) {
+    //   navigate("/");
+    //   message.success("Successfully logged in!");
+    // } else {
+    //   message.error("Email or Password is wrong!");
+    // }
+    login(body);
   };
 
   return (
