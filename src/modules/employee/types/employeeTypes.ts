@@ -81,5 +81,6 @@ export type ISubmitData = Partial<{
 
 export interface IEmployeeParams {
   limit?: number;
-  skip?: number;
+  offset?: number;
+  key?: string;
 }

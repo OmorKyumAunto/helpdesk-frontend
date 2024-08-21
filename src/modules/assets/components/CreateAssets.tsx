@@ -93,6 +93,17 @@ const CreateAsset = () => {
                 </Form.Item>
               </Col>
               <Col xs={24} sm={24} md={12}>
+                <Form.Item
+                  name="model"
+                  rules={[{ required: true }]}
+                  label="Model"
+                  required
+                >
+                  <Input placeholder="Enter Model" type="text" />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} sm={24} md={12}>
                 <DateInput
                   label="Purchase Date"
                   name="purchase_date"
@@ -144,15 +155,13 @@ const CreateAsset = () => {
               </Col>
               <Col xs={24} sm={24} md={12}>
                 <Form.Item
-                  label="Assign Type"
+                  label="Assign "
                   name="is_assign"
-                  rules={[
-                    { required: true, message: "Please Select Assign Type" },
-                  ]}
+                  rules={[{ required: true, message: "Please Select Assign " }]}
                 >
-                  <Select placeholder="Select Assign Type">
-                    <Option value={1}>True</Option>
-                    <Option value={0}>False</Option>
+                  <Select placeholder="Select Assign ">
+                    <Option value={1}>Yes</Option>
+                    <Option value={0}>No</Option>
                   </Select>
                 </Form.Item>
               </Col>
@@ -196,6 +205,16 @@ const CreateAsset = () => {
                   </Col>
                 </>
               )}
+              <Col xs={24} sm={24} md={24}>
+                <Form.Item
+                  name="specification"
+                  rules={[{ required: true }]}
+                  label="Specification"
+                  required
+                >
+                  <TextArea placeholder="Enter Specification" />
+                </Form.Item>
+              </Col>
             </Row>
           </Card>
 

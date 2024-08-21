@@ -1,4 +1,4 @@
-import { Card, Col, Row, Table } from "antd";
+import { Card, Col, Input, Row, Select, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
@@ -8,8 +8,11 @@ import { setCommonModal } from "../../../app/slice/modalSlice";
 import { AssetsTableColumns } from "../utils/AssetsTableColumns";
 import { CreateButton } from "../../../common/CommonButton";
 import CreateAsset from "../components/CreateAssets";
+import { tablePagination } from "../../../common/TablePagination copy";
+import { SearchOutlined } from "@ant-design/icons";
 
 const AssetsList = () => {
+  const { Option } = Select;
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams({
     page: "",
@@ -46,7 +49,28 @@ const AssetsList = () => {
           }}
           extra={
             <Row gutter={[16, 24]}>
-              <Col xs={24} md={12} xxl={12}>
+              <Col xs={24} md={8}>
+                <Input
+                  style={{ width: "100%" }}
+                  prefix={<SearchOutlined />}
+                  onChange={(e) =>
+                    setFilter({ ...filter, key: e.target.value })
+                  }
+                  placeholder="Search..."
+                />
+              </Col>
+              <Col xs={24} md={8}>
+                <Select
+                  style={{ width: "100%" }}
+                  onChange={(e) => setFilter({ ...filter, unit: e })}
+                  placeholder="Select Unit Name"
+                >
+                  <Option value="JTML">JTML</Option>
+                  <Option value="DIPL">DIPL</Option>
+                  <Option value="Corporate Office">Corporate Office</Option>
+                </Select>
+              </Col>
+              <Col xs={24} md={8}>
                 <CreateButton name=" Create Assets" onClick={showModal} />
               </Col>
             </Row>
@@ -74,14 +98,14 @@ const AssetsList = () => {
                   limit: pagination.pageSize!,
                 });
               }}
-              // pagination={
-              //   Number(data?.total) !== undefined && Number(data?.total) > 20
-              //     ? {
-              //         ...tablePagination,
-              //         current: Number(page),
-              //       }
-              //     : false
-              // }
+              pagination={
+                Number(data?.total) !== undefined && Number(data?.total) > 20
+                  ? {
+                      ...tablePagination,
+                      current: Number(page),
+                    }
+                  : false
+              }
             />
           </div>
         </Card>

@@ -1,30 +1,16 @@
 import { TableProps } from "antd/lib";
 import { IAsset } from "../types/assetsTypes";
 import dayjs from "dayjs";
+import { Button, Space } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
+import AssetDetails from "../components/AssetDetails";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { useDispatch } from "react-redux";
 
 export const DistributedAssetsTableColumns =
   (): TableProps<IAsset>["columns"] => {
-    //    {
-    //             "id": 2,
-    //             "name": "T-shirt",
-    //             "category": "Dress",
-    //             "purchase_date": "2024-04-21T18:00:00.000Z",
-    //             "serial_number": "0098765",
-    //             "po_number": "234543534",
-    //             "asset_history": "This is tshirt",
-    //             "is_assign": 1,
-    //             "created_at": "2024-08-21T08:04:53.000Z",
-    //             "status": 1,
-    //             "remarks": "assigned",
-    //             "unit_name": "DIPL",
-    //             "employee_id": 2,
-    //             "assign_date": "2024-05-16T18:00:00.000Z",
-    //             "employee_name": "Karim Rahman",
-    //             "employee_id_no": "1153432",
-    //             "employee_department": "IT",
-    //             "employee_designation": "Network Engineer",
-    //             "employee_unit": "Corporate Office"
-    //         },
+    const dispatch = useDispatch();
+
     return [
       {
         title: "Serial No",
@@ -64,6 +50,30 @@ export const DistributedAssetsTableColumns =
       {
         title: "Assigning Date",
         render: ({ assign_date }) => dayjs(assign_date).format("DD-MM-YYYY"),
+      },
+      {
+        title: "Actions",
+        key: "action",
+        render: (record) => (
+          <Space size="middle">
+            <Button
+              size="small"
+              type="primary"
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
+                    title: "Distributed Asset Details",
+                    content: <AssetDetails id={record?.id} />,
+                    show: true,
+                    width: 740,
+                  })
+                );
+              }}
+            >
+              <EyeOutlined />
+            </Button>
+          </Space>
+        ),
       },
     ];
   };

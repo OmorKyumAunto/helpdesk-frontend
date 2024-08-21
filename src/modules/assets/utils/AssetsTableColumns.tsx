@@ -1,14 +1,13 @@
-import { Button, Popconfirm, Space } from "antd";
+import { Button, Popconfirm, Space, Tag } from "antd";
 import { TableProps } from "antd/lib";
 import { IAsset } from "../types/assetsTypes";
 import { useDeleteAssetsMutation } from "../api/assetsEndPoint";
-import { CustomLink } from "../../../common/CustomLink";
-import { DeleteIcon, EyeIcon } from "../../../common/CommonButton";
 import UpdateAsset from "../components/UpdateAssets";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useDispatch } from "react-redux";
 import AssignEmployee from "../components/AssignEmployee";
+import AssetDetails from "../components/AssetDetails";
 
 export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
   const dispatch = useDispatch();
@@ -47,8 +46,12 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
     },
     {
       title: "Remarks",
-      dataIndex: "remarks",
-      key: "remarks",
+      render: ({ remarks }) =>
+        remarks === "assigned" ? (
+          <Tag color="success">Assigned</Tag>
+        ) : (
+          <Tag color="processing">In Stock</Tag>
+        ),
     },
     {
       title: "Unit",
@@ -61,33 +64,14 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
       key: "action",
       render: (record) => (
         <Space size="middle">
-          {/* {record?.is_assign === 0 && ( */}
           <Button
             size="small"
             type="primary"
-            className={record?.is_assign === 0 ? "block" : "hidden"}
             onClick={() => {
               dispatch(
                 setCommonModal({
-                  title: "Assign Employee",
-                  content: <AssignEmployee id={record.id} />,
-                  show: true,
-                  width: 500,
-                })
-              );
-            }}
-          >
-            Assign
-          </Button>
-          {/* )} */}
-          {/* <Button
-            size="small"
-            type="primary"
-            onClick={() => {
-              dispatch(
-                setCommonModal({
-                  title: "Employee Details",
-                  content: <EmployeeDetails employee={record} />,
+                  title: "Assets Details",
+                  content: <AssetDetails id={record?.id} />,
                   show: true,
                   width: 740,
                 })
@@ -95,7 +79,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
             }}
           >
             <EyeOutlined />
-          </Button> */}
+          </Button>
           <Button
             size="small"
             type="primary"
@@ -123,6 +107,23 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
               <DeleteOutlined />
             </Button>
           </Popconfirm>
+          <Button
+            size="small"
+            type="primary"
+            className={record?.is_assign === 0 ? "block" : "hidden"}
+            onClick={() => {
+              dispatch(
+                setCommonModal({
+                  title: "Assign Employee",
+                  content: <AssignEmployee id={record.id} />,
+                  show: true,
+                  width: 500,
+                })
+              );
+            }}
+          >
+            Assign
+          </Button>
         </Space>
       ),
     },

@@ -1,4 +1,4 @@
-import { Card, Col, Row, Space, Table } from "antd";
+import { Card, Col, Input, Row, Space, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
@@ -8,6 +8,8 @@ import { setCommonModal } from "../../../app/slice/modalSlice";
 import CreateEmployee from "../components/CreateEmployee";
 import { EmployeeTableColumns } from "../utils/EmployeeTableColumns";
 import { CreateButton } from "../../../common/CommonButton";
+import { SearchOutlined } from "@ant-design/icons";
+import { tablePagination } from "../../../common/TablePagination copy";
 
 const EmployeeList = () => {
   const dispatch = useDispatch();
@@ -20,9 +22,9 @@ const EmployeeList = () => {
   const skipValue = Number(page) * Number(pageSize);
   const [filter, setFilter] = useState<IEmployeeParams>({
     limit: 20,
-    skip: skipValue - 20,
+    offset: skipValue - 20,
   });
-  const { data, isLoading } = useGetEmployeesQuery({});
+  const { data, isLoading } = useGetEmployeesQuery({ ...filter });
   console.log(data);
 
   const showModal = () => {
@@ -65,18 +67,17 @@ const EmployeeList = () => {
           extra={
             <Row gutter={[16, 24]}>
               <Col xs={24} md={12} xxl={12}>
+                <Input
+                  prefix={<SearchOutlined />}
+                  onChange={(e) =>
+                    setFilter({ ...filter, key: e.target.value })
+                  }
+                  placeholder="Search..."
+                />
+              </Col>
+              <Col xs={24} md={12} xxl={12}>
                 <CreateButton name=" Create employee" onClick={showModal} />
               </Col>
-              {/* <Col xs={24} md={12} xxl={12}>
-                <Button
-                  style={{ background: "blue" }}
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={showModalInc}
-                >
-                  Increment
-                </Button>
-              </Col> */}
             </Row>
           }
         >
@@ -96,20 +97,20 @@ const EmployeeList = () => {
                 });
                 setFilter({
                   ...filter,
-                  skip:
+                  offset:
                     ((pagination.current || 1) - 1) *
                     (pagination.pageSize || 20),
                   limit: pagination.pageSize!,
                 });
               }}
-              // pagination={
-              //   Number(data?.total) !== undefined && Number(data?.total) > 20
-              //     ? {
-              //         ...tablePagination,
-              //         current: Number(page),
-              //       }
-              //     : false
-              // }
+              pagination={
+                Number(data?.total) !== undefined && Number(data?.total) > 20
+                  ? {
+                      ...tablePagination,
+                      current: Number(page),
+                    }
+                  : false
+              }
             />
           </div>
         </Card>

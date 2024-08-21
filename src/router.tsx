@@ -11,6 +11,9 @@ import EmployeeList from "./modules/employee/pages/Employeelist";
 import SingleEmployee from "./modules/employee/pages/SingleEmployee";
 import AssetsList from "./modules/assets/pages/AssetsList";
 import DistributedAsset from "./modules/assets/pages/DistributedAsset";
+import RequireUser from "./utils/requireUser";
+import { DashboardDemo } from "./modules/dashboard/Pages/DashboardDemo";
+import DashboardCards from "./modules/dashboard/Pages/DashboardCards";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -48,6 +51,7 @@ export const routers = createBrowserRouter([
       {
         path: "/",
         // element: <RequireUser children={<DashboardDemo />} />,
+        element: <DashboardCards />,
       },
       {
         path: "/assets/list",

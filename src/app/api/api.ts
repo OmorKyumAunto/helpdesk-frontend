@@ -70,6 +70,7 @@ export const api = createApi({
     "expense",
     "service",
     "asset",
+    "dashboardTypes",
   ],
 });
 

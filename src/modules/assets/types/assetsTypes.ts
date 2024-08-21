@@ -33,9 +33,13 @@ export interface IAssetDetails {
   employee_department: string;
   employee_designation: string;
   employee_unit: string;
+  model: string;
+  specification: string;
 }
 
 export interface IAssetParams {
   limit?: number;
   offset?: number;
+  key?: string;
+  unit?: string;
 }

@@ -76,7 +76,7 @@ const AssignEmployee = ({ id }: any) => {
                         .includes(input.toLowerCase())
                     }
                     options={data?.data?.map((employee: any) => ({
-                      value: employee.employee_id,
+                      value: employee.id,
                       label: `${employee.employee_id} (${employee.name})`,
                     }))}
                     allowClear

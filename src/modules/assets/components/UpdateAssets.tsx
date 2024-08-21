@@ -12,11 +12,13 @@ import {
 } from "../api/assetsEndPoint";
 import { IAsset } from "../types/assetsTypes";
 import { useGetEmployeesQuery } from "../../employee/api/employeeEndPoint";
+import TextArea from "antd/es/input/TextArea";
 const { Option } = Select;
 
 const UpdateAsset = ({ asset }: { asset: IAsset }) => {
   const { data: singleAsset } = useGetSingleAssetsQuery(Number(asset?.id));
   const {
+    id,
     name,
     category,
     purchase_date,
@@ -25,12 +27,16 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
     asset_history,
     is_assign,
     employee_id,
+    employee_name,
     assign_date,
     unit_name,
+    model,
+    specification,
+    employee_id_no,
   } = singleAsset?.data || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const assignType = Form.useWatch("is_assign", form);
+  const assignType = Form.useWatch("assign_update", form);
   const { data } = useGetEmployeesQuery({});
   const [Update, { isLoading, isSuccess }] = useUpdateAssetsMutation();
 
@@ -41,13 +47,15 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
       serial_number,
       po_number,
       asset_history,
-      is_assign,
+      assign_update: is_assign,
       unit_name,
+      model,
+      specification,
       purchase_date: dayjs(purchase_date),
       assign_date: assign_date ? dayjs(assign_date) : null,
     });
     form.setFieldValue("employee_id", {
-      label: employee_id,
+      label: `${employee_id_no} (${employee_name})`,
       value: employee_id,
     });
   }, [
@@ -141,6 +149,16 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    name="model"
+                    rules={[{ required: true }]}
+                    label="Model"
+                    required
+                  >
+                    <Input placeholder="Enter Model" type="text" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
                   <DateInput
                     label="Purchase Date"
                     name="purchase_date"
@@ -192,15 +210,15 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item
-                    label="Assign Type"
-                    name="is_assign"
+                    label="Assign"
+                    name="assign_update"
                     rules={[
                       { required: true, message: "Please Select Assign Type" },
                     ]}
                   >
-                    <Select placeholder="Select Assign Type">
-                      <Option value={1}>True</Option>
-                      <Option value={0}>False</Option>
+                    <Select placeholder="Select Assign">
+                      <Option value={1}>Yes</Option>
+                      <Option value={0}>No</Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -227,7 +245,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                               .includes(input.toLowerCase())
                           }
                           options={data?.data?.map((employee: any) => ({
-                            value: employee.employee_id,
+                            value: employee.id,
                             label: `${employee.employee_id} (${employee.name})`,
                           }))}
                           allowClear
@@ -244,6 +262,16 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                     </Col>
                   </>
                 )}
+                <Col xs={24} sm={24} md={24}>
+                  <Form.Item
+                    name="specification"
+                    rules={[{ required: true }]}
+                    label="Specification"
+                    required
+                  >
+                    <TextArea placeholder="Enter Specification" />
+                  </Form.Item>
+                </Col>
               </Row>
             </Card>
 

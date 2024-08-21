@@ -1,9 +1,11 @@
-import { Card } from "antd";
+import { Card, Input } from "antd";
 import { Table } from "antd/lib";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DistributedAssetsTableColumns } from "../utils/DistributedTableColumns";
 import { useGetAllDistributedAssetQuery } from "../api/assetsEndPoint";
+import { tablePagination } from "../../../common/TablePagination copy";
+import { SearchOutlined } from "@ant-design/icons";
 
 const DistributedAsset = () => {
   const [searchParams, setSearchParams] = useSearchParams({
@@ -26,6 +28,15 @@ const DistributedAsset = () => {
           boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
           marginBottom: "1rem",
         }}
+        extra={
+          <>
+            <Input
+              prefix={<SearchOutlined />}
+              onChange={(e) => setFilter({ ...filter, key: e.target.value })}
+              placeholder="Search..."
+            />
+          </>
+        }
       >
         <div>
           <Table
@@ -48,14 +59,14 @@ const DistributedAsset = () => {
                 limit: pagination.pageSize!,
               });
             }}
-            // pagination={
-            //   Number(data?.total) !== undefined && Number(data?.total) > 20
-            //     ? {
-            //         ...tablePagination,
-            //         current: Number(page),
-            //       }
-            //     : false
-            // }
+            pagination={
+              Number(data?.total) !== undefined && Number(data?.total) > 20
+                ? {
+                    ...tablePagination,
+                    current: Number(page),
+                  }
+                : false
+            }
           />
         </div>
       </Card>
