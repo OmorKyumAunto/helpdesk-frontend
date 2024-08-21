@@ -48,6 +48,22 @@ export const assetsEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["asset"],
     }),
+    createAssetsFileUpdate: build.mutation<unknown, { data: any }>({
+      query: ({ data }) => {
+        return {
+          url: `/asset/upload-asset`,
+          method: "POST",
+          body: data,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully asset file upload ");
+        });
+      },
+      invalidatesTags: () => ["asset"],
+    }),
     UpdateAssets: build.mutation<unknown, { data: any; id: number }>({
       query: ({ data, id }) => {
         return {
@@ -101,6 +117,7 @@ export const assetsEndPoint = api.injectEndpoints({
 export const {
   useGetAssetsQuery,
   useGetAllDistributedAssetQuery,
+  useCreateAssetsFileUpdateMutation,
   useGetSingleAssetsQuery,
   useCreateAssetsMutation,
   useAssignEmployeeMutation,

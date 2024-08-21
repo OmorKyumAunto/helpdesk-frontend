@@ -44,6 +44,22 @@ export const employeeEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["employee"],
     }),
+    createEmployeeUploadFile: build.mutation<unknown, { data: any }>({
+      query: ({ data }) => {
+        return {
+          url: `/employee/upload`,
+          method: "POST",
+          body: data,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully employee file upload ");
+        });
+      },
+      invalidatesTags: () => ["employee"],
+    }),
     UpdateEmployee: build.mutation<unknown, { data: ISubmitData; id: number }>({
       query: ({ data, id }) => {
         return {
@@ -81,6 +97,7 @@ export const employeeEndPoint = api.injectEndpoints({
 export const {
   useGetEmployeesQuery,
   useCreateEmployeeMutation,
+  useCreateEmployeeUploadFileMutation,
   useUpdateEmployeeMutation,
   useGetSingleEmployeeQuery,
   useDeleteEmployeeMutation,

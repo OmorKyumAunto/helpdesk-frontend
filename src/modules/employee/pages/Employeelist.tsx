@@ -10,6 +10,7 @@ import { EmployeeTableColumns } from "../utils/EmployeeTableColumns";
 import { CreateButton } from "../../../common/CommonButton";
 import { SearchOutlined } from "@ant-design/icons";
 import { tablePagination } from "../../../common/TablePagination copy";
+import EmployeeFileUpdate from "./EmployeeFileUpdate";
 
 const EmployeeList = () => {
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ const EmployeeList = () => {
           }}
           extra={
             <Row gutter={[16, 24]}>
-              <Col xs={24} md={12} xxl={12}>
+              <Col xs={24} md={8}>
                 <Input
                   prefix={<SearchOutlined />}
                   onChange={(e) =>
@@ -75,7 +76,22 @@ const EmployeeList = () => {
                   placeholder="Search..."
                 />
               </Col>
-              <Col xs={24} md={12} xxl={12}>
+              <Col xs={24} md={8}>
+                <CreateButton
+                  name="Upload employee"
+                  onClick={() => {
+                    dispatch(
+                      setCommonModal({
+                        title: "Upload Employee",
+                        content: <EmployeeFileUpdate />,
+                        show: true,
+                        width: 400,
+                      })
+                    );
+                  }}
+                />
+              </Col>
+              <Col xs={24} md={8}>
                 <CreateButton name=" Create employee" onClick={showModal} />
               </Col>
             </Row>

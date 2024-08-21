@@ -10,6 +10,7 @@ import { CreateButton } from "../../../common/CommonButton";
 import CreateAsset from "../components/CreateAssets";
 import { tablePagination } from "../../../common/TablePagination copy";
 import { SearchOutlined } from "@ant-design/icons";
+import UploadAssetFile from "../components/UploadAssetFile";
 
 const AssetsList = () => {
   const { Option } = Select;
@@ -49,7 +50,7 @@ const AssetsList = () => {
           }}
           extra={
             <Row gutter={[16, 24]}>
-              <Col xs={24} md={8}>
+              <Col xs={24} md={6}>
                 <Input
                   style={{ width: "100%" }}
                   prefix={<SearchOutlined />}
@@ -59,7 +60,7 @@ const AssetsList = () => {
                   placeholder="Search..."
                 />
               </Col>
-              <Col xs={24} md={8}>
+              <Col xs={24} md={6}>
                 <Select
                   style={{ width: "100%" }}
                   onChange={(e) => setFilter({ ...filter, unit: e })}
@@ -70,7 +71,22 @@ const AssetsList = () => {
                   <Option value="Corporate Office">Corporate Office</Option>
                 </Select>
               </Col>
-              <Col xs={24} md={8}>
+              <Col xs={24} md={6}>
+                <CreateButton
+                  name="Upload Asset"
+                  onClick={() => {
+                    dispatch(
+                      setCommonModal({
+                        title: "Upload Asset",
+                        content: <UploadAssetFile />,
+                        show: true,
+                        width: 400,
+                      })
+                    );
+                  }}
+                />
+              </Col>
+              <Col xs={24} md={6}>
                 <CreateButton name=" Create Assets" onClick={showModal} />
               </Col>
             </Row>

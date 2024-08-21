@@ -15,6 +15,7 @@ const AssetDetails = ({ id }: { id: number }) => {
     specification,
     remarks,
     employee_id_no,
+    employee_name,
   } = singleAsset?.data || {};
   return (
     <div>
@@ -80,7 +81,7 @@ const AssetDetails = ({ id }: { id: number }) => {
           </Typography.Text>{" "}
           <br />
           <Typography.Text style={{ fontWeight: 500, fontSize: "15px" }}>
-            2. Reserved for Employee ID : {employee_id_no}
+            2. Reserved for Employee ID : {employee_id_no} ({employee_name})
           </Typography.Text>
         </>
       )}
