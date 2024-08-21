@@ -10,6 +10,7 @@ import ResetPassword from "./auth/pages/ResetPassword";
 import EmployeeList from "./modules/employee/pages/Employeelist";
 import SingleEmployee from "./modules/employee/pages/SingleEmployee";
 import AssetsList from "./modules/assets/pages/AssetsList";
+import DistributedAsset from "./modules/assets/pages/DistributedAsset";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -51,6 +52,10 @@ export const routers = createBrowserRouter([
       {
         path: "/assets/list",
         element: <AssetsList />,
+      },
+      {
+        path: "/assets/distributed",
+        element: <DistributedAsset />,
       },
       {
         path: "/employee/list",

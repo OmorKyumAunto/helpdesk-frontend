@@ -2,19 +2,65 @@
 import { Card, Col, Row, Form, Input, Button, Select } from "antd";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
-import { IFromData, ISingleEmployee } from "../types/assetsTypes";
 import { SendOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { DateInput } from "../../../common/formItem/FormItems";
-import { useUpdateAssetsMutation } from "../api/assetsEndPoint";
+import {
+  useGetSingleAssetsQuery,
+  useUpdateAssetsMutation,
+} from "../api/assetsEndPoint";
+import { IAsset } from "../types/assetsTypes";
+import { useGetEmployeesQuery } from "../../employee/api/employeeEndPoint";
 const { Option } = Select;
 
-const UpdateEmployee = ({ employee }: { employee: ISingleEmployee }) => {
+const UpdateAsset = ({ asset }: { asset: IAsset }) => {
+  const { data: singleAsset } = useGetSingleAssetsQuery(Number(asset?.id));
+  const {
+    name,
+    category,
+    purchase_date,
+    serial_number,
+    po_number,
+    asset_history,
+    is_assign,
+    employee_id,
+    assign_date,
+    unit_name,
+  } = singleAsset?.data || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const assignType = Form.useWatch("is_assign", form);
+  const { data } = useGetEmployeesQuery({});
   const [Update, { isLoading, isSuccess }] = useUpdateAssetsMutation();
+
+  useEffect(() => {
+    form.setFieldsValue({
+      name,
+      category,
+      serial_number,
+      po_number,
+      asset_history,
+      is_assign,
+      unit_name,
+      purchase_date: dayjs(purchase_date),
+      assign_date: assign_date ? dayjs(assign_date) : null,
+    });
+    form.setFieldValue("employee_id", {
+      label: employee_id,
+      value: employee_id,
+    });
+  }, [
+    name,
+    category,
+    serial_number,
+    po_number,
+    asset_history,
+    is_assign,
+    unit_name,
+    purchase_date,
+    assign_date,
+  ]);
 
   // const setFileField = (field: string, path: any) => {
   //   if (path) {
@@ -30,20 +76,22 @@ const UpdateEmployee = ({ employee }: { employee: ISingleEmployee }) => {
   //   }
   // };
 
-  const onFinish = (values: IFromData) => {
+  const onFinish = (values: any) => {
     const formattedData: any = {};
 
     for (const key in values) {
       if (values[key]) {
-        if (key === "joining_date") {
+        if (key === "purchase_date" || key === "assign_date") {
           formattedData[key] = dayjs(values[key]).format("YYYY-MM-DD");
+        } else if (key === "employee_id") {
+          formattedData[key] = values[key]?.values || values[key];
         } else {
           formattedData[key] = values[key];
         }
       }
     }
 
-    Update({ data: formattedData, id: employee.id });
+    Update({ data: formattedData, id: asset.id });
   };
   useEffect(() => {
     if (isSuccess) {
@@ -58,10 +106,7 @@ const UpdateEmployee = ({ employee }: { employee: ISingleEmployee }) => {
             layout="vertical"
             form={form}
             onFinish={onFinish}
-            initialValues={{
-              joining_date: dayjs(),
-              unit: "JTML",
-            }}
+            initialValues={{}}
           >
             <Card
               className="border"
@@ -73,81 +118,58 @@ const UpdateEmployee = ({ employee }: { employee: ISingleEmployee }) => {
               <Row align={"middle"} gutter={[5, 16]}>
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item
-                    name="employee_id"
+                    name="name"
                     rules={[{ required: true }]}
-                    label="Employee ID"
+                    label="Asset Name"
                     required
                   >
-                    <Input placeholder="Enter Employee ID" type="text" />
+                    <Input placeholder="Enter Asset Name" type="text" />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item
-                    name="employee_name"
-                    rules={[{ required: true }]}
-                    label="Employee Name"
-                    required
+                    label="Category"
+                    name="category"
+                    rules={[{ required: true, message: "Please Category" }]}
                   >
-                    <Input placeholder="Enter Employee Name" type="text" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    name="designation"
-                    label="Employee Designation"
-                    rules={[{ required: true }]}
-                  >
-                    <Input
-                      placeholder="Enter Employee Designation"
-                      type="text"
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    name="phone_number"
-                    label="Contact No"
-                    rules={[
-                      { required: true, validator: validateMobileNumber },
-                    ]}
-                  >
-                    <Input
-                      addonBefore="+88"
-                      placeholder="Enter Contact No"
-                      type="number"
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    label="Employee Email"
-                    name="email"
-                    rules={[{ required: true }]}
-                  >
-                    <Input placeholder="Enter employee email" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    label="Employee Department"
-                    name="department"
-                    rules={[{ required: true }]}
-                  >
-                    <Input placeholder="Enter employee department" />
+                    <Select placeholder="Select Category">
+                      <Option value="Laptop">Laptop</Option>
+                      <Option value="Desktop">Desktop</Option>
+                      <Option value="Pinter">Pinter</Option>
+                      <Option value="Accessories">Accessories</Option>
+                    </Select>
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <DateInput
-                    label="Date of Joining"
-                    name="joining_date"
-                    placeholder="Select Joining Date"
+                    label="Purchase Date"
+                    name="purchase_date"
+                    placeholder="Select Purchase Date"
                     rules={[{ required: true }]}
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item
+                    label="Serial Number"
+                    name="serial_number"
+                    rules={[{ required: true }]}
+                  >
+                    <Input placeholder="Enter serial no" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    label="PO Number"
+                    name="po_number"
+                    rules={[{ required: true }]}
+                  >
+                    <Input placeholder="Enter serial no" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
                     label="Unit Name"
-                    name="unit"
+                    name="unit_name"
                     rules={[{ required: true, message: "Please Select Unit" }]}
                   >
                     <Select placeholder="Select Unit Name">
@@ -157,6 +179,71 @@ const UpdateEmployee = ({ employee }: { employee: ISingleEmployee }) => {
                     </Select>
                   </Form.Item>
                 </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    label="Asset History"
+                    name="asset_history"
+                    rules={[
+                      { required: true, message: "Please Select Assign Type" },
+                    ]}
+                  >
+                    <Input placeholder="Enter Asset History" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    label="Assign Type"
+                    name="is_assign"
+                    rules={[
+                      { required: true, message: "Please Select Assign Type" },
+                    ]}
+                  >
+                    <Select placeholder="Select Assign Type">
+                      <Option value={1}>True</Option>
+                      <Option value={0}>False</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                {assignType === 1 && (
+                  <>
+                    <Col xs={24} sm={24} md={12}>
+                      <Form.Item
+                        name="employee_id"
+                        rules={[{ required: true }]}
+                        label="Employee ID"
+                        required
+                      >
+                        <Select
+                          className="w-full "
+                          placeholder="Select Employee"
+                          showSearch
+                          optionFilterProp="children"
+                          filterOption={(
+                            input: string,
+                            option?: { label: string; value: string }
+                          ) =>
+                            (option?.label ?? "")
+                              .toLowerCase()
+                              .includes(input.toLowerCase())
+                          }
+                          options={data?.data?.map((employee: any) => ({
+                            value: employee.employee_id,
+                            label: `${employee.employee_id} (${employee.name})`,
+                          }))}
+                          allowClear
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={24} md={12}>
+                      <DateInput
+                        label="Assign Date"
+                        name="assign_date"
+                        placeholder="Select Assign Date"
+                        rules={[{ required: true }]}
+                      />
+                    </Col>
+                  </>
+                )}
               </Row>
             </Card>
 
@@ -179,4 +266,4 @@ const UpdateEmployee = ({ employee }: { employee: ISingleEmployee }) => {
   );
 };
 
-export default UpdateEmployee;
+export default UpdateAsset;

@@ -3,28 +3,30 @@ import { Card, Col, Row, Form, Input, Button, Select } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
-import { IFromData } from "../types/assetsTypes";
 import { useEffect } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { DateInput } from "../../../common/formItem/FormItems";
 import { useCreateAssetsMutation } from "../api/assetsEndPoint";
 import TextArea from "antd/es/input/TextArea";
+import { useGetEmployeesQuery } from "../../employee/api/employeeEndPoint";
 const { Option } = Select;
 
 const CreateAsset = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const assignType = Form.useWatch("assign", form);
+  const assignType = Form.useWatch("is_assign", form);
+  const { data } = useGetEmployeesQuery({});
 
   const [create, { isLoading, isSuccess }] = useCreateAssetsMutation();
 
-  const onFinish = (values: IFromData) => {
+  const onFinish = (data: any) => {
+    const { is_assign, ...values } = data || {};
     const formattedData: any = {};
-
+    formattedData["is_assign"] = is_assign;
     for (const key in values) {
       if (values[key]) {
-        if (key === "joining_date") {
+        if (key === "purchase_date" || key === "assign_date") {
           formattedData[key] = dayjs(values[key]).format("YYYY-MM-DD");
         } else {
           formattedData[key] = values[key];
@@ -32,7 +34,7 @@ const CreateAsset = () => {
       }
     }
 
-    console.log(formattedData);
+    // console.log(formattedData);
     create({ data: formattedData });
   };
 
@@ -53,8 +55,9 @@ const CreateAsset = () => {
           initialValues={{
             category: "Laptop",
             unit: "JTML",
-            assign: false,
+            is_assign: 0,
             purchase_date: dayjs(),
+            assign_date: dayjs(),
           }}
         >
           <Card
@@ -67,7 +70,7 @@ const CreateAsset = () => {
             <Row align={"middle"} gutter={[5, 16]}>
               <Col xs={24} sm={24} md={12}>
                 <Form.Item
-                  name="asset_name"
+                  name="name"
                   rules={[{ required: true }]}
                   label="Asset Name"
                   required
@@ -117,19 +120,43 @@ const CreateAsset = () => {
               </Col>
               <Col xs={24} sm={24} md={12}>
                 <Form.Item
+                  label="Unit Name"
+                  name="unit_name"
+                  rules={[{ required: true, message: "Please Select Unit" }]}
+                >
+                  <Select placeholder="Select Unit Name">
+                    <Option value="JTML">JTML</Option>
+                    <Option value="DIPL">DIPL</Option>
+                    <Option value="Corporate Office">Corporate Office</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={12}>
+                <Form.Item
+                  label="Asset History"
+                  name="asset_history"
+                  rules={[
+                    { required: true, message: "Please Select Assign Type" },
+                  ]}
+                >
+                  <Input placeholder="Enter Asset History" />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={12}>
+                <Form.Item
                   label="Assign Type"
-                  name="assign"
+                  name="is_assign"
                   rules={[
                     { required: true, message: "Please Select Assign Type" },
                   ]}
                 >
                   <Select placeholder="Select Assign Type">
-                    <Option value={true}>True</Option>
-                    <Option value={false}>False</Option>
+                    <Option value={1}>True</Option>
+                    <Option value={0}>False</Option>
                   </Select>
                 </Form.Item>
               </Col>
-              {assignType === true && (
+              {assignType === 1 && (
                 <>
                   <Col xs={24} sm={24} md={12}>
                     <Form.Item
@@ -138,35 +165,37 @@ const CreateAsset = () => {
                       label="Employee ID"
                       required
                     >
-                      <Input placeholder="Enter Employee ID" type="text" />
+                      <Select
+                        className="w-full "
+                        placeholder="Select Employee"
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={(
+                          input: string,
+                          option?: { label: string; value: string }
+                        ) =>
+                          (option?.label ?? "")
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                        options={data?.data?.map((employee: any) => ({
+                          value: employee.employee_id,
+                          label: `${employee.employee_id} (${employee.name})`,
+                        }))}
+                        allowClear
+                      />
                     </Form.Item>
                   </Col>
-
                   <Col xs={24} sm={24} md={12}>
-                    <Form.Item
-                      label="Unit Name"
-                      name="unit"
-                      rules={[
-                        { required: true, message: "Please Select Unit" },
-                      ]}
-                    >
-                      <Select placeholder="Select Unit Name">
-                        <Option value="JTML">JTML</Option>
-                        <Option value="DIPL">DIPL</Option>
-                        <Option value="Corporate Office">
-                          Corporate Office
-                        </Option>
-                      </Select>
-                    </Form.Item>
+                    <DateInput
+                      label="Assign Date"
+                      name="assign_date"
+                      placeholder="Select Assign Date"
+                      rules={[{ required: true }]}
+                    />
                   </Col>
                 </>
               )}
-
-              <Col xs={24} sm={24} md={24}>
-                <Form.Item label="Asset History" name="asset_history">
-                  <TextArea placeholder="Enter Asset History" />
-                </Form.Item>
-              </Col>
             </Row>
           </Card>
 

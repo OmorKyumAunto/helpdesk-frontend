@@ -2,7 +2,7 @@ import { Card, Col, Row, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import { IEmployeeParams } from "../types/assetsTypes";
+import { IAssetParams } from "../types/assetsTypes";
 import { useGetAssetsQuery } from "../api/assetsEndPoint";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { AssetsTableColumns } from "../utils/AssetsTableColumns";
@@ -17,10 +17,10 @@ const AssetsList = () => {
   });
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "20";
-  const skipValue = Number(page) * Number(pageSize);
-  const [filter, setFilter] = useState<IEmployeeParams>({
+  const offsetValue = Number(page) * Number(pageSize);
+  const [filter, setFilter] = useState<IAssetParams>({
     limit: 20,
-    skip: skipValue - 20,
+    offset: offsetValue - 20,
   });
   const { data, isLoading } = useGetAssetsQuery({ ...filter });
 
@@ -49,16 +49,6 @@ const AssetsList = () => {
               <Col xs={24} md={12} xxl={12}>
                 <CreateButton name=" Create Assets" onClick={showModal} />
               </Col>
-              {/* <Col xs={24} md={12} xxl={12}>
-                <Button
-                  style={{ background: "blue" }}
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={showModalInc}
-                >
-                  Increment
-                </Button>
-              </Col> */}
             </Row>
           }
         >
@@ -78,7 +68,7 @@ const AssetsList = () => {
                 });
                 setFilter({
                   ...filter,
-                  skip:
+                  offset:
                     ((pagination.current || 1) - 1) *
                     (pagination.pageSize || 20),
                   limit: pagination.pageSize!,

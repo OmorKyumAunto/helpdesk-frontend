@@ -69,6 +69,7 @@ export const api = createApi({
     "dashboardProfitLoss",
     "expense",
     "service",
+    "asset",
   ],
 });
 

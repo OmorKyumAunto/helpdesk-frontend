@@ -1,15 +1,21 @@
-import { Space } from "antd";
+import { Button, Popconfirm, Space } from "antd";
 import { TableProps } from "antd/lib";
-import { IEmployee } from "../types/assetsTypes";
+import { IAsset } from "../types/assetsTypes";
 import { useDeleteAssetsMutation } from "../api/assetsEndPoint";
 import { CustomLink } from "../../../common/CustomLink";
 import { DeleteIcon, EyeIcon } from "../../../common/CommonButton";
+import UpdateAsset from "../components/UpdateAssets";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { useDispatch } from "react-redux";
+import AssignEmployee from "../components/AssignEmployee";
 
-export const AssetsTableColumns = (): TableProps<IEmployee>["columns"] => {
-  const [deleteEmployee] = useDeleteAssetsMutation();
+export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
+  const dispatch = useDispatch();
+  const [deleteAsset] = useDeleteAssetsMutation();
   const confirm = (id: number) => {
     if (id) {
-      deleteEmployee(id);
+      deleteAsset(id);
     }
   };
   return [
@@ -26,13 +32,13 @@ export const AssetsTableColumns = (): TableProps<IEmployee>["columns"] => {
     },
     {
       title: "Serial No",
-      dataIndex: "serial_no",
-      key: "serial_no",
+      dataIndex: "serial_number",
+      key: "serial_number",
     },
     {
       title: "PO No",
-      dataIndex: "po_no",
-      key: "po_no",
+      dataIndex: "po_number",
+      key: "po_number",
     },
     {
       title: "Specification",
@@ -46,8 +52,8 @@ export const AssetsTableColumns = (): TableProps<IEmployee>["columns"] => {
     },
     {
       title: "Unit",
-      dataIndex: "unit",
-      key: "unit",
+      dataIndex: "unit_name",
+      key: "unit_name",
     },
 
     {
@@ -55,19 +61,68 @@ export const AssetsTableColumns = (): TableProps<IEmployee>["columns"] => {
       key: "action",
       render: (record) => (
         <Space size="middle">
-          <CustomLink to={`${record?.id}`}>
-            <EyeIcon />
-          </CustomLink>
-
-          {/* <CommonTooltip title={"History"}>
-            <Button size="small" type="primary">
-              History
-            </Button>
-          </CommonTooltip> */}
-          <DeleteIcon
-            title={"Delete employee"}
+          {/* {record?.is_assign === 0 && ( */}
+          <Button
+            size="small"
+            type="primary"
+            className={record?.is_assign === 0 ? "block" : "hidden"}
+            onClick={() => {
+              dispatch(
+                setCommonModal({
+                  title: "Assign Employee",
+                  content: <AssignEmployee id={record.id} />,
+                  show: true,
+                  width: 500,
+                })
+              );
+            }}
+          >
+            Assign
+          </Button>
+          {/* )} */}
+          {/* <Button
+            size="small"
+            type="primary"
+            onClick={() => {
+              dispatch(
+                setCommonModal({
+                  title: "Employee Details",
+                  content: <EmployeeDetails employee={record} />,
+                  show: true,
+                  width: 740,
+                })
+              );
+            }}
+          >
+            <EyeOutlined />
+          </Button> */}
+          <Button
+            size="small"
+            type="primary"
+            onClick={() => {
+              dispatch(
+                setCommonModal({
+                  title: "Update Asset",
+                  content: <UpdateAsset asset={record} />,
+                  show: true,
+                  width: 678,
+                })
+              );
+            }}
+          >
+            <EditOutlined />
+          </Button>
+          <Popconfirm
+            title="Delete the asset"
+            description="Are you sure to delete this asset?"
             onConfirm={() => confirm(record?.id)}
-          />
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button danger size="small" type="primary">
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },

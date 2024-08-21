@@ -1,83 +1,41 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface IEmployee {
+export interface IAsset {
   id: number;
   name: string;
-  email: string;
-  phone_number: string;
-  designation: string;
-  joining_date: string;
-  status: boolean;
-  salary: string;
-  tax: string;
+  category: string;
+  purchase_date: Date;
+  serial_number: string;
+  po_number: string;
+  asset_history: string;
+  is_assign: number;
+  created_at: Date;
+  status: number;
+  remarks: string;
+  unit_name: string;
 }
-
-export interface IAdjustSalary {
+export interface IAssetDetails {
   id: number;
-  adjustment_type: string;
-  amount: string;
-  details: string;
-  created_by: number;
-  created_at: string;
+  name: string;
+  category: string;
+  purchase_date: Date;
+  serial_number: string;
+  po_number: string;
+  asset_history: string;
+  is_assign: number;
+  created_at: Date;
+  status: number;
+  remarks: string;
+  unit_name: string;
   employee_id: number;
-  salary_statement: string;
+  assign_date: Date;
+  employee_name: string;
+  employee_id_no: string;
+  employee_department: string;
+  employee_designation: string;
+  employee_unit: string;
 }
 
-export interface ISingleEmployee {
-  id: number;
-  name: string;
-  email: string;
-  phone_number: string;
-  designation: string;
-  salary: string;
-  gross_salary: string;
-  tax: string;
-  commission: string;
-  appointment_date: string;
-  joining_date: string;
-  address: string;
-  status: true;
-  blood_group: string;
-  created_by: string;
-  employee_photo: string;
-  employee_cv: string;
-  education_certificate: string;
-  experience_certificate: string;
-  nid_number: string;
-  nid_photo: string;
-  banking_doc: string;
-  bio_data: string;
-  nominee_name: string;
-  nominee_nid: string;
-  nominee_nid_photo: string;
-  tin_number: string;
-  tin_certificate: string;
-  other_documents: string;
-  total_casual_leaves: number;
-  total_annual_leaves: number;
-  total_sick_leaves: number;
-  adjustmentSalary: IAdjustSalary[];
-}
-
-export interface IFromData {
-  [key: string]: any;
-  company_id: number | undefined;
-  name: string;
-  designation: string;
-  salary: number | string;
-  commission: number | string;
-  mobile: string;
-  blood_group: any;
-  date_of_birth: string;
-  joining_date: string;
-  appointment_date: string;
-  address: string;
-  department_id: { value: string; label: number };
-}
-export type ISubmitData = Partial<{
-  [K in keyof IFromData]: K extends "department_id" ? any : IFromData[K];
-}>;
-
-export interface IEmployeeParams {
+export interface IAssetParams {
   limit?: number;
-  skip?: number;
+  offset?: number;
 }

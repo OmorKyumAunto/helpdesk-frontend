@@ -2,36 +2,40 @@ import { api } from "../../../app/api/api";
 import { HTTPResponse } from "../../../app/types/commonTypes";
 import notification from "../../../common/utils/Notification";
 import asyncWrapper from "../../../utils/asyncWrapper";
-import {
-  IEmployee,
-  IEmployeeParams,
-  ISingleEmployee,
-  ISubmitData,
-} from "../types/assetsTypes";
+import { IAsset, IAssetDetails, IAssetParams } from "../types/assetsTypes";
 
 export const assetsEndPoint = api.injectEndpoints({
   endpoints: (build) => ({
-    getAssets: build.query<HTTPResponse<IEmployee[]>, IEmployeeParams>({
+    getAssets: build.query<HTTPResponse<IAsset[]>, IAssetParams>({
       query: (params) => {
         return {
-          url: `/admin/employee`,
+          url: `/asset/list`,
           params,
         };
       },
-      providesTags: () => ["employee"],
+      providesTags: () => ["asset"],
     }),
-    getSingleAssets: build.query<HTTPResponse<ISingleEmployee>, number>({
-      query: (id) => {
+    getAllDistributedAsset: build.query<HTTPResponse<any[]>, IAssetParams>({
+      query: (params) => {
         return {
-          url: `/admin/employee/${id}`,
+          url: `/asset/distributed-asset`,
+          params,
         };
       },
-      providesTags: () => ["employee", "s-emp"],
+      providesTags: () => ["asset"],
     }),
-    createAssets: build.mutation<unknown, { data: ISubmitData }>({
+    getSingleAssets: build.query<HTTPResponse<IAssetDetails>, number>({
+      query: (id) => {
+        return {
+          url: `/asset/details/${id}`,
+        };
+      },
+      providesTags: () => ["asset"],
+    }),
+    createAssets: build.mutation<unknown, { data: any }>({
       query: ({ data }) => {
         return {
-          url: `/admin/employee`,
+          url: `/asset/add`,
           method: "POST",
           body: data,
         };
@@ -39,49 +43,67 @@ export const assetsEndPoint = api.injectEndpoints({
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully employee create ");
+          notification("success", "Successfully asset create ");
         });
       },
-      invalidatesTags: () => ["employee"],
+      invalidatesTags: () => ["asset"],
     }),
-    UpdateAssets: build.mutation<unknown, { data: ISubmitData; id: number }>({
+    UpdateAssets: build.mutation<unknown, { data: any; id: number }>({
       query: ({ data, id }) => {
         return {
-          url: `/admin/employee/${id}`,
-          method: "PATCH",
+          url: `/asset/update/${id}`,
+          method: "PUT",
           body: data,
         };
       },
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully employee update ");
+          notification("success", "Successfully asset update ");
         });
       },
-      invalidatesTags: () => ["employee"],
+      invalidatesTags: () => ["asset"],
+    }),
+    assignEmployee: build.mutation<unknown, { data: any; id: number }>({
+      query: ({ data, id }) => {
+        return {
+          url: `/asset/assign-employee/${id}`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully asset assign ");
+        });
+      },
+      invalidatesTags: () => ["asset"],
     }),
     deleteAssets: build.mutation<unknown, number>({
       query: (id) => {
         return {
-          url: `/admin/employee/${id}`,
+          url: `/asset/delete/${id}`,
           method: "DELETE",
         };
       },
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully delete employee");
+          notification("success", "Successfully delete asset");
         });
       },
-      invalidatesTags: () => ["employee"],
+      invalidatesTags: () => ["asset"],
     }),
   }),
 });
 
 export const {
   useGetAssetsQuery,
+  useGetAllDistributedAssetQuery,
   useGetSingleAssetsQuery,
   useCreateAssetsMutation,
+  useAssignEmployeeMutation,
   useUpdateAssetsMutation,
   useDeleteAssetsMutation,
 } = assetsEndPoint;
