@@ -26,7 +26,7 @@ export const userSlice = createSlice({
       state.user = action.payload;
     },
     setLogout: (state) => {
-      // console.log('logout called');
+      // console.log("logout called");
       localStorage.removeItem(TOKEN);
       state.user = null;
       state.token = null;

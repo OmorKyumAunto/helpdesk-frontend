@@ -1,3 +1,3 @@
-export const TOKEN = "amcham_a_token";
+export const TOKEN = "dbl_token";
 
 export const debounceTime = 2000;
