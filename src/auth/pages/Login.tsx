@@ -1,5 +1,10 @@
 import { Form, Input, Row, Col, Typography, Divider, message } from "antd";
-import { LockOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  LockOutlined,
+  LoginOutlined,
+  MailOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { motion } from "framer-motion";
 import "./Login.css";
 import { useLoginMutation } from "../../app/api/api";
@@ -56,8 +61,8 @@ export const Login = () => {
               <Row gutter={6}>
                 <Col xs={24}>
                   <Form.Item
-                    name="email"
-                    label="email"
+                    name="mail"
+                    label="Email"
                     rules={[
                       {
                         required: true,
@@ -66,7 +71,7 @@ export const Login = () => {
                     ]}
                   >
                     <Input
-                      prefix={<UserOutlined />}
+                      prefix={<MailOutlined />}
                       placeholder="Enter email"
                     />
                   </Form.Item>

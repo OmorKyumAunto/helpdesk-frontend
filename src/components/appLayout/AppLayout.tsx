@@ -435,7 +435,7 @@ export const AppLayout = () => {
           }}
         >
           <strong>
-            Copyright © {new Date().getFullYear()} DBI Group. All Rights
+            Copyright © {new Date().getFullYear()} DBL Group. All Rights
             Reserved.
           </strong>
         </Footer>
