@@ -19,15 +19,15 @@
 }
 
 .login-form {
-  width: 50%;
+  width: 80%;
   border-radius: 8px;
-  padding-top: 160px;
 }
 .login-form-container {
   background-color: #fff;
-  /* max-width: 450px; */
-  min-height: 450px;
-  max-height: 450px;
+  max-width: 450px;
+  border-radius: 12px;
+  /* max-height: 450px; */
+  padding: 20px 0;
 }
 .login-left-photo {
   width: 350px;

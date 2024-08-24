@@ -1,4 +1,14 @@
-import { Form, Input, Row, Col, Typography, Divider, message } from "antd";
+import {
+  Form,
+  Input,
+  Row,
+  Col,
+  Typography,
+  Divider,
+  message,
+  Avatar,
+  Image,
+} from "antd";
 import {
   LockOutlined,
   LoginOutlined,
@@ -8,7 +18,7 @@ import {
 import { motion } from "framer-motion";
 import "./Login.css";
 import { useLoginMutation } from "../../app/api/api";
-
+import logo from "../../assets/logo.png";
 type IInputs = {
   email: string;
   password: string;
@@ -58,6 +68,9 @@ export const Login = () => {
           }}
         >
           <div className="login-form">
+            <div className="flex justify-center">
+              <Image preview={false} height={140} src={logo} />
+            </div>
             <Form name="login-form" layout="vertical" onFinish={onFinish}>
               <Row gutter={6}>
                 <Col xs={24}>
@@ -116,9 +129,23 @@ export const Login = () => {
                     }}
                   >
                     <span style={{ color: "black" }}>
-                      <Link to="/forget-password"> Forget Password? </Link>
+                      <Link to="/register">
+                        {" "}
+                        Don't have an account? Please Register{" "}
+                      </Link>
                     </span>
                   </div>
+                  {/* <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span style={{ color: "black" }}>
+                      <Link to="/forget-password"> Forget Password? </Link>
+                    </span>
+                  </div> */}
                 </Col>
               </Row>
             </Form>

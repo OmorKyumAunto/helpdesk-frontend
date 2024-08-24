@@ -1,13 +1,32 @@
-import { Button, Checkbox, Form, Input, Space, Row, Col } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Space,
+  Row,
+  Col,
+  Image,
+  Divider,
+  Select,
+} from "antd";
+import {
+  LockOutlined,
+  LoginOutlined,
+  MailOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { IFormInput } from "../../../Types/Login";
 import styled from "styled-components";
 import { Typography } from "antd";
-
+import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../api/authEndPoint";
 import { useEffect } from "react";
+import SubmitButton from "../../components/submitButton/SubmitButton";
 const { Title } = Typography;
+import logo from "../../assets/logo.png";
+const { Option } = Select;
 const Register = () => {
   const navigate = useNavigate();
   const [register, { isLoading, isSuccess }] = useRegisterMutation();
@@ -22,108 +41,138 @@ const Register = () => {
   }, [isSuccess]);
 
   return (
-    <WrapperStyle>
-      <div className="login_form_card">
-        <div style={{ paddingBottom: "15px" }}>
-          <Title style={{ textAlign: "center" }} level={3}>
-            BECOME A MEMBER
-          </Title>
+    <motion.div
+      className="login-container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className=" login-form-container"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div className="login-form">
+            <div className="flex justify-center">
+              <Image preview={false} height={140} src={logo} />
+            </div>
+            <Form name="login-form" layout="vertical" onFinish={onFinish}>
+              <Row gutter={6}>
+                <Col xs={24}>
+                  <Form.Item
+                    name="name"
+                    label="Name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your name!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      // prefix={<MailOutlined />}
+                      placeholder="Enter name"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24}>
+                  <Form.Item
+                    name="employee_id"
+                    label="employee ID"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your employee id!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      // prefix={<MailOutlined />}
+                      placeholder="Enter employee id"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24}>
+                  <Form.Item
+                    name="unit"
+                    label="Unit"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your employee id!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      style={{ width: "100%" }}
+                      placeholder="Select Unit Name"
+                    >
+                      <Option value="JTML">JTML</Option>
+                      <Option value="DIPL">DIPL</Option>
+                      <Option value="Corporate Office">Corporate Office</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={24}>
+                  <Form.Item
+                    name="password"
+                    label="Password"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter your password!",
+                      },
+                    ]}
+                  >
+                    <Input.Password
+                      prefix={<LockOutlined />}
+                      placeholder="Enter Password"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24}>
+                  <Form.Item>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <SubmitButton
+                        loading={isLoading}
+                        label="Register"
+                        icon={<LoginOutlined />}
+                        style={{ width: "100%" }}
+                      />
+                    </div>
+                  </Form.Item>
+                </Col>
+                <Divider style={{ marginTop: "0px", marginBottom: "10px" }} />
+                <Col xs={24}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span style={{ color: "black" }}>
+                      <Link to="/login">
+                        {" "}
+                        Already have an account? Please Login{" "}
+                      </Link>
+                    </span>
+                  </div>
+                </Col>
+              </Row>
+            </Form>
+          </div>
         </div>
-        <>
-          <Form onFinish={onFinish} layout="vertical">
-            <Row gutter={[5, 5]}>
-              <Col xs={24} md={12} xl={12}>
-                <Form.Item
-                  name="user_name"
-                  label="User name"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter user name",
-                    },
-                  ]}
-                >
-                  <Input placeholder="Enter user name" />
-                </Form.Item>
-              </Col>{" "}
-              <Col xs={24} md={12} xl={12}>
-                <Form.Item
-                  name="company_name"
-                  label="Hotel name"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please type your hotel name!",
-                    },
-                  ]}
-                >
-                  <Input placeholder="Enter hotel name" />
-                </Form.Item>
-              </Col>{" "}
-              <Col xs={24} md={12} xl={12}>
-                {" "}
-                <Form.Item
-                  name="email"
-                  label="Email address"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your email address!",
-                    },
-                  ]}
-                >
-                  <Input type="email" placeholder="Enter email address" />
-                </Form.Item>
-              </Col>
-              <Col xs={24} md={12} xl={12}>
-                <Form.Item
-                  name="phone"
-                  label="Phone number"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your phone number",
-                    },
-                  ]}
-                >
-                  <Input type="number" placeholder="Enter phone number" />
-                </Form.Item>
-              </Col>{" "}
-              <Col xs={24} md={12} xl={12}>
-                {" "}
-                <Form.Item
-                  name="password"
-                  label="Password"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your password!",
-                    },
-                  ]}
-                >
-                  <Input.Password
-                    prefix={<LockOutlined />}
-                    placeholder="Password"
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="login-form-button"
-                loading={isLoading}
-              >
-                Register
-              </Button>
-              Already have an account? <Link to={"/login"}>Login</Link>
-            </Form.Item>
-          </Form>
-        </>
-      </div>
-    </WrapperStyle>
+      </motion.div>
+    </motion.div>
   );
 };
 

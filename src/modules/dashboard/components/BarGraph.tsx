@@ -122,7 +122,7 @@ export default function BarGraph() {
               marginBottom: "1rem",
             }}
           >
-            <ResponsiveContainer width="100%" height={320}>
+            <ResponsiveContainer width="100%" height={520}>
               <BarChart
                 width={500}
                 height={300}

@@ -3,13 +3,14 @@ import { useGetAllDashboardQuery } from "../api/dashboardEndPoints";
 import { FaComputer } from "react-icons/fa6";
 import { LuUsers2 } from "react-icons/lu";
 import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
+import GraphChartApex from "../components/ApexChart";
 
 const DashboardCards = () => {
   const { data } = useGetAllDashboardQuery();
   return (
-    <Row gutter={[12, 6]}>
+    <Row gutter={[12, 12]}>
       <Col xs={24} sm={24} md={24} lg={8}>
-        <Card>
+        <Card className="bg-[#ba45ba] text-white">
           <div
             style={{
               display: "flex",
@@ -18,7 +19,9 @@ const DashboardCards = () => {
             }}
           >
             <div>
-              <Typography.Title level={3}>Total Asset</Typography.Title>
+              <Typography.Title style={{ color: "white" }} level={3}>
+                Total Asset
+              </Typography.Title>
               <p
                 style={{
                   textAlign: "center",
@@ -32,14 +35,14 @@ const DashboardCards = () => {
             </div>
             <div>
               <div
+                className="bg-[#cf7dcf]"
                 style={{
                   height: "80px",
                   width: "80px",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  borderRadius: "12px",
-                  border: "1px solid gray",
+                  borderRadius: "50%",
                 }}
               >
                 <FaComputer size={52} />
@@ -49,7 +52,7 @@ const DashboardCards = () => {
         </Card>
       </Col>
       <Col xs={24} sm={24} md={24} lg={8}>
-        <Card>
+        <Card className="bg-[#ffa500] text-white">
           <div
             style={{
               display: "flex",
@@ -58,7 +61,9 @@ const DashboardCards = () => {
             }}
           >
             <div>
-              <Typography.Title level={3}>Total Employee</Typography.Title>
+              <Typography.Title style={{ color: "white" }} level={3}>
+                Total Employee
+              </Typography.Title>
               <p
                 style={{
                   textAlign: "center",
@@ -72,14 +77,14 @@ const DashboardCards = () => {
             </div>
             <div>
               <div
+                className="bg-[#ffc14d]"
                 style={{
                   height: "80px",
                   width: "80px",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  borderRadius: "12px",
-                  border: "1px solid gray",
+                  borderRadius: "50%",
                 }}
               >
                 <LuUsers2 size={52} />
@@ -89,7 +94,7 @@ const DashboardCards = () => {
         </Card>
       </Col>
       <Col xs={24} sm={24} md={24} lg={8}>
-        <Card>
+        <Card className="bg-[#8dc73f] text-white">
           <div
             style={{
               display: "flex",
@@ -98,7 +103,9 @@ const DashboardCards = () => {
             }}
           >
             <div>
-              <Typography.Title level={3}>Total Assign Asset</Typography.Title>
+              <Typography.Title style={{ color: "white" }} level={3}>
+                Total Assign Asset
+              </Typography.Title>
               <p
                 style={{
                   textAlign: "center",
@@ -112,14 +119,14 @@ const DashboardCards = () => {
             </div>
             <div>
               <div
+                className="bg-[#acd775]"
                 style={{
                   height: "80px",
                   width: "80px",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  borderRadius: "12px",
-                  border: "1px solid gray",
+                  borderRadius: "50%",
                 }}
               >
                 <MdOutlineAssignmentTurnedIn size={52} />
@@ -127,6 +134,9 @@ const DashboardCards = () => {
             </div>
           </div>
         </Card>
+      </Col>
+      <Col xs={24} sm={24} md={24} lg={24}>
+        <GraphChartApex />
       </Col>
     </Row>
   );

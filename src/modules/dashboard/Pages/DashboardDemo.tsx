@@ -3,6 +3,7 @@ import { Card, Col, Row } from "antd";
 import DashCard from "../components/DashCard";
 import { useGetAllDashboardQuery } from "../api/dashboardEndPoints";
 import { IViewDashboard } from "../types/dashboardTypes";
+import BarGraph from "../components/BarGraph";
 // import FullCalender from "./FullCalender";
 // import TopDash from "../components/TopDash";
 export const DashboardDemo = () => {
@@ -26,7 +27,6 @@ export const DashboardDemo = () => {
           </Card>
         </Col>
       </Row>
-      {/* <BarGraph /> */}
       {/* <ReportInformation /> */}
     </>
   );

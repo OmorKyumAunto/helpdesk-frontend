@@ -16,6 +16,7 @@ import DashboardCards from "./modules/dashboard/Pages/DashboardCards";
 import ProfileSection from "./components/navBar/ProfileSection";
 import About from "./modules/about/page/About";
 import Forms from "./modules/forms/page/Forms";
+import Register from "./auth/pages/Register";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -23,7 +24,10 @@ export const routers = createBrowserRouter([
     path: "/login",
     element: <ProtectedRoute children={<Login />} />,
   },
-
+  {
+    path: "/register",
+    element: <ProtectedRoute children={<Register />} />,
+  },
   {
     path: "/unauthorized",
     element: <UnauthorizePage />,
