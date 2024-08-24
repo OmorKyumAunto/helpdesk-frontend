@@ -11,6 +11,9 @@ import { CreateButton } from "../../../common/CommonButton";
 import { SearchOutlined } from "@ant-design/icons";
 import { tablePagination } from "../../../common/TablePagination copy";
 import EmployeeFileUpdate from "./EmployeeFileUpdate";
+import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+import dayjs from "dayjs";
+import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 
 const EmployeeList = () => {
   const dispatch = useDispatch();
@@ -66,35 +69,118 @@ const EmployeeList = () => {
             marginBottom: "1rem",
           }}
           extra={
-            <Row gutter={[16, 24]}>
-              <Col xs={24} md={8}>
-                <Input
-                  prefix={<SearchOutlined />}
-                  onChange={(e) =>
-                    setFilter({ ...filter, key: e.target.value })
+            <Space>
+              <Input
+                prefix={<SearchOutlined />}
+                onChange={(e) => setFilter({ ...filter, key: e.target.value })}
+                placeholder="Search..."
+              />
+
+              <>
+                <PDFDownload
+                  PDFFileName="employee_list"
+                  fileHeader="EMPLOYEE LIST"
+                  PDFHeader={[
+                    "Employee ID",
+                    "Employee Name",
+                    "Department",
+                    "Designation",
+                    "Email",
+                    "Contact No",
+                    "Date of Joining",
+                    "Unit Name",
+                  ]}
+                  PDFData={
+                    data?.data?.length
+                      ? data?.data?.map(
+                          ({
+                            employee_id,
+                            name,
+                            department,
+                            designation,
+                            email,
+                            contact_no,
+                            joining_date,
+                            unit_name,
+                          }: any) => {
+                            const data = {
+                              "Employee ID": employee_id,
+                              "Employee Name": name,
+                              Department: department,
+                              Designation: designation,
+                              Email: email,
+                              "Contact No": contact_no,
+                              "Date of Joining":
+                                dayjs(joining_date).format("DD-MM-YYYY"),
+                              "Unit Name": unit_name,
+                            };
+                            return data;
+                          }
+                        )
+                      : []
                   }
-                  placeholder="Search..."
                 />
-              </Col>
-              <Col xs={24} md={8}>
-                <CreateButton
-                  name="Upload employee"
-                  onClick={() => {
-                    dispatch(
-                      setCommonModal({
-                        title: "Upload Employee",
-                        content: <EmployeeFileUpdate />,
-                        show: true,
-                        width: 400,
-                      })
-                    );
-                  }}
+              </>
+
+              <Space>
+                <ExcelDownload
+                  excelName={"employee_list"}
+                  excelTableHead={[
+                    "Employee ID",
+                    "Employee Name",
+                    "Department",
+                    "Designation",
+                    "Email",
+                    "Contact No",
+                    "Date of Joining",
+                    "Unit Name",
+                  ]}
+                  excelData={
+                    data?.data?.length
+                      ? data?.data?.map(
+                          ({
+                            employee_id,
+                            name,
+                            department,
+                            designation,
+                            email,
+                            contact_no,
+                            joining_date,
+                            unit_name,
+                          }: any) => {
+                            const data = {
+                              "Employee ID": employee_id,
+                              "Employee Name": name,
+                              Department: department,
+                              Designation: designation,
+                              Email: email,
+                              "Contact No": contact_no,
+                              "Date of Joining":
+                                dayjs(joining_date).format("DD-MM-YYYY"),
+                              "Unit Name": unit_name,
+                            };
+                            return data;
+                          }
+                        )
+                      : []
+                  }
                 />
-              </Col>
-              <Col xs={24} md={8}>
-                <CreateButton name=" Create employee" onClick={showModal} />
-              </Col>
-            </Row>
+              </Space>
+              <CreateButton
+                name="Upload employee"
+                onClick={() => {
+                  dispatch(
+                    setCommonModal({
+                      title: "Upload Employee",
+                      content: <EmployeeFileUpdate />,
+                      show: true,
+                      width: 400,
+                    })
+                  );
+                }}
+              />
+              <CreateButton name=" Create employee" onClick={showModal} />
+            </Space>
           }
         >
           <div>

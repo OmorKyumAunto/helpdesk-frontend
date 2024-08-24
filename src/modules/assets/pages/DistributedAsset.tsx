@@ -1,4 +1,4 @@
-import { Card, Input } from "antd";
+import { Card, Input, Space } from "antd";
 import { Table } from "antd/lib";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -6,6 +6,9 @@ import { DistributedAssetsTableColumns } from "../utils/DistributedTableColumns"
 import { useGetAllDistributedAssetQuery } from "../api/assetsEndPoint";
 import { tablePagination } from "../../../common/TablePagination copy";
 import { SearchOutlined } from "@ant-design/icons";
+import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
+import dayjs from "dayjs";
 
 const DistributedAsset = () => {
   const [searchParams, setSearchParams] = useSearchParams({
@@ -29,13 +32,99 @@ const DistributedAsset = () => {
           marginBottom: "1rem",
         }}
         extra={
-          <>
+          <Space>
             <Input
               prefix={<SearchOutlined />}
               onChange={(e) => setFilter({ ...filter, key: e.target.value })}
               placeholder="Search..."
             />
-          </>
+
+            <PDFDownload
+              PDFFileName="distributed_asset_list"
+              fileHeader="Distributed ASSET LIST"
+              PDFHeader={[
+                "No",
+                "Employee ID",
+                "Employee Name",
+                "Department",
+                "Unit",
+                "Asset Type",
+                "Serial No",
+                "Assigning Date",
+              ]}
+              PDFData={
+                data?.data?.length
+                  ? data?.data?.map(
+                      (
+                        {
+                          employee_id_no,
+                          employee_name,
+                          employee_department,
+                          category,
+                          assign_date,
+                          serial_number,
+                          employee_unit,
+                        }: any,
+                        index
+                      ) => {
+                        const data = {
+                          No: index + 1,
+                          "Employee ID": employee_id_no,
+                          "Employee Name": employee_name,
+                          Department: employee_department,
+                          Unit: employee_unit,
+                          "Asset Type": category,
+                          "Serial No": serial_number,
+                          "Assigning Date":
+                            dayjs(assign_date).format("DD-MM-YYYY"),
+                        };
+                        return data;
+                      }
+                    )
+                  : []
+              }
+            />
+
+            <ExcelDownload
+              excelName={"distributed_asset_list"}
+              excelTableHead={[
+                "Employee ID",
+                "Employee Name",
+                "Department",
+                "Unit",
+                "Asset Type",
+                "Serial No",
+                "Assigning Date",
+              ]}
+              excelData={
+                data?.data?.length
+                  ? data?.data?.map(
+                      ({
+                        employee_id_no,
+                        employee_name,
+                        employee_department,
+                        category,
+                        assign_date,
+                        serial_number,
+                        employee_unit,
+                      }: any) => {
+                        const data = {
+                          "Employee ID": employee_id_no,
+                          "Employee Name": employee_name,
+                          Department: employee_department,
+                          Unit: employee_unit,
+                          "Asset Type": category,
+                          "Serial No": serial_number,
+                          "Assigning Date":
+                            dayjs(assign_date).format("DD-MM-YYYY"),
+                        };
+                        return data;
+                      }
+                    )
+                  : []
+              }
+            />
+          </Space>
         }
       >
         <div>

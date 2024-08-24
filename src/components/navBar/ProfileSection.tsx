@@ -94,9 +94,9 @@ const ProfileSection = (props: Props) => {
             fontSize: "16px",
           }}
         >
-          {profileData?.username.slice(0, 1)}
+          {profileData?.name.slice(0, 1)}
         </Avatar>
-        <Typography.Text strong>{profileData?.username}</Typography.Text>
+        <Typography.Text strong>{profileData?.name}</Typography.Text>
       </Space>
     </Popover>
   );

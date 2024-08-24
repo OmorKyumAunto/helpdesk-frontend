@@ -23,15 +23,21 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
   };
   return [
     {
-      title: "SL",
-      render: (_, __, index) => index + 1,
+      title: "Employee ID",
+      dataIndex: "employee_id",
+      key: "employee_id",
     },
+
     {
-      title: "Name",
+      title: "Employee Name",
       dataIndex: "name",
       key: "name",
     },
-
+    {
+      title: "Department",
+      dataIndex: "department",
+      key: "department",
+    },
     {
       title: "Designation",
       dataIndex: "designation",
@@ -43,27 +49,21 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
       key: "email",
     },
     {
-      title: "Phone ",
+      title: "Contact No",
       dataIndex: "contact_no",
       key: "contact_no",
     },
 
     {
-      title: "Joining Date",
+      title: "Date of Joining",
       dataIndex: "joining_date",
       key: "joining_date",
       render: (joining_date) => dayjs(joining_date).format("DD-MM-YYYY"),
     },
-
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag color={status ? "green" : "red"}>
-          {status ? "Active" : "Inactive"}
-        </Tag>
-      ),
+      title: "Unit Name",
+      dataIndex: "unit_name",
+      key: "unit_name",
     },
     {
       title: "Actions",

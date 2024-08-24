@@ -19,7 +19,6 @@ export const ReceiptHeader = () => {
       <div style={{ flex: 1 }}>
         {/* <img style={GetInfo().logoProp} src={TOAB_LOGO} alt={"LOGO"} /> */}
       </div>
-
       <div style={{ flex: 1 }}>
         <div
           style={{
@@ -111,7 +110,7 @@ export const InvoiceHeader = () => {
           }}
         >
           <Typography.Title level={5} style={{}}>
-            {profile?.data?.username}
+            {profile?.data?.name}
           </Typography.Title>
           {/* 
           <Typography.Text

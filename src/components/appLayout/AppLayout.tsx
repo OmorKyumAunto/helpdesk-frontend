@@ -17,6 +17,7 @@ import {
   MenuProps,
   Grid,
   Image,
+  Avatar,
 } from "antd";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Footer } from "antd/es/layout/layout";
@@ -25,6 +26,7 @@ import { useAppDispatch } from "../../app/store/store";
 import { setLogout } from "../../app/features/userSlice";
 import { menuItems } from "./AppLayoutData";
 // import LiveTime from "../Time/LiveTime";
+import userIcon from "../../assets//user.png";
 import { globalTheme, setTheme } from "../../app/slice/themeSlice";
 import { useSelector } from "react-redux";
 // import { BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
@@ -260,7 +262,18 @@ export const AppLayout = () => {
             </div>
           )}
         </div>
-
+        {!collapsed && (
+          <div
+            style={{
+              backgroundColor: "#e6e6e6",
+              textAlign: "center",
+            }}
+          >
+            <Typography.Title level={4} style={{ padding: "10px 0" }}>
+              <Avatar src={userIcon} /> Hello {profile?.data?.name}
+            </Typography.Title>
+          </div>
+        )}
         <div className="resize-handle" onMouseDown={handleResizeStart} />
         <Menu
           mode="inline"
@@ -277,7 +290,7 @@ export const AppLayout = () => {
         <Header
           style={{
             padding: 0,
-            background: "green",
+            background: "#8DC73F",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -334,7 +347,7 @@ export const AppLayout = () => {
               padding: "10px",
             }}
           >
-            {!grid.xs && (
+            {/* {!grid.xs && (
               <div>
                 <p
                   style={{
@@ -343,10 +356,10 @@ export const AppLayout = () => {
                     lineHeight: 1,
                   }}
                 >
-                  Hello, {profile?.data?.username}
+                  Hello {profile?.data?.name}
                 </p>
               </div>
-            )}
+            )} */}
 
             {/* notifications  */}
             {/* {!grid.xs && (
@@ -375,6 +388,7 @@ export const AppLayout = () => {
                 />
               )}
             </div> */}
+
             {/* <Popover content={content}>
               <Button
                 icon={<UserOutlined />}
@@ -384,6 +398,17 @@ export const AppLayout = () => {
                 }}
               />
             </Popover> */}
+            <Link to="/login">
+              <Button
+                danger
+                style={{ marginTop: "10px" }}
+                color="primary"
+                icon={<LogoutOutlined />}
+                onClick={() => handleLogout()}
+              >
+                Logout
+              </Button>
+            </Link>
           </div>
         </Header>
 

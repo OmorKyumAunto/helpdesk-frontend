@@ -13,7 +13,7 @@ export const DistributedAssetsTableColumns =
 
     return [
       {
-        title: "Serial No",
+        title: "No",
         render: (_, __, index) => index + 1,
       },
 

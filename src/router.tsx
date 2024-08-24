@@ -14,6 +14,9 @@ import DistributedAsset from "./modules/assets/pages/DistributedAsset";
 import RequireUser from "./utils/requireUser";
 import { DashboardDemo } from "./modules/dashboard/Pages/DashboardDemo";
 import DashboardCards from "./modules/dashboard/Pages/DashboardCards";
+import ProfileSection from "./components/navBar/ProfileSection";
+import About from "./modules/about/page/About";
+import Forms from "./modules/forms/page/Forms";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -45,14 +48,18 @@ export const routers = createBrowserRouter([
   },
   {
     path: "/",
-    element: <AppLayout />,
-    // element: <RequireUser children={<AppLayout />} />,
+    // element: <AppLayout />,
+    element: <RequireUser children={<AppLayout />} />,
     children: [
       {
         path: "/",
         // element: <RequireUser children={<DashboardDemo />} />,
         element: <DashboardCards />,
       },
+      // {
+      //   path: "/setting/profile",
+      //   element: <ProfileSection />,
+      // },
       {
         path: "/assets/list",
         element: <AssetsList />,
@@ -68,6 +75,14 @@ export const routers = createBrowserRouter([
       {
         path: "/employee/list/:id",
         element: <SingleEmployee />,
+      },
+      {
+        path: "/forms",
+        element: <Forms />,
+      },
+      {
+        path: "/about",
+        element: <About />,
       },
     ],
   },
