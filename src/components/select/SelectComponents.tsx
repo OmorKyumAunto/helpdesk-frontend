@@ -1,6 +1,6 @@
 import { Col, Form, Select } from "antd";
 import { NamePath } from "antd/es/form/interface";
-import { useGetServiceQuery } from "../../modules/Configuration/Service/api/serviceEndPoint";
+// import { useGetServiceQuery } from "../../modules/Configuration/Service/api/serviceEndPoint";
 import { commonProps } from "../../common/types/CommonTypes";
 
 type CommonProps = {
@@ -385,48 +385,48 @@ export const SelectTransactionType = ({
   );
 };
 
-export const SelectService = ({ name, label, required }: commonProps) => {
-  const { data: service } = useGetServiceQuery({});
+// export const SelectService = ({ name, label, required }: commonProps) => {
+//   const { data: service } = useGetServiceQuery({});
 
-  const selectService = service?.data;
-  const serviceChildren: React.ReactNode[] = [];
-  if (selectService) {
-    for (let i = 0; i < selectService.length; i++) {
-      serviceChildren.push(
-        <Select.Option
-          title="Select Service"
-          key={selectService[i].id + " " + selectService[i].name}
-          value={selectService[i].id}
-        >
-          {selectService[i].name}
-        </Select.Option>
-      );
-    }
-  }
+//   const selectService = service?.data;
+//   const serviceChildren: React.ReactNode[] = [];
+//   if (selectService) {
+//     for (let i = 0; i < selectService.length; i++) {
+//       serviceChildren.push(
+//         <Select.Option
+//           title="Select Service"
+//           key={selectService[i].id + " " + selectService[i].name}
+//           value={selectService[i].id}
+//         >
+//           {selectService[i].name}
+//         </Select.Option>
+//       );
+//     }
+//   }
 
-  return (
-    <Form.Item
-      name={name}
-      label={label}
-      rules={[
-        {
-          required: required || false,
-          message: `${label} is required!`,
-        },
-      ]}
-    >
-      <Select
-        placeholder={"Select Service"}
-        showSearch
-        allowClear
-        style={{ padding: "0", margin: "0", border: "0", width: "100%" }}
-        optionFilterProp="roleMobile"
-        filterOption={(input, option) =>
-          (option!.children as unknown as string).includes(input.toLowerCase())
-        }
-      >
-        {serviceChildren}
-      </Select>
-    </Form.Item>
-  );
-};
+//   return (
+//     <Form.Item
+//       name={name}
+//       label={label}
+//       rules={[
+//         {
+//           required: required || false,
+//           message: `${label} is required!`,
+//         },
+//       ]}
+//     >
+//       <Select
+//         placeholder={"Select Service"}
+//         showSearch
+//         allowClear
+//         style={{ padding: "0", margin: "0", border: "0", width: "100%" }}
+//         optionFilterProp="roleMobile"
+//         filterOption={(input, option) =>
+//           (option!.children as unknown as string).includes(input.toLowerCase())
+//         }
+//       >
+//         {serviceChildren}
+//       </Select>
+//     </Form.Item>
+//   );
+// };

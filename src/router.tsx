@@ -8,7 +8,6 @@ import SendOtp from "./auth/pages/SendOtp";
 import { AppLayout } from "./components/appLayout/AppLayout";
 import ResetPassword from "./auth/pages/ResetPassword";
 import EmployeeList from "./modules/employee/pages/Employeelist";
-import SingleEmployee from "./modules/employee/pages/SingleEmployee";
 import AssetsList from "./modules/assets/pages/AssetsList";
 import DistributedAsset from "./modules/assets/pages/DistributedAsset";
 import RequireUser from "./utils/requireUser";
@@ -72,10 +71,7 @@ export const routers = createBrowserRouter([
         path: "/employee/list",
         element: <EmployeeList />,
       },
-      {
-        path: "/employee/list/:id",
-        element: <SingleEmployee />,
-      },
+
       {
         path: "/forms",
         element: <Forms />,

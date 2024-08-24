@@ -50,7 +50,7 @@ const TopDash = () => {
       >
         <div>
           <h1 style={{ fontSize: "40px" }}>
-            {greeting}, {profile?.data?.username}{" "}
+            {greeting}, {profile?.data?.name}{" "}
             {/* <Avatar
               size={{ xs: 30, sm: 40, md: 40, lg: 40, xl: 60, xxl: 70 }}
               src={imageURL + "user_files/" + profile?.data?.image}

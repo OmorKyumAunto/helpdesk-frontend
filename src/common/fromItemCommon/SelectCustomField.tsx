@@ -1,7 +1,6 @@
-import { Button, Col, DatePicker, Form, Select, Upload } from "antd";
+import { Form, Select } from "antd";
 import { useGetEmployeesQuery } from "../../modules/employee/api/employeeEndPoint";
 import { commonProps } from "../types/CommonTypes";
-import { useGetCommonExpenseHeadQuery } from "../CommonEndPoint/CommonEndPoint";
 
 /* employee    */
 export const SelectEmployee = ({
@@ -64,47 +63,3 @@ export const SelectEmployee = ({
 };
 
 /* Expense Head */
-export const SelectExpenseHead = ({ name, label, required }: commonProps) => {
-  const { data: expenseHead } = useGetCommonExpenseHeadQuery();
-  const selectExpenseHead = expenseHead?.data;
-  const expenseHeadChildren: React.ReactNode[] = [];
-  if (selectExpenseHead) {
-    for (let i = 0; i < selectExpenseHead.length; i++) {
-      expenseHeadChildren.push(
-        <Select.Option
-          title="Select Expense Head"
-          key={selectExpenseHead[i].id + " " + selectExpenseHead[i].name}
-          value={selectExpenseHead[i].id}
-        >
-          {selectExpenseHead[i].name} [{selectExpenseHead[i].expense_head_id}]
-        </Select.Option>
-      );
-    }
-  }
-
-  return (
-    <Form.Item
-      name={name}
-      label={label}
-      rules={[
-        {
-          required: required || false,
-          message: `${label} is required!`,
-        },
-      ]}
-    >
-      <Select
-        placeholder={"Select Expense Head"}
-        showSearch
-        allowClear
-        // style={{ padding: "0", margin: "0", border: "0", width: "100%" }}
-        optionFilterProp="roleMobile"
-        filterOption={(input, option) =>
-          (option!.children as unknown as string).includes(input.toLowerCase())
-        }
-      >
-        {expenseHeadChildren}
-      </Select>
-    </Form.Item>
-  );
-};

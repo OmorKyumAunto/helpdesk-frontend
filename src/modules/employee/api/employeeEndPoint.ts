@@ -20,7 +20,7 @@ export const employeeEndPoint = api.injectEndpoints({
       },
       providesTags: () => ["employee"],
     }),
-    getSingleEmployee: build.query<HTTPResponse<ISingleEmployee>, number>({
+    getSingleEmployee: build.query<HTTPResponse<IEmployee>, number>({
       query: (id) => {
         return {
           url: `/employee/list/${id}`,

@@ -74,7 +74,7 @@ const NavBar = () => {
       <div
         style={{ textAlign: "center", marginBottom: "1px", fontWeight: "bold" }}
       >
-        <p>{profile?.data?.username}</p>
+        <p>{profile?.data?.name}</p>
         <Image
           style={{ width: "60px", marginBottom: "10px" }}
           src={`${imageURL + "user_files/" + profile?.data?.image}`}
@@ -146,7 +146,7 @@ const NavBar = () => {
             gap: 20,
           }}
         >
-          <p>Hi,{profile?.data?.username}</p>
+          <p>Hi,{profile?.data?.name}</p>
 
           <Button
             icon={<FullscreenOutlined />}

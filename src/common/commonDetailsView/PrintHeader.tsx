@@ -44,7 +44,7 @@ export const PrintHeader = () => {
               color="black"
               bordered={false}
               value={`
-              Name: ${ProfileInfo?.username || "M360 ICT"}
+              Name: ${ProfileInfo?.name || "ADMIN"}
               Email: ${ProfileInfo?.email || ""}
               Mobile No: ${ProfileInfo?.phone_number}
             
@@ -54,7 +54,7 @@ export const PrintHeader = () => {
           </div>
           <div>
             <Typography.Title level={4} style={{}}>
-              {ProfileInfo?.username || ""}
+              {ProfileInfo?.name || ""}
             </Typography.Title>
             {/* {orgInfo?.org_address1 ? (
               <Typography.Text

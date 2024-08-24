@@ -3,7 +3,7 @@ import { Card, Col, Row } from "antd";
 import DashCard from "../components/DashCard";
 import { useGetAllDashboardQuery } from "../api/dashboardEndPoints";
 import { IViewDashboard } from "../types/dashboardTypes";
-import FullCalender from "./FullCalender";
+// import FullCalender from "./FullCalender";
 // import TopDash from "../components/TopDash";
 export const DashboardDemo = () => {
   const { data } = useGetAllDashboardQuery();
@@ -22,7 +22,7 @@ export const DashboardDemo = () => {
             //     "linear-gradient(90deg, hsla(172, 63%, 27%, 1) 0%, hsla(258, 40%, 68%, 1) 100%)",
             // }}
           >
-            <FullCalender />
+            {/* <FullCalender /> */}
           </Card>
         </Col>
       </Row>

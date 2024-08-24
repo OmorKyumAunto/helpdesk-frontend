@@ -23,11 +23,15 @@ export interface IAdjustSalary {
   employee_id: number;
   salary_statement: string;
 }
-
 export interface ISingleEmployee {
   id: number;
   name: string;
   email: string;
+  employee_id: string;
+  department: string;
+  contact_no: string;
+  unit_name: string;
+  created_at: string;
   phone_number: string;
   designation: string;
   salary: string;
