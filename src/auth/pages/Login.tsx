@@ -33,6 +33,7 @@ export const Login = () => {
     // } else {
     //   message.error("Email or Password is wrong!");
     // }
+    // console.log(body);
     login(body);
   };
 
@@ -61,7 +62,7 @@ export const Login = () => {
               <Row gutter={6}>
                 <Col xs={24}>
                   <Form.Item
-                    name="mail"
+                    name="email"
                     label="Email"
                     rules={[
                       {
