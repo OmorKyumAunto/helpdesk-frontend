@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Space, Table } from "antd";
+import { Card, Col, Input, Row, Select, Space, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
@@ -14,6 +14,7 @@ import EmployeeFileUpdate from "./EmployeeFileUpdate";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import dayjs from "dayjs";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
+const { Option } = Select;
 
 const EmployeeList = () => {
   const dispatch = useDispatch();
@@ -75,7 +76,16 @@ const EmployeeList = () => {
                 onChange={(e) => setFilter({ ...filter, key: e.target.value })}
                 placeholder="Search..."
               />
-
+              <Select
+                style={{ width: "180px" }}
+                onChange={(e) => setFilter({ ...filter, unit: e })}
+                placeholder="Select Unit Name"
+              >
+                <Option value="">All</Option>
+                <Option value="JTML">JTML</Option>
+                <Option value="DIPL">DIPL</Option>
+                <Option value="Corporate Office">Corporate Office</Option>
+              </Select>
               <>
                 <PDFDownload
                   PDFFileName="employee_list"

@@ -1,4 +1,4 @@
-import { Card, Input, Space } from "antd";
+import { Card, Input, Select, Space } from "antd";
 import { Table } from "antd/lib";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -9,7 +9,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import dayjs from "dayjs";
-
+const { Option } = Select;
 const DistributedAsset = () => {
   const [searchParams, setSearchParams] = useSearchParams({
     page: "",
@@ -38,7 +38,16 @@ const DistributedAsset = () => {
               onChange={(e) => setFilter({ ...filter, key: e.target.value })}
               placeholder="Search..."
             />
-
+            <Select
+              style={{ width: "180px" }}
+              onChange={(e) => setFilter({ ...filter, unit: e })}
+              placeholder="Select Unit Name"
+            >
+              <Option value="">All</Option>
+              <Option value="JTML">JTML</Option>
+              <Option value="DIPL">DIPL</Option>
+              <Option value="Corporate Office">Corporate Office</Option>
+            </Select>
             <PDFDownload
               PDFFileName="distributed_asset_list"
               fileHeader="Distributed ASSET LIST"

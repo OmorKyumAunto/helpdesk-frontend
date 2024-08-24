@@ -45,7 +45,7 @@ const AssetsList = () => {
     <>
       <div>
         <Card
-          title={`Assets List (${data?.total || 0})`}
+          title={`Assets List `}
           style={{
             boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
             marginBottom: "1rem",
@@ -64,6 +64,7 @@ const AssetsList = () => {
                 onChange={(e) => setFilter({ ...filter, unit: e })}
                 placeholder="Select Unit Name"
               >
+                <Option value="">All</Option>
                 <Option value="JTML">JTML</Option>
                 <Option value="DIPL">DIPL</Option>
                 <Option value="Corporate Office">Corporate Office</Option>

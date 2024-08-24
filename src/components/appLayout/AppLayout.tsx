@@ -290,7 +290,7 @@ export const AppLayout = () => {
         <Header
           style={{
             padding: 0,
-            background: "#8DC73F",
+            background: "#1775BB",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",

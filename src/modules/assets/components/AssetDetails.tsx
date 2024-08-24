@@ -16,6 +16,7 @@ const AssetDetails = ({ id }: { id: number }) => {
     remarks,
     employee_id_no,
     employee_name,
+    name,
   } = singleAsset?.data || {};
   return (
     <div>
@@ -25,10 +26,14 @@ const AssetDetails = ({ id }: { id: number }) => {
         column={2}
         items={[
           {
+            key: "12",
+            label: "Name",
+            children: name,
+          },
+          {
             key: "2",
             label: "Category",
             children: category,
-            span: 2,
           },
           {
             key: "1",
