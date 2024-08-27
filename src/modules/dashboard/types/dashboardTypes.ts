@@ -5,7 +5,11 @@ export interface IViewDashboard {
     total_inactive: string;
   };
 }
-
+export interface IDashboardGraphData {
+  month: string;
+  total_assign_asset: number;
+  total_asset: number;
+}
 export interface IDashboardCalenderData {
   id: number;
   title: string;

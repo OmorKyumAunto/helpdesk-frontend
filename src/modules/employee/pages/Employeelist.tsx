@@ -23,11 +23,11 @@ const EmployeeList = () => {
     pageSize: "",
   });
   const page = searchParams.get("page") || "1";
-  const pageSize = searchParams.get("pageSize") || "20";
+  const pageSize = searchParams.get("pageSize") || "10";
   const skipValue = Number(page) * Number(pageSize);
   const [filter, setFilter] = useState<IEmployeeParams>({
-    limit: 20,
-    offset: skipValue - 20,
+    limit: 10,
+    offset: skipValue - 10,
   });
   const { data, isLoading } = useGetEmployeesQuery({ ...filter });
   console.log(data);
@@ -211,17 +211,18 @@ const EmployeeList = () => {
                   ...filter,
                   offset:
                     ((pagination.current || 1) - 1) *
-                    (pagination.pageSize || 20),
+                    (pagination.pageSize || 10),
                   limit: pagination.pageSize!,
                 });
               }}
               pagination={
-                Number(data?.total) !== undefined && Number(data?.total) > 20
-                  ? {
-                      ...tablePagination,
-                      current: Number(page),
-                    }
-                  : false
+                // Number(data?.count) !== undefined && Number(data?.count) > 10
+                //   ?
+                {
+                  ...tablePagination,
+                  current: Number(page),
+                }
+                // : false
               }
             />
           </div>

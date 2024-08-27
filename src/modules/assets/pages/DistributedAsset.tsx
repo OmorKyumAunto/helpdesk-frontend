@@ -158,7 +158,7 @@ const DistributedAsset = () => {
               });
             }}
             pagination={
-              Number(data?.total) !== undefined && Number(data?.total) > 20
+              Number(data?.count) !== undefined && Number(data?.count) > 20
                 ? {
                     ...tablePagination,
                     current: Number(page),

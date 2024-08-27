@@ -1,5 +1,6 @@
 import { api } from "../../../app/api/api";
 import { HTTPResponse } from "../../../app/types/commonTypes";
+import { IDashboardGraphData } from "../types/dashboardTypes";
 
 export const dashboardEndpoints = api.injectEndpoints({
   endpoints: (build) => ({

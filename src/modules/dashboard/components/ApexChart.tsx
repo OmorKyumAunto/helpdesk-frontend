@@ -1,62 +1,136 @@
+import { useEffect, useRef } from "react";
+import ApexCharts, { ApexOptions } from "apexcharts";
 import { Card } from "antd";
-import React, { useState } from "react";
-import ReactApexChart from "react-apexcharts";
+import { useGetDashboardGraphDataQuery } from "../api/dashboardEndPoints";
 
 const GraphChartApex = () => {
-  const [series, setSeries] = useState([
-    {
-      name: "Asset",
-      data: [28, 15, 24, 55, 37, 38, 62, 55, 41, 78, 36, 98],
-    },
-    {
-      name: "Employee",
-      data: [8, 22, 58, 37, 11, 50, 85, 66, 77, 49, 72, 109],
-    },
-    {
-      name: "Assign Asset",
-      data: [3, 30, 33, 22, 35, 27, 36, 18, 49, 53, 60, 57],
-    },
-  ]);
+  const { data } = useGetDashboardGraphDataQuery({});
+  const totalAsset = data?.data?.map((item: any) => item?.total_asset);
+  const totalAssignAsset = data?.data?.map(
+    (item: any) => item?.total_assign_asset
+  );
+  const getCurrentMonthName = () => {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const monthNames = [];
+    for (let i = 0; i < 12; i++) {
+      const monthIndex = (currentMonth - i + 12) % 12;
+      monthNames.unshift(months[monthIndex]);
+    }
+
+    return monthNames;
+  };
+  const monthsArray = getCurrentMonthName();
+  const chartRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const options: ApexOptions = {
+      // colors: ["#FF5580", "#b5e550"],
+      series: [
+        {
+          name: "Total Asset",
+          data: totalAsset,
+        },
+        {
+          name: "Total Assign Asset",
+          data: totalAssignAsset,
+        },
+      ],
+      chart: {
+        type: "area",
+        height: 550,
+        zoom: {
+          enabled: false,
+        },
+      },
+      dataLabels: {
+        enabled: true,
+      },
+      stroke: {
+        curve: "smooth",
+      },
+      title: {
+        text: "Asset And Assign Asset Statistics",
+        align: "left",
+        style: {
+          color: "#155E75",
+        },
+      },
+      subtitle: {
+        text: "Last 12 months asset and assign asset statistics",
+        style: {
+          color: "#155E75",
+        },
+      },
+      xaxis: {
+        categories: monthsArray,
+        labels: {
+          style: {
+            colors: "#155E75",
+            fontSize: "14px",
+            fontWeight: 600,
+          },
+        },
+      },
+      yaxis: {
+        opposite: false,
+        labels: {
+          style: {
+            colors: "#155E75",
+            fontSize: "14px",
+            fontWeight: 600,
+          },
+        },
+      },
+      legend: {
+        horizontalAlign: "center",
+      },
+      responsive: [
+        {
+          breakpoint: 1000,
+          options: {
+            plotOptions: {
+              bar: {
+                horizontal: false,
+              },
+            },
+            legend: {
+              position: "bottom",
+            },
+          },
+        },
+      ],
+    };
+
+    if (chartRef.current) {
+      const chart = new ApexCharts(chartRef.current, options);
+      chart.render();
+
+      return () => {
+        chart.destroy();
+      };
+    }
+  }, [totalAssignAsset, totalAsset]);
+
   return (
-    <Card>
-      <div id="chart">
-        <ReactApexChart
-          options={{
-            chart: {
-              height: 350,
-              type: "area",
-            },
-            dataLabels: {
-              enabled: false,
-            },
-            stroke: {
-              curve: "smooth",
-            },
-            xaxis: {
-              type: "category",
-              categories: [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-              ],
-            },
-          }}
-          series={series}
-          type="area"
-          height={550}
-        />
-      </div>
-      <div id="html-dist"></div>
-    </Card>
+    <Card
+      style={{ padding: "22px 16px", color: "#0c0c0c" }}
+      id="chart"
+      ref={chartRef}
+    />
   );
 };
 

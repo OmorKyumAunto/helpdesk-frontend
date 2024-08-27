@@ -60,6 +60,17 @@ const AssetsList = () => {
               />
 
               <Select
+                allowClear
+                style={{ width: "180px" }}
+                onChange={(e) => setFilter({ ...filter, type: e })}
+                placeholder="Select Remark Type"
+              >
+                <Option value="">All</Option>
+                <Option value="Assigned">Assigned</Option>
+                <Option value="In Stock">In Stock</Option>
+              </Select>
+              <Select
+                allowClear
                 style={{ width: "180px" }}
                 onChange={(e) => setFilter({ ...filter, unit: e })}
                 placeholder="Select Unit Name"
@@ -188,7 +199,7 @@ const AssetsList = () => {
                 });
               }}
               pagination={
-                Number(data?.total) !== undefined && Number(data?.total) > 20
+                Number(data?.count) !== undefined && Number(data?.count) > 5
                   ? {
                       ...tablePagination,
                       current: Number(page),
