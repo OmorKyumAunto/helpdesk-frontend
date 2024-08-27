@@ -67,7 +67,7 @@ const AssetsList = () => {
               >
                 <Option value="">All</Option>
                 <Option value="Assigned">Assigned</Option>
-                <Option value="In Stock">In Stock</Option>
+                <Option value="In_stock">In Stock</Option>
               </Select>
               <Select
                 allowClear
