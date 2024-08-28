@@ -2,7 +2,7 @@ import { Card, Col, Row, Form, Input, Button, Select } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { DateInput } from "../../../common/formItem/FormItems";
-import { useGetEmployeesQuery } from "../../employee/api/employeeEndPoint";
+import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
 import { useAssignEmployeeMutation } from "../api/assetsEndPoint";
 import { useEffect } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
@@ -11,7 +11,11 @@ import { useDispatch } from "react-redux";
 const AssignEmployee = ({ id }: any) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const { data } = useGetEmployeesQuery({});
+  const {
+    data,
+    isLoading: empLoading,
+    isFetching,
+  } = useGetOverallEmployeesQuery();
   const [update, { isLoading, isSuccess }] = useAssignEmployeeMutation(id);
 
   const onFinish = (values: any) => {
@@ -63,7 +67,8 @@ const AssignEmployee = ({ id }: any) => {
                   required
                 >
                   <Select
-                    className="w-full "
+                    className="w-full"
+                    loading={empLoading || isFetching}
                     placeholder="Select Employee"
                     showSearch
                     optionFilterProp="children"

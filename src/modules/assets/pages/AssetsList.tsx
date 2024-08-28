@@ -1,14 +1,20 @@
 import { Card, Col, Input, Row, Select, Space, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IAssetParams } from "../types/assetsTypes";
-import { useGetAssetsQuery } from "../api/assetsEndPoint";
+import {
+  useGetAssetsQuery,
+  useGetOverallAssetsQuery,
+} from "../api/assetsEndPoint";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { AssetsTableColumns } from "../utils/AssetsTableColumns";
 import { CreateButton } from "../../../common/CommonButton";
 import CreateAsset from "../components/CreateAssets";
-import { tablePagination } from "../../../common/TablePagination copy";
+import {
+  generatePagination,
+  tablePagination,
+} from "../../../common/TablePagination copy";
 import { SearchOutlined } from "@ant-design/icons";
 import UploadAssetFile from "../components/UploadAssetFile";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
@@ -17,18 +23,32 @@ import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 const AssetsList = () => {
   const { Option } = Select;
   const dispatch = useDispatch();
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 50,
+  });
+
   const [searchParams, setSearchParams] = useSearchParams({
-    page: "",
-    pageSize: "",
+    page: "1",
+    pageSize: "50",
   });
   const page = searchParams.get("page") || "1";
-  const pageSize = searchParams.get("pageSize") || "20";
-  const offsetValue = Number(page) * Number(pageSize);
+  const pageSize = searchParams.get("pageSize") || "50";
+  const skipValue = (Number(page) - 1) * Number(pageSize);
+
   const [filter, setFilter] = useState<IAssetParams>({
-    limit: 20,
-    offset: offsetValue - 20,
+    limit: Number(pageSize),
+    offset: skipValue,
   });
+
+  useEffect(() => {
+    setFilter({
+      limit: Number(pageSize),
+      offset: skipValue,
+    });
+  }, [page, pageSize, skipValue]);
   const { data, isLoading } = useGetAssetsQuery({ ...filter });
+  const { data: allAsset } = useGetOverallAssetsQuery();
 
   const showModal = () => {
     dispatch(
@@ -55,24 +75,26 @@ const AssetsList = () => {
               <Input
                 style={{ width: "100%" }}
                 prefix={<SearchOutlined />}
-                onChange={(e) => setFilter({ ...filter, key: e.target.value })}
+                onChange={(e) =>
+                  setFilter({ ...filter, key: e.target.value, offset: 0 })
+                }
                 placeholder="Search..."
               />
 
               <Select
                 allowClear
                 style={{ width: "180px" }}
-                onChange={(e) => setFilter({ ...filter, type: e })}
+                onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
                 placeholder="Select Remark Type"
               >
                 <Option value="">All</Option>
-                <Option value="Assigned">Assigned</Option>
-                <Option value="In_stock">In Stock</Option>
+                <Option value="assigned">Assigned</Option>
+                <Option value="in_stock">In Stock</Option>
               </Select>
               <Select
                 allowClear
                 style={{ width: "180px" }}
-                onChange={(e) => setFilter({ ...filter, unit: e })}
+                onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
                 placeholder="Select Unit Name"
               >
                 <Option value="">All</Option>
@@ -94,8 +116,8 @@ const AssetsList = () => {
                   "Unit",
                 ]}
                 PDFData={
-                  data?.data?.length
-                    ? data?.data?.map(
+                  allAsset?.data?.length
+                    ? allAsset?.data?.map(
                         ({
                           serial_number,
                           remarks,
@@ -133,8 +155,8 @@ const AssetsList = () => {
                   "Unit",
                 ]}
                 excelData={
-                  data?.data?.length
-                    ? data?.data?.map(
+                  allAsset?.data?.length
+                    ? allAsset?.data?.map(
                         ({
                           serial_number,
                           remarks,
@@ -185,6 +207,28 @@ const AssetsList = () => {
               dataSource={data?.data?.length ? data.data : []}
               columns={AssetsTableColumns()}
               scroll={{ x: true }}
+              pagination={{
+                ...generatePagination(
+                  Number(data?.total),
+                  setPagination,
+                  pagination
+                ),
+                current: Number(page),
+                showSizeChanger: true,
+                defaultPageSize: 50,
+                pageSizeOptions: [
+                  "10",
+                  "20",
+                  "50",
+                  "100",
+                  "500",
+                  "300",
+                  "400",
+                  "500",
+                ],
+                total: data ? Number(data?.total) : 0,
+                showTotal: (total) => `Total ${total} `,
+              }}
               onChange={(pagination) => {
                 setSearchParams({
                   page: String(pagination.current),
@@ -194,18 +238,10 @@ const AssetsList = () => {
                   ...filter,
                   offset:
                     ((pagination.current || 1) - 1) *
-                    (pagination.pageSize || 20),
+                    (pagination.pageSize || 50),
                   limit: pagination.pageSize!,
                 });
               }}
-              pagination={
-                Number(data?.count) !== undefined && Number(data?.count) > 5
-                  ? {
-                      ...tablePagination,
-                      current: Number(page),
-                    }
-                  : false
-              }
             />
           </div>
         </Card>

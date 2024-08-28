@@ -15,11 +15,27 @@ export const assetsEndPoint = api.injectEndpoints({
       },
       providesTags: () => ["asset"],
     }),
+    getOverallAssets: build.query<HTTPResponse<IAsset[]>, void>({
+      query: () => {
+        return {
+          url: `/asset/all-list`,
+        };
+      },
+      providesTags: () => ["asset"],
+    }),
     getAllDistributedAsset: build.query<HTTPResponse<any[]>, IAssetParams>({
       query: (params) => {
         return {
           url: `/asset/distributed-asset`,
           params,
+        };
+      },
+      providesTags: () => ["asset"],
+    }),
+    getOverAllDistributedAsset: build.query<HTTPResponse<any[]>, void>({
+      query: () => {
+        return {
+          url: `/asset/all-distributed-asset`,
         };
       },
       providesTags: () => ["asset"],
@@ -116,6 +132,8 @@ export const assetsEndPoint = api.injectEndpoints({
 
 export const {
   useGetAssetsQuery,
+  useGetOverallAssetsQuery,
+  useGetOverAllDistributedAssetQuery,
   useGetAllDistributedAssetQuery,
   useCreateAssetsFileUpdateMutation,
   useGetSingleAssetsQuery,

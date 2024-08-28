@@ -34,6 +34,16 @@ const Forms = () => {
       description: "Template for monthly Achivements.",
       file: "/templates/monthly-achivement-template.pptx",
     },
+    {
+      title: "Employee template",
+      description: "Template for Employee.",
+      file: "/templates/employee.xlsx",
+    },
+    {
+      title: "Asset template",
+      description: "Template for Asset",
+      file: "/templates/asset.xlsx",
+    },
   ];
 
   // Filter templates based on search term

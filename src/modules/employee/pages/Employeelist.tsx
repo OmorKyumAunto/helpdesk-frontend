@@ -1,15 +1,21 @@
 import { Card, Col, Input, Row, Select, Space, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IEmployeeParams } from "../types/employeeTypes";
-import { useGetEmployeesQuery } from "../api/employeeEndPoint";
+import {
+  useGetEmployeesQuery,
+  useGetOverallEmployeesQuery,
+} from "../api/employeeEndPoint";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import CreateEmployee from "../components/CreateEmployee";
 import { EmployeeTableColumns } from "../utils/EmployeeTableColumns";
 import { CreateButton } from "../../../common/CommonButton";
 import { SearchOutlined } from "@ant-design/icons";
-import { tablePagination } from "../../../common/TablePagination copy";
+import {
+  generatePagination,
+  tablePagination,
+} from "../../../common/TablePagination copy";
 import EmployeeFileUpdate from "./EmployeeFileUpdate";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import dayjs from "dayjs";
@@ -18,19 +24,33 @@ const { Option } = Select;
 
 const EmployeeList = () => {
   const dispatch = useDispatch();
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 50,
+  });
+
   const [searchParams, setSearchParams] = useSearchParams({
-    page: "",
-    pageSize: "",
+    page: "1",
+    pageSize: "50",
   });
   const page = searchParams.get("page") || "1";
-  const pageSize = searchParams.get("pageSize") || "10";
-  const skipValue = Number(page) * Number(pageSize);
+  const pageSize = searchParams.get("pageSize") || "50";
+  const skipValue = (Number(page) - 1) * Number(pageSize);
+
   const [filter, setFilter] = useState<IEmployeeParams>({
-    limit: 10,
-    offset: skipValue - 10,
+    limit: Number(pageSize),
+    offset: skipValue,
   });
+
+  useEffect(() => {
+    setFilter({
+      limit: Number(pageSize),
+      offset: skipValue,
+    });
+  }, [page, pageSize, skipValue]);
+
   const { data, isLoading } = useGetEmployeesQuery({ ...filter });
-  console.log(data);
+  const { data: allEmployees } = useGetOverallEmployeesQuery();
 
   const showModal = () => {
     dispatch(
@@ -73,12 +93,14 @@ const EmployeeList = () => {
             <Space>
               <Input
                 prefix={<SearchOutlined />}
-                onChange={(e) => setFilter({ ...filter, key: e.target.value })}
+                onChange={(e) =>
+                  setFilter({ ...filter, key: e.target.value, offset: 0 })
+                }
                 placeholder="Search..."
               />
               <Select
                 style={{ width: "180px" }}
-                onChange={(e) => setFilter({ ...filter, unit: e })}
+                onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
                 placeholder="Select Unit Name"
               >
                 <Option value="">All</Option>
@@ -101,8 +123,8 @@ const EmployeeList = () => {
                     "Unit Name",
                   ]}
                   PDFData={
-                    data?.data?.length
-                      ? data?.data?.map(
+                    allEmployees?.data?.length
+                      ? allEmployees?.data?.map(
                           ({
                             employee_id,
                             name,
@@ -146,8 +168,8 @@ const EmployeeList = () => {
                     "Unit Name",
                   ]}
                   excelData={
-                    data?.data?.length
-                      ? data?.data?.map(
+                    allEmployees?.data?.length
+                      ? allEmployees?.data?.map(
                           ({
                             employee_id,
                             name,
@@ -202,6 +224,28 @@ const EmployeeList = () => {
               dataSource={data?.data?.length ? data.data : []}
               columns={EmployeeTableColumns()}
               scroll={{ x: true }}
+              pagination={{
+                ...generatePagination(
+                  Number(data?.total),
+                  setPagination,
+                  pagination
+                ),
+                current: Number(page),
+                showSizeChanger: true,
+                defaultPageSize: 50,
+                pageSizeOptions: [
+                  "10",
+                  "20",
+                  "50",
+                  "100",
+                  "200",
+                  "300",
+                  "400",
+                  "500",
+                ],
+                total: data ? Number(data?.total) : 0,
+                showTotal: (total) => `Total ${total} `,
+              }}
               onChange={(pagination) => {
                 setSearchParams({
                   page: String(pagination.current),
@@ -211,19 +255,10 @@ const EmployeeList = () => {
                   ...filter,
                   offset:
                     ((pagination.current || 1) - 1) *
-                    (pagination.pageSize || 10),
+                    (pagination.pageSize || 50),
                   limit: pagination.pageSize!,
                 });
               }}
-              pagination={
-                // Number(data?.count) !== undefined && Number(data?.count) > 10
-                //   ?
-                {
-                  ...tablePagination,
-                  current: Number(page),
-                }
-                // : false
-              }
             />
           </div>
         </Card>
