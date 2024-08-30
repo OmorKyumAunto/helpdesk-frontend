@@ -33,9 +33,9 @@ const PDFDownload: React.FC<Props> = ({
     });
 
     doc.setFontSize(16);
-    doc.text(name as string, 14, 16, {
-      align: "left",
-    });
+    // doc.text(name as string, 14, 16, {
+    //   align: "left",
+    // });
 
     // doc.setFontSize(11);
     // doc.text(Address: ${restaurant_address}, 14, 24, {
@@ -62,7 +62,7 @@ const PDFDownload: React.FC<Props> = ({
     autoTable(doc, {
       styles: { halign: "center" },
       headStyles: { fillColor: "#0079FF" },
-      startY: 50,
+      // startY: 50,
       head: [PDFHeader],
       body: tableRows,
       theme: "grid",

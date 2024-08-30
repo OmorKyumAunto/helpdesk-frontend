@@ -67,7 +67,7 @@ const AssetDetails = ({ id }: { id: number }) => {
           },
           {
             key: "7",
-            label: "Unit Name",
+            label: "Buying Unit",
             children: unit_name,
           },
         ]}

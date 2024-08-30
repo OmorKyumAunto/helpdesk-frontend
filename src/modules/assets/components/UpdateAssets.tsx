@@ -54,10 +54,12 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
       purchase_date: dayjs(purchase_date),
       assign_date: assign_date ? dayjs(assign_date) : null,
     });
-    form.setFieldValue("employee_id", {
-      label: `${employee_id_no} (${employee_name})`,
-      value: employee_id,
-    });
+    if (employee_id_no) {
+      form.setFieldValue("employee_id", {
+        label: `${employee_id_no} (${employee_name})`,
+        value: employee_id,
+      });
+    }
   }, [
     name,
     category,
@@ -84,9 +86,11 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
   //   }
   // };
 
-  const onFinish = (values: any) => {
-    const formattedData: any = {};
+  const onFinish = (data: any) => {
+    const { assign_update, ...values } = data;
 
+    const formattedData: any = {};
+    formattedData["assign_update"] = assign_update;
     for (const key in values) {
       if (values[key]) {
         if (key === "purchase_date" || key === "assign_date") {

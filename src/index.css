@@ -212,7 +212,9 @@ code {
   background: white !important;
   color: black !important;
 }
-
+:where(.css-dev-only-do-not-override-1lx7cwr).ant-card .ant-card-body {
+  padding: 12px 24px 24px 24px;
+}
 .ant-menu-item-selected {
   font-weight: 600;
 }

@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Select, Space, Table } from "antd";
+import { Card, Input, Select, Space, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -12,10 +12,7 @@ import CreateEmployee from "../components/CreateEmployee";
 import { EmployeeTableColumns } from "../utils/EmployeeTableColumns";
 import { CreateButton } from "../../../common/CommonButton";
 import { SearchOutlined } from "@ant-design/icons";
-import {
-  generatePagination,
-  tablePagination,
-} from "../../../common/TablePagination copy";
+import { generatePagination } from "../../../common/TablePagination copy";
 import EmployeeFileUpdate from "./EmployeeFileUpdate";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import dayjs from "dayjs";
@@ -44,12 +41,13 @@ const EmployeeList = () => {
 
   useEffect(() => {
     setFilter({
+      ...filter,
       limit: Number(pageSize),
       offset: skipValue,
     });
   }, [page, pageSize, skipValue]);
 
-  const { data, isLoading } = useGetEmployeesQuery({ ...filter });
+  const { data, isLoading, isFetching } = useGetEmployeesQuery({ ...filter });
   const { data: allEmployees } = useGetOverallEmployeesQuery();
 
   const showModal = () => {
@@ -65,23 +63,6 @@ const EmployeeList = () => {
 
   return (
     <>
-      {/* <div
-        style={{
-          display: "flex",
-          justifyContent: "end",
-          gap: 6,
-          flexWrap: "wrap",
-        }}
-      >
-        <CreateButton name=" Create employee" onClick={showModal} />
-        <CreateButton name=" Create employee" onClick={showModal} />
-        <CreateButton name=" Create employee" onClick={showModal} />
-        <CreateButton name=" Create employee" onClick={showModal} />
-        <CreateButton name=" Create employee" onClick={showModal} />
-        <CreateButton name=" Create employee" onClick={showModal} />
-        <CreateButton name=" Create employee" onClick={showModal} />
-        <CreateButton name=" Create employee" onClick={showModal} />
-      </div> */}
       <div>
         <Card
           title={`Employee List`}
@@ -89,8 +70,17 @@ const EmployeeList = () => {
             boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
             marginBottom: "1rem",
           }}
-          extra={
-            <Space>
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "right",
+              flexWrap: "wrap",
+              gap: 8,
+              marginBottom: "12px",
+            }}
+          >
+            <div>
               <Input
                 prefix={<SearchOutlined />}
                 onChange={(e) =>
@@ -98,129 +88,128 @@ const EmployeeList = () => {
                 }
                 placeholder="Search..."
               />
-              <Select
-                style={{ width: "180px" }}
-                onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
-                placeholder="Select Unit Name"
-              >
-                <Option value="">All</Option>
-                <Option value="JTML">JTML</Option>
-                <Option value="DIPL">DIPL</Option>
-                <Option value="Corporate Office">Corporate Office</Option>
-              </Select>
-              <>
-                <PDFDownload
-                  PDFFileName="employee_list"
-                  fileHeader="EMPLOYEE LIST"
-                  PDFHeader={[
-                    "Employee ID",
-                    "Employee Name",
-                    "Department",
-                    "Designation",
-                    "Email",
-                    "Contact No",
-                    "Date of Joining",
-                    "Unit Name",
-                  ]}
-                  PDFData={
-                    allEmployees?.data?.length
-                      ? allEmployees?.data?.map(
-                          ({
-                            employee_id,
-                            name,
-                            department,
-                            designation,
-                            email,
-                            contact_no,
-                            joining_date,
-                            unit_name,
-                          }: any) => {
-                            const data = {
-                              "Employee ID": employee_id,
-                              "Employee Name": name,
-                              Department: department,
-                              Designation: designation,
-                              Email: email,
-                              "Contact No": contact_no,
-                              "Date of Joining":
-                                dayjs(joining_date).format("DD-MM-YYYY"),
-                              "Unit Name": unit_name,
-                            };
-                            return data;
-                          }
-                        )
-                      : []
-                  }
-                />
-              </>
-
-              <Space>
-                <ExcelDownload
-                  excelName={"employee_list"}
-                  excelTableHead={[
-                    "Employee ID",
-                    "Employee Name",
-                    "Department",
-                    "Designation",
-                    "Email",
-                    "Contact No",
-                    "Date of Joining",
-                    "Unit Name",
-                  ]}
-                  excelData={
-                    allEmployees?.data?.length
-                      ? allEmployees?.data?.map(
-                          ({
-                            employee_id,
-                            name,
-                            department,
-                            designation,
-                            email,
-                            contact_no,
-                            joining_date,
-                            unit_name,
-                          }: any) => {
-                            const data = {
-                              "Employee ID": employee_id,
-                              "Employee Name": name,
-                              Department: department,
-                              Designation: designation,
-                              Email: email,
-                              "Contact No": contact_no,
-                              "Date of Joining":
-                                dayjs(joining_date).format("DD-MM-YYYY"),
-                              "Unit Name": unit_name,
-                            };
-                            return data;
-                          }
-                        )
-                      : []
-                  }
-                />
-              </Space>
-              <CreateButton
-                name="Upload employee"
-                onClick={() => {
-                  dispatch(
-                    setCommonModal({
-                      title: "Upload Employee",
-                      content: <EmployeeFileUpdate />,
-                      show: true,
-                      width: 400,
-                    })
-                  );
-                }}
+            </div>
+            <Select
+              style={{ width: "180px" }}
+              onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
+              placeholder="Select Unit Name"
+            >
+              <Option value="">All</Option>
+              <Option value="JTML">JTML</Option>
+              <Option value="DIPL">DIPL</Option>
+              <Option value="Corporate Office">Corporate Office</Option>
+            </Select>
+            <>
+              <PDFDownload
+                PDFFileName="employee_list"
+                fileHeader="EMPLOYEE LIST"
+                PDFHeader={[
+                  "Employee ID",
+                  "Employee Name",
+                  "Department",
+                  "Designation",
+                  "Email",
+                  "Contact No",
+                  "Date of Joining",
+                  "Unit Name",
+                ]}
+                PDFData={
+                  allEmployees?.data?.length
+                    ? allEmployees?.data?.map(
+                        ({
+                          employee_id,
+                          name,
+                          department,
+                          designation,
+                          email,
+                          contact_no,
+                          joining_date,
+                          unit_name,
+                        }: any) => {
+                          const data = {
+                            "Employee ID": employee_id,
+                            "Employee Name": name,
+                            Department: department,
+                            Designation: designation,
+                            Email: email,
+                            "Contact No": contact_no,
+                            "Date of Joining":
+                              dayjs(joining_date).format("DD-MM-YYYY"),
+                            "Unit Name": unit_name,
+                          };
+                          return data;
+                        }
+                      )
+                    : []
+                }
               />
-              <CreateButton name=" Create employee" onClick={showModal} />
+            </>
+
+            <Space>
+              <ExcelDownload
+                excelName={"employee_list"}
+                excelTableHead={[
+                  "Employee ID",
+                  "Employee Name",
+                  "Department",
+                  "Designation",
+                  "Email",
+                  "Contact No",
+                  "Date of Joining",
+                  "Unit Name",
+                ]}
+                excelData={
+                  allEmployees?.data?.length
+                    ? allEmployees?.data?.map(
+                        ({
+                          employee_id,
+                          name,
+                          department,
+                          designation,
+                          email,
+                          contact_no,
+                          joining_date,
+                          unit_name,
+                        }: any) => {
+                          const data = {
+                            "Employee ID": employee_id,
+                            "Employee Name": name,
+                            Department: department,
+                            Designation: designation,
+                            Email: email,
+                            "Contact No": contact_no,
+                            "Date of Joining":
+                              dayjs(joining_date).format("DD-MM-YYYY"),
+                            "Unit Name": unit_name,
+                          };
+                          return data;
+                        }
+                      )
+                    : []
+                }
+              />
             </Space>
-          }
-        >
+            <CreateButton
+              name="Upload employee"
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
+                    title: "Upload Employee",
+                    content: <EmployeeFileUpdate />,
+                    show: true,
+                    width: 400,
+                  })
+                );
+              }}
+            />
+            <CreateButton name=" Create employee" onClick={showModal} />
+          </div>
           <div>
             <Table
               rowKey={"id"}
               size="small"
               bordered
-              loading={isLoading}
+              loading={isLoading || isFetching}
               dataSource={data?.data?.length ? data.data : []}
               columns={EmployeeTableColumns()}
               scroll={{ x: true }}
@@ -233,16 +222,7 @@ const EmployeeList = () => {
                 current: Number(page),
                 showSizeChanger: true,
                 defaultPageSize: 50,
-                pageSizeOptions: [
-                  "10",
-                  "20",
-                  "50",
-                  "100",
-                  "200",
-                  "300",
-                  "400",
-                  "500",
-                ],
+                pageSizeOptions: ["50", "100", "200", "300", "500"],
                 total: data ? Number(data?.total) : 0,
                 showTotal: (total) => `Total ${total} `,
               }}
