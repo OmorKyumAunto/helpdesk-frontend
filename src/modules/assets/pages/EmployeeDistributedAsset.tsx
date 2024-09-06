@@ -13,6 +13,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import dayjs from "dayjs";
+import { EmployeeDistributedAssetsTableColumns } from "../utils/EmployeeDistributedTableColumns";
 const { Option } = Select;
 const EmployeeDistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -186,7 +187,7 @@ const EmployeeDistributedAsset = () => {
             bordered
             loading={isLoading || isFetching}
             dataSource={data?.data?.length ? data.data : []}
-            columns={DistributedAssetsTableColumns()}
+            columns={EmployeeDistributedAssetsTableColumns()}
             scroll={{ x: true }}
             pagination={{
               ...generatePagination(
