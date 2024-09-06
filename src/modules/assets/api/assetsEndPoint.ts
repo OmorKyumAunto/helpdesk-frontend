@@ -32,6 +32,18 @@ export const assetsEndPoint = api.injectEndpoints({
       },
       providesTags: () => ["asset"],
     }),
+    getEmployeeAllDistributedAsset: build.query<
+      HTTPResponse<any[]>,
+      IAssetParams
+    >({
+      query: (params) => {
+        return {
+          url: `/employee/employee-asset-assign-list`,
+          params,
+        };
+      },
+      providesTags: () => ["asset"],
+    }),
     getOverAllDistributedAsset: build.query<HTTPResponse<any[]>, void>({
       query: () => {
         return {
@@ -136,6 +148,7 @@ export const {
   useGetOverAllDistributedAssetQuery,
   useGetAllDistributedAssetQuery,
   useCreateAssetsFileUpdateMutation,
+  useGetEmployeeAllDistributedAssetQuery,
   useGetSingleAssetsQuery,
   useCreateAssetsMutation,
   useAssignEmployeeMutation,

@@ -7,10 +7,48 @@ import GraphChartApex from "../components/ApexChart";
 import ApexPieChart from "../components/ApexPieChart";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { AiOutlineOrderedList } from "react-icons/ai";
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const { data } = useGetAllDashboardQuery();
+
+  function getMonthName(monthNumber: any) {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return months[monthNumber - 1];
+  }
+
+  const agents = [
+    { MONTH: 1, total_agent: 20 },
+    { MONTH: 2, total_agent: 30 },
+    { MONTH: 3, total_agent: 25 },
+    { MONTH: 4, total_agent: 35 },
+    { MONTH: 5, total_agent: 40 },
+    { MONTH: 6, total_agent: 45 },
+  ];
+  const colors = [
+    "#FF6384",
+    "#36A2EB",
+    "#FFCE56",
+    "#4BC0C0",
+    "#9966FF",
+    "#FF9966",
+  ];
+
   return (
     <>
       {roleId !== 3 ? (
@@ -144,7 +182,31 @@ const DashboardCards = () => {
           <Col xs={24} sm={24} md={24} lg={6}>
             <ApexPieChart />
             <br />
-            <ApexPieChart />
+            <Card>
+              <ResponsiveContainer width="100%" height={320}>
+                <PieChart>
+                  <Pie
+                    dataKey="total_agent"
+                    data={agents}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    fill="#8228d0"
+                    label
+                  >
+                    {agents.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={colors[index % colors.length]}
+                        name={getMonthName(entry.MONTH)}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </Card>
           </Col>
           <Col xs={24} sm={24} md={24} lg={18}>
             <GraphChartApex />
@@ -163,8 +225,49 @@ const DashboardCards = () => {
             justifyContent: "center",
           }}
         >
-          {" "}
-          <Typography.Title level={2}> Employee Dashboard</Typography.Title>
+          <Card className="bg-[#ff9933] text-white w-[25%] py-8 ">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    textAlign: "center",
+                    fontSize: "34px",
+                    fontWeight: "bold",
+                    marginTop: "4px",
+                  }}
+                >
+                  {data?.data?.total_assign_asset || 0}
+                </p>
+                <p
+                  style={{ color: "white" }}
+                  className="uppercase font-bold text-[24px]"
+                >
+                  Asset Assign Count
+                </p>
+              </div>
+              <div>
+                <div
+                  className="bg-[#ffbf80]"
+                  style={{
+                    height: "80px",
+                    width: "80px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: "50%",
+                  }}
+                >
+                  <AiOutlineOrderedList size={52} />
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
       )}
     </>

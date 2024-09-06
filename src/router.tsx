@@ -17,6 +17,8 @@ import Forms from "./modules/forms/page/Forms";
 import Register from "./auth/pages/Register";
 import UnitList from "./modules/Unit/pages/UnitList";
 import ProfileSection from "./components/navBar/ProfileSection";
+import AdminList from "./modules/admin/pages/Adminlist";
+import EmployeeDistributedAsset from "./modules/assets/pages/EmployeeDistributedAsset";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -72,10 +74,17 @@ export const routers = createBrowserRouter([
         element: <DistributedAsset />,
       },
       {
+        path: "/employee/distributed",
+        element: <EmployeeDistributedAsset />,
+      },
+      {
         path: "/employee/list",
         element: <EmployeeList />,
       },
-
+      {
+        path: "/admin/list",
+        element: <AdminList />,
+      },
       {
         path: "/forms",
         element: <Forms />,

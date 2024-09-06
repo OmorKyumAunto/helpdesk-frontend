@@ -125,7 +125,7 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
                 cancelText="No"
               >
                 <Button size="small" type="primary">
-                  Assign
+                  Make Admin
                 </Button>
               </Popconfirm>
             </>

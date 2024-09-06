@@ -40,7 +40,7 @@ export const api = createApi({
     "company-document",
     "restaurant-facilities",
     "representative",
-    "admin",
+    "Admin",
     "member",
     "payroll",
     "s-payroll",

@@ -61,9 +61,7 @@ const ApexPieChart: React.FC<ChartProps> = ({
       type: "gradient",
     },
     legend: {
-      formatter: function (val: string, opts) {
-        return val + " - " + opts.w.globals.series[opts.seriesIndex];
-      },
+      horizontalAlign: "center",
     },
     title: {
       text: title,
@@ -97,13 +95,13 @@ const ApexPieChart: React.FC<ChartProps> = ({
         shadeIntensity: 0.65,
       },
     },
-    tooltip: {
-      y: {
-        formatter: function (value: number) {
-          return value + " units";
-        },
-      },
-    },
+    // tooltip: {
+    //   y: {
+    //     formatter: function (value: number) {
+    //       return value + " units";
+    //     },
+    //   },
+    // },
     xaxis: {
       categories: ["a", "b", "c", "d", "e"],
     },

@@ -81,7 +81,7 @@ export const Login = () => {
                   <Col xs={24}>
                     <Form.Item
                       name="id"
-                      label="User Id"
+                      label="Employee Id"
                       rules={[
                         {
                           required: true,
@@ -89,7 +89,10 @@ export const Login = () => {
                         },
                       ]}
                     >
-                      <Input prefix={<UserOutlined />} placeholder="Enter id" />
+                      <Input
+                        prefix={<UserOutlined />}
+                        placeholder="Enter Employee Id"
+                      />
                     </Form.Item>
                   </Col>
                   <Col xs={24}>
