@@ -5,12 +5,14 @@ import { useDeleteAssetsMutation } from "../api/assetsEndPoint";
 import UpdateAsset from "../components/UpdateAssets";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AssignEmployee from "../components/AssignEmployee";
 import AssetDetails from "../components/AssetDetails";
+import { RootState } from "../../../app/store/store";
 
 export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
   const dispatch = useDispatch();
+  const { roleId } = useSelector((state: RootState) => state.userSlice);
   const [deleteAsset] = useDeleteAssetsMutation();
   const confirm = (id: number) => {
     if (id) {
@@ -96,17 +98,19 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
           >
             <EditOutlined />
           </Button>
-          <Popconfirm
-            title="Delete the asset"
-            description="Are you sure to delete this asset?"
-            onConfirm={() => confirm(record?.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button danger size="small" type="primary">
-              <DeleteOutlined />
-            </Button>
-          </Popconfirm>
+          {roleId === 1 && (
+            <Popconfirm
+              title="Delete the asset"
+              description="Are you sure to delete this asset?"
+              onConfirm={() => confirm(record?.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button danger size="small" type="primary">
+                <DeleteOutlined />
+              </Button>
+            </Popconfirm>
+          )}
           <Button
             size="small"
             type="primary"

@@ -19,7 +19,7 @@ export const baseQuery = fetchBaseQuery({
   prepareHeaders: async (headers, { getState }) => {
     const token = (getState() as RootState).userSlice.token;
     if (token) {
-      headers.set("authorization", `Bearer ${token}`);
+      headers.set("authorization", `${token}`);
     }
     return headers;
   },
@@ -31,6 +31,7 @@ export const baseQueryWithReAuth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
   if (
+    result?.error?.status === 400 ||
     result?.error?.status === 401 ||
     result?.error?.status === "CUSTOM_ERROR" ||
     result?.error?.status === "FETCH_ERROR" ||

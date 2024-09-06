@@ -4,11 +4,15 @@ export interface IUser {
   email: string;
   phone_number: string;
   role_id: number;
-  status: boolean;
+  status: number;
   created_by: null | string;
   created_at: string;
-  role: string;
+  role: {
+    role_id: number;
+    role_name: string;
+  };
   image: string;
+  token: string;
 }
 
 export interface ILoginResponse<T> {

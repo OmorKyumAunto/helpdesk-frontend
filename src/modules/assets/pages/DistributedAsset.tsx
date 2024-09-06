@@ -74,11 +74,23 @@ const DistributedAsset = () => {
             style={{ width: "180px" }}
             onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
             placeholder="Select Unit Name"
+            allowClear
           >
-            <Option value="">All</Option>
+            {/* <Option value="">All</Option> */}
             <Option value="JTML">JTML</Option>
             <Option value="DIPL">DIPL</Option>
             <Option value="Corporate Office">Corporate Office</Option>
+          </Select>
+          <Select
+            placeholder="Select Asset Type"
+            style={{ width: "180px" }}
+            onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
+            allowClear
+          >
+            <Option value="Laptop">Laptop</Option>
+            <Option value="Desktop">Desktop</Option>
+            <Option value="Pinter">Pinter</Option>
+            <Option value="Accessories">Accessories</Option>
           </Select>
           <PDFDownload
             PDFFileName="distributed_asset_list"

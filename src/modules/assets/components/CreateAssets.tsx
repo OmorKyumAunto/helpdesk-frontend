@@ -16,6 +16,7 @@ const CreateAsset = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const assignType = Form.useWatch("is_assign", form);
+  const employeeType = Form.useWatch("employee_type", form);
   const { data } = useGetEmployeesQuery({});
 
   const [create, { isLoading, isSuccess }] = useCreateAssetsMutation();
@@ -68,7 +69,7 @@ const CreateAsset = () => {
             }}
           >
             <Row align={"middle"} gutter={[5, 16]}>
-              <Col xs={24} sm={24} md={12}>
+              <Col xs={24} sm={24} md={8}>
                 <Form.Item
                   name="name"
                   rules={[{ required: true }]}
@@ -78,7 +79,7 @@ const CreateAsset = () => {
                   <Input placeholder="Enter Asset Name" type="text" />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={12}>
+              <Col xs={24} sm={24} md={8}>
                 <Form.Item
                   label="Category"
                   name="category"
@@ -92,7 +93,7 @@ const CreateAsset = () => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={12}>
+              <Col xs={24} sm={24} md={8}>
                 <Form.Item
                   name="model"
                   rules={[{ required: true }]}
@@ -103,7 +104,7 @@ const CreateAsset = () => {
                 </Form.Item>
               </Col>
 
-              <Col xs={24} sm={24} md={12}>
+              <Col xs={24} sm={24} md={8}>
                 <DateInput
                   label="Purchase Date"
                   name="purchase_date"
@@ -111,7 +112,7 @@ const CreateAsset = () => {
                   rules={[{ required: true }]}
                 />
               </Col>
-              <Col xs={24} sm={24} md={12}>
+              <Col xs={24} sm={24} md={8}>
                 <Form.Item
                   label="Serial Number"
                   name="serial_number"
@@ -120,7 +121,7 @@ const CreateAsset = () => {
                   <Input placeholder="Enter serial no" />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={12}>
+              <Col xs={24} sm={24} md={8}>
                 <Form.Item
                   label="PO Number"
                   name="po_number"
@@ -129,7 +130,7 @@ const CreateAsset = () => {
                   <Input placeholder="Enter serial no" />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={12}>
+              <Col xs={24} sm={24} md={8}>
                 <Form.Item
                   label="Unit Name"
                   name="unit_name"
@@ -142,7 +143,7 @@ const CreateAsset = () => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={12}>
+              {/* <Col xs={24} sm={24} md={8}>
                 <Form.Item
                   label="Asset History"
                   name="asset_history"
@@ -152,8 +153,8 @@ const CreateAsset = () => {
                 >
                   <Input placeholder="Enter Asset History" />
                 </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={12}>
+              </Col> */}
+              <Col xs={24} sm={24} md={8}>
                 <Form.Item
                   label="Assign "
                   name="is_assign"
@@ -166,8 +167,27 @@ const CreateAsset = () => {
                 </Form.Item>
               </Col>
               {assignType === 1 && (
+                <Col xs={24} sm={24} md={8}>
+                  <Form.Item
+                    label="Employee Type "
+                    name="employee_type"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please Select Employee Type ",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Select Employee Type ">
+                      <Option value={"old_employee"}>Old Employee</Option>
+                      <Option value={"new_employee"}>New Employee</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              )}
+              {employeeType === "old_employee" && (
                 <>
-                  <Col xs={24} sm={24} md={12}>
+                  <Col xs={24} sm={24} md={8}>
                     <Form.Item
                       name="employee_id"
                       rules={[{ required: true }]}
@@ -195,7 +215,7 @@ const CreateAsset = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={24} md={12}>
+                  <Col xs={24} sm={24} md={8}>
                     <DateInput
                       label="Assign Date"
                       name="assign_date"
@@ -205,6 +225,101 @@ const CreateAsset = () => {
                   </Col>
                 </>
               )}
+              {employeeType === "new_employee" && (
+                <>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      name="employee_id"
+                      rules={[{ required: true }]}
+                      label="Employee ID"
+                      required
+                    >
+                      <Input placeholder="Enter Employee ID" type="text" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      name="name"
+                      rules={[{ required: true }]}
+                      label="Employee Name"
+                      required
+                    >
+                      <Input placeholder="Enter Employee Name" type="text" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      name="designation"
+                      label="Employee Designation"
+                      rules={[{ required: true }]}
+                    >
+                      <Input
+                        placeholder="Enter Employee Designation"
+                        type="text"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      name="contact_no"
+                      label="Contact No"
+                      rules={[
+                        { required: true, validator: validateMobileNumber },
+                      ]}
+                    >
+                      <Input
+                        addonBefore="+88"
+                        placeholder="Enter Contact No"
+                        type="number"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      label="Employee Email"
+                      name="email"
+                      rules={[{ required: true }]}
+                    >
+                      <Input placeholder="Enter employee email" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      label="Employee Department"
+                      name="department"
+                      rules={[{ required: true }]}
+                    >
+                      <Input placeholder="Enter employee department" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <DateInput
+                      label="Date of Joining"
+                      name="joining_date"
+                      placeholder="Select Joining Date"
+                      rules={[{ required: true }]}
+                    />
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      label="Unit Name"
+                      name="employee_unit_name"
+                      rules={[
+                        { required: true, message: "Please Select Unit" },
+                      ]}
+                    >
+                      <Select placeholder="Select Unit Name">
+                        <Option value="JTML">JTML</Option>
+                        <Option value="DIPL">DIPL</Option>
+                        <Option value="Corporate Office">
+                          Corporate Office
+                        </Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                </>
+              )}
+
               <Col xs={24} sm={24} md={24}>
                 <Form.Item
                   name="specification"

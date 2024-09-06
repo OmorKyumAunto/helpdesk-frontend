@@ -1,21 +1,23 @@
-import { Button, Popconfirm, Space, Tag } from "antd";
-
-// import { DeleteIcon } from "../../../../common/icon/Icon";
+import { Button, Popconfirm, Space } from "antd";
 import { TableProps } from "antd/lib";
 import { IEmployee } from "../types/employeeTypes";
 import dayjs from "dayjs";
-import { useDeleteEmployeeMutation } from "../api/employeeEndPoint";
-import { CustomLink } from "../../../common/CustomLink";
-import { DeleteIcon, EditButton, EyeIcon } from "../../../common/CommonButton";
+import {
+  useDeleteEmployeeMutation,
+  useEmployeeAssignToAdminMutation,
+} from "../api/employeeEndPoint";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import UpdateEmployee from "../components/UpdateEmployee";
 import EmployeeDetails from "../pages/EmployeeDetails";
-// import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { RootState } from "../../../app/store/store";
+
 export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
   const [deleteEmployee] = useDeleteEmployeeMutation();
+  const [assignToAdmin] = useEmployeeAssignToAdminMutation();
   const dispatch = useDispatch();
+  const { roleId } = useSelector((state: RootState) => state.userSlice);
   const confirm = (id: number) => {
     if (id) {
       deleteEmployee(id);
@@ -102,17 +104,32 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
           >
             <EditOutlined />
           </Button>
-          <Popconfirm
-            title="Delete the employee"
-            description="Are you sure to delete this employee?"
-            onConfirm={() => confirm(record?.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button danger size="small" type="primary">
-              <DeleteOutlined />
-            </Button>
-          </Popconfirm>
+          {roleId === 1 && (
+            <>
+              <Popconfirm
+                title="Delete the employee"
+                description="Are you sure to delete this employee?"
+                onConfirm={() => confirm(record?.id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button danger size="small" type="primary">
+                  <DeleteOutlined />
+                </Button>
+              </Popconfirm>
+              <Popconfirm
+                title="Assign to admin"
+                description="Are you sure to assign this employee as a admin?"
+                onConfirm={() => assignToAdmin(record?.id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button size="small" type="primary">
+                  Assign
+                </Button>
+              </Popconfirm>
+            </>
+          )}
         </Space>
       ),
     },

@@ -99,6 +99,21 @@ export const employeeEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["employee"],
     }),
+    employeeAssignToAdmin: build.mutation<unknown, number>({
+      query: (id) => {
+        return {
+          url: `/employee/assign-admin/${id}`,
+          method: "POST",
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully assigned employee as a admin");
+        });
+      },
+      invalidatesTags: () => ["employee"],
+    }),
   }),
 });
 
@@ -110,4 +125,5 @@ export const {
   useUpdateEmployeeMutation,
   useGetSingleEmployeeQuery,
   useDeleteEmployeeMutation,
+  useEmployeeAssignToAdminMutation,
 } = employeeEndPoint;

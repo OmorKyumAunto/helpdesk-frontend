@@ -54,7 +54,7 @@ const AssetsList = () => {
         title: "Create Assets",
         content: <CreateAsset />,
         show: true,
-        width: 678,
+        width: 880,
       })
     );
   };

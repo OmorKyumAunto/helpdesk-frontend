@@ -1,7 +1,7 @@
 import { message } from "antd";
 import { ILoginResponse, IUser } from "../../auth/types/loginTypes";
 import { userApi } from "./userApi";
-import { setToken } from "../features/userSlice";
+import { setRoleId, setToken } from "../features/userSlice";
 import { baseQueryWithReAuth } from "../slice/baseQuery";
 import asyncWrapper from "../../utils/asyncWrapper";
 import { createApi } from "@reduxjs/toolkit/dist/query/react";
@@ -13,7 +13,7 @@ export const api = createApi({
   endpoints: (builder) => ({
     login: builder.mutation<
       ILoginResponse<IUser>,
-      { email: string; password: string }
+      { id: string; password: string }
     >({
       query: (body) => ({
         url: "/authentication/login",
@@ -25,8 +25,9 @@ export const api = createApi({
       onQueryStarted: async (_arg, { dispatch, queryFulfilled }) => {
         asyncWrapper(async () => {
           const { data } = await queryFulfilled;
-          console.log(data);
-          dispatch(setToken(data.token!));
+          console.log(data?.data);
+          dispatch(setToken(data?.data?.token!));
+          dispatch(setRoleId(data.data?.role?.role_id!));
           await dispatch(userApi.endpoints.getMe.initiate());
           message.success("Successfully logged in!");
           localStorage.setItem("theme", "defaultTheme");
@@ -71,6 +72,7 @@ export const api = createApi({
     "service",
     "asset",
     "dashboardTypes",
+    "unit",
   ],
 });
 

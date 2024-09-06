@@ -11,12 +11,12 @@ import EmployeeList from "./modules/employee/pages/Employeelist";
 import AssetsList from "./modules/assets/pages/AssetsList";
 import DistributedAsset from "./modules/assets/pages/DistributedAsset";
 import RequireUser from "./utils/requireUser";
-import { DashboardDemo } from "./modules/dashboard/Pages/DashboardDemo";
 import DashboardCards from "./modules/dashboard/Pages/DashboardCards";
-import ProfileSection from "./components/navBar/ProfileSection";
 import About from "./modules/about/page/About";
 import Forms from "./modules/forms/page/Forms";
 import Register from "./auth/pages/Register";
+import UnitList from "./modules/Unit/pages/UnitList";
+import ProfileSection from "./components/navBar/ProfileSection";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -59,10 +59,10 @@ export const routers = createBrowserRouter([
         // element: <RequireUser children={<DashboardDemo />} />,
         element: <DashboardCards />,
       },
-      // {
-      //   path: "/setting/profile",
-      //   element: <ProfileSection />,
-      // },
+      {
+        path: "/setting/profile",
+        element: <ProfileSection />,
+      },
       {
         path: "/assets/list",
         element: <AssetsList />,
@@ -83,6 +83,15 @@ export const routers = createBrowserRouter([
       {
         path: "/about",
         element: <About />,
+      },
+      {
+        path: "/settings",
+        children: [
+          {
+            path: "unit/list",
+            element: <UnitList />,
+          },
+        ],
       },
     ],
   },

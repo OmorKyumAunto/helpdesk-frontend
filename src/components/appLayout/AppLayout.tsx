@@ -22,7 +22,7 @@ import {
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Footer } from "antd/es/layout/layout";
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
-import { useAppDispatch } from "../../app/store/store";
+import { RootState, useAppDispatch } from "../../app/store/store";
 import { setLogout } from "../../app/features/userSlice";
 import { menuItems } from "./AppLayoutData";
 // import LiveTime from "../Time/LiveTime";
@@ -33,6 +33,8 @@ import { useSelector } from "react-redux";
 import logo from "../../assets/logo.png";
 import DateTimeWidget from "./DateTimeWidget";
 import { useGetMeQuery } from "../../app/api/userApi";
+import { roleID } from "../../utils/helper";
+import { api } from "../../app/api/api";
 // import Notification from "../notification/Notification";
 const { useBreakpoint } = Grid;
 
@@ -46,17 +48,18 @@ export const AppLayout = () => {
   const [openKeys, setOpenKeys] = useState<Array<string>>([]);
   const location = useLocation();
   const gridBreak = useBreakpoint();
-
+  const { roleId } = useSelector((state: RootState) => state.userSlice);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(setLogout());
+    dispatch(api.util.resetApiState());
     navigate("/login");
   };
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
+  console.log(roleID);
   useEffect(() => {
     const index = location.pathname.indexOf(
       "/",
@@ -185,7 +188,7 @@ export const AppLayout = () => {
         <Button
           danger
           style={{ marginTop: "10px" }}
-          color="primary"
+          type="primary"
           icon={<LogoutOutlined />}
           onClick={() => handleLogout()}
         >
@@ -277,7 +280,7 @@ export const AppLayout = () => {
         <div className="resize-handle" onMouseDown={handleResizeStart} />
         <Menu
           mode="inline"
-          items={menuItems(profile?.data)}
+          items={menuItems(profile?.data, roleId as number)}
           style={{ marginTop: "15px" }}
           selectedKeys={[currentSelection]}
           openKeys={openKeys}
@@ -290,7 +293,7 @@ export const AppLayout = () => {
         <Header
           style={{
             padding: 0,
-            background: "#1775BB",
+            background: roleId === 3 ? "#8DC73F" : "#1775BB",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -389,7 +392,7 @@ export const AppLayout = () => {
               )}
             </div> */}
 
-            {/* <Popover content={content}>
+            <Popover content={content}>
               <Button
                 icon={<UserOutlined />}
                 type="dashed"
@@ -397,18 +400,7 @@ export const AppLayout = () => {
                   marginRight: "20px",
                 }}
               />
-            </Popover> */}
-            <Link to="/login">
-              <Button
-                danger
-                style={{ marginTop: "10px" }}
-                color="primary"
-                icon={<LogoutOutlined />}
-                onClick={() => handleLogout()}
-              >
-                Logout
-              </Button>
-            </Link>
+            </Popover>
           </div>
         </Header>
 

@@ -30,6 +30,6 @@ function createMenuItems(items: Array<any>): Array<MenuItem> {
   });
 }
 
-export const menuItems = (data?: IUser) => {
-  return createMenuItems(sideBarItems());
+export const menuItems = (data?: IUser, roleId?: number) => {
+  return createMenuItems(sideBarItems(roleId!));
 };

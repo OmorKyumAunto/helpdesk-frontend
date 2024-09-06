@@ -20,7 +20,7 @@ import "./Login.css";
 import { useLoginMutation } from "../../app/api/api";
 import logo from "../../assets/logo.png";
 type IInputs = {
-  email: string;
+  id: string;
   password: string;
 };
 import SubmitButton from "../../components/submitButton/SubmitButton";
@@ -32,7 +32,7 @@ export const Login = () => {
   const [login, { isLoading }] = useLoginMutation();
   const onFinish = (values: IInputs) => {
     const body = {
-      email: values.email,
+      id: values.id,
       password: values.password,
     };
     // if (
@@ -80,19 +80,16 @@ export const Login = () => {
                 <Row gutter={6}>
                   <Col xs={24}>
                     <Form.Item
-                      name="email"
-                      label="Email"
+                      name="id"
+                      label="User Id"
                       rules={[
                         {
                           required: true,
-                          message: "Please input your email!",
+                          message: "Please input your id!",
                         },
                       ]}
                     >
-                      <Input
-                        prefix={<MailOutlined />}
-                        placeholder="Enter email"
-                      />
+                      <Input prefix={<UserOutlined />} placeholder="Enter id" />
                     </Form.Item>
                   </Col>
                   <Col xs={24}>
@@ -126,7 +123,7 @@ export const Login = () => {
                       </div>
                     </Form.Item>
                   </Col>
-                  <Divider style={{ marginTop: "0px", marginBottom: "10px" }} />
+                  {/* <Divider style={{ marginTop: "0px", marginBottom: "10px" }} />
                   <Col xs={24}>
                     <div
                       style={{
@@ -142,7 +139,7 @@ export const Login = () => {
                         </Link>
                       </span>
                     </div>
-                    {/* <div
+                    <div
                     style={{
                       display: "flex",
                       justifyContent: "center",
@@ -152,8 +149,8 @@ export const Login = () => {
                     <span style={{ color: "black" }}>
                       <Link to="/forget-password"> Forget Password? </Link>
                     </span>
-                  </div> */}
-                  </Col>
+                  </div>
+                  </Col> */}
                 </Row>
               </Form>
             </div>
