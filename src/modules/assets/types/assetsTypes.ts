@@ -26,7 +26,8 @@ export interface IAssetDetails {
   status: number;
   remarks: string;
   unit_name: string;
-  employee_id: number;
+  unit_id: string;
+  user_id: number;
   assign_date: Date;
   employee_name: string;
   employee_id_no: string;

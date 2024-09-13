@@ -94,13 +94,8 @@ export const routers = createBrowserRouter([
         element: <About />,
       },
       {
-        path: "/settings",
-        children: [
-          {
-            path: "unit/list",
-            element: <UnitList />,
-          },
-        ],
+        path: "/unit/list",
+        element: <UnitList />,
       },
     ],
   },

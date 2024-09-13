@@ -19,13 +19,13 @@ export const EmployeeDistributedAssetsTableColumns =
 
       {
         title: "Asset Name",
-        dataIndex: "name",
-        key: "name",
+        dataIndex: "asset_name",
+        key: "asset_name",
       },
       {
         title: "Unit Name",
-        dataIndex: "unit_name",
-        key: "unit_name",
+        dataIndex: "asset_unit_name",
+        key: "asset_unit_name",
       },
 
       {

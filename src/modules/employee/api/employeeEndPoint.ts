@@ -114,6 +114,37 @@ export const employeeEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["employee"],
     }),
+    UpdateEmployeeStatus: build.mutation<unknown, { id: number }>({
+      query: (id) => {
+        return {
+          url: `/employee/changeStatus/${id}`,
+          method: "PUT",
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully update employee status");
+        });
+      },
+      invalidatesTags: () => ["employee"],
+    }),
+    changeEmployeePassword: build.mutation<unknown, any>({
+      query: (data) => {
+        return {
+          url: `/employee/password-change`,
+          method: "POST",
+          body: data,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully changed employee password");
+        });
+      },
+      invalidatesTags: () => ["employee"],
+    }),
   }),
 });
 
@@ -126,4 +157,6 @@ export const {
   useGetSingleEmployeeQuery,
   useDeleteEmployeeMutation,
   useEmployeeAssignToAdminMutation,
+  useUpdateEmployeeStatusMutation,
+  useChangeEmployeePasswordMutation,
 } = employeeEndPoint;

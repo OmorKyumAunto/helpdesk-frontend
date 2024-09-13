@@ -10,24 +10,31 @@ import { DateInput } from "../../../common/formItem/FormItems";
 import { useCreateAssetsMutation } from "../api/assetsEndPoint";
 import TextArea from "antd/es/input/TextArea";
 import { useGetEmployeesQuery } from "../../employee/api/employeeEndPoint";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const { Option } = Select;
 
 const CreateAsset = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const assignType = Form.useWatch("is_assign", form);
-  const employeeType = Form.useWatch("employee_type", form);
+  const employeeType = Form.useWatch("is_new_employee", form);
   const { data } = useGetEmployeesQuery({});
+  const { data: unitData } = useGetUnitsQuery({});
 
   const [create, { isLoading, isSuccess }] = useCreateAssetsMutation();
 
   const onFinish = (data: any) => {
-    const { is_assign, ...values } = data || {};
+    const { is_assign, is_new_employee, ...values } = data || {};
     const formattedData: any = {};
     formattedData["is_assign"] = is_assign;
+    formattedData["is_new_employee"] = is_new_employee;
     for (const key in values) {
       if (values[key]) {
-        if (key === "purchase_date" || key === "assign_date") {
+        if (
+          key === "purchase_date" ||
+          key === "assign_date" ||
+          key === "joining_date"
+        ) {
           formattedData[key] = dayjs(values[key]).format("YYYY-MM-DD");
         } else {
           formattedData[key] = values[key];
@@ -132,15 +139,29 @@ const CreateAsset = () => {
               </Col>
               <Col xs={24} sm={24} md={8}>
                 <Form.Item
-                  label="Unit Name"
-                  name="unit_name"
+                  label="Buying Unit"
+                  name="unit_id"
                   rules={[{ required: true, message: "Please Select Unit" }]}
                 >
-                  <Select placeholder="Select Unit Name">
-                    <Option value="JTML">JTML</Option>
-                    <Option value="DIPL">DIPL</Option>
-                    <Option value="Corporate Office">Corporate Office</Option>
-                  </Select>
+                  <Select
+                    className="w-full "
+                    placeholder="Select Buying Unit"
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(
+                      input: string,
+                      option?: { label: string; value: string }
+                    ) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    options={unitData?.data?.map((unit: any) => ({
+                      value: unit.id,
+                      label: unit.title,
+                    }))}
+                    allowClear
+                  />
                 </Form.Item>
               </Col>
               {/* <Col xs={24} sm={24} md={8}>
@@ -170,7 +191,7 @@ const CreateAsset = () => {
                 <Col xs={24} sm={24} md={8}>
                   <Form.Item
                     label="Employee Type "
-                    name="employee_type"
+                    name="is_new_employee"
                     rules={[
                       {
                         required: true,
@@ -179,17 +200,17 @@ const CreateAsset = () => {
                     ]}
                   >
                     <Select placeholder="Select Employee Type ">
-                      <Option value={"old_employee"}>Old Employee</Option>
-                      <Option value={"new_employee"}>New Employee</Option>
+                      <Option value={0}>Old Employee</Option>
+                      <Option value={1}>New Employee</Option>
                     </Select>
                   </Form.Item>
                 </Col>
               )}
-              {employeeType === "old_employee" && (
+              {employeeType === 0 && (
                 <>
                   <Col xs={24} sm={24} md={8}>
                     <Form.Item
-                      name="employee_id"
+                      name="user_id"
                       rules={[{ required: true }]}
                       label="Employee ID"
                       required
@@ -225,7 +246,7 @@ const CreateAsset = () => {
                   </Col>
                 </>
               )}
-              {employeeType === "new_employee" && (
+              {employeeType === 1 && (
                 <>
                   <Col xs={24} sm={24} md={8}>
                     <Form.Item
@@ -239,7 +260,7 @@ const CreateAsset = () => {
                   </Col>
                   <Col xs={24} sm={24} md={8}>
                     <Form.Item
-                      name="name"
+                      name="employee_name"
                       rules={[{ required: true }]}
                       label="Employee Name"
                       required

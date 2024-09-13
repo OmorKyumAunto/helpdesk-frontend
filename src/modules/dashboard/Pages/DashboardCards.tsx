@@ -9,6 +9,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { AiOutlineOrderedList } from "react-icons/ai";
+import ApexInventoryPieChart from "../components/RePieChart";
+import TopDash from "../components/TopDash";
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
@@ -51,6 +53,7 @@ const DashboardCards = () => {
 
   return (
     <>
+      <TopDash />
       {roleId !== 3 ? (
         <Row gutter={[12, 12]}>
           <Col xs={24} sm={24} md={24} lg={8}>
@@ -180,7 +183,9 @@ const DashboardCards = () => {
             </Card>
           </Col>
           <Col xs={24} sm={24} md={24} lg={6}>
-            <ApexPieChart />
+            <Card>
+              <ApexPieChart />
+            </Card>
             <br />
             <Card>
               <ResponsiveContainer width="100%" height={320}>

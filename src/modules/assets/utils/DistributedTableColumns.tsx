@@ -29,13 +29,13 @@ export const DistributedAssetsTableColumns =
       },
       {
         title: "Department",
-        dataIndex: "employee_department",
-        key: "employee_department",
+        dataIndex: "department",
+        key: "department",
       },
       {
         title: "Unit",
-        dataIndex: "employee_unit",
-        key: "employee_unit",
+        dataIndex: "employee_unit_name",
+        key: "employee_unit_name",
       },
       {
         title: "Asset Type",

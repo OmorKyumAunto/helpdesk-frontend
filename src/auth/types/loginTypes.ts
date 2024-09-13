@@ -1,8 +1,14 @@
 export interface IUser {
   id: number;
+  profile_id: number;
   name: string;
+  employee_id: string;
   email: string;
-  phone_number: string;
+  contact_no: string;
+  department: string;
+  designation: string;
+  joining_date: string;
+  unit_name: string;
   role_id: number;
   status: number;
   created_by: null | string;

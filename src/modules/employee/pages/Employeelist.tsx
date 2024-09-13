@@ -17,6 +17,7 @@ import EmployeeFileUpdate from "./EmployeeFileUpdate";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import dayjs from "dayjs";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const { Option } = Select;
 
 const EmployeeList = () => {
@@ -48,6 +49,7 @@ const EmployeeList = () => {
   }, [page, pageSize, skipValue]);
 
   const { data, isLoading, isFetching } = useGetEmployeesQuery({ ...filter });
+  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({});
   const { data: allEmployees } = useGetOverallEmployeesQuery();
 
   const showModal = () => {
@@ -99,6 +101,27 @@ const EmployeeList = () => {
               <Option value="DIPL">DIPL</Option>
               <Option value="Corporate Office">Corporate Office</Option>
             </Select>
+            {/* <Select
+              style={{ width: "180px" }}
+              loading={unitIsLoading}
+              placeholder="Select Unit Name"
+              showSearch
+              optionFilterProp="children"
+              onChange={(e) => setFilter({ ...filter, unit_id: e, offset: 0 })}
+              filterOption={(
+                input: string,
+                option?: { label: string; value: string }
+              ) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={unitData?.data?.map((unit: any) => ({
+                value: unit.id,
+                label: unit.title,
+              }))}
+              allowClear
+            /> */}
             <>
               <PDFDownload
                 PDFFileName="employee_list"

@@ -1,75 +1,36 @@
-import React from "react";
-import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
+import ReactApexChart from "react-apexcharts";
+import { useGetDashboardPieDataQuery } from "../api/dashboardEndPoints";
 
-interface ChartProps {
-  title?: string;
-  chartType?: "donut" | "pie" | "bar" | "line";
-}
-
-const ApexPieChart: React.FC<ChartProps> = ({
-  title = "Category Data Details",
-  chartType = "donut",
-}) => {
-  const data = {
-    series: [44, 55, 41, 17],
-    labels: ["a", "B", "C", "D"],
-  };
+const ReactPieChart = () => {
+  const { data: pieData } = useGetDashboardPieDataQuery();
+  const { total_laptop, total_desktop, total_printer, total_accessories } =
+    pieData?.data || {};
+  const data = [
+    { name: "Laptops", value: total_laptop },
+    { name: "Desktops", value: total_desktop },
+    { name: "Printers", value: total_printer },
+    { name: "Accessories", value: total_accessories },
+  ];
 
   const options: ApexOptions = {
     chart: {
-      width: "100%",
-      type: chartType,
-      animations: {
-        enabled: true,
-        easing: "easeinout",
-        speed: 800,
-        animateGradually: {
-          enabled: true,
-          delay: 150,
-        },
-        dynamicAnimation: {
-          enabled: true,
-          speed: 350,
-        },
-      },
+      type: "pie",
     },
-    plotOptions: {
-      pie: {
-        startAngle: -90,
-        endAngle: 270,
-        donut: {
-          labels: {
-            show: true,
-            total: {
-              showAlways: true,
-              show: true,
-            },
-          },
-        },
-      },
-      bar: {
-        horizontal: true,
-        columnWidth: "55%",
-      },
+    labels: data.map((item) => item.name),
+    series: data.map((item) => item.value),
+    colors: ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"],
+    legend: {
+      position: "bottom",
     },
-
     dataLabels: {
       enabled: true,
-    },
-    fill: {
-      type: "gradient",
-    },
-    legend: {
-      horizontalAlign: "center",
-    },
-    title: {
-      text: title,
-      align: "center",
-      style: {
-        fontSize: "18px",
-        fontWeight: "bold",
-        color: "#263238",
+      formatter: function (val: any, opts: any) {
+        return (
+          opts.w.config.labels[opts.seriesIndex] +
+          ": " +
+          opts.w.config.series[opts.seriesIndex]
+        );
       },
     },
     responsive: [
@@ -77,7 +38,7 @@ const ApexPieChart: React.FC<ChartProps> = ({
         breakpoint: 480,
         options: {
           chart: {
-            width: 200,
+            width: 300,
           },
           legend: {
             position: "bottom",
@@ -85,39 +46,18 @@ const ApexPieChart: React.FC<ChartProps> = ({
         },
       },
     ],
-    theme: {
-      mode: "light",
-      palette: "palette1", // You can choose from palette1 to palette10
-      monochrome: {
-        enabled: false,
-        color: "#255aee",
-        shadeTo: "light",
-        shadeIntensity: 0.65,
-      },
-    },
-    // tooltip: {
-    //   y: {
-    //     formatter: function (value: number) {
-    //       return value + " units";
-    //     },
-    //   },
-    // },
-    xaxis: {
-      categories: ["a", "b", "c", "d", "e"],
-    },
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div>
       <ReactApexChart
         options={options}
-        series={data.series}
-        type={chartType}
-        height={350}
-        width="100%"
+        series={options.series}
+        type="pie"
+        height={400}
       />
     </div>
   );
 };
 
-export default ApexPieChart;
+export default ReactPieChart;

@@ -1,10 +1,12 @@
 import React from "react";
 import { IEmployee } from "../types/employeeTypes";
-import { Descriptions, Tag } from "antd";
+import { Button, Descriptions, Divider, Popconfirm, Tag } from "antd";
 import dayjs from "dayjs";
+import { useEmployeeAssignToAdminMutation } from "../api/employeeEndPoint";
 
 const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
   console.log(employee);
+  const [assignToAdmin] = useEmployeeAssignToAdminMutation();
   const {
     id,
     employee_id,
@@ -16,6 +18,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
     joining_date,
     unit_name,
     status,
+    licenses,
   } = employee || {};
   return (
     <div>
@@ -76,6 +79,32 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
               ) : (
                 <Tag color="error">Inactive</Tag>
               ),
+          },
+          {
+            key: "10",
+            label: "Licenses",
+            children: licenses,
+            span: 2,
+          },
+          {
+            key: "11",
+            label: "Make Admin",
+            children: (
+              <>
+                <Popconfirm
+                  title="Assign to admin"
+                  description="Are you sure to assign this employee as a admin?"
+                  onConfirm={() => assignToAdmin(id)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button size="small" type="primary">
+                    Confirm Admin
+                  </Button>
+                </Popconfirm>
+              </>
+            ),
+            span: 2,
           },
         ]}
       />

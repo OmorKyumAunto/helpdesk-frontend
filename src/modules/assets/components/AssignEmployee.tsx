@@ -61,7 +61,7 @@ const AssignEmployee = ({ id }: any) => {
             <Row align={"middle"} gutter={[5, 16]}>
               <Col xs={24} sm={24} md={24}>
                 <Form.Item
-                  name="employee_id"
+                  name="user_id"
                   rules={[{ required: true }]}
                   label="Employee ID"
                   required

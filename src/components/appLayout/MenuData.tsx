@@ -56,6 +56,15 @@ export const sideBarItems = (roleId: number) => {
           },
         ]
       : []),
+    ...(roleId === 1
+      ? [
+          {
+            label: <Link to="/unit/list">Asset Unit</Link>,
+            key: "/unit/list",
+            icon: <FaRegListAlt size={16} />,
+          },
+        ]
+      : []),
     {
       label: <Link to="/forms">Forms</Link>,
       key: "/forms",
@@ -66,22 +75,6 @@ export const sideBarItems = (roleId: number) => {
       key: "/about",
       icon: <TbUserHexagon size={20} />,
     },
-    ...(roleId === 1
-      ? [
-          {
-            label: "Settings",
-            key: "settings",
-            icon: <CiSettings size={20} />,
-            children: [
-              {
-                label: <Link to="/settings/unit/list">Unit List</Link>,
-                key: "/settings/unit/list",
-                icon: <FaRegListAlt size={16} />,
-              },
-            ],
-          },
-        ]
-      : []),
   ];
   return menuData;
 };

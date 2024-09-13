@@ -17,6 +17,7 @@ const AssetDetails = ({ id }: { id: number }) => {
     employee_id_no,
     employee_name,
     name,
+    licenses,
   } = singleAsset?.data || {};
   return (
     <div>
@@ -69,6 +70,12 @@ const AssetDetails = ({ id }: { id: number }) => {
             key: "7",
             label: "Buying Unit",
             children: unit_name,
+          },
+          {
+            key: "8",
+            label: "licenses",
+            children: licenses,
+            span: 4,
           },
         ]}
       />

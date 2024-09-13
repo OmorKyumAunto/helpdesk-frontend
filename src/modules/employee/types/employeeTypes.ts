@@ -11,6 +11,7 @@ export interface IEmployee {
   unit_name: string;
   status: number;
   created_at: string;
+  licenses: string;
 }
 
 export interface IAdjustSalary {

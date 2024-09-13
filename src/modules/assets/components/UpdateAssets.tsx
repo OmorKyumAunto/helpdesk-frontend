@@ -13,10 +13,13 @@ import {
 import { IAsset } from "../types/assetsTypes";
 import { useGetEmployeesQuery } from "../../employee/api/employeeEndPoint";
 import TextArea from "antd/es/input/TextArea";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const { Option } = Select;
 
 const UpdateAsset = ({ asset }: { asset: IAsset }) => {
   const { data: singleAsset } = useGetSingleAssetsQuery(Number(asset?.id));
+  const { data: unitData } = useGetUnitsQuery({});
+
   const {
     id,
     name,
@@ -26,13 +29,14 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
     po_number,
     asset_history,
     is_assign,
-    employee_id,
+    user_id,
     employee_name,
     assign_date,
     unit_name,
     model,
     specification,
     employee_id_no,
+    unit_id,
   } = singleAsset?.data || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -48,16 +52,21 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
       po_number,
       asset_history,
       assign_update: is_assign,
-      unit_name,
       model,
       specification,
       purchase_date: dayjs(purchase_date),
       assign_date: assign_date ? dayjs(assign_date) : null,
     });
-    if (employee_id_no) {
-      form.setFieldValue("employee_id", {
+    if (user_id) {
+      form.setFieldValue("user_id", {
         label: `${employee_id_no} (${employee_name})`,
-        value: employee_id,
+        value: user_id,
+      });
+    }
+    if (unit_id) {
+      form.setFieldValue("unit_id", {
+        label: unit_name,
+        value: Number(unit_id),
       });
     }
   }, [
@@ -95,14 +104,14 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
       if (values[key]) {
         if (key === "purchase_date" || key === "assign_date") {
           formattedData[key] = dayjs(values[key]).format("YYYY-MM-DD");
-        } else if (key === "employee_id") {
-          formattedData[key] = values[key]?.values || values[key];
+        } else if (key === "user_id" || key === "unit_id") {
+          formattedData[key] = values[key]?.value || values[key];
         } else {
           formattedData[key] = values[key];
         }
       }
     }
-
+    // console.log(formattedData);
     Update({ data: formattedData, id: asset.id });
   };
   useEffect(() => {
@@ -190,18 +199,32 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item
-                    label="Unit Name"
-                    name="unit_name"
+                    label="Buying Unit"
+                    name="unit_id"
                     rules={[{ required: true, message: "Please Select Unit" }]}
                   >
-                    <Select placeholder="Select Unit Name">
-                      <Option value="JTML">JTML</Option>
-                      <Option value="DIPL">DIPL</Option>
-                      <Option value="Corporate Office">Corporate Office</Option>
-                    </Select>
+                    <Select
+                      className="w-full"
+                      placeholder="Select Buying Unit"
+                      showSearch
+                      optionFilterProp="children"
+                      filterOption={(
+                        input: string,
+                        option?: { label: string; value: string }
+                      ) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={unitData?.data?.map((unit: any) => ({
+                        value: unit.id,
+                        label: unit.title,
+                      }))}
+                      allowClear
+                    />
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={24} md={12}>
+                {/* <Col xs={24} sm={24} md={12}>
                   <Form.Item
                     label="Asset History"
                     name="asset_history"
@@ -211,7 +234,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                   >
                     <Input placeholder="Enter Asset History" />
                   </Form.Item>
-                </Col>
+                </Col> */}
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item
                     label="Assign"
@@ -230,7 +253,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                   <>
                     <Col xs={24} sm={24} md={12}>
                       <Form.Item
-                        name="employee_id"
+                        name="user_id"
                         rules={[{ required: true }]}
                         label="Employee ID"
                         required

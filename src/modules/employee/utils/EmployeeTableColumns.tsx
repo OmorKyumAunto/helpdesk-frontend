@@ -1,10 +1,10 @@
-import { Button, Popconfirm, Space } from "antd";
+import { Button, Popconfirm, Space, Switch, Tag } from "antd";
 import { TableProps } from "antd/lib";
 import { IEmployee } from "../types/employeeTypes";
 import dayjs from "dayjs";
 import {
   useDeleteEmployeeMutation,
-  useEmployeeAssignToAdminMutation,
+  useUpdateEmployeeStatusMutation,
 } from "../api/employeeEndPoint";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,7 @@ import { RootState } from "../../../app/store/store";
 
 export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
   const [deleteEmployee] = useDeleteEmployeeMutation();
-  const [assignToAdmin] = useEmployeeAssignToAdminMutation();
+  const [updateStatus] = useUpdateEmployeeStatusMutation();
   const dispatch = useDispatch();
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const confirm = (id: number) => {
@@ -104,6 +104,14 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
           >
             <EditOutlined />
           </Button>
+          <>
+            <Switch
+              defaultChecked={record.status === 1 ? true : false}
+              unCheckedChildren="Inactive"
+              checkedChildren="Active"
+              onChange={() => updateStatus(record.id)}
+            />
+          </>
           {roleId === 1 && (
             <>
               <Popconfirm
@@ -117,17 +125,13 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
                   <DeleteOutlined />
                 </Button>
               </Popconfirm>
-              <Popconfirm
-                title="Assign to admin"
-                description="Are you sure to assign this employee as a admin?"
-                onConfirm={() => assignToAdmin(record?.id)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button size="small" type="primary">
-                  Make Admin
-                </Button>
-              </Popconfirm>
+              {record.role_id === 1 && (
+                <Tag color="green-inverse">Super Admin</Tag>
+              )}
+              {record.role_id === 2 && <Tag color="orange-inverse">Admin</Tag>}
+              {record.role_id === 3 && (
+                <Tag color="purple-inverse">Employee</Tag>
+              )}
             </>
           )}
         </Space>

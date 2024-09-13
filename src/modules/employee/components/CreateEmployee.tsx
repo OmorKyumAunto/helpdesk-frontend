@@ -9,16 +9,20 @@ import { useEffect } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { DateInput } from "../../../common/formItem/FormItems";
+import TextArea from "antd/es/input/TextArea";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const { Option } = Select;
 
 const CreateEmployee = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-
+  const licenseType = Form.useWatch("need_license", form);
+  const { data, isLoading: unitIsLoading } = useGetUnitsQuery({});
   const [createEmployee, { isLoading, isSuccess }] =
     useCreateEmployeeMutation();
 
-  const onFinish = (values: IFromData) => {
+  const onFinish = (data: IFromData) => {
+    const { licenses, ...values } = data;
     const formattedData: any = {};
 
     for (const key in values) {
@@ -31,7 +35,7 @@ const CreateEmployee = () => {
       }
     }
 
-    console.log(formattedData);
+    // console.log(formattedData);
     createEmployee({ data: formattedData });
   };
 
@@ -51,7 +55,7 @@ const CreateEmployee = () => {
           onFinish={onFinish}
           initialValues={{
             joining_date: dayjs(),
-            unit: "JTML",
+            need_license: "No",
           }}
         >
           <Card
@@ -143,6 +147,61 @@ const CreateEmployee = () => {
                   </Select>
                 </Form.Item>
               </Col>
+              {/* <Col xs={24} sm={24} md={12}>
+                <Form.Item
+                  label="Unit Name"
+                  name="unit_id"
+                  rules={[{ required: true, message: "Please Select Unit" }]}
+                >
+                  <Select
+                    className="w-full"
+                    loading={unitIsLoading}
+                    placeholder="Select Unit Name"
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(
+                      input: string,
+                      option?: { label: string; value: string }
+                    ) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    options={data?.data?.map((unit: any) => ({
+                      value: unit.id,
+                      label: unit.title,
+                    }))}
+                    allowClear
+                  />
+                </Form.Item>
+              </Col> */}
+              <Col xs={24} sm={24} md={12}>
+                <Form.Item
+                  label="Need License"
+                  name="need_license"
+                  rules={[
+                    { required: true, message: "Please Select License Type" },
+                  ]}
+                >
+                  <Select placeholder="Select License Type">
+                    <Option value="Yes">Yes</Option>
+                    <Option value="No">No</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              {licenseType === "Yes" && (
+                <Col xs={24} sm={24} md={24}>
+                  <Form.Item
+                    label="Licenses"
+                    name="licenses"
+                    rules={[
+                      { required: true, message: "Please Select License Type" },
+                    ]}
+                  >
+                    <TextArea placeholder="Enter licenses" />
+                  </Form.Item>
+                </Col>
+              )}
             </Row>
           </Card>
 
