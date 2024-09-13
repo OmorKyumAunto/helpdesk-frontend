@@ -3,17 +3,27 @@ import dayjs from "dayjs";
 import { useGetSingleAssetsQuery } from "../api/assetsEndPoint";
 
 const AssetDetails = ({ id }: { id: any }) => {
-  console.log(id);
-
   const { data: singleAsset } = useGetSingleAssetsQuery(id.id);
   const assetHistory = id?.asset_history?.map((item: any) => {
     return {
-      children: `${dayjs(item.created_at).format("DD-MM-YYYY")} ${
-        item.history
-      }`,
+      children: (
+        <p>
+          <span className="bg-blue-300 px-1 rounded ">
+            {dayjs(item?.created_at).format("DD-MM-YYYY")}
+          </span>
+
+          <span
+            style={{
+              color: item?.status === 1 ? "green" : "red",
+              marginLeft: "12px",
+            }}
+          >
+            {item?.history}
+          </span>
+        </p>
+      ),
     };
   });
-  console.log(assetHistory);
   const {
     category,
     purchase_date,
@@ -28,8 +38,6 @@ const AssetDetails = ({ id }: { id: any }) => {
     name,
     asset_history,
   } = singleAsset?.data || {};
-  console.log(singleAsset);
-  console.log(asset_history);
   return (
     <div>
       <Descriptions
@@ -87,11 +95,19 @@ const AssetDetails = ({ id }: { id: any }) => {
       {purchase_date && employee_id_no && (
         <>
           <Divider
-            orientation="left"
+            orientation="center"
             style={{ fontWeight: "bold", fontSize: "16px" }}
           >
+            {" "}
             Asset History
           </Divider>
+          {/* <Typography.Text style={{ fontWeight: 500, fontSize: "15px" }}>
+            1. In Stock since {dayjs(purchase_date).format("DD-MM-YYYY")}
+          </Typography.Text>{" "}
+          <br />
+          <Typography.Text style={{ fontWeight: 500, fontSize: "15px" }}>
+            2. Reserved for Employee ID : {employee_id_no} ({employee_name})
+          </Typography.Text> */}
         </>
       )}
       <Timeline items={assetHistory?.length ? assetHistory : []} />
