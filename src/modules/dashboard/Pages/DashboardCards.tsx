@@ -187,7 +187,7 @@ const DashboardCards = () => {
               <ApexPieChart />
             </Card>
             <br />
-            <Card>
+            {/* <Card>
               <ResponsiveContainer width="100%" height={320}>
                 <PieChart>
                   <Pie
@@ -211,7 +211,7 @@ const DashboardCards = () => {
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
-            </Card>
+            </Card> */}
           </Col>
           <Col xs={24} sm={24} md={24} lg={18}>
             <GraphChartApex />

@@ -42,8 +42,12 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
       contact_no,
       unit_name,
       status,
-      joining_date: dayjs(joining_date),
     });
+    if (joining_date) {
+      form.setFieldValue("joining_date", dayjs(joining_date));
+    } else {
+      form.setFieldValue("joining_date", null);
+    }
   }, [
     form,
     employee_id,
@@ -222,9 +226,9 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                   <Form.Item
                     label="Licenses"
                     name="licenses"
-                    rules={[
-                      { required: true, message: "Please Select License Type" },
-                    ]}
+                    // rules={[
+                    //   { required: true, message: "Please Select License Type" },
+                    // ]}
                   >
                     <TextArea placeholder="Enter licenses" />
                   </Form.Item>
