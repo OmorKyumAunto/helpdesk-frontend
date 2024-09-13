@@ -23,6 +23,13 @@ export const dashboardEndpoints = api.injectEndpoints({
       }),
       providesTags: () => [{ type: "dashboardTypes", id: "dashboard" }],
     }),
+    getDashboardEmployeeData: build.query<HTTPResponse<any>, any>({
+      query: (params) => ({
+        url: `/dashboard/dashboard-graph-data`,
+        params,
+      }),
+      providesTags: () => [{ type: "dashboardTypes", id: "dashboard" }],
+    }),
   }),
 });
 
@@ -30,4 +37,5 @@ export const {
   useGetAllDashboardQuery,
   useGetDashboardGraphDataQuery,
   useGetDashboardPieDataQuery,
+  useGetDashboardEmployeeDataQuery,
 } = dashboardEndpoints;

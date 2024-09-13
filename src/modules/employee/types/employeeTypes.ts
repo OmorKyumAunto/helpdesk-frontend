@@ -88,5 +88,5 @@ export interface IEmployeeParams {
   limit?: number;
   offset?: number;
   key?: string;
-  unit?: string;
+  unit_name?: string;
 }

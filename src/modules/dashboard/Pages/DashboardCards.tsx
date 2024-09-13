@@ -1,56 +1,27 @@
 import { Card, Col, Row, Typography } from "antd";
-import { useGetAllDashboardQuery } from "../api/dashboardEndPoints";
+import {
+  useGetAllDashboardQuery,
+  useGetDashboardEmployeeDataQuery,
+} from "../api/dashboardEndPoints";
 import { FaComputer } from "react-icons/fa6";
-import { LuUsers2 } from "react-icons/lu";
+import { LuUser2, LuUsers2 } from "react-icons/lu";
 import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
 import GraphChartApex from "../components/ApexChart";
 import ApexPieChart from "../components/ApexPieChart";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { AiOutlineOrderedList } from "react-icons/ai";
-import ApexInventoryPieChart from "../components/RePieChart";
 import TopDash from "../components/TopDash";
+import { useGetMeQuery } from "../../../app/api/userApi";
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const { data } = useGetAllDashboardQuery();
-
-  function getMonthName(monthNumber: any) {
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    return months[monthNumber - 1];
-  }
-
-  const agents = [
-    { MONTH: 1, total_agent: 20 },
-    { MONTH: 2, total_agent: 30 },
-    { MONTH: 3, total_agent: 25 },
-    { MONTH: 4, total_agent: 35 },
-    { MONTH: 5, total_agent: 40 },
-    { MONTH: 6, total_agent: 45 },
-  ];
-  const colors = [
-    "#FF6384",
-    "#36A2EB",
-    "#FFCE56",
-    "#4BC0C0",
-    "#9966FF",
-    "#FF9966",
-  ];
-
+  const { data: profile } = useGetMeQuery();
+  console.log(profile?.data);
+  const { employee_id, designation, unit_name } = profile?.data || {};
+  const { data: empData } = useGetDashboardEmployeeDataQuery({});
+  console.log(empData);
   return (
     <>
       <TopDash />
@@ -186,32 +157,6 @@ const DashboardCards = () => {
             <Card title="Asset Category Statistics">
               <ApexPieChart />
             </Card>
-            <br />
-            {/* <Card>
-              <ResponsiveContainer width="100%" height={320}>
-                <PieChart>
-                  <Pie
-                    dataKey="total_agent"
-                    data={agents}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    fill="#8228d0"
-                    label
-                  >
-                    {agents.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={colors[index % colors.length]}
-                        name={getMonthName(entry.MONTH)}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </Card> */}
           </Col>
           <Col xs={24} sm={24} md={24} lg={18}>
             <GraphChartApex />
@@ -219,8 +164,8 @@ const DashboardCards = () => {
         </Row>
       ) : (
         <Row gutter={[12, 6]}>
-          <Col xs={24} sm={24} md={24} lg={6}>
-            <Card className="bg-[#ff9933] text-white py-8 ">
+          <Col xs={24} sm={24} md={12} lg={8}>
+            <Card className="bg-[#ad33ff] text-white py-8 ">
               <div
                 style={{
                   display: "flex",
@@ -248,7 +193,7 @@ const DashboardCards = () => {
                 </div>
                 <div>
                   <div
-                    className="bg-[#ffbf80]"
+                    className="bg-[#c266ff]"
                     style={{
                       height: "80px",
                       width: "80px",
@@ -264,8 +209,8 @@ const DashboardCards = () => {
               </div>
             </Card>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={6}>
-            <Card className="bg-[#ff9933] text-white py-8 ">
+          <Col xs={24} sm={24} md={12} lg={8}>
+            <Card className="bg-[#ff7733] text-white py-8 ">
               <div
                 style={{
                   display: "flex",
@@ -282,18 +227,18 @@ const DashboardCards = () => {
                       marginTop: "4px",
                     }}
                   >
-                    {data?.data?.total_assign_asset || 0}
+                    {data?.data?.total_asset || 0}
                   </p>
                   <p
                     style={{ color: "white" }}
                     className="uppercase font-bold text-[24px]"
                   >
-                    Asset Assign Count
+                    Total Asset Count
                   </p>
                 </div>
                 <div>
                   <div
-                    className="bg-[#ffbf80]"
+                    className="bg-[#ff9966]"
                     style={{
                       height: "80px",
                       width: "80px",
@@ -309,8 +254,8 @@ const DashboardCards = () => {
               </div>
             </Card>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={12}>
-            <Card className="bg-[#ff9933] text-white py-8 ">
+          <Col xs={24} sm={24} md={12} lg={8}>
+            <Card className="bg-[#bf4080] text-white py-8 h-full">
               <div
                 style={{
                   display: "flex",
@@ -318,27 +263,21 @@ const DashboardCards = () => {
                   alignItems: "center",
                 }}
               >
-                <div>
-                  <p
-                    style={{
-                      textAlign: "center",
-                      fontSize: "34px",
-                      fontWeight: "bold",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {data?.data?.total_assign_asset || 0}
-                  </p>
-                  <p
-                    style={{ color: "white" }}
-                    className="uppercase font-bold text-[24px]"
-                  >
-                    Asset Assign Count
-                  </p>
+                <div className="flex ">
+                  <div className="text-2xl font-bold">
+                    <p>Employee ID</p>
+                    <p>Department</p>
+                    <p>Unit Name</p>
+                  </div>
+                  <div className="text-2xl ml-5">
+                    <p>: {employee_id}</p>
+                    <p>: {designation}</p>
+                    <p>: {unit_name}</p>
+                  </div>
                 </div>
                 <div>
                   <div
-                    className="bg-[#ffbf80]"
+                    className="bg-[#cc6699]"
                     style={{
                       height: "80px",
                       width: "80px",
@@ -348,7 +287,7 @@ const DashboardCards = () => {
                       borderRadius: "50%",
                     }}
                   >
-                    <AiOutlineOrderedList size={52} />
+                    <LuUser2 size={52} />
                   </div>
                 </div>
               </div>

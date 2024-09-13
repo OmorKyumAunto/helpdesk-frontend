@@ -88,7 +88,9 @@ const EmployeeList = () => {
             </div>
             <Select
               style={{ width: "180px" }}
-              onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
+              onChange={(e) =>
+                setFilter({ ...filter, unit_name: e, offset: 0 })
+              }
               placeholder="Select Unit Name"
             >
               <Option value="">All</Option>
