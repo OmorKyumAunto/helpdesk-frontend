@@ -265,7 +265,7 @@ export const AppLayout = () => {
             </div>
           )}
         </div>
-        {!collapsed && (
+        {/* {!collapsed && (
           <div
             style={{
               backgroundColor: "#e6e6e6",
@@ -276,7 +276,7 @@ export const AppLayout = () => {
               <Avatar src={userIcon} /> Hello {profile?.data?.name}
             </Typography.Title>
           </div>
-        )}
+        )} */}
         <div className="resize-handle" onMouseDown={handleResizeStart} />
         <Menu
           mode="inline"
