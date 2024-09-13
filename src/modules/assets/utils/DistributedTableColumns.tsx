@@ -63,7 +63,7 @@ export const DistributedAssetsTableColumns =
                 dispatch(
                   setCommonModal({
                     title: "Distributed Asset Details",
-                    content: <AssetDetails id={record?.id} />,
+                    content: <AssetDetails id={record} />,
                     show: true,
                     width: 740,
                   })
