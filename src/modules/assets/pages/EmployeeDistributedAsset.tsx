@@ -91,7 +91,7 @@ const EmployeeDistributedAsset = () => {
           >
             <Option value="Laptop">Laptop</Option>
             <Option value="Desktop">Desktop</Option>
-            <Option value="Pinter">Pinter</Option>
+            <Option value="Printer">Printer</Option>
             <Option value="Accessories">Accessories</Option>
           </Select>
           <PDFDownload

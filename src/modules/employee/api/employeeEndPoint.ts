@@ -19,6 +19,7 @@ export const employeeEndPoint = api.injectEndpoints({
         };
       },
       providesTags: () => ["employee"],
+      // providesTags: () => [{ type: "employee", id: "list" }],
     }),
     getOverallEmployees: build.query<HTTPResponse<IEmployee[]>, void>({
       query: () => {
@@ -50,7 +51,10 @@ export const employeeEndPoint = api.injectEndpoints({
           notification("success", "Successfully employee create ");
         });
       },
-      invalidatesTags: () => ["employee"],
+      invalidatesTags: () => [
+        "employee",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
     }),
     createEmployeeUploadFile: build.mutation<unknown, { data: any }>({
       query: ({ data }) => {
@@ -66,7 +70,10 @@ export const employeeEndPoint = api.injectEndpoints({
           notification("success", "Successfully employee file upload ");
         });
       },
-      invalidatesTags: () => ["employee"],
+      invalidatesTags: () => [
+        "employee",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
     }),
     UpdateEmployee: build.mutation<unknown, { data: ISubmitData; id: number }>({
       query: ({ data, id }) => {
@@ -82,7 +89,10 @@ export const employeeEndPoint = api.injectEndpoints({
           notification("success", "Successfully employee update ");
         });
       },
-      invalidatesTags: () => ["employee"],
+      invalidatesTags: () => [
+        "employee",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
     }),
     deleteEmployee: build.mutation<unknown, number>({
       query: (id) => {
@@ -97,7 +107,10 @@ export const employeeEndPoint = api.injectEndpoints({
           notification("success", "Successfully delete employee");
         });
       },
-      invalidatesTags: () => ["employee"],
+      invalidatesTags: () => [
+        "employee",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
     }),
     employeeAssignToAdmin: build.mutation<unknown, number>({
       query: (id) => {
@@ -112,7 +125,10 @@ export const employeeEndPoint = api.injectEndpoints({
           notification("success", "Successfully assigned employee as a admin");
         });
       },
-      invalidatesTags: () => ["employee"],
+      invalidatesTags: () => [
+        "employee",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
     }),
     UpdateEmployeeStatus: build.mutation<unknown, { id: number }>({
       query: (id) => {

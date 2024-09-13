@@ -1,4 +1,4 @@
-import { Typography } from "antd";
+import { Card, Typography } from "antd";
 
 const About = () => {
   return (
@@ -16,13 +16,10 @@ const About = () => {
       >
         ABOUT US
       </div>
-      <p
+      <Card
         // strong
         style={{
-          paddingTop: "22px",
-          width: "85%",
-          margin: "0 auto",
-          fontWeight: 600,
+          marginTop: "20px",
         }}
       >
         DBL Group is a family owned business which started in 1991. The first
@@ -36,7 +33,7 @@ const About = () => {
         addition to working with international development organizations such as
         CARE, DEG, IFC, GIZ, ILO, and UNICEF, DBL has a diverse set of
         sustainability programs.
-      </p>
+      </Card>
     </>
   );
 };

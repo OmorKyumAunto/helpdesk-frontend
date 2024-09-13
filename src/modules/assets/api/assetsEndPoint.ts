@@ -74,7 +74,10 @@ export const assetsEndPoint = api.injectEndpoints({
           notification("success", "Successfully asset create ");
         });
       },
-      invalidatesTags: () => ["asset"],
+      invalidatesTags: () => [
+        "asset",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
     }),
     createAssetsFileUpdate: build.mutation<unknown, { data: any }>({
       query: ({ data }) => {
@@ -90,7 +93,10 @@ export const assetsEndPoint = api.injectEndpoints({
           notification("success", "Successfully asset file upload ");
         });
       },
-      invalidatesTags: () => ["asset"],
+      invalidatesTags: () => [
+        "asset",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
     }),
     UpdateAssets: build.mutation<unknown, { data: any; id: number }>({
       query: ({ data, id }) => {
@@ -106,7 +112,10 @@ export const assetsEndPoint = api.injectEndpoints({
           notification("success", "Successfully asset update ");
         });
       },
-      invalidatesTags: () => ["asset"],
+      invalidatesTags: () => [
+        "asset",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
     }),
     assignEmployee: build.mutation<unknown, { data: any; id: number }>({
       query: ({ data, id }) => {
@@ -122,7 +131,10 @@ export const assetsEndPoint = api.injectEndpoints({
           notification("success", "Successfully asset assign ");
         });
       },
-      invalidatesTags: () => ["asset"],
+      invalidatesTags: () => [
+        "asset",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
     }),
     deleteAssets: build.mutation<unknown, number>({
       query: (id) => {
@@ -137,7 +149,10 @@ export const assetsEndPoint = api.injectEndpoints({
           notification("success", "Successfully delete asset");
         });
       },
-      invalidatesTags: () => ["asset"],
+      invalidatesTags: () => [
+        "asset",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
     }),
   }),
 });

@@ -100,17 +100,6 @@ const AssetsList = () => {
               <Option value="assigned">Assigned</Option>
               <Option value="in_stock">In Stock</Option>
             </Select>
-            {/* <Select
-              allowClear
-              style={{ width: "180px" }}
-              onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
-              placeholder="Select Unit Name"
-            >
-              <Option value="">All</Option>
-              <Option value="JTML">JTML</Option>
-              <Option value="DIPL">DIPL</Option>
-              <Option value="Corporate Office">Corporate Office</Option>
-            </Select> */}
             <Select
               style={{ width: "180px" }}
               loading={unitIsLoading}

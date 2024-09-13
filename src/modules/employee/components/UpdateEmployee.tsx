@@ -11,6 +11,7 @@ import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { DateInput } from "../../../common/formItem/FormItems";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import TextArea from "antd/es/input/TextArea";
+import { useGetMeQuery } from "../../../app/api/userApi";
 const { Option } = Select;
 
 const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
@@ -31,7 +32,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
   const { data, isLoading: unitIsLoading } = useGetUnitsQuery({});
   const [UpdateEmployee, { isLoading, isSuccess }] =
     useUpdateEmployeeMutation();
-
+  const { refetch } = useGetMeQuery();
   useEffect(() => {
     form.setFieldsValue({
       employee_id,
@@ -92,6 +93,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
   };
   useEffect(() => {
     if (isSuccess) {
+      refetch();
       dispatch(setCommonModal());
     }
   }, [isSuccess]);

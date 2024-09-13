@@ -183,7 +183,7 @@ const DashboardCards = () => {
             </Card>
           </Col>
           <Col xs={24} sm={24} md={24} lg={6}>
-            <Card>
+            <Card title="Asset Category Statistics">
               <ApexPieChart />
             </Card>
             <br />

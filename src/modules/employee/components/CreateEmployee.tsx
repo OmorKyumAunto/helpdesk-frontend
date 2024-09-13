@@ -194,9 +194,9 @@ const CreateEmployee = () => {
                   <Form.Item
                     label="Licenses"
                     name="licenses"
-                    rules={[
-                      { required: true, message: "Please Select License Type" },
-                    ]}
+                    // rules={[
+                    //   { required: true, message: "Please Select License Type" },
+                    // ]}
                   >
                     <TextArea placeholder="Enter licenses" />
                   </Form.Item>

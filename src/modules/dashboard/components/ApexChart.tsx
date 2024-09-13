@@ -51,7 +51,7 @@ const GraphChartApex = () => {
       ],
       chart: {
         type: "area",
-        height: 550,
+        height: 414,
         zoom: {
           enabled: false,
         },

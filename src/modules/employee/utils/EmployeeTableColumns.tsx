@@ -126,15 +126,11 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
                   <DeleteOutlined />
                 </Button>
               </Popconfirm>
-              {record.role_id === 1 && (
-                <Tag color="green-inverse">Super Admin</Tag>
-              )}
-              {record.role_id === 2 && <Tag color="orange-inverse">Admin</Tag>}
-              {record.role_id === 3 && (
-                <Tag color="purple-inverse">Employee</Tag>
-              )}
             </>
           )}
+          {record.role_id === 1 && <Tag color="green-inverse">Super Admin</Tag>}
+          {record.role_id === 2 && <Tag color="orange-inverse">Admin</Tag>}
+          {record.role_id === 3 && <Tag color="purple-inverse">Employee</Tag>}
         </Space>
       ),
     },

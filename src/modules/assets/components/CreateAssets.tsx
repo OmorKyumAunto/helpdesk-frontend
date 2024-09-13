@@ -90,12 +90,14 @@ const CreateAsset = () => {
                 <Form.Item
                   label="Category"
                   name="category"
-                  rules={[{ required: true, message: "Please Category" }]}
+                  rules={[
+                    { required: true, message: "Please Select Category" },
+                  ]}
                 >
                   <Select placeholder="Select Category">
                     <Option value="Laptop">Laptop</Option>
                     <Option value="Desktop">Desktop</Option>
-                    <Option value="Pinter">Pinter</Option>
+                    <Option value="Printer">Printer</Option>
                     <Option value="Accessories">Accessories</Option>
                   </Select>
                 </Form.Item>
@@ -344,9 +346,8 @@ const CreateAsset = () => {
               <Col xs={24} sm={24} md={24}>
                 <Form.Item
                   name="specification"
-                  rules={[{ required: true }]}
+                  // rules={[{ required: true }]}
                   label="Specification"
-                  required
                 >
                   <TextArea placeholder="Enter Specification" />
                 </Form.Item>
