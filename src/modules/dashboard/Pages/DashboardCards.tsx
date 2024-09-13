@@ -218,62 +218,143 @@ const DashboardCards = () => {
           </Col>
         </Row>
       ) : (
-        <div
-          // xs={24}
-          // sm={24}
-          // md={24}
-          // lg={14}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            height: "100%",
-            justifyContent: "center",
-          }}
-        >
-          <Card className="bg-[#ff9933] text-white w-[25%] py-8 ">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <div>
-                <p
-                  style={{
-                    textAlign: "center",
-                    fontSize: "34px",
-                    fontWeight: "bold",
-                    marginTop: "4px",
-                  }}
-                >
-                  {data?.data?.total_assign_asset || 0}
-                </p>
-                <p
-                  style={{ color: "white" }}
-                  className="uppercase font-bold text-[24px]"
-                >
-                  Asset Assign Count
-                </p>
-              </div>
-              <div>
-                <div
-                  className="bg-[#ffbf80]"
-                  style={{
-                    height: "80px",
-                    width: "80px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: "50%",
-                  }}
-                >
-                  <AiOutlineOrderedList size={52} />
+        <Row gutter={[12, 6]}>
+          <Col xs={24} sm={24} md={24} lg={6}>
+            <Card className="bg-[#ff9933] text-white py-8 ">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <div>
+                  <p
+                    style={{
+                      textAlign: "center",
+                      fontSize: "34px",
+                      fontWeight: "bold",
+                      marginTop: "4px",
+                    }}
+                  >
+                    {data?.data?.total_assign_asset || 0}
+                  </p>
+                  <p
+                    style={{ color: "white" }}
+                    className="uppercase font-bold text-[24px]"
+                  >
+                    Asset Assign Count
+                  </p>
+                </div>
+                <div>
+                  <div
+                    className="bg-[#ffbf80]"
+                    style={{
+                      height: "80px",
+                      width: "80px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: "50%",
+                    }}
+                  >
+                    <AiOutlineOrderedList size={52} />
+                  </div>
                 </div>
               </div>
-            </div>
-          </Card>
-        </div>
+            </Card>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={6}>
+            <Card className="bg-[#ff9933] text-white py-8 ">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <div>
+                  <p
+                    style={{
+                      textAlign: "center",
+                      fontSize: "34px",
+                      fontWeight: "bold",
+                      marginTop: "4px",
+                    }}
+                  >
+                    {data?.data?.total_assign_asset || 0}
+                  </p>
+                  <p
+                    style={{ color: "white" }}
+                    className="uppercase font-bold text-[24px]"
+                  >
+                    Asset Assign Count
+                  </p>
+                </div>
+                <div>
+                  <div
+                    className="bg-[#ffbf80]"
+                    style={{
+                      height: "80px",
+                      width: "80px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: "50%",
+                    }}
+                  >
+                    <AiOutlineOrderedList size={52} />
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12}>
+            <Card className="bg-[#ff9933] text-white py-8 ">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <div>
+                  <p
+                    style={{
+                      textAlign: "center",
+                      fontSize: "34px",
+                      fontWeight: "bold",
+                      marginTop: "4px",
+                    }}
+                  >
+                    {data?.data?.total_assign_asset || 0}
+                  </p>
+                  <p
+                    style={{ color: "white" }}
+                    className="uppercase font-bold text-[24px]"
+                  >
+                    Asset Assign Count
+                  </p>
+                </div>
+                <div>
+                  <div
+                    className="bg-[#ffbf80]"
+                    style={{
+                      height: "80px",
+                      width: "80px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: "50%",
+                    }}
+                  >
+                    <AiOutlineOrderedList size={52} />
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </Col>
+        </Row>
       )}
     </>
   );

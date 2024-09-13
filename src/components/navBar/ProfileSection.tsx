@@ -72,6 +72,7 @@ const ProfileSection = () => {
                     title: "Change Employee Password",
                     content: <ChangeEmployeePassword />,
                     show: true,
+                    width: 550,
                   })
                 );
               }}

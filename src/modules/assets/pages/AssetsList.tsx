@@ -16,6 +16,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import UploadAssetFile from "../components/UploadAssetFile";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 
 const AssetsList = () => {
   const { Option } = Select;
@@ -32,7 +33,7 @@ const AssetsList = () => {
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
-
+  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({});
   const [filter, setFilter] = useState<IAssetParams>({
     limit: Number(pageSize),
     offset: skipValue,
@@ -99,7 +100,7 @@ const AssetsList = () => {
               <Option value="assigned">Assigned</Option>
               <Option value="in_stock">In Stock</Option>
             </Select>
-            <Select
+            {/* <Select
               allowClear
               style={{ width: "180px" }}
               onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
@@ -109,8 +110,28 @@ const AssetsList = () => {
               <Option value="JTML">JTML</Option>
               <Option value="DIPL">DIPL</Option>
               <Option value="Corporate Office">Corporate Office</Option>
-            </Select>
-
+            </Select> */}
+            <Select
+              style={{ width: "180px" }}
+              loading={unitIsLoading}
+              placeholder="Select Unit Name"
+              showSearch
+              optionFilterProp="children"
+              onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
+              filterOption={(
+                input: string,
+                option?: { label: string; value: string }
+              ) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={unitData?.data?.map((unit: any) => ({
+                value: unit.id,
+                label: unit.title,
+              }))}
+              allowClear
+            />
             <PDFDownload
               PDFFileName="asset-list"
               fileHeader="ASSET LIST"

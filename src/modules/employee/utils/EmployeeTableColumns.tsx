@@ -109,6 +109,7 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
               defaultChecked={record.status === 1 ? true : false}
               unCheckedChildren="Inactive"
               checkedChildren="Active"
+              style={{ background: record.status === 1 ? "green" : "red" }}
               onChange={() => updateStatus(record.id)}
             />
           </>

@@ -21,6 +21,7 @@ export interface IAssetDetails {
   serial_number: string;
   po_number: string;
   asset_history: string;
+  licenses: string;
   is_assign: number;
   created_at: Date;
   status: number;

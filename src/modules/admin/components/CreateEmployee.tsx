@@ -4,11 +4,11 @@ import { SendOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import { IFromData } from "../types/adminTypes";
-import { useCreateEmployeeMutation } from "../api/adminEndPoint";
 import { useEffect } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { DateInput } from "../../../common/formItem/FormItems";
+import { useCreateEmployeeMutation } from "../../employee/api/employeeEndPoint";
 const { Option } = Select;
 
 const CreateEmployee = () => {
