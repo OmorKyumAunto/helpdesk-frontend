@@ -3,10 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IEmployeeParams } from "../types/employeeTypes";
-import {
-  useGetEmployeesQuery,
-  useGetOverallEmployeesQuery,
-} from "../api/employeeEndPoint";
+import { useGetEmployeesQuery } from "../api/employeeEndPoint";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import CreateEmployee from "../components/CreateEmployee";
 import { EmployeeTableColumns } from "../utils/EmployeeTableColumns";
@@ -17,7 +14,6 @@ import EmployeeFileUpdate from "./EmployeeFileUpdate";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import dayjs from "dayjs";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
-import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const { Option } = Select;
 
 const EmployeeList = () => {
@@ -49,8 +45,7 @@ const EmployeeList = () => {
   }, [page, pageSize, skipValue]);
 
   const { data, isLoading, isFetching } = useGetEmployeesQuery({ ...filter });
-  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({});
-  const { data: allEmployees } = useGetOverallEmployeesQuery();
+  // const { data: allEmployees } = useGetOverallEmployeesQuery();
 
   const showModal = () => {
     dispatch(
@@ -137,8 +132,8 @@ const EmployeeList = () => {
                   "Unit Name",
                 ]}
                 PDFData={
-                  allEmployees?.data?.length
-                    ? allEmployees?.data?.map(
+                  data?.data?.length
+                    ? data?.data?.map(
                         ({
                           employee_id,
                           name,
@@ -182,8 +177,8 @@ const EmployeeList = () => {
                   "Unit Name",
                 ]}
                 excelData={
-                  allEmployees?.data?.length
-                    ? allEmployees?.data?.map(
+                  data?.data?.length
+                    ? data?.data?.map(
                         ({
                           employee_id,
                           name,

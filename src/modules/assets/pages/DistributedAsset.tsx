@@ -3,16 +3,12 @@ import { Table } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DistributedAssetsTableColumns } from "../utils/DistributedTableColumns";
-import {
-  useGetAllDistributedAssetQuery,
-  useGetOverAllDistributedAssetQuery,
-} from "../api/assetsEndPoint";
+import { useGetAllDistributedAssetQuery } from "../api/assetsEndPoint";
 import { generatePagination } from "../../../common/TablePagination copy";
 import { SearchOutlined } from "@ant-design/icons";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import dayjs from "dayjs";
-import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const { Option } = Select;
 const DistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -43,8 +39,7 @@ const DistributedAsset = () => {
   const { data, isLoading, isFetching } = useGetAllDistributedAssetQuery({
     ...filter,
   });
-  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({});
-  const { data: allDistributedAsset } = useGetOverAllDistributedAssetQuery();
+  // const { data: allDistributedAsset } = useGetOverAllDistributedAssetQuery();
   return (
     <div>
       <Card
@@ -74,23 +69,14 @@ const DistributedAsset = () => {
           </div>
           <Select
             style={{ width: "180px" }}
-            loading={unitIsLoading}
-            placeholder="Select Unit Name"
-            showSearch
-            optionFilterProp="children"
             onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
-            filterOption={(
-              input: string,
-              option?: { label: string; value: string }
-            ) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            options={unitData?.data?.map((unit: any) => ({
-              value: unit.id,
-              label: unit.title,
-            }))}
-            allowClear
-          />
+            placeholder="Select Unit Name"
+          >
+            <Option value="">All</Option>
+            <Option value="JTML">JTML</Option>
+            <Option value="DIPL">DIPL</Option>
+            <Option value="Corporate Office">Corporate Office</Option>
+          </Select>
           <Select
             placeholder="Select Asset Type"
             style={{ width: "180px" }}
@@ -116,8 +102,8 @@ const DistributedAsset = () => {
               "Assigning Date",
             ]}
             PDFData={
-              allDistributedAsset?.data?.length
-                ? allDistributedAsset?.data?.map(
+              data?.data?.length
+                ? data?.data?.map(
                     (
                       {
                         employee_id_no,
@@ -160,8 +146,8 @@ const DistributedAsset = () => {
               "Assigning Date",
             ]}
             excelData={
-              allDistributedAsset?.data?.length
-                ? allDistributedAsset?.data?.map(
+              data?.data?.length
+                ? data?.data?.map(
                     ({
                       employee_id_no,
                       employee_name,

@@ -71,12 +71,6 @@ const AssetDetails = ({ id }: { id: number }) => {
             label: "Buying Unit",
             children: unit_name,
           },
-          {
-            key: "8",
-            label: "licenses",
-            children: licenses,
-            span: 4,
-          },
         ]}
       />
       {purchase_date && employee_id_no && (

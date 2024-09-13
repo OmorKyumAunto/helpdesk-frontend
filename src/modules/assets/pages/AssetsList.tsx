@@ -3,10 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IAssetParams } from "../types/assetsTypes";
-import {
-  useGetAssetsQuery,
-  useGetOverallAssetsQuery,
-} from "../api/assetsEndPoint";
+import { useGetAssetsQuery } from "../api/assetsEndPoint";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { AssetsTableColumns } from "../utils/AssetsTableColumns";
 import { CreateButton } from "../../../common/CommonButton";
@@ -47,7 +44,7 @@ const AssetsList = () => {
     });
   }, [page, pageSize, skipValue]);
   const { data, isLoading, isFetching } = useGetAssetsQuery({ ...filter });
-  const { data: allAsset } = useGetOverallAssetsQuery();
+  // const { data: allAsset } = useGetOverallAssetsQuery();
 
   const showModal = () => {
     dispatch(
@@ -134,8 +131,8 @@ const AssetsList = () => {
                 "Unit",
               ]}
               PDFData={
-                allAsset?.data?.length
-                  ? allAsset?.data?.map(
+                data?.data?.length
+                  ? data?.data?.map(
                       ({
                         serial_number,
                         remarks,
@@ -173,8 +170,8 @@ const AssetsList = () => {
                 "Unit",
               ]}
               excelData={
-                allAsset?.data?.length
-                  ? allAsset?.data?.map(
+                data?.data?.length
+                  ? data?.data?.map(
                       ({
                         serial_number,
                         remarks,
