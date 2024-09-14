@@ -34,8 +34,12 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
           >
             {item?.history}
           </span>
-          <span className="bg-blue-600 px-2 rounded text-white ml-3 font-bold">
-            {dayjs(item?.created_at).format("DD-MM-YYYY")}
+          <span className="ml-2">
+            ( Assign date :
+            <span className="px-2 rounded font-bold">
+              {dayjs(item?.created_at).format("DD-MM-YYYY")}
+            </span>
+            )
           </span>
         </p>
       ),
