@@ -46,3 +46,37 @@ export interface IAssetParams {
   unit?: string;
   type?: string;
 }
+
+export interface IDistributedSingle {
+  id: number;
+  asset_name: string;
+  category: string;
+  purchase_date: string;
+  serial_number: string;
+  po_number: string;
+  asset_create_date: string;
+  remarks: string;
+  asset_unit_id: string;
+  model: string;
+  specification: string;
+  asset_unit_name: string;
+  employee_id: number;
+  employee_name: string;
+  employee_id_no: string;
+  designation: string;
+  department: string;
+  email: string;
+  contact_no: string;
+  joining_date: string;
+  employee_unit_name: string;
+  licenses: string;
+  status: number;
+  history: History[];
+}
+
+export interface History {
+  id: number;
+  history: string;
+  status: number;
+  created_at: string;
+}

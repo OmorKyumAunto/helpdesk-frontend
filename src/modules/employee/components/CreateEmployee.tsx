@@ -10,19 +10,16 @@ import { setCommonModal } from "../../../app/slice/modalSlice";
 import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { DateInput } from "../../../common/formItem/FormItems";
 import TextArea from "antd/es/input/TextArea";
-import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const { Option } = Select;
 
 const CreateEmployee = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const licenseType = Form.useWatch("need_license", form);
-  const { data, isLoading: unitIsLoading } = useGetUnitsQuery({});
   const [createEmployee, { isLoading, isSuccess }] =
     useCreateEmployeeMutation();
 
-  const onFinish = (data: IFromData) => {
-    const { licenses, ...values } = data;
+  const onFinish = (values: IFromData) => {
     const formattedData: any = {};
 
     for (const key in values) {

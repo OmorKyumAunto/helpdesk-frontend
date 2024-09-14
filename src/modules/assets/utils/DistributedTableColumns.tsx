@@ -6,6 +6,7 @@ import { EyeOutlined } from "@ant-design/icons";
 import AssetDetails from "../components/AssetDetails";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useDispatch } from "react-redux";
+import DistributeAssetDetails from "../components/DistributedAssetDetails";
 
 export const DistributedAssetsTableColumns =
   (): TableProps<IAsset>["columns"] => {
@@ -63,7 +64,7 @@ export const DistributedAssetsTableColumns =
                 dispatch(
                   setCommonModal({
                     title: "Distributed Asset Details",
-                    content: <AssetDetails id={record} />,
+                    content: <DistributeAssetDetails id={record.id} />,
                     show: true,
                     width: 740,
                   })

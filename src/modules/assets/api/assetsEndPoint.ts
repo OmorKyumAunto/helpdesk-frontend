@@ -2,7 +2,12 @@ import { api } from "../../../app/api/api";
 import { HTTPResponse } from "../../../app/types/commonTypes";
 import notification from "../../../common/utils/Notification";
 import asyncWrapper from "../../../utils/asyncWrapper";
-import { IAsset, IAssetDetails, IAssetParams } from "../types/assetsTypes";
+import {
+  IAsset,
+  IAssetDetails,
+  IAssetParams,
+  IDistributedSingle,
+} from "../types/assetsTypes";
 
 export const assetsEndPoint = api.injectEndpoints({
   endpoints: (build) => ({
@@ -28,6 +33,17 @@ export const assetsEndPoint = api.injectEndpoints({
         return {
           url: `/asset/distributed-asset`,
           params,
+        };
+      },
+      providesTags: () => ["asset"],
+    }),
+    getSingleDistributedAsset: build.query<
+      HTTPResponse<IDistributedSingle>,
+      number
+    >({
+      query: (id) => {
+        return {
+          url: `/asset/distributed-details/${id}`,
         };
       },
       providesTags: () => ["asset"],
@@ -161,6 +177,7 @@ export const {
   useGetAssetsQuery,
   useGetOverallAssetsQuery,
   useGetOverAllDistributedAssetQuery,
+  useGetSingleDistributedAssetQuery,
   useGetAllDistributedAssetQuery,
   useCreateAssetsFileUpdateMutation,
   useGetEmployeeAllDistributedAssetQuery,

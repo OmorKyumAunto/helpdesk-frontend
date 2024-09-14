@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IEmployee {
   id: number;
+  role_id: number;
   employee_id: string;
   name: string;
   department: string;
