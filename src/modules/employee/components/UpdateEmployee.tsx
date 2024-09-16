@@ -29,7 +29,6 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
   } = employee || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const { data, isLoading: unitIsLoading } = useGetUnitsQuery({});
   const [UpdateEmployee, { isLoading, isSuccess }] =
     useUpdateEmployeeMutation();
   const { refetch } = useGetMeQuery();
@@ -196,34 +195,6 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                     </Select>
                   </Form.Item>
                 </Col>
-                {/* <Col xs={24} sm={24} md={12}>
-                <Form.Item
-                  label="Unit Name"
-                  name="unit_id"
-                  rules={[{ required: true, message: "Please Select Unit" }]}
-                >
-                  <Select
-                    className="w-full"
-                    loading={unitIsLoading}
-                    placeholder="Select Unit Name"
-                    showSearch
-                    optionFilterProp="children"
-                    filterOption={(
-                      input: string,
-                      option?: { label: string; value: string }
-                    ) =>
-                      (option?.label ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                    options={data?.data?.map((unit: any) => ({
-                      value: unit.id,
-                      label: unit.title,
-                    }))}
-                    allowClear
-                  />
-                </Form.Item>
-              </Col> */}
                 <Col xs={24} sm={24} md={24}>
                   <Form.Item
                     label="Licenses"

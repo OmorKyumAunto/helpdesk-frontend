@@ -36,8 +36,8 @@ export const UnitTableColumns = (): TableProps<IUnit>["columns"] => {
       render: (record) => (
         <>
           <Switch
-            defaultChecked={record.status === 1 ? true : false}
-            style={{ background: record.status === 1 ? "green" : "red" }}
+            defaultChecked={record.status === "active" ? true : false}
+            style={{ background: record.status === "active" ? "green" : "red" }}
             onChange={() => updateStatus(record.id)}
           />
         </>

@@ -19,7 +19,7 @@ const CreateAsset = () => {
   const assignType = Form.useWatch("is_assign", form);
   const employeeType = Form.useWatch("is_new_employee", form);
   const { data } = useGetEmployeesQuery({});
-  const { data: unitData } = useGetUnitsQuery({});
+  const { data: unitData } = useGetUnitsQuery({ status: "active" });
 
   const [create, { isLoading, isSuccess }] = useCreateAssetsMutation();
 

@@ -30,7 +30,9 @@ const AssetsList = () => {
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
-  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({});
+  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
+    status: "active",
+  });
   const [filter, setFilter] = useState<IAssetParams>({
     limit: Number(pageSize),
     offset: skipValue,
@@ -209,7 +211,7 @@ const AssetsList = () => {
                 );
               }}
             />
-            <CreateButton name=" Create Assets" onClick={showModal} />
+            <CreateButton name="Create Assets" onClick={showModal} />
           </div>
           <div>
             <Table

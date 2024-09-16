@@ -18,7 +18,7 @@ const { Option } = Select;
 
 const UpdateAsset = ({ asset }: { asset: IAsset }) => {
   const { data: singleAsset } = useGetSingleAssetsQuery(Number(asset?.id));
-  const { data: unitData } = useGetUnitsQuery({});
+  const { data: unitData } = useGetUnitsQuery({ status: "active" });
 
   const {
     id,
