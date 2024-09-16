@@ -2,9 +2,9 @@ import { TableProps } from "antd/lib";
 import dayjs from "dayjs";
 import { IAdmin } from "../types/adminTypes";
 import { Button, Popconfirm, Space, Switch } from "antd";
-import { useUpdateEmployeeStatusMutation } from "../../employee/api/employeeEndPoint";
+import { useDemoteToAdminMutation } from "../api/adminEndPoint";
 export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
-  const [updateStatus] = useUpdateEmployeeStatusMutation();
+  const [demote] = useDemoteToAdminMutation();
 
   return [
     {
@@ -66,7 +66,7 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
             <Popconfirm
               title="Remove the admin"
               description="Are you sure to remove this admin?"
-              onConfirm={() => console.log(record?.id)}
+              onConfirm={() => demote(record?.id)}
               okText="Yes"
               cancelText="No"
             >

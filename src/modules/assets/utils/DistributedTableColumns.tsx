@@ -59,7 +59,7 @@ export const DistributedAssetsTableColumns =
           <Space size="middle">
             <Button
               size="small"
-              type="primary"
+              style={{ color: "#1775BB" }}
               onClick={() => {
                 dispatch(
                   setCommonModal({

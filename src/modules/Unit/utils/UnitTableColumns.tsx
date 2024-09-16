@@ -37,8 +37,7 @@ export const UnitTableColumns = (): TableProps<IUnit>["columns"] => {
         <>
           <Switch
             defaultChecked={record.status === 1 ? true : false}
-            unCheckedChildren="Inactive"
-            checkedChildren="Active"
+            style={{ background: record.status === 1 ? "green" : "red" }}
             onChange={() => updateStatus(record.id)}
           />
         </>
@@ -57,7 +56,7 @@ export const UnitTableColumns = (): TableProps<IUnit>["columns"] => {
         <Space size="middle">
           <Button
             size="small"
-            type="primary"
+            style={{ color: "#1775BB" }}
             onClick={() => {
               dispatch(
                 setCommonModal({
@@ -78,7 +77,7 @@ export const UnitTableColumns = (): TableProps<IUnit>["columns"] => {
             okText="Yes"
             cancelText="No"
           >
-            <Button danger size="small" type="primary">
+            <Button size="small" style={{ color: "red" }}>
               <DeleteOutlined />
             </Button>
           </Popconfirm>

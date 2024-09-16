@@ -68,7 +68,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
         <Space size="middle">
           <Button
             size="small"
-            type="primary"
+            style={{ color: "#1775BB" }}
             onClick={() => {
               dispatch(
                 setCommonModal({
@@ -84,7 +84,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
           </Button>
           <Button
             size="small"
-            type="primary"
+            style={{ color: "#1775BB" }}
             onClick={() => {
               dispatch(
                 setCommonModal({
@@ -106,7 +106,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
               okText="Yes"
               cancelText="No"
             >
-              <Button danger size="small" type="primary">
+              <Button size="small" style={{ color: "red" }}>
                 <DeleteOutlined />
               </Button>
             </Popconfirm>

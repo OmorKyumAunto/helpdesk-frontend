@@ -108,8 +108,6 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
           <>
             <Switch
               defaultChecked={record.status === 1 ? true : false}
-              // unCheckedChildren="Inactive"
-              // checkedChildren="Active"
               style={{ background: record.status === 1 ? "green" : "red" }}
               onChange={() => updateStatus(record.id)}
             />
@@ -137,46 +135,9 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
       key: "role",
       render: (record) => (
         <>
-          {/* {record.role_id === 1 && <Tag color="green">Super Admin</Tag>}
+          {record.role_id === 1 && <Tag color="green">Super Admin</Tag>}
           {record.role_id === 2 && <Tag color="orange">Admin</Tag>}
-          {record.role_id === 3 && <Tag color="purple">Employee</Tag>} */}
-          {record.role_id === 1 && (
-            // <p style={{ color: "green", fontWeight: "bold", fontSize: "15px" }}>
-            //   Super Admin
-            // </p>
-            <Button style={{ color: "green" }} size="small">
-              Super Admin
-            </Button>
-          )}
-          {record.role_id === 2 && (
-            // <p
-            //   style={{ color: "orange", fontWeight: "bold", fontSize: "15px" }}
-            // >
-            //   Admin
-            // </p>
-            <Button style={{ color: "orange" }} size="small">
-              Admin
-            </Button>
-          )}
-          {record.role_id === 3 && (
-            // <p
-            //   className="rounded border-solid border-1 border-gray-300"
-            //   style={{
-            //     color: "purple",
-            //     fontWeight: "bold",
-            //     fontSize: "15px",
-            //     // border:'1px solid gray'
-            //   }}
-            // >
-            //   Employee
-            // </p>
-            <Button style={{ color: "purple" }} size="small">
-              Employee
-            </Button>
-          )}
-          {/* {record.role_id === 1 && <Tag color="green-inverse">Super Admin</Tag>}
-          {record.role_id === 2 && <Tag color="orange-inverse">Admin</Tag>}
-          {record.role_id === 3 && <Tag color="purple-inverse">Employee</Tag>} */}
+          {record.role_id === 3 && <Tag color="purple">Employee</Tag>}
         </>
       ),
     },

@@ -219,7 +219,7 @@ const AssetsList = () => {
               loading={isLoading || isFetching}
               dataSource={data?.data?.length ? data.data : []}
               columns={AssetsTableColumns()}
-              scroll={{ x: true }}
+              scroll={{ x: true, y: "70vh" }}
               pagination={{
                 ...generatePagination(
                   Number(data?.total),
