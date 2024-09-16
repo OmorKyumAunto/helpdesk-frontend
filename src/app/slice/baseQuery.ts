@@ -31,7 +31,7 @@ export const baseQueryWithReAuth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
   if (
-    result?.error?.status === 400 ||
+    // result?.error?.status === 400 ||
     result?.error?.status === 401 ||
     result?.error?.status === "CUSTOM_ERROR" ||
     result?.error?.status === "FETCH_ERROR" ||
