@@ -1,7 +1,7 @@
 import { TableProps } from "antd/lib";
 import dayjs from "dayjs";
 import { IAdmin } from "../types/adminTypes";
-import { Space, Switch } from "antd";
+import { Button, Popconfirm, Space, Switch } from "antd";
 import { useUpdateEmployeeStatusMutation } from "../../employee/api/employeeEndPoint";
 export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
   const [updateStatus] = useUpdateEmployeeStatusMutation();
@@ -56,12 +56,24 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
       render: (record) => (
         <Space size="middle">
           <>
-            <Switch
+            {/* <Switch
               defaultChecked={record.status === 1 ? true : false}
               unCheckedChildren="Inactive"
               checkedChildren="Active"
               onChange={() => updateStatus(record.id)}
-            />
+            /> */}
+
+            <Popconfirm
+              title="Remove the admin"
+              description="Are you sure to remove this admin?"
+              onConfirm={() => console.log(record?.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button size="small" type="primary" danger>
+                Remove
+              </Button>
+            </Popconfirm>
           </>
         </Space>
       ),

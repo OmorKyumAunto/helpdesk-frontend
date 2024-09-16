@@ -7,7 +7,7 @@ import {
 
 const DistributeAssetDetails = ({ id }: { id: any }) => {
   const { data: singleAsset } = useGetSingleDistributedAssetQuery(id);
-  console.log(singleAsset);
+  // console.log(singleAsset);
 
   const {
     category,
@@ -57,6 +57,7 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
             key: "12",
             label: "Name",
             children: asset_name,
+            span: 4,
           },
           {
             key: "2",
@@ -98,6 +99,11 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
             label: "Buying Unit",
             children: asset_unit_name,
           },
+          {
+            key: "7",
+            label: "Purchase Date",
+            children: dayjs(purchase_date).format("DD-MM-YYYY"),
+          },
         ]}
       />
       {purchase_date && employee_id_no && (
@@ -116,9 +122,9 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
           <Typography.Text style={{ fontWeight: 500, fontSize: "15px" }}>
             2. Reserved for Employee ID : {employee_id_no} ({employee_name})
           </Typography.Text> */}
+          <Timeline items={assetHistory?.length ? assetHistory : []} />
         </>
       )}
-      <Timeline items={assetHistory?.length ? assetHistory : []} />
     </div>
   );
 };

@@ -48,17 +48,6 @@ const AdminList = () => {
   const { data, isLoading, isFetching } = useGetAdminsQuery({ ...filter });
   const { data: allAdmins } = useGetOverallAdminsQuery();
 
-  const showModal = () => {
-    dispatch(
-      setCommonModal({
-        title: "Create Admin",
-        content: "Coming Soon...",
-        show: true,
-        width: 678,
-      })
-    );
-  };
-
   return (
     <>
       <div>
@@ -187,20 +176,6 @@ const AdminList = () => {
                 }
               />
             </Space>
-            <CreateButton
-              name="Upload Admin"
-              onClick={() => {
-                dispatch(
-                  setCommonModal({
-                    title: "Upload Admin",
-                    content: "Coming Soon...",
-                    show: true,
-                    width: 400,
-                  })
-                );
-              }}
-            />
-            <CreateButton name="Create Admin" onClick={showModal} />
           </div>
           <div>
             <Table

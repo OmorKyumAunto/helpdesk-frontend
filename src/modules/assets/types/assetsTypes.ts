@@ -37,6 +37,7 @@ export interface IAssetDetails {
   employee_unit: string;
   model: string;
   specification: string;
+  history: History[];
 }
 
 export interface IAssetParams {

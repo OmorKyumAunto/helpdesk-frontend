@@ -4,10 +4,12 @@ import { Button, Descriptions, Divider, Popconfirm, Tag } from "antd";
 import dayjs from "dayjs";
 import { useEmployeeAssignToAdminMutation } from "../api/employeeEndPoint";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../app/store/store";
 
 const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
   // console.log(employee);
+  const { roleId } = useSelector((state: RootState) => state.userSlice);
   const dispatch = useDispatch();
   const [assignToAdmin, { isSuccess }] = useEmployeeAssignToAdminMutation();
   const {
@@ -95,7 +97,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
             children: licenses,
             span: 2,
           },
-          ...(role_id === 3
+          ...(role_id === 3 && roleId === 1
             ? [
                 {
                   key: "11",

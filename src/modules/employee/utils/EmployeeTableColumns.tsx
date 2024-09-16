@@ -12,6 +12,7 @@ import { setCommonModal } from "../../../app/slice/modalSlice";
 import UpdateEmployee from "../components/UpdateEmployee";
 import EmployeeDetails from "../pages/EmployeeDetails";
 import { RootState } from "../../../app/store/store";
+import { BsTiktok } from "react-icons/bs";
 
 export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
   const [deleteEmployee] = useDeleteEmployeeMutation();
@@ -74,7 +75,9 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
         <Space size="middle">
           <Button
             size="small"
-            type="primary"
+            type="text"
+            style={{ color: "#1775BB" }}
+            // type="primary"
             onClick={() => {
               dispatch(
                 setCommonModal({
@@ -90,7 +93,8 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
           </Button>
           <Button
             size="small"
-            type="primary"
+            style={{ color: "#1775BB" }}
+            // type="primary"
             onClick={() => {
               dispatch(
                 setCommonModal({
@@ -107,8 +111,8 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
           <>
             <Switch
               defaultChecked={record.status === 1 ? true : false}
-              unCheckedChildren="Inactive"
-              checkedChildren="Active"
+              // unCheckedChildren="Inactive"
+              // checkedChildren="Active"
               style={{ background: record.status === 1 ? "green" : "red" }}
               onChange={() => updateStatus(record.id)}
             />
@@ -128,10 +132,26 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
               </Popconfirm>
             </>
           )}
-          {record.role_id === 1 && <Tag color="green-inverse">Super Admin</Tag>}
-          {record.role_id === 2 && <Tag color="orange-inverse">Admin</Tag>}
-          {record.role_id === 3 && <Tag color="purple-inverse">Employee</Tag>}
         </Space>
+      ),
+    },
+    {
+      title: "Role",
+      key: "role",
+      render: (record) => (
+        <>
+          {/* {record.role_id === 1 && <Tag color="green">Super Admin</Tag>}
+          {record.role_id === 2 && <Tag color="orange">Admin</Tag>}
+          {record.role_id === 3 && <Tag color="purple">Employee</Tag>} */}
+          {record.role_id === 1 && (
+            <p style={{ color: "green" }}>Super Admin</p>
+          )}
+          {record.role_id === 2 && <p style={{ color: "orange" }}>Admin</p>}
+          {record.role_id === 3 && <p style={{ color: "purple" }}>Employee</p>}
+          {/* {record.role_id === 1 && <Tag color="green-inverse">Super Admin</Tag>}
+          {record.role_id === 2 && <Tag color="orange-inverse">Admin</Tag>}
+          {record.role_id === 3 && <Tag color="purple-inverse">Employee</Tag>} */}
+        </>
       ),
     },
   ];

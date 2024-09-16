@@ -177,6 +177,7 @@ const EmployeeList = () => {
                   "Contact No",
                   "Date of Joining",
                   "Unit Name",
+                  "Licenses",
                 ]}
                 excelData={
                   data?.data?.length
@@ -190,6 +191,7 @@ const EmployeeList = () => {
                           contact_no,
                           joining_date,
                           unit_name,
+                          licenses,
                         }: any) => {
                           const data = {
                             "Employee ID": employee_id,
@@ -201,6 +203,7 @@ const EmployeeList = () => {
                             "Date of Joining":
                               dayjs(joining_date).format("DD-MM-YYYY"),
                             "Unit Name": unit_name,
+                            Licenses: licenses,
                           };
                           return data;
                         }

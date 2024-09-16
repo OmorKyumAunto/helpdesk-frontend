@@ -4,7 +4,7 @@ import { useGetSingleAssetsQuery } from "../api/assetsEndPoint";
 
 const AssetDetails = ({ id }: { id: any }) => {
   const { data: singleAsset } = useGetSingleAssetsQuery(id);
-
+  console.log(singleAsset);
   const {
     category,
     purchase_date,
@@ -16,7 +16,31 @@ const AssetDetails = ({ id }: { id: any }) => {
     remarks,
     employee_id_no,
     name,
+    history,
   } = singleAsset?.data || {};
+  const assetHistory = history?.map((item: any) => {
+    return {
+      children: (
+        <p>
+          <span
+          // style={{
+          //   color: item?.status === 1 ? "green" : "red",
+          // }}
+          >
+            {item?.history}
+          </span>
+          <span className="ml-2">
+            ( Assign date :
+            <span className="px-2 rounded font-bold">
+              {dayjs(item?.created_at).format("DD-MM-YYYY")}
+            </span>
+            )
+          </span>
+        </p>
+      ),
+      color: item?.status === 1 ? "green" : "red",
+    };
+  });
   return (
     <div>
       <Descriptions
@@ -28,6 +52,7 @@ const AssetDetails = ({ id }: { id: any }) => {
             key: "12",
             label: "Name",
             children: name,
+            span: 4,
           },
           {
             key: "2",
@@ -69,8 +94,32 @@ const AssetDetails = ({ id }: { id: any }) => {
             label: "Buying Unit",
             children: unit_name,
           },
+          {
+            key: "8",
+            label: "Purchase Date",
+            children: dayjs(purchase_date).format("DD-MM-YYYY"),
+          },
         ]}
       />
+      {purchase_date && employee_id_no && (
+        <>
+          <Divider
+            orientation="center"
+            style={{ fontWeight: "bold", fontSize: "16px" }}
+          >
+            {" "}
+            Asset History
+          </Divider>
+          {/* <Typography.Text style={{ fontWeight: 500, fontSize: "15px" }}>
+            1. In Stock since {dayjs(purchase_date).format("DD-MM-YYYY")}
+          </Typography.Text>{" "}
+          <br />
+          <Typography.Text style={{ fontWeight: 500, fontSize: "15px" }}>
+            2. Reserved for Employee ID : {employee_id_no} ({employee_name})
+          </Typography.Text> */}
+          <Timeline items={assetHistory?.length ? assetHistory : []} />
+        </>
+      )}
     </div>
   );
 };
