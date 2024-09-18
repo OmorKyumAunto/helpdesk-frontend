@@ -1,22 +1,15 @@
-import { Button, Popconfirm, Space, Switch, Tag } from "antd";
+import { Button, Space } from "antd";
 import { TableProps } from "antd/lib";
 import { IEmployee } from "../types/employeeTypes";
 import dayjs from "dayjs";
-import {
-  useDeleteEmployeeMutation,
-  useUpdateEmployeeStatusMutation,
-} from "../api/employeeEndPoint";
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import UpdateEmployee from "../components/UpdateEmployee";
 import EmployeeDetails from "../pages/EmployeeDetails";
-import { RootState } from "../../../app/store/store";
+import { EyeOutlined } from "@ant-design/icons";
 
 export const EmployeeTableColumnsForEmployeePanel =
   (): TableProps<IEmployee>["columns"] => {
     const dispatch = useDispatch();
-    const { roleId } = useSelector((state: RootState) => state.userSlice);
 
     return [
       {

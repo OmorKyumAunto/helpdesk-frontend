@@ -1,8 +1,5 @@
 import { Card, Col, Row, Typography } from "antd";
-import {
-  useGetAllDashboardQuery,
-  useGetDashboardEmployeeDataQuery,
-} from "../api/dashboardEndPoints";
+import { useGetAllDashboardQuery } from "../api/dashboardEndPoints";
 import { FaComputer } from "react-icons/fa6";
 import { LuUser2, LuUsers2 } from "react-icons/lu";
 import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
@@ -10,7 +7,6 @@ import GraphChartApex from "../components/ApexChart";
 import ApexPieChart from "../components/ApexPieChart";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
-import { AiOutlineOrderedList } from "react-icons/ai";
 import TopDash from "../components/TopDash";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import dayjs from "dayjs";
@@ -19,13 +15,9 @@ const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const { data } = useGetAllDashboardQuery();
   const { data: profile } = useGetMeQuery();
-  console.log(profile?.data);
   const {
-    id,
-    role_id,
-    profile_id,
+    total_assign_asset,
     employee_id,
-    name,
     department,
     designation,
     email,
@@ -34,7 +26,6 @@ const DashboardCards = () => {
     unit_name,
     status,
   } = profile?.data || {};
-  const { data: empData } = useGetDashboardEmployeeDataQuery({});
   return (
     <>
       <TopDash />
@@ -241,7 +232,7 @@ const DashboardCards = () => {
                       <div className="text-lg md:text-xl ml-5">
                         <p>: {dayjs(joining_date).format("DD-MM-YYYY")}</p>
                         <p>: {status === 1 ? "Active" : "Inactive"}</p>
-                        <p>: {0}</p>
+                        <p>: {total_assign_asset}</p>
                       </div>
                     </div>
                     <div>

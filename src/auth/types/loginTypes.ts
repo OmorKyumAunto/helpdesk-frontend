@@ -13,6 +13,7 @@ export interface IUser {
   status: number;
   created_by: null | string;
   created_at: string;
+  total_assign_asset: number;
   role: {
     role_id: number;
     role_name: string;

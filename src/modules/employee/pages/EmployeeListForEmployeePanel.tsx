@@ -2,8 +2,7 @@ import { Card, Input, Select, Space, Table } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IEmployeeParams } from "../types/employeeTypes";
-import { useGetEmployeesForEmployeePanelQuery } from "../api/employeeEndPoint";
-import { EmployeeTableColumns } from "../utils/EmployeeTableColumns";
+import { useGetEmployeesQuery } from "../api/employeeEndPoint";
 import { SearchOutlined } from "@ant-design/icons";
 import { generatePagination } from "../../../common/TablePagination copy";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
@@ -39,10 +38,9 @@ const EmployeeListForEmployeePanel = () => {
     });
   }, [page, pageSize, skipValue]);
 
-  const { data, isLoading, isFetching } = useGetEmployeesForEmployeePanelQuery({
+  const { data, isLoading, isFetching } = useGetEmployeesQuery({
     ...filter,
   });
-  // const { data: allEmployees } = useGetOverallEmployeesQuery();
 
   return (
     <>
@@ -84,27 +82,6 @@ const EmployeeListForEmployeePanel = () => {
               <Option value="DIPL">DIPL</Option>
               <Option value="Corporate Office">Corporate Office</Option>
             </Select>
-            {/* <Select
-              style={{ width: "180px" }}
-              loading={unitIsLoading}
-              placeholder="Select Unit Name"
-              showSearch
-              optionFilterProp="children"
-              onChange={(e) => setFilter({ ...filter, unit_id: e, offset: 0 })}
-              filterOption={(
-                input: string,
-                option?: { label: string; value: string }
-              ) =>
-                (option?.label ?? "")
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-              options={unitData?.data?.map((unit: any) => ({
-                value: unit.id,
-                label: unit.title,
-              }))}
-              allowClear
-            /> */}
             <>
               <PDFDownload
                 PDFFileName="employee_list"
@@ -150,7 +127,6 @@ const EmployeeListForEmployeePanel = () => {
                 }
               />
             </>
-
             <Space>
               <ExcelDownload
                 excelName={"employee_list"}
