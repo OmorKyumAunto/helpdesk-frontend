@@ -175,7 +175,7 @@ const DashboardCards = () => {
         </Row>
       ) : (
         <Row gutter={[12, 6]}>
-          <Col xs={24} sm={24} md={24} lg={9}>
+          <Col xs={24} sm={24} md={24} lg={8}>
             <Row gutter={[6, 12]}>
               <Col xs={24} sm={24} md={24}>
                 <Link to={"/employee/list"}>
@@ -267,12 +267,12 @@ const DashboardCards = () => {
               </Col>
             </Row>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={15}>
+          <Col xs={24} sm={24} md={24} lg={16}>
             <Row>
               <Col xs={24} sm={24} md={24}>
                 <Card className="bg-[#1775bb] text-white py-8 h-full">
                   <Row gutter={[12, 6]}>
-                    <Col xs={24} sm={24} md={12} lg={12}>
+                    <Col xs={24} sm={24} md={12} lg={11}>
                       <div
                         style={{
                           display: "flex",
@@ -287,7 +287,7 @@ const DashboardCards = () => {
                             <p className="mb-2">Department</p>
                             <p className="mb-3">Joining Date</p>
                           </div>
-                          <div className="text-lg md:text-xl ml-5 md:ml-6">
+                          <div className="text-lg md:text-xl ml-4">
                             <p className="mb-2">: {employee_id}</p>
                             <p className="mb-2">: {designation}</p>
                             <p className="mb-2">: {department}</p>
@@ -298,7 +298,7 @@ const DashboardCards = () => {
                         </div>
                       </div>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
+                    <Col xs={24} sm={24} md={12} lg={13}>
                       <div
                         style={{
                           display: "flex",
@@ -313,7 +313,7 @@ const DashboardCards = () => {
                             <p className="mb-2">Unit Name</p>
                             <p className="mb-3">Status</p>
                           </div>
-                          <div className="text-lg md:text-xl ml-5 md:ml-6">
+                          <div className="text-lg md:text-xl ml-4">
                             <p className="mb-2">: {contact_no}</p>
                             <p className="mb-2">: {email}</p>
                             <p className="mb-2">: {unit_name}</p>
