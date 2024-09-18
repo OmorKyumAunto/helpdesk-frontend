@@ -32,7 +32,7 @@ const AssetDetails = ({ id }: { id: any }) => {
           <span className="ml-2">
             ( Assign date :
             <span className="px-2 rounded font-bold">
-              {dayjs(item?.created_at).format("DD-MM-YYYY")}
+              {dayjs(item?.asset_assign_date).format("DD-MM-YYYY")}
             </span>
             )
           </span>

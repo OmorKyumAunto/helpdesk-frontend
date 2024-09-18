@@ -63,7 +63,7 @@ export interface IDistributedSingle {
   asset_unit_name: string;
   employee_id: number;
   employee_name: string;
-  employee_id_no: string;
+  user_id_no: string;
   designation: string;
   department: string;
   email: string;

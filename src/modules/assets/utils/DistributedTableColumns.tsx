@@ -20,13 +20,13 @@ export const DistributedAssetsTableColumns =
 
       {
         title: "Employee ID",
-        dataIndex: "employee_id_no",
-        key: "employee_id_no",
+        dataIndex: "user_id_no",
+        key: "user_id_no",
       },
       {
         title: "Employee Name",
-        dataIndex: "employee_name",
-        key: "employee_name",
+        dataIndex: "user_name",
+        key: "user_name",
       },
       {
         title: "Department",

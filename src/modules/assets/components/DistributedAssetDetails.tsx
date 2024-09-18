@@ -7,7 +7,7 @@ import {
 
 const DistributeAssetDetails = ({ id }: { id: any }) => {
   const { data: singleAsset } = useGetSingleDistributedAssetQuery(id);
-  // console.log(singleAsset);
+  console.log(singleAsset);
 
   const {
     category,
@@ -18,7 +18,7 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
     model,
     specification,
     remarks,
-    employee_id_no,
+    user_id_no,
     // employee_name,
     asset_name,
     history,
@@ -37,7 +37,7 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
           <span className="ml-2">
             ( Assign date :
             <span className="px-2 rounded font-bold">
-              {dayjs(item?.created_at).format("DD-MM-YYYY")}
+              {dayjs(item?.asset_assign_date).format("DD-MM-YYYY") || "N/A"}
             </span>
             )
           </span>
@@ -106,7 +106,7 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
           },
         ]}
       />
-      {purchase_date && employee_id_no && (
+      {purchase_date && user_id_no && (
         <>
           <Divider
             orientation="center"

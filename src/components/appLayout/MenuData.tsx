@@ -6,12 +6,10 @@ import { LuUsers2 } from "react-icons/lu";
 import { MdWebAsset } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { IMenuData } from "../../../Types/MenuData";
-import { CiSettings } from "react-icons/ci";
 import { FaRegListAlt } from "react-icons/fa";
 import { LiaUsersCogSolid } from "react-icons/lia";
 
 export const sideBarItems = (roleId: number) => {
-  console.log(roleId);
   let menuData: IMenuData[] = [
     {
       label: <Link to="/">Dashboard</Link>,
@@ -21,19 +19,24 @@ export const sideBarItems = (roleId: number) => {
     ...(roleId !== 3
       ? [
           {
-            label: <Link to="/assets/list">Assets</Link>,
+            label: <Link to="/assets/list">Stock</Link>,
             key: "/assets/list",
             icon: <AiOutlinePlusSquare size={20} />,
           },
           {
-            label: <Link to="/assets/distributed">Distributed Assets</Link>,
+            label: <Link to="/assets/distributed">Disbursements</Link>,
             key: "/assets/distributed",
+            icon: <MdOutlineAssignment size={20} />,
+          },
+          {
+            label: <Link to="/employee/distributed">My Stock</Link>,
+            key: "/employee/distributed",
             icon: <MdOutlineAssignment size={20} />,
           },
         ]
       : [
           {
-            label: <Link to="/employee/distributed">Distributed Assets</Link>,
+            label: <Link to="/employee/distributed">Disbursements</Link>,
             key: "/employee/distributed",
             icon: <MdOutlineAssignment size={20} />,
           },
@@ -50,7 +53,7 @@ export const sideBarItems = (roleId: number) => {
     ...(roleId === 1
       ? [
           {
-            label: <Link to="/admin/list">Admin List</Link>,
+            label: <Link to="/admin/list">Admin Panel</Link>,
             key: "/admin/list",
             icon: <LiaUsersCogSolid size={20} />,
           },

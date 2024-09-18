@@ -14,6 +14,7 @@ import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import dayjs from "dayjs";
 import { EmployeeDistributedAssetsTableColumns } from "../utils/EmployeeDistributedTableColumns";
+import { useGetMeQuery } from "../../../app/api/userApi";
 const { Option } = Select;
 const EmployeeDistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -33,7 +34,8 @@ const EmployeeDistributedAsset = () => {
     limit: Number(pageSize),
     offset: skipValue,
   });
-
+  const { data: profile } = useGetMeQuery();
+  const roleID = profile?.data?.role_id;
   useEffect(() => {
     setFilter({
       ...filter,
@@ -49,7 +51,7 @@ const EmployeeDistributedAsset = () => {
   return (
     <div>
       <Card
-        title={`Distributed Asset List `}
+        title={roleID === 3 ? `Distributed Asset List ` : "My Stock List"}
         style={{
           boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
           marginBottom: "1rem",

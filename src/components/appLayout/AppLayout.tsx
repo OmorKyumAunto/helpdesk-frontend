@@ -44,7 +44,7 @@ export const AppLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentSelection, setCurrentSelection] = useState<string>("");
-  const [sidebarWidth, setSidebarWidth] = useState(250);
+  const [sidebarWidth, setSidebarWidth] = useState(240);
   const [openKeys, setOpenKeys] = useState<Array<string>>([]);
   const location = useLocation();
   const gridBreak = useBreakpoint();

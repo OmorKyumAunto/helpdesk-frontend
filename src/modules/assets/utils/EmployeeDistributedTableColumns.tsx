@@ -3,15 +3,16 @@ import { IAsset } from "../types/assetsTypes";
 import dayjs from "dayjs";
 import { Button, Space } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
-import AssetDetails from "../components/AssetDetails";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useDispatch } from "react-redux";
 import EmployeeDistributedAssetDetails from "../components/EmployeeDistributedAssetDetails";
+import { useGetMeQuery } from "../../../app/api/userApi";
 
 export const EmployeeDistributedAssetsTableColumns =
   (): TableProps<IAsset>["columns"] => {
     const dispatch = useDispatch();
-
+    const { data: profile } = useGetMeQuery();
+    const roleID = profile?.data?.role_id;
     return [
       {
         title: "No",
@@ -59,7 +60,11 @@ export const EmployeeDistributedAssetsTableColumns =
               onClick={() => {
                 dispatch(
                   setCommonModal({
-                    title: "Distributed Asset Details",
+                    title: `${
+                      roleID === 3
+                        ? `Distributed Asset Details`
+                        : "My Stock Details"
+                    }`,
                     content: (
                       <EmployeeDistributedAssetDetails record={record} />
                     ),
