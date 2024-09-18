@@ -40,6 +40,11 @@ export const sideBarItems = (roleId: number) => {
             key: "/employee/distributed",
             icon: <MdOutlineAssignment size={20} />,
           },
+          {
+            label: <Link to="/employee/employee-list">Employees</Link>,
+            key: "/employee/employee-list",
+            icon: <LuUsers2 size={20} />,
+          },
         ]),
     ...(roleId !== 3
       ? [

@@ -19,6 +19,7 @@ import UnitList from "./modules/Unit/pages/UnitList";
 import ProfileSection from "./components/navBar/ProfileSection";
 import AdminList from "./modules/admin/pages/Adminlist";
 import EmployeeDistributedAsset from "./modules/assets/pages/EmployeeDistributedAsset";
+import EmployeeListForEmployeePanel from "./modules/employee/pages/EmployeeListForEmployeePanel";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -80,6 +81,10 @@ export const routers = createBrowserRouter([
       {
         path: "/employee/list",
         element: <EmployeeList />,
+      },
+      {
+        path: "/employee/employee-list",
+        element: <EmployeeListForEmployeePanel />,
       },
       {
         path: "/admin/list",

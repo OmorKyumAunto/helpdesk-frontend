@@ -21,6 +21,19 @@ export const employeeEndPoint = api.injectEndpoints({
       providesTags: () => ["employee"],
       // providesTags: () => [{ type: "employee", id: "list" }],
     }),
+    getEmployeesForEmployeePanel: build.query<
+      HTTPResponse<IEmployee[]>,
+      IEmployeeParams
+    >({
+      query: (params) => {
+        return {
+          url: `/employee/employee-list`,
+          params,
+        };
+      },
+      providesTags: () => ["employee"],
+      // providesTags: () => [{ type: "employee", id: "list" }],
+    }),
     getOverallEmployees: build.query<HTTPResponse<IEmployee[]>, void>({
       query: () => {
         return {
@@ -166,6 +179,7 @@ export const employeeEndPoint = api.injectEndpoints({
 
 export const {
   useGetEmployeesQuery,
+  useGetEmployeesForEmployeePanelQuery,
   useGetOverallEmployeesQuery,
   useCreateEmployeeMutation,
   useCreateEmployeeUploadFileMutation,
