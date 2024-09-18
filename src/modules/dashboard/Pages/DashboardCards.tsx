@@ -1,4 +1,4 @@
-import { Card, Col, Row, Typography } from "antd";
+import { Card, Col, Descriptions, Row, Typography } from "antd";
 import { useGetAllDashboardQuery } from "../api/dashboardEndPoints";
 import { FaComputer } from "react-icons/fa6";
 import { LuUser2, LuUsers2 } from "react-icons/lu";
@@ -10,6 +10,7 @@ import { RootState } from "../../../app/store/store";
 import TopDash from "../components/TopDash";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
@@ -32,130 +33,136 @@ const DashboardCards = () => {
       {roleId !== 3 ? (
         <Row gutter={[12, 12]}>
           <Col xs={24} sm={24} md={24} lg={8}>
-            <Card className="bg-[#ba45ba] text-white">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  <Typography.Title style={{ color: "white" }} level={3}>
-                    Total Asset
-                  </Typography.Title>
-                  <p
-                    style={{
-                      textAlign: "center",
-                      fontSize: "24px",
-                      fontWeight: "bold",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {data?.data?.total_asset || 0}
-                  </p>
-                </div>
-                <div>
-                  <div
-                    className="bg-[#cf7dcf]"
-                    style={{
-                      height: "80px",
-                      width: "80px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: "50%",
-                    }}
-                  >
-                    <FaComputer size={52} />
+            <Link to={"/assets/list"}>
+              <Card className="bg-[#ba45ba] text-white">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    <Typography.Title style={{ color: "white" }} level={3}>
+                      Total Asset
+                    </Typography.Title>
+                    <p
+                      style={{
+                        textAlign: "center",
+                        fontSize: "24px",
+                        fontWeight: "bold",
+                        marginTop: "4px",
+                      }}
+                    >
+                      {data?.data?.total_asset || 0}
+                    </p>
+                  </div>
+                  <div>
+                    <div
+                      className="bg-[#cf7dcf]"
+                      style={{
+                        height: "80px",
+                        width: "80px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: "50%",
+                      }}
+                    >
+                      <FaComputer size={52} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </Link>
           </Col>
           <Col xs={24} sm={24} md={24} lg={8}>
-            <Card className="bg-[#ffa500] text-white">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  <Typography.Title style={{ color: "white" }} level={3}>
-                    Total Employee
-                  </Typography.Title>
-                  <p
-                    style={{
-                      textAlign: "center",
-                      fontSize: "24px",
-                      fontWeight: "bold",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {data?.data?.total_employee || 0}
-                  </p>
-                </div>
-                <div>
-                  <div
-                    className="bg-[#ffc14d]"
-                    style={{
-                      height: "80px",
-                      width: "80px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: "50%",
-                    }}
-                  >
-                    <LuUsers2 size={52} />
+            <Link to={"/employee/list"}>
+              <Card className="bg-[#ffa500] text-white">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    <Typography.Title style={{ color: "white" }} level={3}>
+                      Total Employee
+                    </Typography.Title>
+                    <p
+                      style={{
+                        textAlign: "center",
+                        fontSize: "24px",
+                        fontWeight: "bold",
+                        marginTop: "4px",
+                      }}
+                    >
+                      {data?.data?.total_employee || 0}
+                    </p>
+                  </div>
+                  <div>
+                    <div
+                      className="bg-[#ffc14d]"
+                      style={{
+                        height: "80px",
+                        width: "80px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: "50%",
+                      }}
+                    >
+                      <LuUsers2 size={52} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </Link>
           </Col>
           <Col xs={24} sm={24} md={24} lg={8}>
-            <Card className="bg-[#8dc73f] text-white">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  <Typography.Title style={{ color: "white" }} level={3}>
-                    Total Assign Asset
-                  </Typography.Title>
-                  <p
-                    style={{
-                      textAlign: "center",
-                      fontSize: "24px",
-                      fontWeight: "bold",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {data?.data?.total_assign_asset || 0}
-                  </p>
-                </div>
-                <div>
-                  <div
-                    className="bg-[#acd775]"
-                    style={{
-                      height: "80px",
-                      width: "80px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: "50%",
-                    }}
-                  >
-                    <MdOutlineAssignmentTurnedIn size={52} />
+            <Link to={"/assets/distributed"}>
+              <Card className="bg-[#8dc73f] text-white">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    <Typography.Title style={{ color: "white" }} level={3}>
+                      Total Disbursements
+                    </Typography.Title>
+                    <p
+                      style={{
+                        textAlign: "center",
+                        fontSize: "24px",
+                        fontWeight: "bold",
+                        marginTop: "4px",
+                      }}
+                    >
+                      {data?.data?.total_assign_asset || 0}
+                    </p>
+                  </div>
+                  <div>
+                    <div
+                      className="bg-[#acd775]"
+                      style={{
+                        height: "80px",
+                        width: "80px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: "50%",
+                      }}
+                    >
+                      <MdOutlineAssignmentTurnedIn size={52} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </Link>
           </Col>
           <Col xs={24} sm={24} md={24} lg={6}>
             <Card title="Asset Category Statistics">
@@ -168,92 +175,170 @@ const DashboardCards = () => {
         </Row>
       ) : (
         <Row gutter={[12, 6]}>
-          <Col xs={24} sm={24} md={24} lg={24}>
-            <Card className="bg-[#1775bb] text-white py-8 h-full">
-              <Row gutter={[12, 6]}>
-                <Col xs={24} sm={24} md={12} lg={8}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div className="flex ">
-                      <div className="text-lg md:text-xl font-bold">
-                        <p>Employee ID</p>
-                        <p>Designation</p>
-                        <p>Department</p>
+          <Col xs={24} sm={24} md={24} lg={12}>
+            <Row gutter={[6, 12]}>
+              <Col xs={24} sm={24} md={24}>
+                <Link to={"/employee/list"}>
+                  <Card className="bg-[#ffa500] text-white">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div>
+                        <Typography.Title style={{ color: "white" }} level={3}>
+                          Total Employee
+                        </Typography.Title>
+                        <p
+                          style={{
+                            textAlign: "center",
+                            fontSize: "24px",
+                            fontWeight: "bold",
+                            marginTop: "4px",
+                          }}
+                        >
+                          {data?.data?.total_employee || 0}
+                        </p>
                       </div>
-                      <div className="text-lg md:text-xl ml-5">
-                        <p>: {employee_id}</p>
-                        <p>: {designation}</p>
-                        <p>: {department}</p>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={8}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div className="flex ">
-                      <div className="text-lg md:text-xl font-bold">
-                        <p>Phone</p>
-                        <p>Email</p>
-                        <p>Unit Name</p>
-                      </div>
-                      <div className="text-lg md:text-xl ml-5">
-                        <p>: {contact_no}</p>
-                        <p>: {email}</p>
-                        <p>: {unit_name}</p>
+                      <div>
+                        <div
+                          className="bg-[#ffc14d]"
+                          style={{
+                            height: "80px",
+                            width: "80px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: "50%",
+                          }}
+                        >
+                          <LuUsers2 size={52} />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={8}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div className="flex ">
-                      <div className="text-lg md:text-xl font-bold">
-                        <p>Joining Date</p>
-                        <p>Status</p>
-                        <p>Asset Count</p>
+                  </Card>
+                </Link>
+              </Col>
+              <Col xs={24} sm={24} md={24}>
+                <Link to={"/assets/distributed"}>
+                  <Card className="bg-[#8dc73f] text-white">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div>
+                        <Typography.Title style={{ color: "white" }} level={3}>
+                          Total Disbursements
+                        </Typography.Title>
+                        <p
+                          style={{
+                            textAlign: "center",
+                            fontSize: "24px",
+                            fontWeight: "bold",
+                            marginTop: "4px",
+                          }}
+                        >
+                          {total_assign_asset || 0}
+                        </p>
                       </div>
-                      <div className="text-lg md:text-xl ml-5">
-                        <p>: {dayjs(joining_date).format("DD-MM-YYYY")}</p>
-                        <p>: {status === 1 ? "Active" : "Inactive"}</p>
-                        <p>: {total_assign_asset}</p>
+                      <div>
+                        <div
+                          className="bg-[#acd775]"
+                          style={{
+                            height: "80px",
+                            width: "80px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: "50%",
+                          }}
+                        >
+                          <MdOutlineAssignmentTurnedIn size={52} />
+                        </div>
                       </div>
                     </div>
-                    <div>
+                  </Card>
+                </Link>
+              </Col>
+            </Row>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12}>
+            <Row>
+              <Col xs={24} sm={24} md={24}>
+                <Card className="bg-[#1775bb] text-white py-8 h-full">
+                  {/* <Descriptions
+                    bordered
+                    column={1}
+                    items={[
+                      {
+                        key: "1",
+                        label: "Employee Id",
+                        children: employee_id,
+                      },
+                    ]}
+                  /> */}
+                  <Row gutter={[12, 6]}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <div
-                        className="bg-[#3398e6]"
                         style={{
-                          height: "80px",
-                          width: "80px",
                           display: "flex",
-                          justifyContent: "center",
+                          justifyContent: "space-between",
                           alignItems: "center",
-                          borderRadius: "50%",
                         }}
                       >
-                        <LuUser2 size={52} />
+                        <div className="flex ">
+                          <div className="text-lg md:text-xl font-bold">
+                            <p className="mb-2">Employee ID</p>
+                            <p className="mb-2">Designation</p>
+                            <p className="mb-2">Department</p>
+                            <p className="mb-3">Joining Date</p>
+                          </div>
+                          <div className="text-lg md:text-xl ml-5 md:ml-8 lg:ml-10">
+                            <p className="mb-2">: {employee_id}</p>
+                            <p className="mb-2">: {designation}</p>
+                            <p className="mb-2">: {department}</p>
+                            <p className="mb-3">
+                              : {dayjs(joining_date).format("DD-MM-YYYY")}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </Card>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className="flex ">
+                          <div className="text-lg md:text-xl font-bold">
+                            <p className="mb-2">Phone</p>
+                            <p className="mb-2">Email</p>
+                            <p className="mb-2">Unit Name</p>
+                            <p className="mb-3">Status</p>
+                          </div>
+                          <div className="text-lg md:text-xl ml-5 md:ml-8 lg:ml-10">
+                            <p className="mb-2">: {contact_no}</p>
+                            <p className="mb-2">: {email}</p>
+                            <p className="mb-2">: {unit_name}</p>
+                            <p className="mb-3">
+                              : {status === 1 ? "Active" : "Inactive"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                </Card>
+              </Col>
+            </Row>
           </Col>
         </Row>
       )}
