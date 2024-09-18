@@ -175,11 +175,11 @@ const DashboardCards = () => {
         </Row>
       ) : (
         <Row gutter={[12, 6]}>
-          <Col xs={24} sm={24} md={24} lg={12}>
+          <Col xs={24} sm={24} md={24} lg={9}>
             <Row gutter={[6, 12]}>
               <Col xs={24} sm={24} md={24}>
                 <Link to={"/employee/list"}>
-                  <Card className="bg-[#ffa500] text-white">
+                  <Card className="bg-[#ffa500] text-white h-full">
                     <div
                       style={{
                         display: "flex",
@@ -223,7 +223,7 @@ const DashboardCards = () => {
               </Col>
               <Col xs={24} sm={24} md={24}>
                 <Link to={"/assets/distributed"}>
-                  <Card className="bg-[#8dc73f] text-white">
+                  <Card className="bg-[#8dc73f] text-white h-full">
                     <div
                       style={{
                         display: "flex",
@@ -267,21 +267,10 @@ const DashboardCards = () => {
               </Col>
             </Row>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={12}>
+          <Col xs={24} sm={24} md={24} lg={15}>
             <Row>
               <Col xs={24} sm={24} md={24}>
                 <Card className="bg-[#1775bb] text-white py-8 h-full">
-                  {/* <Descriptions
-                    bordered
-                    column={1}
-                    items={[
-                      {
-                        key: "1",
-                        label: "Employee Id",
-                        children: employee_id,
-                      },
-                    ]}
-                  /> */}
                   <Row gutter={[12, 6]}>
                     <Col xs={24} sm={24} md={12} lg={12}>
                       <div
@@ -298,7 +287,7 @@ const DashboardCards = () => {
                             <p className="mb-2">Department</p>
                             <p className="mb-3">Joining Date</p>
                           </div>
-                          <div className="text-lg md:text-xl ml-5 md:ml-8 lg:ml-10">
+                          <div className="text-lg md:text-xl ml-5 md:ml-6">
                             <p className="mb-2">: {employee_id}</p>
                             <p className="mb-2">: {designation}</p>
                             <p className="mb-2">: {department}</p>
@@ -324,7 +313,7 @@ const DashboardCards = () => {
                             <p className="mb-2">Unit Name</p>
                             <p className="mb-3">Status</p>
                           </div>
-                          <div className="text-lg md:text-xl ml-5 md:ml-8 lg:ml-10">
+                          <div className="text-lg md:text-xl ml-5 md:ml-6">
                             <p className="mb-2">: {contact_no}</p>
                             <p className="mb-2">: {email}</p>
                             <p className="mb-2">: {unit_name}</p>

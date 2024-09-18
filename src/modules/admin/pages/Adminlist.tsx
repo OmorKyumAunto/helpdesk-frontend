@@ -104,7 +104,7 @@ const AdminList = () => {
                   allAdmins?.data?.length
                     ? allAdmins?.data?.map(
                         ({
-                          Admin_id,
+                          employee_id,
                           name,
                           department,
                           designation,
@@ -114,7 +114,7 @@ const AdminList = () => {
                           unit_name,
                         }: any) => {
                           const data = {
-                            "Admin ID": Admin_id,
+                            "Admin ID": employee_id,
                             "Admin Name": name,
                             Department: department,
                             Designation: designation,
@@ -149,7 +149,7 @@ const AdminList = () => {
                   allAdmins?.data?.length
                     ? allAdmins?.data?.map(
                         ({
-                          Admin_id,
+                          employee_id,
                           name,
                           department,
                           designation,
@@ -159,7 +159,7 @@ const AdminList = () => {
                           unit_name,
                         }: any) => {
                           const data = {
-                            "Admin ID": Admin_id,
+                            "Admin ID": employee_id,
                             "Admin Name": name,
                             Department: department,
                             Designation: designation,

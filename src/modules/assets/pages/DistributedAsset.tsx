@@ -106,22 +106,22 @@ const DistributedAsset = () => {
                 ? data?.data?.map(
                     (
                       {
-                        employee_id_no,
-                        employee_name,
-                        employee_department,
+                        user_id_no,
+                        user_name,
+                        department,
                         category,
                         assign_date,
                         serial_number,
-                        employee_unit,
+                        employee_unit_name,
                       }: any,
                       index
                     ) => {
                       const data = {
                         No: index + 1,
-                        "Employee ID": employee_id_no,
-                        "Employee Name": employee_name,
-                        Department: employee_department,
-                        Unit: employee_unit,
+                        "Employee ID": user_id_no,
+                        "Employee Name": user_name,
+                        Department: department,
+                        Unit: employee_unit_name,
                         "Asset Type": category,
                         "Serial No": serial_number,
                         "Assigning Date":
@@ -149,19 +149,19 @@ const DistributedAsset = () => {
               data?.data?.length
                 ? data?.data?.map(
                     ({
-                      employee_id_no,
-                      employee_name,
-                      employee_department,
+                      user_id_no,
+                      user_name,
+                      department,
                       category,
                       assign_date,
                       serial_number,
-                      employee_unit,
+                      employee_unit_name,
                     }: any) => {
                       const data = {
-                        "Employee ID": employee_id_no,
-                        "Employee Name": employee_name,
-                        Department: employee_department,
-                        Unit: employee_unit,
+                        "Employee ID": user_id_no,
+                        "Employee Name": user_name,
+                        Department: department,
+                        Unit: employee_unit_name,
                         "Asset Type": category,
                         "Serial No": serial_number,
                         "Assigning Date":
