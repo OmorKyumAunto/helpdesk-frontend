@@ -87,7 +87,7 @@ const EmployeeList = () => {
               />
             </div>
             <Select
-              style={{ width: "180px" }}
+              style={{ width: "160px" }}
               onChange={(e) =>
                 setFilter({ ...filter, unit_name: e, offset: 0 })
               }
@@ -95,8 +95,29 @@ const EmployeeList = () => {
             >
               <Option value="">All</Option>
               <Option value="JTML">JTML</Option>
-              <Option value="DIPL">DIPL</Option>
+              <Option value="Sylhet EZ">Sylhet EZ</Option>
+              <Option value="Digital Corporate">Digital Corporate</Option>
               <Option value="Corporate Office">Corporate Office</Option>
+              <Option value="Pharma">Pharma</Option>
+              <Option value="Mymun">Mymun</Option>
+              <Option value="Jinnat">Jinnat</Option>
+            </Select>
+            <Select
+              style={{ width: "160px" }}
+              // onChange={(e) =>
+              //   setFilter({ ...filter, unit_name: e, offset: 0 })
+              // }
+              placeholder="Select Blood Group"
+            >
+              <Option value="">Coming Soon</Option>
+              {/* <Option value="">All</Option>
+              <Option value="#">A+</Option>
+              <Option value="#">A-</Option>
+              <Option value="#">B+</Option>
+              <Option value="#">AB+</Option>
+              <Option value="#">AB-</Option>
+              <Option value="#">O+</Option>
+              <Option value="#">O+</Option> */}
             </Select>
             {/* <Select
               style={{ width: "180px" }}

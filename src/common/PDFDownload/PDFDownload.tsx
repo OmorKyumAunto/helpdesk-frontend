@@ -87,7 +87,7 @@ const PDFDownload: React.FC<Props> = ({
       style={{ backgroundColor: "#E74F5B" }}
       //   icon={<Icon icon="bxs:file-pdf" />}
     >
-      PDF Download
+      PDF
     </Button>
   );
 };

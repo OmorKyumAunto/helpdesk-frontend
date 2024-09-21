@@ -29,19 +29,19 @@ export const sideBarItems = (roleId: number) => {
             icon: <MdOutlineAssignment size={20} />,
           },
           {
-            label: <Link to="/employee/distributed">My Stock</Link>,
+            label: <Link to="/employee/distributed">My Assets</Link>,
             key: "/employee/distributed",
             icon: <MdOutlineAssignment size={20} />,
           },
         ]
       : [
           {
-            label: <Link to="/employee/distributed">Disbursements</Link>,
+            label: <Link to="/employee/distributed">My Assets</Link>,
             key: "/employee/distributed",
             icon: <MdOutlineAssignment size={20} />,
           },
           {
-            label: <Link to="/employee/employee-list">Employees</Link>,
+            label: <Link to="/employee/employee-list">Address Book</Link>,
             key: "/employee/employee-list",
             icon: <LuUsers2 size={20} />,
           },
@@ -49,7 +49,7 @@ export const sideBarItems = (roleId: number) => {
     ...(roleId !== 3
       ? [
           {
-            label: <Link to="/employee/list">Employees</Link>,
+            label: <Link to="/employee/list">Address Book</Link>,
             key: "/employee/list",
             icon: <LuUsers2 size={20} />,
           },
@@ -67,14 +67,14 @@ export const sideBarItems = (roleId: number) => {
     ...(roleId === 1
       ? [
           {
-            label: <Link to="/unit/list">Asset Unit</Link>,
+            label: <Link to="/unit/list">Unit Setting</Link>,
             key: "/unit/list",
             icon: <FaRegListAlt size={16} />,
           },
         ]
       : []),
     {
-      label: <Link to="/forms">Forms</Link>,
+      label: <Link to="/forms">Templates</Link>,
       key: "/forms",
       icon: <MdWebAsset size={20} />,
     },

@@ -82,7 +82,24 @@ const EmployeeListForEmployeePanel = () => {
               <Option value="DIPL">DIPL</Option>
               <Option value="Corporate Office">Corporate Office</Option>
             </Select>
-            <>
+            <Select
+              style={{ width: "180px" }}
+              // onChange={(e) =>
+              //   setFilter({ ...filter, unit_name: e, offset: 0 })
+              // }
+              placeholder="Select Blood Group"
+            >
+              <Option value="">Coming Soon</Option>
+              {/* <Option value="">All</Option>
+              <Option value="#">A+</Option>
+              <Option value="#">A-</Option>
+              <Option value="#">B+</Option>
+              <Option value="#">AB+</Option>
+              <Option value="#">AB-</Option>
+              <Option value="#">O+</Option>
+              <Option value="#">O+</Option> */}
+            </Select>
+            {/* <>
               <PDFDownload
                 PDFFileName="employee_list"
                 fileHeader="EMPLOYEE LIST"
@@ -126,8 +143,8 @@ const EmployeeListForEmployeePanel = () => {
                     : []
                 }
               />
-            </>
-            <Space>
+            </> */}
+            {/* <Space>
               <ExcelDownload
                 excelName={"employee_list"}
                 excelTableHead={[
@@ -173,7 +190,7 @@ const EmployeeListForEmployeePanel = () => {
                     : []
                 }
               />
-            </Space>
+            </Space> */}
           </div>
           <div>
             <Table

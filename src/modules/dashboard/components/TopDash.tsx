@@ -57,7 +57,7 @@ const TopDash = () => {
               alt={`${profile?.data?.image}'s Avatar`}
             /> */}
           </h1>
-          <p>It's a lovely {timeOfDay}!, Welcome to DBL Group</p>
+          <p>It's a lovely {timeOfDay}!, Welcome to DBL Group Asset System</p>
         </div>
       </div>
     </Card>

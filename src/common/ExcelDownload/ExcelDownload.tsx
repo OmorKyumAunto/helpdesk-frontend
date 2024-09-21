@@ -57,7 +57,7 @@ const ExcelDownload: React.FC<Props> = ({
       icon={<SiMicrosoftexcel />}
       onClick={saveExcel}
     >
-      Excel Download
+      Excel
     </Button>
   );
 };

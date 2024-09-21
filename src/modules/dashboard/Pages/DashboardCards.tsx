@@ -178,7 +178,7 @@ const DashboardCards = () => {
           <Col xs={24} sm={24} md={24} lg={8}>
             <Row gutter={[6, 12]}>
               <Col xs={24} sm={24} md={24}>
-                <Link to={"/employee/list"}>
+                <Link to={"/employee/employee-list"}>
                   <Card className="bg-[#ffa500] text-white h-full">
                     <div
                       style={{
@@ -222,7 +222,7 @@ const DashboardCards = () => {
                 </Link>
               </Col>
               <Col xs={24} sm={24} md={24}>
-                <Link to={"/assets/distributed"}>
+                <Link to={"/employee/distributed"}>
                   <Card className="bg-[#8dc73f] text-white h-full">
                     <div
                       style={{
