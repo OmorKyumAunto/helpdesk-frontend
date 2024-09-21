@@ -9,7 +9,7 @@ import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { DateInput } from "../../../common/formItem/FormItems";
 import { useCreateAssetsMutation } from "../api/assetsEndPoint";
 import TextArea from "antd/es/input/TextArea";
-import { useGetEmployeesQuery } from "../../employee/api/employeeEndPoint";
+import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const { Option } = Select;
 
@@ -18,7 +18,7 @@ const CreateAsset = () => {
   const [form] = Form.useForm();
   const assignType = Form.useWatch("is_assign", form);
   const employeeType = Form.useWatch("is_new_employee", form);
-  const { data } = useGetEmployeesQuery({});
+  const { data } = useGetOverallEmployeesQuery();
   const { data: unitData } = useGetUnitsQuery({ status: "active" });
 
   const [create, { isLoading, isSuccess }] = useCreateAssetsMutation();
