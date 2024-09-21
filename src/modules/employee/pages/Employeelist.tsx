@@ -88,7 +88,7 @@ const EmployeeList = () => {
               />
             </div>
             <Select
-              style={{ width: "130px" }}
+              style={{ width: "160px" }}
               onChange={(e) => setFilter({ ...filter, status: e, offset: 0 })}
               placeholder="Select Status"
             >
