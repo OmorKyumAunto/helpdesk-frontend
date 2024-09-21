@@ -90,4 +90,5 @@ export interface IEmployeeParams {
   offset?: number;
   key?: string;
   unit_name?: string;
+  status?: number;
 }

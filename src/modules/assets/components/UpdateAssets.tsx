@@ -11,7 +11,7 @@ import {
   useUpdateAssetsMutation,
 } from "../api/assetsEndPoint";
 import { IAsset } from "../types/assetsTypes";
-import { useGetEmployeesQuery } from "../../employee/api/employeeEndPoint";
+import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
 import TextArea from "antd/es/input/TextArea";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const { Option } = Select;
@@ -41,7 +41,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const assignType = Form.useWatch("assign_update", form);
-  const { data } = useGetEmployeesQuery({});
+  const { data } = useGetOverallEmployeesQuery();
   const [Update, { isLoading, isSuccess }] = useUpdateAssetsMutation();
 
   useEffect(() => {

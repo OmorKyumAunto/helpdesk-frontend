@@ -7,7 +7,7 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query";
 
-const baseURL = "http://192.168.36.100:3003/api/v1";
+const baseURL = "http://localhost:3003/api/v1";
 
 export const socket_url = "https://test.socket.com";
 

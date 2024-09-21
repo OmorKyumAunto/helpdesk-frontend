@@ -9,7 +9,6 @@ import { useUpdateEmployeeMutation } from "../api/employeeEndPoint";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { DateInput } from "../../../common/formItem/FormItems";
-import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import TextArea from "antd/es/input/TextArea";
 import { useGetMeQuery } from "../../../app/api/userApi";
 const { Option } = Select;
@@ -26,6 +25,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
     joining_date,
     unit_name,
     status,
+    licenses,
   } = employee || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -42,6 +42,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
       contact_no,
       unit_name,
       status,
+      licenses,
     });
     if (joining_date) {
       form.setFieldValue("joining_date", dayjs(joining_date));

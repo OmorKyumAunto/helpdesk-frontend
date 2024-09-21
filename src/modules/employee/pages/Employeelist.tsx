@@ -79,6 +79,7 @@ const EmployeeList = () => {
           >
             <div>
               <Input
+                style={{ width: "130px" }}
                 prefix={<SearchOutlined />}
                 onChange={(e) =>
                   setFilter({ ...filter, key: e.target.value, offset: 0 })
@@ -87,7 +88,16 @@ const EmployeeList = () => {
               />
             </div>
             <Select
-              style={{ width: "160px" }}
+              style={{ width: "130px" }}
+              onChange={(e) => setFilter({ ...filter, status: e, offset: 0 })}
+              placeholder="Select Status"
+            >
+              <Option value="">All</Option>
+              <Option value={1}>Active</Option>
+              <Option value={2}>Inactive</Option>
+            </Select>
+            <Select
+              style={{ width: "130px" }}
               onChange={(e) =>
                 setFilter({ ...filter, unit_name: e, offset: 0 })
               }
@@ -103,7 +113,7 @@ const EmployeeList = () => {
               <Option value="Jinnat">Jinnat</Option>
             </Select>
             <Select
-              style={{ width: "160px" }}
+              style={{ width: "130px" }}
               // onChange={(e) =>
               //   setFilter({ ...filter, unit_name: e, offset: 0 })
               // }
