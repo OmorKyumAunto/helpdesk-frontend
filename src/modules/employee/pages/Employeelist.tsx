@@ -79,7 +79,7 @@ const EmployeeList = () => {
           >
             <div>
               <Input
-                style={{ width: "130px" }}
+                style={{ width: "160px" }}
                 prefix={<SearchOutlined />}
                 onChange={(e) =>
                   setFilter({ ...filter, key: e.target.value, offset: 0 })
@@ -97,7 +97,7 @@ const EmployeeList = () => {
               <Option value={2}>Inactive</Option>
             </Select>
             <Select
-              style={{ width: "130px" }}
+              style={{ width: "160px" }}
               onChange={(e) =>
                 setFilter({ ...filter, unit_name: e, offset: 0 })
               }
@@ -113,7 +113,7 @@ const EmployeeList = () => {
               <Option value="Jinnat">Jinnat</Option>
             </Select>
             <Select
-              style={{ width: "130px" }}
+              style={{ width: "160px" }}
               // onChange={(e) =>
               //   setFilter({ ...filter, unit_name: e, offset: 0 })
               // }
@@ -244,7 +244,7 @@ const EmployeeList = () => {
               />
             </Space>
             <CreateButton
-              name="Upload employee"
+              name="Upload"
               onClick={() => {
                 dispatch(
                   setCommonModal({
@@ -256,7 +256,7 @@ const EmployeeList = () => {
                 );
               }}
             />
-            <CreateButton name=" Create employee" onClick={showModal} />
+            <CreateButton name="Create" onClick={showModal} />
           </div>
           <div>
             <Table
