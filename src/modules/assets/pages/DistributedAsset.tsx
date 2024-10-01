@@ -73,7 +73,7 @@ const DistributedAsset = () => {
             placeholder="Select Unit Name"
           >
             <Option value="">All</Option>
-            <Option value="JTML">JTML</Option>
+            <Option value="Sylhet EZ">Sylhet EZ</Option>
             <Option value="DIPL">DIPL</Option>
             <Option value="Corporate Office">Corporate Office</Option>
           </Select>

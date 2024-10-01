@@ -37,12 +37,12 @@ const Forms = () => {
     {
       title: "Employee template",
       description: "Template for Employee.",
-      file: "/templates/employee.xlsx",
+      file: "/templates/employeeformat.xlsx",
     },
     {
       title: "Asset template",
       description: "Template for Asset",
-      file: "/templates/asset.xlsx",
+      file: "/templates/assetformat.xlsx",
     },
   ];
 

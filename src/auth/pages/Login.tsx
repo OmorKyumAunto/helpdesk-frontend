@@ -50,9 +50,9 @@ export const Login = () => {
 
   return (
     <>
-      <video className="video-background" autoPlay loop muted>
+      {/* <video className="video-background" autoPlay loop muted>
         <source src={videoBg} type="video/mp4" />
-      </video>
+      </video> */}
       <motion.div
         className="login-container"
         initial={{ opacity: 0 }}
@@ -81,17 +81,17 @@ export const Login = () => {
                   <Col xs={24}>
                     <Form.Item
                       name="id"
-                      label="Employee Id"
+                      label="Employee ID"
                       rules={[
                         {
                           required: true,
-                          message: "Please input your id!",
+                          message: "Please input your ID!",
                         },
                       ]}
                     >
                       <Input
                         prefix={<UserOutlined />}
-                        placeholder="Enter Employee Id"
+                        placeholder="Enter Employee ID"
                       />
                     </Form.Item>
                   </Col>
@@ -119,7 +119,7 @@ export const Login = () => {
                       >
                         <SubmitButton
                           loading={isLoading}
-                          label="Login"
+                          label="LogIn"
                           icon={<LoginOutlined />}
                           style={{ width: "100%" }}
                         />

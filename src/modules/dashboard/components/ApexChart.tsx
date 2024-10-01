@@ -63,14 +63,14 @@ const GraphChartApex = () => {
         curve: "smooth",
       },
       title: {
-        text: "Asset And Assign Asset Statistics",
+        text: "Asset and Disbursement Statistics",
         align: "left",
         style: {
           color: "#155E75",
         },
       },
       subtitle: {
-        text: "Last 12 months asset and assign asset statistics",
+        text: "Last 12 months Asset and Disbursements",
         style: {
           color: "#155E75",
         },
