@@ -28,7 +28,7 @@ const PDFView = ({ pdf }) => {
           <iframe
             className="border border-solid border-gray-400"
             src={PDFPath}
-            width={"70%"}
+            width={"90%"}
             height={600}
             frameBorder="0"
           ></iframe>

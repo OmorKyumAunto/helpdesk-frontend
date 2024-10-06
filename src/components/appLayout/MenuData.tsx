@@ -64,121 +64,140 @@ export const sideBarItems = (roleId: number) => {
         ]
       : []),
 
-    {
-      label: "SOP",
-      key: "sop",
-      icon: <FaRegFileAlt size={20} />,
-      children: [
-        {
-          label: <Link to="/sop/one">SOP1.0.1 ROLES AND RESPONSIBILITIES</Link>,
-          key: "/sop/one",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/two">SOP 1.0.2_IT SUPPORT</Link>,
-          key: "/sop/two",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: (
-            <Link to="/sop/three">
-              SOP 1.0.3_EMAIL USER CREATION AND DEACTIVATION
-            </Link>
-          ),
-          key: "/sop/three",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/four">SOP 1.0.4_EMAIL ARCHIVING</Link>,
-          key: "/sop/four",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: (
-            <Link to="/sop/five">
-              SOP 1.0.5 NETWORK AND INFRASTRUCTURE MANAGEMENT
-            </Link>
-          ),
-          key: "/sop/five",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/six">SOP 1.0.6_FIREWALL CONFIGURATION</Link>,
-          key: "/sop/six",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/seven">SOP 1.0.7 NETWORK CONFIGURATION</Link>,
-          key: "/sop/seven",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/eight">SOP 1.0.8_CHANGE MANAGEMENT</Link>,
-          key: "/sop/eight",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/nine">SOP 1.0.9_INCIDENT RESPONSE</Link>,
-          key: "/sop/nine",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/ten">SOP 1.0.10_DATA BACKUP AND RECOVERY</Link>,
-          key: "/sop/ten",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/eleven">SOP 1.0.11 IT ACCESS CONTROL</Link>,
-          key: "/sop/eleven",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/twelve">SOP 1.0.12_IT ASSET MANAGEMENT</Link>,
-          key: "/sop/twelve",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: (
-            <Link to="/sop/thirteen">SOP 1.0.13_IT VENDOR MANAGEMENT</Link>
-          ),
-          key: "/sop/thirteen",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: (
-            <Link to="/sop/fourteen">SOP 1.0.14_IT INVENTORY MANAGEMENT</Link>
-          ),
-          key: "/sop/fourteen",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: (
-            <Link to="/sop/fifteen">SOP 1.0.15_IT Procurement (Approved)</Link>
-          ),
-          key: "/sop/fifteen",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/sixteen">SOP INDEX.pdf</Link>,
-          key: "/sop/sixteen",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-        {
-          label: <Link to="/sop/seventeen">SOP Safety & Security.pdf</Link>,
-          key: "/sop/seventeen",
-          icon: <RxHamburgerMenu size={16} />,
-        },
-      ],
-    },
+    ...(roleId !== 3
+      ? [
+          {
+            label: "SOP",
+            key: "sop",
+            icon: <FaRegFileAlt size={20} />,
+            children: [
+              {
+                label: (
+                  <Link to="/sop/one">SOP1.0.1 ROLES AND RESPONSIBILITIES</Link>
+                ),
+                key: "/sop/one",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: <Link to="/sop/two">SOP 1.0.2_IT SUPPORT</Link>,
+                key: "/sop/two",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/three">
+                    SOP 1.0.3_EMAIL USER CREATION AND DEACTIVATION
+                  </Link>
+                ),
+                key: "/sop/three",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: <Link to="/sop/four">SOP 1.0.4_EMAIL ARCHIVING</Link>,
+                key: "/sop/four",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/five">
+                    SOP 1.0.5 NETWORK AND INFRASTRUCTURE MANAGEMENT
+                  </Link>
+                ),
+                key: "/sop/five",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/six">SOP 1.0.6_FIREWALL CONFIGURATION</Link>
+                ),
+                key: "/sop/six",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/seven">SOP 1.0.7 NETWORK CONFIGURATION</Link>
+                ),
+                key: "/sop/seven",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: <Link to="/sop/eight">SOP 1.0.8_CHANGE MANAGEMENT</Link>,
+                key: "/sop/eight",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: <Link to="/sop/nine">SOP 1.0.9_INCIDENT RESPONSE</Link>,
+                key: "/sop/nine",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/ten">SOP 1.0.10_DATA BACKUP AND RECOVERY</Link>
+                ),
+                key: "/sop/ten",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/eleven">SOP 1.0.11 IT ACCESS CONTROL</Link>
+                ),
+                key: "/sop/eleven",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/twelve">SOP 1.0.12_IT ASSET MANAGEMENT</Link>
+                ),
+                key: "/sop/twelve",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/thirteen">
+                    SOP 1.0.13_IT VENDOR MANAGEMENT
+                  </Link>
+                ),
+                key: "/sop/thirteen",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/fourteen">
+                    SOP 1.0.14_IT INVENTORY MANAGEMENT
+                  </Link>
+                ),
+                key: "/sop/fourteen",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/fifteen">
+                    SOP 1.0.15_IT Procurement (Approved)
+                  </Link>
+                ),
+                key: "/sop/fifteen",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: <Link to="/sop/sixteen">SOP INDEX.pdf</Link>,
+                key: "/sop/sixteen",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/sop/seventeen">SOP Safety & Security.pdf</Link>
+                ),
+                key: "/sop/seventeen",
+                icon: <RxHamburgerMenu size={16} />,
+              },
+            ],
+          },
+        ]
+      : []),
     {
       label: <Link to="/forms">Templates</Link>,
       key: "/forms",
       icon: <MdWebAsset size={20} />,
-    },
-    {
-      label: <Link to="/about">About</Link>,
-      key: "/about",
-      icon: <TbUserHexagon size={20} />,
     },
     ...(roleId === 1
       ? [
@@ -201,6 +220,11 @@ export const sideBarItems = (roleId: number) => {
           },
         ]
       : []),
+    {
+      label: <Link to="/about">About</Link>,
+      key: "/about",
+      icon: <TbUserHexagon size={20} />,
+    },
   ];
   return menuData;
 };
