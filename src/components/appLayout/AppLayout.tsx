@@ -179,15 +179,29 @@ export const AppLayout = () => {
   const content = (
     <div>
       <Link to="/setting/profile">
-        <Button color="primary" icon={<UserOutlined />}>
+        <Button
+          color="primary"
+          style={{ width: "100%" }}
+          icon={<UserOutlined />}
+        >
           Profile
+        </Button>
+      </Link>
+      <br />
+      <Link to="https://www.google.com/" target="_blank">
+        <Button
+          style={{ marginTop: "10px", width: "100%" }}
+          type="primary"
+          icon={<LogoutOutlined />}
+        >
+          Self Service
         </Button>
       </Link>
       <br />
       <Link to="/login">
         <Button
           danger
-          style={{ marginTop: "10px" }}
+          style={{ marginTop: "10px", width: "100%" }}
           type="primary"
           icon={<LogoutOutlined />}
           onClick={() => handleLogout()}

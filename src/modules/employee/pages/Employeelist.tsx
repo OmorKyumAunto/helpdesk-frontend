@@ -1,19 +1,19 @@
+import { SearchOutlined } from "@ant-design/icons";
 import { Card, Input, Select, Space, Table } from "antd";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { IEmployeeParams } from "../types/employeeTypes";
-import { useGetEmployeesQuery } from "../api/employeeEndPoint";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import CreateEmployee from "../components/CreateEmployee";
-import { EmployeeTableColumns } from "../utils/EmployeeTableColumns";
 import { CreateButton } from "../../../common/CommonButton";
-import { SearchOutlined } from "@ant-design/icons";
-import { generatePagination } from "../../../common/TablePagination copy";
-import EmployeeFileUpdate from "./EmployeeFileUpdate";
-import PDFDownload from "../../../common/PDFDownload/PDFDownload";
-import dayjs from "dayjs";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
+import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+import { generatePagination } from "../../../common/TablePagination copy";
+import { useGetEmployeesQuery } from "../api/employeeEndPoint";
+import CreateEmployee from "../components/CreateEmployee";
+import { IEmployeeParams } from "../types/employeeTypes";
+import { EmployeeTableColumns } from "../utils/EmployeeTableColumns";
+import EmployeeFileUpdate from "./EmployeeFileUpdate";
 const { Option } = Select;
 
 const EmployeeList = () => {
@@ -114,42 +114,21 @@ const EmployeeList = () => {
             </Select>
             <Select
               style={{ width: "160px" }}
-              // onChange={(e) =>
-              //   setFilter({ ...filter, unit_name: e, offset: 0 })
-              // }
+              onChange={(e) =>
+                setFilter({ ...filter, blood_group: e, offset: 0 })
+              }
               placeholder="Select Blood Group"
             >
-              <Option value="">Coming Soon</Option>
-              {/* <Option value="">All</Option>
-              <Option value="#">A+</Option>
-              <Option value="#">A-</Option>
-              <Option value="#">B+</Option>
-              <Option value="#">AB+</Option>
-              <Option value="#">AB-</Option>
-              <Option value="#">O+</Option>
-              <Option value="#">O+</Option> */}
+              <Option value="">All</Option>
+              <Option value="A+">A+</Option>
+              <Option value="A-">A-</Option>
+              <Option value="B+">B+</Option>
+              <Option value="B-">B-</Option>
+              <Option value="AB+">AB+</Option>
+              <Option value="AB-">AB-</Option>
+              <Option value="O+">O+</Option>
+              <Option value="O-">O+</Option>
             </Select>
-            {/* <Select
-              style={{ width: "180px" }}
-              loading={unitIsLoading}
-              placeholder="Select Unit Name"
-              showSearch
-              optionFilterProp="children"
-              onChange={(e) => setFilter({ ...filter, unit_id: e, offset: 0 })}
-              filterOption={(
-                input: string,
-                option?: { label: string; value: string }
-              ) =>
-                (option?.label ?? "")
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-              options={unitData?.data?.map((unit: any) => ({
-                value: unit.id,
-                label: unit.title,
-              }))}
-              allowClear
-            /> */}
             <>
               <PDFDownload
                 PDFFileName="employee_list"
@@ -161,8 +140,12 @@ const EmployeeList = () => {
                   "Designation",
                   "Email",
                   "Contact No",
+                  "Blood Group",
                   "Date of Joining",
                   "Unit Name",
+                  "Business Type",
+                  "Line of Business",
+                  "Grade",
                 ]}
                 PDFData={
                   data?.data?.length
@@ -176,6 +159,10 @@ const EmployeeList = () => {
                           contact_no,
                           joining_date,
                           unit_name,
+                          blood_group,
+                          business_type,
+                          line_of_business,
+                          grade,
                         }: any) => {
                           const data = {
                             "Employee ID": employee_id,
@@ -184,9 +171,13 @@ const EmployeeList = () => {
                             Designation: designation,
                             Email: email,
                             "Contact No": contact_no,
+                            "Blood Group": blood_group,
                             "Date of Joining":
                               dayjs(joining_date).format("DD-MM-YYYY"),
                             "Unit Name": unit_name,
+                            "Business Type": business_type,
+                            "Line of Business": line_of_business,
+                            Grade: grade,
                           };
                           return data;
                         }
@@ -206,9 +197,12 @@ const EmployeeList = () => {
                   "Designation",
                   "Email",
                   "Contact No",
+                  "Blood Group",
                   "Date of Joining",
                   "Unit Name",
-                  "Licenses",
+                  "Business Type",
+                  "Line of Business",
+                  "Grade",
                 ]}
                 excelData={
                   data?.data?.length
@@ -223,6 +217,10 @@ const EmployeeList = () => {
                           joining_date,
                           unit_name,
                           licenses,
+                          blood_group,
+                          business_type,
+                          line_of_business,
+                          grade,
                         }: any) => {
                           const data = {
                             "Employee ID": employee_id,
@@ -231,10 +229,14 @@ const EmployeeList = () => {
                             Designation: designation,
                             Email: email,
                             "Contact No": contact_no,
+                            "Blood Group": blood_group,
                             "Date of Joining":
                               dayjs(joining_date).format("DD-MM-YYYY"),
                             "Unit Name": unit_name,
                             Licenses: licenses,
+                            "Business Type": business_type,
+                            "Line of Business": line_of_business,
+                            Grade: grade,
                           };
                           return data;
                         }

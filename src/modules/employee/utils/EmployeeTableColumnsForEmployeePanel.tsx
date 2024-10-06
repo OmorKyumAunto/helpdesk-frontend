@@ -1,11 +1,11 @@
+import { EyeOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
 import { TableProps } from "antd/lib";
-import { IEmployee } from "../types/employeeTypes";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import EmployeeDetails from "../pages/EmployeeDetails";
-import { EyeOutlined } from "@ant-design/icons";
+import { IEmployee } from "../types/employeeTypes";
 
 export const EmployeeTableColumnsForEmployeePanel =
   (): TableProps<IEmployee>["columns"] => {
@@ -43,7 +43,11 @@ export const EmployeeTableColumnsForEmployeePanel =
         dataIndex: "contact_no",
         key: "contact_no",
       },
-
+      {
+        title: "Blood Group",
+        dataIndex: "blood_group",
+        key: "blood_group",
+      },
       {
         title: "Date of Joining",
         dataIndex: "joining_date",

@@ -12,7 +12,15 @@ export interface IEmployee {
   unit_name: string;
   status: number;
   created_at: string;
-  licenses: string;
+  licenses: {
+    id: number;
+    title: string;
+    price: number;
+  }[];
+  blood_group: string;
+  grade: string;
+  line_of_business: string;
+  business_type: string;
 }
 
 export interface IAdjustSalary {

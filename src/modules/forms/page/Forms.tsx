@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Input, Row, Typography } from "antd";
+import { Card, Col, Input, Row, Typography } from "antd";
 import { saveAs } from "file-saver";
 import { useState } from "react";
 
@@ -45,7 +45,7 @@ const Forms = () => {
       file: "/templates/assetformat.xlsx",
     },
   ];
-
+  const nums = [1, 2, 3, 4, 5];
   // Filter templates based on search term
   const filteredTemplates = templates.filter((template) =>
     template.title.toLowerCase().includes(searchTerm.toLowerCase())

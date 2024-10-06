@@ -1,18 +1,17 @@
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space, Switch, Tag } from "antd";
 import { TableProps } from "antd/lib";
-import { IEmployee } from "../types/employeeTypes";
 import dayjs from "dayjs";
+import { useDispatch, useSelector } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { RootState } from "../../../app/store/store";
 import {
   useDeleteEmployeeMutation,
   useUpdateEmployeeStatusMutation,
 } from "../api/employeeEndPoint";
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
-import { setCommonModal } from "../../../app/slice/modalSlice";
 import UpdateEmployee from "../components/UpdateEmployee";
 import EmployeeDetails from "../pages/EmployeeDetails";
-import { RootState } from "../../../app/store/store";
-import { BsTiktok } from "react-icons/bs";
+import { IEmployee } from "../types/employeeTypes";
 
 export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
   const [deleteEmployee] = useDeleteEmployeeMutation();
@@ -55,6 +54,11 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
       title: "Contact No",
       dataIndex: "contact_no",
       key: "contact_no",
+    },
+    {
+      title: "Blood Group",
+      dataIndex: "blood_group",
+      key: "blood_group",
     },
 
     {

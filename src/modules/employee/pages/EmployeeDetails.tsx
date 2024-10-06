@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import { IEmployee } from "../types/employeeTypes";
-import { Button, Descriptions, Divider, Popconfirm, Tag } from "antd";
+import { Button, Descriptions, Popconfirm, Tag } from "antd";
 import dayjs from "dayjs";
-import { useEmployeeAssignToAdminMutation } from "../api/employeeEndPoint";
-import { setCommonModal } from "../../../app/slice/modalSlice";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
 import { RootState } from "../../../app/store/store";
+import { useEmployeeAssignToAdminMutation } from "../api/employeeEndPoint";
+import { IEmployee } from "../types/employeeTypes";
 
 const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
   // console.log(employee);
@@ -25,6 +25,10 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
     status,
     licenses,
     role_id,
+    blood_group,
+    grade,
+    line_of_business,
+    business_type,
   } = employee || {};
   useEffect(() => {
     if (isSuccess) {
@@ -70,6 +74,11 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
             children: contact_no,
           },
           {
+            key: "11",
+            label: "Blood Group",
+            children: blood_group,
+          },
+          {
             key: "7",
             label: "Unit Name",
             children: unit_name,
@@ -80,6 +89,21 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
             children: joining_date
               ? dayjs(joining_date).format("DD-MM-YYYY")
               : "N/A",
+          },
+          {
+            key: "12",
+            label: "Business Type",
+            children: business_type,
+          },
+          {
+            key: "13",
+            label: "Line of Business",
+            children: line_of_business,
+          },
+          {
+            key: "14",
+            label: "Grade",
+            children: grade,
           },
           {
             key: "9",
@@ -94,7 +118,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
           {
             key: "10",
             label: "Licenses",
-            children: licenses,
+            children: licenses?.map((item) => item?.title).join(", "),
             span: 2,
           },
           ...(role_id === 3 && roleId === 1

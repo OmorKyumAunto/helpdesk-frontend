@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, Col, Row, Form, Input, Button, Select } from "antd";
-import { useDispatch } from "react-redux";
-import dayjs from "dayjs";
-import { IEmployee, IFromData } from "../types/employeeTypes";
 import { SendOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
-import { useUpdateEmployeeMutation } from "../api/employeeEndPoint";
-import { setCommonModal } from "../../../app/slice/modalSlice";
-import { validateMobileNumber } from "../../../common/phoneNumberValidator";
-import { DateInput } from "../../../common/formItem/FormItems";
-import TextArea from "antd/es/input/TextArea";
+import { Button, Card, Col, Form, Input, Row, Select } from "antd";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useGetMeQuery } from "../../../app/api/userApi";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { DateInput } from "../../../common/formItem/FormItems";
+import { validateMobileNumber } from "../../../common/phoneNumberValidator";
+import { useGetLicensesQuery } from "../../Licenses/api/licenseEndPoint";
+import { useUpdateEmployeeMutation } from "../api/employeeEndPoint";
+import { IEmployee, IFromData } from "../types/employeeTypes";
 const { Option } = Select;
 
 const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
@@ -26,11 +26,17 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
     unit_name,
     status,
     licenses,
+    blood_group,
+    business_type,
+    line_of_business,
+    grade,
   } = employee || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [UpdateEmployee, { isLoading, isSuccess }] =
     useUpdateEmployeeMutation();
+  const { data } = useGetLicensesQuery({ status: "active" });
   const { refetch } = useGetMeQuery();
   useEffect(() => {
     form.setFieldsValue({
@@ -43,6 +49,10 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
       unit_name,
       status,
       licenses,
+      blood_group,
+      business_type,
+      line_of_business,
+      grade,
     });
     if (joining_date) {
       form.setFieldValue("joining_date", dayjs(joining_date));
@@ -60,6 +70,10 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
     unit_name,
     status,
     joining_date,
+    blood_group,
+    business_type,
+    line_of_business,
+    grade,
   ]);
 
   // const setFileField = (field: string, path: any) => {
@@ -196,15 +210,80 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                     </Select>
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={24} md={24}>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    label="Business Type"
+                    name="business_type"
+                    rules={[{ required: true }]}
+                  >
+                    <Input placeholder="Enter business type" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    label="Line of Business"
+                    name="line_of_business"
+                    rules={[{ required: true }]}
+                  >
+                    <Input placeholder="Enter line of business" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    label="Grade"
+                    name="grade"
+                    rules={[{ required: true }]}
+                  >
+                    <Input placeholder="Enter grade" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    label="Blood Group"
+                    name="blood_group"
+                    rules={[
+                      { required: true, message: "Please select blood group" },
+                    ]}
+                  >
+                    <Select showSearch placeholder="Select Blood Group">
+                      <Option value="A+">A+</Option>
+                      <Option value="A-">A-</Option>
+                      <Option value="B+">B+</Option>
+                      <Option value="B-">B-</Option>
+                      <Option value="AB+">AB+</Option>
+                      <Option value="AB-">AB-</Option>
+                      <Option value="O+">O+</Option>
+                      <Option value="O-">O+</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
                   <Form.Item
                     label="Licenses"
                     name="licenses"
-                    // rules={[
-                    //   { required: true, message: "Please Select License Type" },
-                    // ]}
+                    rules={[
+                      { required: true, message: "Please Select License Type" },
+                    ]}
                   >
-                    <TextArea placeholder="Enter licenses" />
+                    <Select
+                      mode="multiple"
+                      placeholder="Select License"
+                      value={selectedItems}
+                      onChange={setSelectedItems}
+                      style={{ width: "100%" }}
+                      filterOption={(
+                        input: string,
+                        option?: { label: string; value: string }
+                      ) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={data?.data?.map((item) => ({
+                        value: item.id,
+                        label: item.title,
+                      }))}
+                    />
                   </Form.Item>
                 </Col>
               </Row>
