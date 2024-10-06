@@ -2,7 +2,11 @@ import { AiOutlinePlusSquare } from "react-icons/ai";
 import { FaRegFileAlt, FaRegListAlt } from "react-icons/fa";
 import { LiaUsersCogSolid } from "react-icons/lia";
 import { LuLayoutDashboard, LuSettings, LuUsers2 } from "react-icons/lu";
-import { MdOutlineAssignment, MdWebAsset } from "react-icons/md";
+import {
+  MdOutlineAssignment,
+  MdOutlineFactCheck,
+  MdWebAsset,
+} from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { TbLicense, TbUserHexagon } from "react-icons/tb";
 import { Link } from "react-router-dom";
@@ -66,6 +70,11 @@ export const sideBarItems = (roleId: number) => {
 
     ...(roleId !== 3
       ? [
+          {
+            label: <Link to="/ctc/list">CTC</Link>,
+            key: "/ctc/list",
+            icon: <MdOutlineFactCheck size={20} />,
+          },
           {
             label: "SOP",
             key: "sop",

@@ -1,13 +1,9 @@
 import { Card, Col, Row } from "antd";
-
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import image1 from "../../../assets/chairman-sir-photo.2e16d0ba.fill-385x482-c0.format-webp.jpg";
+import image4 from "../../../assets/dmd-sir-photo.2e16d0ba.fill-385x482-c0.format-webp.jpg";
 import image2 from "../../../assets/Managing_Director_.2e16d0ba.fill-385x482-c0.format-webp.jpg";
 import image3 from "../../../assets/vc-sign-photo.2e16d0ba.fill-385x482-c0.format-webp.jpg";
-import image4 from "../../../assets/dmd-sir-photo.2e16d0ba.fill-385x482-c0.format-webp.jpg";
-import { useState } from "react";
-import { Document, Page } from "react-pdf";
-import moduleName from '../../../../public/templates/';
-import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 
 const teamMembers = [
   {
@@ -31,40 +27,6 @@ const teamMembers = [
     image: image4,
   },
 ];
-
-const PdfViewer = ({ file }: any) => {
-  const [numPages, setNumPages] = useState(0);
-  const [pageNumber, setPageNumber] = useState(1);
-
-  const onDocumentLoadSuccess = ({ numPages }: any) => {
-    setNumPages(numPages);
-  };
-
-  return (
-    <div>
-      <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-        <Page pageNumber={pageNumber} />
-      </Document>
-      <div>
-        <p>
-          Page {pageNumber} of {numPages}
-        </p>
-        <button
-          disabled={pageNumber <= 1}
-          onClick={() => setPageNumber(pageNumber - 1)}
-        >
-          Previous
-        </button>
-        <button
-          disabled={pageNumber >= numPages}
-          onClick={() => setPageNumber(pageNumber + 1)}
-        >
-          Next
-        </button>
-      </div>
-    </div>
-  );
-};
 
 const About = () => {
   return (
@@ -197,8 +159,6 @@ const About = () => {
             ))}
           </Row>
         </div>
-        <h1>PDF Viewer</h1>
-        <PdfViewer file="../../../../public/templates/halder.pdf" />
       </Card>
     </>
   );

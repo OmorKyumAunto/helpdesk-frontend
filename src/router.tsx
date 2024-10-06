@@ -13,6 +13,7 @@ import AdminList from "./modules/admin/pages/Adminlist";
 import AssetsList from "./modules/assets/pages/AssetsList";
 import DistributedAsset from "./modules/assets/pages/DistributedAsset";
 import EmployeeDistributedAsset from "./modules/assets/pages/EmployeeDistributedAsset";
+import CTCList from "./modules/ctc/pages/CTCLIst";
 import DashboardCards from "./modules/dashboard/Pages/DashboardCards";
 import EmployeeList from "./modules/employee/pages/Employeelist";
 import EmployeeListForEmployeePanel from "./modules/employee/pages/EmployeeListForEmployeePanel";
@@ -107,6 +108,10 @@ export const routers = createBrowserRouter([
       {
         path: "/admin/list",
         element: <AdminList />,
+      },
+      {
+        path: "/ctc/list",
+        element: <CTCList />,
       },
       {
         path: "/forms",

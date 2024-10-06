@@ -4,19 +4,15 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { setCommonModal } from "../../../app/slice/modalSlice";
-import { CreateButton } from "../../../common/CommonButton";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import { generatePagination } from "../../../common/TablePagination copy";
-import { useGetEmployeesQuery } from "../api/employeeEndPoint";
-import CreateEmployee from "../components/CreateEmployee";
-import { IEmployeeParams } from "../types/employeeTypes";
-import { EmployeeTableColumns } from "../utils/EmployeeTableColumns";
-import EmployeeFileUpdate from "./EmployeeFileUpdate";
+import { useGetAllCTCQuery } from "../api/ctcEndPoint";
+import { ICTCParams } from "../types/ctcTypes";
+import { CTCTableColumns } from "../utils/CTCTableColumns";
 const { Option } = Select;
 
-const EmployeeList = () => {
+const CTCList = () => {
   const dispatch = useDispatch();
   const [pagination, setPagination] = useState({
     current: 1,
@@ -31,7 +27,7 @@ const EmployeeList = () => {
   const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
 
-  const [filter, setFilter] = useState<IEmployeeParams>({
+  const [filter, setFilter] = useState<ICTCParams>({
     limit: Number(pageSize),
     offset: skipValue,
   });
@@ -44,25 +40,13 @@ const EmployeeList = () => {
     });
   }, [page, pageSize, skipValue]);
 
-  const { data, isLoading, isFetching } = useGetEmployeesQuery({ ...filter });
-  // const { data: allEmployees } = useGetOverallEmployeesQuery();
-
-  const showModal = () => {
-    dispatch(
-      setCommonModal({
-        title: "Create Employee",
-        content: <CreateEmployee />,
-        show: true,
-        width: 678,
-      })
-    );
-  };
+  const { data, isLoading, isFetching } = useGetAllCTCQuery({ ...filter });
 
   return (
     <>
       <div>
         <Card
-          title={`Employee List`}
+          title={`CTC List`}
           style={{
             boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
             marginBottom: "1rem",
@@ -79,7 +63,6 @@ const EmployeeList = () => {
           >
             <div>
               <Input
-                style={{ width: "160px" }}
                 prefix={<SearchOutlined />}
                 onChange={(e) =>
                   setFilter({ ...filter, key: e.target.value, offset: 0 })
@@ -87,65 +70,29 @@ const EmployeeList = () => {
                 placeholder="Search..."
               />
             </div>
-            <Select
-              style={{ width: "160px" }}
-              onChange={(e) => setFilter({ ...filter, status: e, offset: 0 })}
-              placeholder="Select Status"
-            >
-              <Option value="">All</Option>
-              <Option value={1}>Active</Option>
-              <Option value={2}>Inactive</Option>
-            </Select>
-            <Select
-              style={{ width: "160px" }}
-              onChange={(e) =>
-                setFilter({ ...filter, unit_name: e, offset: 0 })
-              }
+            {/* <Select
+              style={{ width: "180px" }}
+              onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
               placeholder="Select Unit Name"
             >
               <Option value="">All</Option>
               <Option value="JTML">JTML</Option>
-              <Option value="Sylhet EZ">Sylhet EZ</Option>
-              <Option value="Digital Corporate">Digital Corporate</Option>
+              <Option value="DIPL">DIPL</Option>
               <Option value="Corporate Office">Corporate Office</Option>
-              <Option value="Pharma">Pharma</Option>
-              <Option value="Mymun">Mymun</Option>
-              <Option value="Jinnat">Jinnat</Option>
-            </Select>
-            <Select
-              style={{ width: "160px" }}
-              onChange={(e) =>
-                setFilter({ ...filter, blood_group: e, offset: 0 })
-              }
-              placeholder="Select Blood Group"
-            >
-              <Option value="">All</Option>
-              <Option value="A+">A+</Option>
-              <Option value="A-">A-</Option>
-              <Option value="B+">B+</Option>
-              <Option value="B-">B-</Option>
-              <Option value="AB+">AB+</Option>
-              <Option value="AB-">AB-</Option>
-              <Option value="O+">O+</Option>
-              <Option value="O-">O-</Option>
-            </Select>
+            </Select> */}
             <>
               <PDFDownload
-                PDFFileName="employee_list"
-                fileHeader="EMPLOYEE LIST"
+                PDFFileName="CTC_list"
+                fileHeader="CTC LIST"
                 PDFHeader={[
-                  "Employee ID",
-                  "Employee Name",
+                  "CTC ID",
+                  "CTC Name",
                   "Department",
                   "Designation",
                   "Email",
                   "Contact No",
-                  "Blood Group",
                   "Date of Joining",
                   "Unit Name",
-                  "Business Type",
-                  "Line of Business",
-                  "Grade",
                 ]}
                 PDFData={
                   data?.data?.length
@@ -159,25 +106,17 @@ const EmployeeList = () => {
                           contact_no,
                           joining_date,
                           unit_name,
-                          blood_group,
-                          business_type,
-                          line_of_business,
-                          grade,
                         }: any) => {
                           const data = {
-                            "Employee ID": employee_id,
-                            "Employee Name": name,
+                            "CTC ID": employee_id,
+                            "CTC Name": name,
                             Department: department,
                             Designation: designation,
                             Email: email,
                             "Contact No": contact_no,
-                            "Blood Group": blood_group,
                             "Date of Joining":
                               dayjs(joining_date).format("DD-MM-YYYY"),
                             "Unit Name": unit_name,
-                            "Business Type": business_type,
-                            "Line of Business": line_of_business,
-                            Grade: grade,
                           };
                           return data;
                         }
@@ -189,20 +128,16 @@ const EmployeeList = () => {
 
             <Space>
               <ExcelDownload
-                excelName={"employee_list"}
+                excelName={"CTC_list"}
                 excelTableHead={[
-                  "Employee ID",
-                  "Employee Name",
+                  "CTC ID",
+                  "CTC Name",
                   "Department",
                   "Designation",
                   "Email",
                   "Contact No",
-                  "Blood Group",
                   "Date of Joining",
                   "Unit Name",
-                  "Business Type",
-                  "Line of Business",
-                  "Grade",
                 ]}
                 excelData={
                   data?.data?.length
@@ -216,27 +151,17 @@ const EmployeeList = () => {
                           contact_no,
                           joining_date,
                           unit_name,
-                          licenses,
-                          blood_group,
-                          business_type,
-                          line_of_business,
-                          grade,
                         }: any) => {
                           const data = {
-                            "Employee ID": employee_id,
-                            "Employee Name": name,
+                            "CTC ID": employee_id,
+                            "CTC Name": name,
                             Department: department,
                             Designation: designation,
                             Email: email,
                             "Contact No": contact_no,
-                            "Blood Group": blood_group,
                             "Date of Joining":
                               dayjs(joining_date).format("DD-MM-YYYY"),
                             "Unit Name": unit_name,
-                            Licenses: licenses,
-                            "Business Type": business_type,
-                            "Line of Business": line_of_business,
-                            Grade: grade,
                           };
                           return data;
                         }
@@ -245,20 +170,6 @@ const EmployeeList = () => {
                 }
               />
             </Space>
-            <CreateButton
-              name="Upload"
-              onClick={() => {
-                dispatch(
-                  setCommonModal({
-                    title: "Upload Employee",
-                    content: <EmployeeFileUpdate />,
-                    show: true,
-                    width: 400,
-                  })
-                );
-              }}
-            />
-            <CreateButton name="Create" onClick={showModal} />
           </div>
           <div>
             <Table
@@ -267,7 +178,7 @@ const EmployeeList = () => {
               bordered
               loading={isLoading || isFetching}
               dataSource={data?.data?.length ? data.data : []}
-              columns={EmployeeTableColumns()}
+              columns={CTCTableColumns()}
               scroll={{ x: true }}
               pagination={{
                 ...generatePagination(
@@ -303,4 +214,4 @@ const EmployeeList = () => {
   );
 };
 
-export default EmployeeList;
+export default CTCList;

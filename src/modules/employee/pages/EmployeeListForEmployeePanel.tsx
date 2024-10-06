@@ -1,13 +1,10 @@
-import { Card, Input, Select, Space, Table } from "antd";
-import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { IEmployeeParams } from "../types/employeeTypes";
-import { useGetEmployeesQuery } from "../api/employeeEndPoint";
 import { SearchOutlined } from "@ant-design/icons";
+import { Card, Input, Select, Table } from "antd";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { generatePagination } from "../../../common/TablePagination copy";
-import PDFDownload from "../../../common/PDFDownload/PDFDownload";
-import dayjs from "dayjs";
-import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
+import { useGetEmployeesQuery } from "../api/employeeEndPoint";
+import { IEmployeeParams } from "../types/employeeTypes";
 import { EmployeeTableColumnsForEmployeePanel } from "../utils/EmployeeTableColumnsForEmployeePanel";
 const { Option } = Select;
 
@@ -84,20 +81,20 @@ const EmployeeListForEmployeePanel = () => {
             </Select>
             <Select
               style={{ width: "180px" }}
-              // onChange={(e) =>
-              //   setFilter({ ...filter, unit_name: e, offset: 0 })
-              // }
+              onChange={(e) =>
+                setFilter({ ...filter, blood_group: e, offset: 0 })
+              }
               placeholder="Select Blood Group"
             >
-              <Option value="">Coming Soon</Option>
-              {/* <Option value="">All</Option>
-              <Option value="#">A+</Option>
-              <Option value="#">A-</Option>
-              <Option value="#">B+</Option>
-              <Option value="#">AB+</Option>
-              <Option value="#">AB-</Option>
-              <Option value="#">O+</Option>
-              <Option value="#">O+</Option> */}
+              <Option value="">All</Option>
+              <Option value="A+">A+</Option>
+              <Option value="A-">A-</Option>
+              <Option value="B+">B+</Option>
+              <Option value="B-">B-</Option>
+              <Option value="AB+">AB+</Option>
+              <Option value="AB-">AB-</Option>
+              <Option value="O+">O+</Option>
+              <Option value="O-">O-</Option>
             </Select>
             {/* <>
               <PDFDownload

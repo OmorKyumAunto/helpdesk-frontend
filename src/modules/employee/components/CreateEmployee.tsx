@@ -188,39 +188,10 @@ const CreateEmployee = () => {
                     <Option value="AB+">AB+</Option>
                     <Option value="AB-">AB-</Option>
                     <Option value="O+">O+</Option>
-                    <Option value="O-">O+</Option>
+                    <Option value="O-">O-</Option>
                   </Select>
                 </Form.Item>
               </Col>
-              {/* <Col xs={24} sm={24} md={12}>
-                <Form.Item
-                  label="Unit Name"
-                  name="unit_id"
-                  rules={[{ required: true, message: "Please Select Unit" }]}
-                >
-                  <Select
-                    className="w-full"
-                    loading={unitIsLoading}
-                    placeholder="Select Unit Name"
-                    showSearch
-                    optionFilterProp="children"
-                    filterOption={(
-                      input: string,
-                      option?: { label: string; value: string }
-                    ) =>
-                      (option?.label ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                    options={data?.data?.map((unit: any) => ({
-                      value: unit.id,
-                      label: unit.title,
-                    }))}
-                    allowClear
-                  />
-                </Form.Item>
-              </Col> */}
-
               <Col xs={24} sm={24} md={12}>
                 <Form.Item
                   label="Need License"
@@ -236,17 +207,6 @@ const CreateEmployee = () => {
                 </Form.Item>
               </Col>
               {licenseType === "Yes" && (
-                // <Col xs={24} sm={24} md={24}>
-                //   <Form.Item
-                //     label="Licenses"
-                //     name="licenses"
-                //     // rules={[
-                //     //   { required: true, message: "Please Select License Type" },
-                //     // ]}
-                //   >
-                //     <TextArea placeholder="Enter licenses" />
-                //   </Form.Item>
-                // </Col>
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item
                     label="Licenses"

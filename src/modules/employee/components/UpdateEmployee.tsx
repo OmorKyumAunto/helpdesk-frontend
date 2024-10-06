@@ -253,7 +253,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                       <Option value="AB+">AB+</Option>
                       <Option value="AB-">AB-</Option>
                       <Option value="O+">O+</Option>
-                      <Option value="O-">O+</Option>
+                      <Option value="O-">O-</Option>
                     </Select>
                   </Form.Item>
                 </Col>
