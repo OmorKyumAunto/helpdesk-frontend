@@ -3,6 +3,7 @@ import { FaRegFileAlt, FaRegListAlt } from "react-icons/fa";
 import { LiaUsersCogSolid } from "react-icons/lia";
 import { LuLayoutDashboard, LuSettings, LuUsers2 } from "react-icons/lu";
 import {
+  MdListAlt,
   MdOutlineAssignment,
   MdOutlineFactCheck,
   MdWebAsset,
@@ -29,7 +30,7 @@ export const sideBarItems = (roleId: number) => {
           {
             label: <Link to="/assets/distributed">Disbursements</Link>,
             key: "/assets/distributed",
-            icon: <MdOutlineAssignment size={20} />,
+            icon: <MdListAlt size={20} />,
           },
           {
             label: <Link to="/employee/distributed">My Assets</Link>,

@@ -1,40 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
 import {
+  LogoutOutlined,
   MenuFoldOutlined,
-  FullscreenOutlined,
   MenuUnfoldOutlined,
-  RightOutlined,
-  LeftOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import {
-  Layout,
-  Menu,
   Button,
-  theme,
-  Typography,
-  Popover,
-  MenuProps,
   Grid,
   Image,
-  Avatar,
+  Layout,
+  Menu,
+  MenuProps,
+  Popover,
+  theme,
 } from "antd";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Footer } from "antd/es/layout/layout";
-import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
-import { RootState, useAppDispatch } from "../../app/store/store";
+import { useEffect, useState } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { setLogout } from "../../app/features/userSlice";
+import { RootState, useAppDispatch } from "../../app/store/store";
 import { menuItems } from "./AppLayoutData";
 // import LiveTime from "../Time/LiveTime";
-import userIcon from "../../assets//user.png";
-import { globalTheme, setTheme } from "../../app/slice/themeSlice";
 import { useSelector } from "react-redux";
 // import { BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
-import logo from "../../assets/logo.png";
-import DateTimeWidget from "./DateTimeWidget";
-import { useGetMeQuery } from "../../app/api/userApi";
-import { roleID } from "../../utils/helper";
 import { api } from "../../app/api/api";
+import { useGetMeQuery } from "../../app/api/userApi";
+import logo from "../../assets/logo.png";
+import { roleID } from "../../utils/helper";
 // import Notification from "../notification/Notification";
 const { useBreakpoint } = Grid;
 
@@ -188,7 +181,7 @@ export const AppLayout = () => {
         </Button>
       </Link>
       <br />
-      <Link to="https://www.google.com/" target="_blank">
+      {/* <Link to="https://www.google.com/" target="_blank">
         <Button
           style={{ marginTop: "10px", width: "100%" }}
           type="primary"
@@ -197,7 +190,7 @@ export const AppLayout = () => {
           Self Service
         </Button>
       </Link>
-      <br />
+      <br /> */}
       <Link to="/login">
         <Button
           danger
@@ -207,6 +200,21 @@ export const AppLayout = () => {
           onClick={() => handleLogout()}
         >
           Logout
+        </Button>
+      </Link>
+    </div>
+  );
+  const selfService = (
+    <div>
+      <Link to="https://www.google.com/" target="_blank">
+        <Button style={{ marginTop: "10px", width: "100%" }} type="primary">
+          Link One
+        </Button>
+      </Link>
+      <br />
+      <Link to="https://www.youtube.com/" target="_blank">
+        <Button style={{ marginTop: "10px", width: "100%" }} type="primary">
+          Link Two
         </Button>
       </Link>
     </div>
@@ -406,6 +414,9 @@ export const AppLayout = () => {
               )}
             </div> */}
 
+            <Popover content={selfService}>
+              <Button type="dashed">Self Service </Button>
+            </Popover>
             <Popover content={content}>
               <Button
                 icon={<UserOutlined />}
