@@ -27,6 +27,11 @@ export const CTCTableColumns = (): TableProps<ICTC>["columns"] => {
       render: ({ assets }) => assets?.map((item) => item?.name).join(", "),
     },
     {
+      title: "Unit Name",
+      dataIndex: "unit_name",
+      key: "unit_name",
+    },
+    {
       title: "Total Asset Cost",
       dataIndex: "total_asset_price",
       key: "total_asset_price",

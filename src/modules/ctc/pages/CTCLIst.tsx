@@ -68,6 +68,22 @@ const CTCList = () => {
                 placeholder="Search..."
               />
             </div>
+            <Select
+              style={{ width: "160px" }}
+              onChange={(e) =>
+                setFilter({ ...filter, unit_name: e, offset: 0 })
+              }
+              placeholder="Select Unit Name"
+            >
+              <Option value="">All</Option>
+              <Option value="JTML">JTML</Option>
+              <Option value="Sylhet EZ">Sylhet EZ</Option>
+              <Option value="Digital Corporate">Digital Corporate</Option>
+              <Option value="Corporate Office">Corporate Office</Option>
+              <Option value="Pharma">Pharma</Option>
+              <Option value="Mymun">Mymun</Option>
+              <Option value="Jinnat">Jinnat</Option>
+            </Select>
             <Space>
               <ExcelDownload
                 excelName={"ctc_list"}
@@ -77,6 +93,7 @@ const CTCList = () => {
                   "Department",
                   "Designation",
                   "Assets",
+                  "Unit Name",
                   "Total Asset Cost",
                   "Monthly Asset Cost",
                   "Licenses",
@@ -93,6 +110,7 @@ const CTCList = () => {
                           department,
                           designation,
                           assets,
+                          unit_name,
                           total_asset_price,
                           monthly_asset_cost,
                           licenses,
@@ -108,6 +126,7 @@ const CTCList = () => {
                             Assets: assets
                               ?.map((item) => item?.name)
                               .join(", "),
+                            "Unit Name": unit_name,
                             "Total Asset Cost": total_asset_price,
                             "Monthly Asset Cost": monthly_asset_cost,
                             Licenses: licenses

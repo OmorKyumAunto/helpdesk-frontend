@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SendOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, Row, Select } from "antd";
+import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -30,6 +30,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
     business_type,
     line_of_business,
     grade,
+    pabx,
   } = employee || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
