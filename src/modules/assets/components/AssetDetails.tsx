@@ -1,4 +1,4 @@
-import { Descriptions, Divider, Tag, Timeline, Typography } from "antd";
+import { Descriptions, Divider, Tag, Timeline } from "antd";
 import dayjs from "dayjs";
 import { useGetSingleAssetsQuery } from "../api/assetsEndPoint";
 
@@ -17,6 +17,8 @@ const AssetDetails = ({ id }: { id: any }) => {
     employee_id_no,
     name,
     history,
+    price,
+    warranty,
   } = singleAsset?.data || {};
   const assetHistory = history?.map((item: any) => {
     return {
@@ -98,6 +100,16 @@ const AssetDetails = ({ id }: { id: any }) => {
             key: "8",
             label: "Purchase Date",
             children: dayjs(purchase_date).format("DD-MM-YYYY"),
+          },
+          {
+            key: "9",
+            label: "Price",
+            children: price,
+          },
+          {
+            key: "10",
+            label: "Warranty",
+            children: warranty,
           },
         ]}
       />

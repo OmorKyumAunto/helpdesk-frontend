@@ -29,6 +29,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
     grade,
     line_of_business,
     business_type,
+    pabx,
   } = employee || {};
   useEffect(() => {
     if (isSuccess) {
@@ -104,6 +105,11 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
             key: "14",
             label: "Grade",
             children: grade,
+          },
+          {
+            key: "15",
+            label: "PABX",
+            children: pabx,
           },
           {
             key: "9",

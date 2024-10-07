@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, Col, Row, Form, Input, Button, Select } from "antd";
 import { SendOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { setCommonModal } from "../../../app/slice/modalSlice";
-import { validateMobileNumber } from "../../../common/phoneNumberValidator";
-import { DateInput } from "../../../common/formItem/FormItems";
-import { useCreateAssetsMutation } from "../api/assetsEndPoint";
+import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import dayjs from "dayjs";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { DateInput } from "../../../common/formItem/FormItems";
+import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import { useCreateAssetsMutation } from "../api/assetsEndPoint";
 const { Option } = Select;
 
 const CreateAsset = () => {
@@ -120,6 +120,19 @@ const CreateAsset = () => {
                   placeholder="Select Purchase Date"
                   rules={[{ required: true }]}
                 />
+              </Col>
+              <Col xs={24} sm={24} md={8}>
+                <Form.Item
+                  label="Asset Price"
+                  name="price"
+                  rules={[{ required: true }]}
+                >
+                  <InputNumber
+                    min={0}
+                    className="w-full"
+                    placeholder="Enter asset price"
+                  />
+                </Form.Item>
               </Col>
               <Col xs={24} sm={24} md={8}>
                 <Form.Item

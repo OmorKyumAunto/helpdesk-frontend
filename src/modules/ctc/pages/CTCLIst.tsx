@@ -1,11 +1,9 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { Card, Input, Select, Space, Table } from "antd";
-import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
-import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import { generatePagination } from "../../../common/TablePagination copy";
 import { useGetAllCTCQuery } from "../api/ctcEndPoint";
 import { ICTCParams } from "../types/ctcTypes";
@@ -70,74 +68,21 @@ const CTCList = () => {
                 placeholder="Search..."
               />
             </div>
-            {/* <Select
-              style={{ width: "180px" }}
-              onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
-              placeholder="Select Unit Name"
-            >
-              <Option value="">All</Option>
-              <Option value="JTML">JTML</Option>
-              <Option value="DIPL">DIPL</Option>
-              <Option value="Corporate Office">Corporate Office</Option>
-            </Select> */}
-            <>
-              <PDFDownload
-                PDFFileName="CTC_list"
-                fileHeader="CTC LIST"
-                PDFHeader={[
-                  "CTC ID",
-                  "CTC Name",
-                  "Department",
-                  "Designation",
-                  "Email",
-                  "Contact No",
-                  "Date of Joining",
-                  "Unit Name",
-                ]}
-                PDFData={
-                  data?.data?.length
-                    ? data?.data?.map(
-                        ({
-                          employee_id,
-                          name,
-                          department,
-                          designation,
-                          email,
-                          contact_no,
-                          joining_date,
-                          unit_name,
-                        }: any) => {
-                          const data = {
-                            "CTC ID": employee_id,
-                            "CTC Name": name,
-                            Department: department,
-                            Designation: designation,
-                            Email: email,
-                            "Contact No": contact_no,
-                            "Date of Joining":
-                              dayjs(joining_date).format("DD-MM-YYYY"),
-                            "Unit Name": unit_name,
-                          };
-                          return data;
-                        }
-                      )
-                    : []
-                }
-              />
-            </>
-
             <Space>
               <ExcelDownload
-                excelName={"CTC_list"}
+                excelName={"ctc_list"}
                 excelTableHead={[
-                  "CTC ID",
-                  "CTC Name",
+                  "Employee ID",
+                  "Employee Name",
                   "Department",
                   "Designation",
-                  "Email",
-                  "Contact No",
-                  "Date of Joining",
-                  "Unit Name",
+                  "Assets",
+                  "Total Asset Cost",
+                  "Monthly Asset Cost",
+                  "Licenses",
+                  "Monthly Licenses Cost",
+                  "Total CTC Per Month",
+                  "Total CTC Per Year",
                 ]}
                 excelData={
                   data?.data?.length
@@ -147,21 +92,30 @@ const CTCList = () => {
                           name,
                           department,
                           designation,
-                          email,
-                          contact_no,
-                          joining_date,
-                          unit_name,
-                        }: any) => {
+                          assets,
+                          total_asset_price,
+                          monthly_asset_cost,
+                          licenses,
+                          montly_licenses_price,
+                          total_ctc_per_month,
+                          total_ctc_per_year,
+                        }) => {
                           const data = {
-                            "CTC ID": employee_id,
-                            "CTC Name": name,
+                            "Employee ID": employee_id,
+                            "Employee Name": name,
                             Department: department,
                             Designation: designation,
-                            Email: email,
-                            "Contact No": contact_no,
-                            "Date of Joining":
-                              dayjs(joining_date).format("DD-MM-YYYY"),
-                            "Unit Name": unit_name,
+                            Assets: assets
+                              ?.map((item) => item?.name)
+                              .join(", "),
+                            "Total Asset Cost": total_asset_price,
+                            "Monthly Asset Cost": monthly_asset_cost,
+                            Licenses: licenses
+                              ?.map((item) => item?.title)
+                              .join(", "),
+                            "Monthly Licenses Cost": montly_licenses_price,
+                            "Total CTC Per Month": total_ctc_per_month,
+                            "Total CTC Per Year": total_ctc_per_year,
                           };
                           return data;
                         }

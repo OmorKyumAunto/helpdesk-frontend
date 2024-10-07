@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SendOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, Row, Select } from "antd";
+import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -193,6 +193,11 @@ const CreateEmployee = () => {
                 </Form.Item>
               </Col>
               <Col xs={24} sm={24} md={12}>
+                <Form.Item label="PABX" name="pabx">
+                  <InputNumber className="w-full" placeholder="Enter pabx" />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={12}>
                 <Form.Item
                   label="Need License"
                   name="need_license"
@@ -207,7 +212,7 @@ const CreateEmployee = () => {
                 </Form.Item>
               </Col>
               {licenseType === "Yes" && (
-                <Col xs={24} sm={24} md={12}>
+                <Col xs={24} sm={24} md={24}>
                   <Form.Item
                     label="Licenses"
                     name="licenses"

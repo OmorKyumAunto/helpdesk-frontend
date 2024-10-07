@@ -146,6 +146,7 @@ const EmployeeList = () => {
                   "Business Type",
                   "Line of Business",
                   "Grade",
+                  "PABX",
                 ]}
                 PDFData={
                   data?.data?.length
@@ -163,6 +164,7 @@ const EmployeeList = () => {
                           business_type,
                           line_of_business,
                           grade,
+                          pabx,
                         }: any) => {
                           const data = {
                             "Employee ID": employee_id,
@@ -178,6 +180,7 @@ const EmployeeList = () => {
                             "Business Type": business_type,
                             "Line of Business": line_of_business,
                             Grade: grade,
+                            PABX: pabx,
                           };
                           return data;
                         }
@@ -203,6 +206,7 @@ const EmployeeList = () => {
                   "Business Type",
                   "Line of Business",
                   "Grade",
+                  "PABX",
                 ]}
                 excelData={
                   data?.data?.length
@@ -221,6 +225,7 @@ const EmployeeList = () => {
                           business_type,
                           line_of_business,
                           grade,
+                          pabx,
                         }: any) => {
                           const data = {
                             "Employee ID": employee_id,
@@ -237,6 +242,7 @@ const EmployeeList = () => {
                             "Business Type": business_type,
                             "Line of Business": line_of_business,
                             Grade: grade,
+                            PABX: pabx,
                           };
                           return data;
                         }

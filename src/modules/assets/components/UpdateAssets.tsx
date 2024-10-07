@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, Col, Row, Form, Input, Button, Select } from "antd";
-import { useDispatch } from "react-redux";
-import dayjs from "dayjs";
 import { SendOutlined } from "@ant-design/icons";
+import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import dayjs from "dayjs";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { DateInput } from "../../../common/formItem/FormItems";
+import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import {
   useGetSingleAssetsQuery,
   useUpdateAssetsMutation,
 } from "../api/assetsEndPoint";
 import { IAsset } from "../types/assetsTypes";
-import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
-import TextArea from "antd/es/input/TextArea";
-import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const { Option } = Select;
 
 const UpdateAsset = ({ asset }: { asset: IAsset }) => {
@@ -37,6 +37,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
     specification,
     employee_id_no,
     unit_id,
+    price,
   } = singleAsset?.data || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -48,6 +49,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
     form.setFieldsValue({
       name,
       category,
+      price,
       serial_number,
       po_number,
       asset_history,
@@ -180,6 +182,19 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                     placeholder="Select Purchase Date"
                     rules={[{ required: true }]}
                   />
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    label="Asset Price"
+                    name="price"
+                    rules={[{ required: true }]}
+                  >
+                    <InputNumber
+                      min={0}
+                      className="w-full"
+                      placeholder="Enter asset price"
+                    />
+                  </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item

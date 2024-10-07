@@ -48,11 +48,12 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
       contact_no,
       unit_name,
       status,
-      licenses,
+      licenses: licenses?.map((item) => item.id),
       blood_group,
       business_type,
       line_of_business,
       grade,
+      pabx,
     });
     if (joining_date) {
       form.setFieldValue("joining_date", dayjs(joining_date));
@@ -74,6 +75,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
     business_type,
     line_of_business,
     grade,
+    pabx,
   ]);
 
   // const setFileField = (field: string, path: any) => {
@@ -255,6 +257,11 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                       <Option value="O+">O+</Option>
                       <Option value="O-">O-</Option>
                     </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item label="PABX" name="pabx">
+                    <InputNumber className="w-full" placeholder="Enter pabx" />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} md={12}>
