@@ -328,13 +328,13 @@ const DashboardCards = () => {
                         </div>
                       </div>
                     </Col>
-                    <Col xs={24} sm={24} md={24}>
-                      <BloodTypeChart />
-                    </Col>
                   </Row>
                 </Card>
               </Col>
             </Row>
+          </Col>
+          <Col xs={24} sm={24} md={24}>
+            <BloodTypeChart />
           </Col>
         </Row>
       )}
