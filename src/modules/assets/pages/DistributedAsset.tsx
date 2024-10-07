@@ -1,14 +1,13 @@
+import { SearchOutlined } from "@ant-design/icons";
 import { Card, Input, Select } from "antd";
 import { Table } from "antd/lib";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { DistributedAssetsTableColumns } from "../utils/DistributedTableColumns";
-import { useGetAllDistributedAssetQuery } from "../api/assetsEndPoint";
-import { generatePagination } from "../../../common/TablePagination copy";
-import { SearchOutlined } from "@ant-design/icons";
-import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
-import dayjs from "dayjs";
+import { generatePagination } from "../../../common/TablePagination copy";
+import { useGetAllDistributedAssetQuery } from "../api/assetsEndPoint";
+import { DistributedAssetsTableColumns } from "../utils/DistributedTableColumns";
 const { Option } = Select;
 const DistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -88,7 +87,7 @@ const DistributedAsset = () => {
             <Option value="Printer">Printer</Option>
             <Option value="Accessories">Accessories</Option>
           </Select>
-          <PDFDownload
+          {/* <PDFDownload
             PDFFileName="distributed_asset_list"
             fileHeader="Distributed ASSET LIST"
             PDFHeader={[
@@ -132,7 +131,7 @@ const DistributedAsset = () => {
                   )
                 : []
             }
-          />
+          /> */}
 
           <ExcelDownload
             excelName={"distributed_asset_list"}

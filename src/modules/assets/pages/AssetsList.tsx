@@ -1,19 +1,19 @@
+import { SearchOutlined } from "@ant-design/icons";
 import { Card, Input, Select, Table } from "antd";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { IAssetParams } from "../types/assetsTypes";
-import { useGetAssetsQuery } from "../api/assetsEndPoint";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { AssetsTableColumns } from "../utils/AssetsTableColumns";
 import { CreateButton } from "../../../common/CommonButton";
-import CreateAsset from "../components/CreateAssets";
-import { generatePagination } from "../../../common/TablePagination copy";
-import { SearchOutlined } from "@ant-design/icons";
-import UploadAssetFile from "../components/UploadAssetFile";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
-import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+import { generatePagination } from "../../../common/TablePagination copy";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import { useGetAssetsQuery } from "../api/assetsEndPoint";
+import CreateAsset from "../components/CreateAssets";
+import UploadAssetFile from "../components/UploadAssetFile";
+import { IAssetParams } from "../types/assetsTypes";
+import { AssetsTableColumns } from "../utils/AssetsTableColumns";
 
 const AssetsList = () => {
   const { Option } = Select;
@@ -120,10 +120,11 @@ const AssetsList = () => {
               }))}
               allowClear
             />
-            <PDFDownload
+            {/* <PDFDownload
               PDFFileName="asset-list"
               fileHeader="ASSET LIST"
               PDFHeader={[
+                "Asset Name",
                 "Category",
                 "Model",
                 "Serial No",
@@ -131,6 +132,9 @@ const AssetsList = () => {
                 "Specification",
                 "Remarks",
                 "Unit",
+                "Purchase Date",
+                "Price",
+                "Warranty",
               ]}
               PDFData={
                 data?.data?.length
@@ -143,8 +147,13 @@ const AssetsList = () => {
                         po_number,
                         specification,
                         unit_name,
+                        name,
+                        purchase_date,
+                        price,
+                        warranty,
                       }: any) => {
                         const data = {
+                          "Asset Name": name,
                           Category: category,
                           Model: model,
                           "Serial No": serial_number,
@@ -152,17 +161,22 @@ const AssetsList = () => {
                           Specification: specification,
                           Remarks: remarks,
                           Unit: unit_name,
+                          "Purchase Date":
+                            dayjs(purchase_date).format("DD-MM-YYYY"),
+                          Price: price,
+                          Warranty: warranty,
                         };
                         return data;
                       }
                     )
                   : []
               }
-            />
+            /> */}
 
             <ExcelDownload
               excelName={"asset-list"}
               excelTableHead={[
+                "Asset Name",
                 "Category",
                 "Model",
                 "Serial No",
@@ -170,6 +184,9 @@ const AssetsList = () => {
                 "Specification",
                 "Remarks",
                 "Unit",
+                "Purchase Date",
+                "Price",
+                "Warranty",
               ]}
               excelData={
                 data?.data?.length
@@ -182,8 +199,13 @@ const AssetsList = () => {
                         po_number,
                         specification,
                         unit_name,
+                        name,
+                        purchase_date,
+                        price,
+                        warranty,
                       }: any) => {
                         const data = {
+                          "Asset Name": name,
                           Category: category,
                           Model: model,
                           "Serial No": serial_number,
@@ -191,6 +213,10 @@ const AssetsList = () => {
                           Specification: specification,
                           Remarks: remarks,
                           Unit: unit_name,
+                          "Purchase Date":
+                            dayjs(purchase_date).format("DD-MM-YYYY"),
+                          Price: price,
+                          Warranty: warranty,
                         };
                         return data;
                       }

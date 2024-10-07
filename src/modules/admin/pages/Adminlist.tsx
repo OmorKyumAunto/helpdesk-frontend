@@ -1,20 +1,17 @@
+import { SearchOutlined } from "@ant-design/icons";
 import { Card, Input, Select, Space, Table } from "antd";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { IAdminParams } from "../types/adminTypes";
+import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
+import { generatePagination } from "../../../common/TablePagination copy";
 import {
   useGetAdminsQuery,
   useGetOverallAdminsQuery,
 } from "../api/adminEndPoint";
-import { setCommonModal } from "../../../app/slice/modalSlice";
+import { IAdminParams } from "../types/adminTypes";
 import { AdminTableColumns } from "../utils/AdminTableColumns";
-import { CreateButton } from "../../../common/CommonButton";
-import { SearchOutlined } from "@ant-design/icons";
-import { generatePagination } from "../../../common/TablePagination copy";
-import PDFDownload from "../../../common/PDFDownload/PDFDownload";
-import dayjs from "dayjs";
-import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 const { Option } = Select;
 
 const AdminList = () => {
@@ -87,7 +84,7 @@ const AdminList = () => {
               <Option value="Corporate Office">Corporate Office</Option>
             </Select>
             <>
-              <PDFDownload
+              {/* <PDFDownload
                 PDFFileName="Admin_list"
                 fileHeader="Admin LIST"
                 PDFHeader={[
@@ -129,7 +126,7 @@ const AdminList = () => {
                       )
                     : []
                 }
-              />
+              /> */}
             </>
 
             <Space>

@@ -149,7 +149,7 @@ const CreateAsset = () => {
                   name="po_number"
                   rules={[{ required: true }]}
                 >
-                  <Input placeholder="Enter serial no" />
+                  <Input placeholder="Enter po number" />
                 </Form.Item>
               </Col>
               <Col xs={24} sm={24} md={8}>

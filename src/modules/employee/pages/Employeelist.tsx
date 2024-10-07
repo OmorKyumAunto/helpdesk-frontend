@@ -7,7 +7,6 @@ import { useSearchParams } from "react-router-dom";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { CreateButton } from "../../../common/CommonButton";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
-import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import { generatePagination } from "../../../common/TablePagination copy";
 import { useGetEmployeesQuery } from "../api/employeeEndPoint";
 import CreateEmployee from "../components/CreateEmployee";
@@ -130,7 +129,7 @@ const EmployeeList = () => {
               <Option value="O-">O-</Option>
             </Select>
             <>
-              <PDFDownload
+              {/* <PDFDownload
                 PDFFileName="employee_list"
                 fileHeader="EMPLOYEE LIST"
                 PDFHeader={[
@@ -187,7 +186,7 @@ const EmployeeList = () => {
                       )
                     : []
                 }
-              />
+              /> */}
             </>
 
             <Space>
