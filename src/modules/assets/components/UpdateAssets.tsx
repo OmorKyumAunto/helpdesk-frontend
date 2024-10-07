@@ -209,7 +209,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                   <Form.Item
                     label="PO Number"
                     name="po_number"
-                    rules={[{ required: true }]}
+                    // rules={[{ required: true }]}
                   >
                     <Input placeholder="Enter serial no" />
                   </Form.Item>

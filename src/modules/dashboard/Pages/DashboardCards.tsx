@@ -1,16 +1,17 @@
-import { Card, Col, Descriptions, Row, Typography } from "antd";
-import { useGetAllDashboardQuery } from "../api/dashboardEndPoints";
+import { Card, Col, Row, Typography } from "antd";
+import dayjs from "dayjs";
 import { FaComputer } from "react-icons/fa6";
-import { LuUser2, LuUsers2 } from "react-icons/lu";
+import { LuUsers2 } from "react-icons/lu";
 import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useGetMeQuery } from "../../../app/api/userApi";
+import { RootState } from "../../../app/store/store";
+import { useGetAllDashboardQuery } from "../api/dashboardEndPoints";
 import GraphChartApex from "../components/ApexChart";
 import ApexPieChart from "../components/ApexPieChart";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store/store";
+import BloodTypeChart from "../components/BloodChart";
 import TopDash from "../components/TopDash";
-import { useGetMeQuery } from "../../../app/api/userApi";
-import dayjs from "dayjs";
-import { Link } from "react-router-dom";
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
@@ -163,6 +164,9 @@ const DashboardCards = () => {
                 </div>
               </Card>
             </Link>
+          </Col>
+          <Col xs={24} sm={24} md={24}>
+            <BloodTypeChart />
           </Col>
           <Col xs={24} sm={24} md={24} lg={6}>
             <Card title="Asset Category Statistics">

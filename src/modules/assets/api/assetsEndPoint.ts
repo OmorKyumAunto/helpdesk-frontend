@@ -149,6 +149,7 @@ export const assetsEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => [
         "asset",
+        "CTC",
         { type: "dashboardTypes", id: "dashboard" },
       ],
     }),

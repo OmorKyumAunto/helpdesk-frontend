@@ -147,7 +147,7 @@ const CreateAsset = () => {
                 <Form.Item
                   label="PO Number"
                   name="po_number"
-                  rules={[{ required: true }]}
+                  // rules={[{ required: true }]}
                 >
                   <Input placeholder="Enter po number" />
                 </Form.Item>

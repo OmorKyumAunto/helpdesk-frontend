@@ -1,6 +1,5 @@
 import { api } from "../../../app/api/api";
 import { HTTPResponse } from "../../../app/types/commonTypes";
-import { IDashboardGraphData } from "../types/dashboardTypes";
 
 export const dashboardEndpoints = api.injectEndpoints({
   endpoints: (build) => ({
@@ -13,6 +12,12 @@ export const dashboardEndpoints = api.injectEndpoints({
     getDashboardPieData: build.query<HTTPResponse<any>, void>({
       query: () => ({
         url: `/dashboard/accessories-count`,
+      }),
+      providesTags: () => [{ type: "dashboardTypes", id: "dashboard" }],
+    }),
+    getDashboardBloodData: build.query<HTTPResponse<any>, void>({
+      query: () => ({
+        url: `/dashboard/blood-count`,
       }),
       providesTags: () => [{ type: "dashboardTypes", id: "dashboard" }],
     }),
@@ -36,6 +41,7 @@ export const dashboardEndpoints = api.injectEndpoints({
 export const {
   useGetAllDashboardQuery,
   useGetDashboardGraphDataQuery,
+  useGetDashboardBloodDataQuery,
   useGetDashboardPieDataQuery,
   useGetDashboardEmployeeDataQuery,
 } = dashboardEndpoints;
