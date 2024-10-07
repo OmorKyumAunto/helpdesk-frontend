@@ -97,14 +97,14 @@ const AssetDetails = ({ id }: { id: any }) => {
             children: unit_name,
           },
           {
-            key: "8",
-            label: "Purchase Date",
-            children: dayjs(purchase_date).format("DD-MM-YYYY"),
-          },
-          {
             key: "9",
             label: "Price",
             children: price,
+          },
+          {
+            key: "8",
+            label: "Purchase Date",
+            children: dayjs(purchase_date).format("DD-MM-YYYY"),
           },
           {
             key: "10",

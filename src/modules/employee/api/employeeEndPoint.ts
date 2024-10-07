@@ -5,7 +5,6 @@ import asyncWrapper from "../../../utils/asyncWrapper";
 import {
   IEmployee,
   IEmployeeParams,
-  ISingleEmployee,
   ISubmitData,
 } from "../types/employeeTypes";
 
@@ -140,6 +139,7 @@ export const employeeEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => [
         "employee",
+        "Admin",
         { type: "dashboardTypes", id: "dashboard" },
       ],
     }),

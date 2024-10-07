@@ -1,31 +1,15 @@
-import {
-  Form,
-  Input,
-  Row,
-  Col,
-  Typography,
-  Divider,
-  message,
-  Avatar,
-  Image,
-} from "antd";
-import {
-  LockOutlined,
-  LoginOutlined,
-  MailOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { LockOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
+import { Col, Form, Image, Input, Row } from "antd";
 import { motion } from "framer-motion";
-import "./Login.css";
+import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../app/api/api";
 import logo from "../../assets/logo.png";
+import SubmitButton from "../../components/submitButton/SubmitButton";
+import "./Login.css";
 type IInputs = {
   id: string;
   password: string;
 };
-import SubmitButton from "../../components/submitButton/SubmitButton";
-import { Link, useNavigate } from "react-router-dom";
-import videoBg from "../../assets/background.mp4";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -60,7 +44,7 @@ export const Login = () => {
         transition={{ duration: 0.5 }}
       >
         <motion.div
-          className=" login-form-container"
+          className="login-form-container"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}

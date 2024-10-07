@@ -353,6 +353,64 @@ const CreateAsset = () => {
                       </Select>
                     </Form.Item>
                   </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      label="Business Type"
+                      name="business_type"
+                      rules={[{ required: true }]}
+                    >
+                      <Input placeholder="Enter business type" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      label="Line of Business"
+                      name="line_of_business"
+                      rules={[{ required: true }]}
+                    >
+                      <Input placeholder="Enter line of business" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      label="Grade"
+                      name="grade"
+                      rules={[{ required: true }]}
+                    >
+                      <Input placeholder="Enter grade" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      label="Blood Group"
+                      name="blood_group"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select blood group",
+                        },
+                      ]}
+                    >
+                      <Select showSearch placeholder="Select Blood Group">
+                        <Option value="A+">A+</Option>
+                        <Option value="A-">A-</Option>
+                        <Option value="B+">B+</Option>
+                        <Option value="B-">B-</Option>
+                        <Option value="AB+">AB+</Option>
+                        <Option value="AB-">AB-</Option>
+                        <Option value="O+">O+</Option>
+                        <Option value="O-">O-</Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item label="PABX" name="pabx">
+                      <InputNumber
+                        className="w-full"
+                        placeholder="Enter pabx"
+                      />
+                    </Form.Item>
+                  </Col>
                 </>
               )}
 
