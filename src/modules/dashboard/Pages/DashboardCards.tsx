@@ -165,9 +165,6 @@ const DashboardCards = () => {
               </Card>
             </Link>
           </Col>
-          <Col xs={24} sm={24} md={24}>
-            <BloodTypeChart />
-          </Col>
           <Col xs={24} sm={24} md={24} lg={6}>
             <Card title="Asset Category Statistics">
               <ApexPieChart />
@@ -175,6 +172,9 @@ const DashboardCards = () => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={18}>
             <GraphChartApex />
+          </Col>
+          <Col xs={24} sm={24} md={24}>
+            <BloodTypeChart />
           </Col>
         </Row>
       ) : (
@@ -327,6 +327,9 @@ const DashboardCards = () => {
                           </div>
                         </div>
                       </div>
+                    </Col>
+                    <Col xs={24} sm={24} md={24}>
+                      <BloodTypeChart />
                     </Col>
                   </Row>
                 </Card>
