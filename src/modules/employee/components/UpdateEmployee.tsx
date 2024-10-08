@@ -244,9 +244,9 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                   <Form.Item
                     label="Blood Group"
                     name="blood_group"
-                    rules={[
-                      { required: true, message: "Please select blood group" },
-                    ]}
+                    // rules={[
+                    //   { required: true, message: "Please select blood group" },
+                    // ]}
                   >
                     <Select showSearch placeholder="Select Blood Group">
                       <Option value="A+">A+</Option>
@@ -269,9 +269,9 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                   <Form.Item
                     label="Licenses"
                     name="licenses"
-                    rules={[
-                      { required: true, message: "Please Select License Type" },
-                    ]}
+                    // rules={[
+                    //   { required: true, message: "Please Select License Type" },
+                    // ]}
                   >
                     <Select
                       mode="multiple"

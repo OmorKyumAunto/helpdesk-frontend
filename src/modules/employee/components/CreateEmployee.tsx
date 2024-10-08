@@ -176,9 +176,9 @@ const CreateEmployee = () => {
                 <Form.Item
                   label="Blood Group"
                   name="blood_group"
-                  rules={[
-                    { required: true, message: "Please select blood group" },
-                  ]}
+                  // rules={[
+                  //   { required: true, message: "Please select blood group" },
+                  // ]}
                 >
                   <Select showSearch placeholder="Select Blood Group">
                     <Option value="A+">A+</Option>

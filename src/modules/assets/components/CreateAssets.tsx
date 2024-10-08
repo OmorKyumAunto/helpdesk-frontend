@@ -3,12 +3,13 @@ import { SendOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { DateInput } from "../../../common/formItem/FormItems";
 import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
+import { useGetLicensesQuery } from "../../Licenses/api/licenseEndPoint";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useCreateAssetsMutation } from "../api/assetsEndPoint";
 const { Option } = Select;
@@ -18,8 +19,11 @@ const CreateAsset = () => {
   const [form] = Form.useForm();
   const assignType = Form.useWatch("is_assign", form);
   const employeeType = Form.useWatch("is_new_employee", form);
+  const licenseType = Form.useWatch("need_license", form);
   const { data } = useGetOverallEmployeesQuery();
   const { data: unitData } = useGetUnitsQuery({ status: "active" });
+  const { data: licenseData } = useGetLicensesQuery({ status: "active" });
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   const [create, { isLoading, isSuccess }] = useCreateAssetsMutation();
 
@@ -330,6 +334,14 @@ const CreateAsset = () => {
                   </Col>
                   <Col xs={24} sm={24} md={8}>
                     <DateInput
+                      label="Assign Date"
+                      name="assign_date"
+                      placeholder="Select Assign Date"
+                      rules={[{ required: true }]}
+                    />
+                  </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <DateInput
                       label="Date of Joining"
                       name="joining_date"
                       placeholder="Select Joining Date"
@@ -384,12 +396,12 @@ const CreateAsset = () => {
                     <Form.Item
                       label="Blood Group"
                       name="blood_group"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please select blood group",
-                        },
-                      ]}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: "Please select blood group",
+                      //   },
+                      // ]}
                     >
                       <Select showSearch placeholder="Select Blood Group">
                         <Option value="A+">A+</Option>
@@ -411,6 +423,57 @@ const CreateAsset = () => {
                       />
                     </Form.Item>
                   </Col>
+                  <Col xs={24} sm={24} md={8}>
+                    <Form.Item
+                      label="Need License"
+                      name="need_license"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please Select License Type",
+                        },
+                      ]}
+                    >
+                      <Select placeholder="Select License Type">
+                        <Option value="Yes">Yes</Option>
+                        <Option value="No">No</Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  {licenseType === "Yes" && (
+                    <Col xs={24} sm={24} md={16}>
+                      <Form.Item
+                        label="Licenses"
+                        name="licenses"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please Select License Type",
+                          },
+                        ]}
+                      >
+                        <Select
+                          mode="multiple"
+                          placeholder="Select License"
+                          value={selectedItems}
+                          onChange={setSelectedItems}
+                          style={{ width: "100%" }}
+                          filterOption={(
+                            input: string,
+                            option?: { label: string; value: string }
+                          ) =>
+                            (option?.label ?? "")
+                              .toLowerCase()
+                              .includes(input.toLowerCase())
+                          }
+                          options={licenseData?.data?.map((item) => ({
+                            value: item.id,
+                            label: item.title,
+                          }))}
+                        />
+                      </Form.Item>
+                    </Col>
+                  )}
                 </>
               )}
 
