@@ -201,7 +201,7 @@ const EmployeeList = () => {
                   "Contact No",
                   "Blood Group",
                   "Date of Joining",
-                  "Unit Name",
+                  "Location",
                   "Business Type",
                   "Line of Business",
                   "Grade",
@@ -236,7 +236,7 @@ const EmployeeList = () => {
                             "Blood Group": blood_group,
                             "Date of Joining":
                               dayjs(joining_date).format("DD-MM-YYYY"),
-                            "Unit Name": unit_name,
+                            Location: unit_name,
                             Licenses: licenses,
                             "Business Type": business_type,
                             "Line of Business": line_of_business,

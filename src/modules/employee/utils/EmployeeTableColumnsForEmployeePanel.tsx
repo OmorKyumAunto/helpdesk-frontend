@@ -1,7 +1,6 @@
 import { EyeOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
 import { TableProps } from "antd/lib";
-import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import EmployeeDetails from "../pages/EmployeeDetails";
@@ -48,14 +47,14 @@ export const EmployeeTableColumnsForEmployeePanel =
         dataIndex: "blood_group",
         key: "blood_group",
       },
+      // {
+      //   title: "Date of Joining",
+      //   dataIndex: "joining_date",
+      //   key: "joining_date",
+      //   render: (joining_date) => dayjs(joining_date).format("DD-MM-YYYY"),
+      // },
       {
-        title: "Date of Joining",
-        dataIndex: "joining_date",
-        key: "joining_date",
-        render: (joining_date) => dayjs(joining_date).format("DD-MM-YYYY"),
-      },
-      {
-        title: "Unit Name",
+        title: "Location",
         dataIndex: "unit_name",
         key: "unit_name",
       },
