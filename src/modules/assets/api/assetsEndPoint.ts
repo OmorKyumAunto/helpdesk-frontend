@@ -87,7 +87,7 @@ export const assetsEndPoint = api.injectEndpoints({
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully asset create ");
+          notification("success", "Successfully Created ");
         });
       },
       invalidatesTags: () => [
@@ -106,7 +106,7 @@ export const assetsEndPoint = api.injectEndpoints({
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully asset file upload ");
+          notification("success", "Successfully Uploaded ");
         });
       },
       invalidatesTags: () => [
@@ -125,7 +125,7 @@ export const assetsEndPoint = api.injectEndpoints({
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully asset update ");
+          notification("success", "Successfully Updated ");
         });
       },
       invalidatesTags: () => [
@@ -144,7 +144,7 @@ export const assetsEndPoint = api.injectEndpoints({
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully asset assign ");
+          notification("success", "Successfully Assigned");
         });
       },
       invalidatesTags: () => [
@@ -163,7 +163,7 @@ export const assetsEndPoint = api.injectEndpoints({
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully delete asset");
+          notification("success", "Successfully Deleted");
         });
       },
       invalidatesTags: () => [

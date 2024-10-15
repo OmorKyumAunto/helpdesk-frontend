@@ -257,7 +257,7 @@ const AssetsList = () => {
                 current: Number(page),
                 showSizeChanger: true,
                 defaultPageSize: 50,
-                pageSizeOptions: ["50", "100", "200", "300", "500"],
+                pageSizeOptions: ["50", "100", "200", "300", "500","1000"],
                 total: data ? Number(data?.total) : 0,
                 showTotal: (total) => `Total ${total} `,
               }}

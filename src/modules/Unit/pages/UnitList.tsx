@@ -14,7 +14,7 @@ const UnitList = () => {
     <>
       <div>
         <Card
-          title={`Unit List`}
+          title={`Asset Unit`}
           style={{
             boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
             marginBottom: "1rem",

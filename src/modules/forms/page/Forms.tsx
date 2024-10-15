@@ -15,14 +15,14 @@ const Forms = () => {
   // Updated dummy template data
   const templates = [
     {
-      title: "Demand Slip For Bandhan",
-      description: "Form for Purchasing Product from Bandhan.",
-      file: "/templates/demand-slip-bandhan.xlsx",
+      title: "Hardware Requisition Form",
+      description: "Template for Hardware requisition.",
+      file: "/templates/HARDWARE REQUISITION FORM.pdf",
     },
     {
-      title: "CS Template",
-      description: "Template for CS.",
-      file: "/templates/cs-template.xlsx",
+      title: "Email Requisition Form",
+      description: "Template for Email requisition.",
+      file: "/templates/EMAIL REQUISITION FORM.pdf",
     },
     {
       title: "Stationary Requisition Form",
@@ -30,19 +30,29 @@ const Forms = () => {
       file: "/templates/stationary-requisition.xlsx",
     },
     {
-      title: "Monthly Achievements PPtx template",
+      title: "CS Template",
+      description: "Template for CS.",
+      file: "/templates/cs-template.xlsx",
+    },
+    {
+      title: "Monthly Achievements PPTX",
       description: "Template for monthly Achivements.",
       file: "/templates/monthly-achivement-template.pptx",
     },
     {
-      title: "Employee template",
-      description: "Template for Employee.",
-      file: "/templates/employeeformat.xlsx",
+      title: "Employee Template",
+      description: "Template for Employee Upload",
+      file: "/templates/Employee Template.xlsx",
     },
     {
-      title: "Asset template",
-      description: "Template for Asset",
-      file: "/templates/assetformat.xlsx",
+      title: "Asset Template",
+      description: "Template for Asset Upload",
+      file: "/templates/Asset Template.xlsx",
+    },
+    {
+      title: "Demand Slip For Bandhan",
+      description: "Demand Slip for Bandhan.",
+      file: "/templates/demand-slip-bandhan.xlsx",
     },
   ];
   const nums = [1, 2, 3, 4, 5];

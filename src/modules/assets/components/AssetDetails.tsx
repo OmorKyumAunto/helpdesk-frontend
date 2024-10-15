@@ -108,7 +108,7 @@ const AssetDetails = ({ id }: { id: any }) => {
           },
           {
             key: "10",
-            label: "Warranty",
+            label: "Remaining Warranty",
             children: warranty,
           },
         ]}

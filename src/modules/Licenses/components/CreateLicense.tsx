@@ -49,7 +49,7 @@ const CreateLicense = () => {
                 <Form.Item
                   name="price"
                   rules={[{ required: true }]}
-                  label="Price"
+                  label="Cost Per Month"
                   required
                 >
                   <InputNumber

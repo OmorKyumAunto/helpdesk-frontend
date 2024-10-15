@@ -219,6 +219,17 @@ export const AppLayout = () => {
       </Link>
     </div>
   );
+  const helpDesk = (
+    <div>
+      <Link to="http://192.168.153.249:8081/" target="_blank">
+        <Button style={{ marginTop: "10px", width: "100%" }} type="primary">
+          Web Help Desk
+        </Button>
+      </Link>
+      <br />
+      
+    </div>
+  );
 
   const handleResizeStart = (e: any) => {
     e.preventDefault();
@@ -413,9 +424,12 @@ export const AppLayout = () => {
                 />
               )}
             </div> */}
+            <Popover content={helpDesk}>
+              <Button type="dashed">Help Desk</Button>
+            </Popover>
 
             <Popover content={selfService}>
-              <Button type="dashed">Self Service </Button>
+              <Button type="dashed">Self Service</Button>
             </Popover>
             <Popover content={content}>
               <Button

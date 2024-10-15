@@ -72,15 +72,20 @@ export const sideBarItems = (roleId: number) => {
     ...(roleId !== 3
       ? [
           {
-            label: <Link to="/ctc/list">CTC</Link>,
+            label: <Link to="/ctc/list">IT CTC</Link>,
             key: "/ctc/list",
             icon: <MdOutlineFactCheck size={20} />,
           },
           {
-            label: "SOP",
+            label: "IT SOP",
             key: "sop",
             icon: <FaRegFileAlt size={20} />,
             children: [
+              {
+                label: <Link to="/sop/sixteen">SOP INDEX</Link>,
+                key: "/sop/sixteen",
+                icon: <RxHamburgerMenu size={16} />,
+              },
               {
                 label: (
                   <Link to="/sop/one">SOP1.0.1 ROLES AND RESPONSIBILITIES</Link>
@@ -188,14 +193,10 @@ export const sideBarItems = (roleId: number) => {
                 key: "/sop/fifteen",
                 icon: <RxHamburgerMenu size={16} />,
               },
-              {
-                label: <Link to="/sop/sixteen">SOP INDEX.pdf</Link>,
-                key: "/sop/sixteen",
-                icon: <RxHamburgerMenu size={16} />,
-              },
+              
               {
                 label: (
-                  <Link to="/sop/seventeen">SOP Safety & Security.pdf</Link>
+                  <Link to="/sop/seventeen">SOP Safety & Security</Link>
                 ),
                 key: "/sop/seventeen",
                 icon: <RxHamburgerMenu size={16} />,
