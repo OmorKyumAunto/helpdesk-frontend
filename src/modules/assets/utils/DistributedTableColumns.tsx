@@ -1,12 +1,10 @@
-import { TableProps } from "antd/lib";
-import { IAsset } from "../types/assetsTypes";
-import dayjs from "dayjs";
-import { Button, Space } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
-import AssetDetails from "../components/AssetDetails";
-import { setCommonModal } from "../../../app/slice/modalSlice";
+import { Button, Space } from "antd";
+import { TableProps } from "antd/lib";
 import { useDispatch } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
 import DistributeAssetDetails from "../components/DistributedAssetDetails";
+import { IAsset } from "../types/assetsTypes";
 
 export const DistributedAssetsTableColumns =
   (): TableProps<IAsset>["columns"] => {
@@ -48,10 +46,13 @@ export const DistributedAssetsTableColumns =
         dataIndex: "serial_number",
         key: "serial_number",
       },
-      {
-        title: "Assigning Date",
-        render: ({ assign_date }) => dayjs(assign_date).format("DD-MM-YYYY"),
-      },
+      // {
+      //   title: "Assigning Date",
+      //   render: ({ history }) =>
+      //     history[0]?.status === 1
+      //       ? dayjs(history[0]?.asset_assign_date).format("DD-MM-YYYY")
+      //       : null,
+      // },
       {
         title: "Actions",
         key: "action",

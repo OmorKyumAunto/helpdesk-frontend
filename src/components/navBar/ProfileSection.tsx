@@ -1,23 +1,13 @@
-import { EditOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  Image,
-  Row,
-  Space,
-  Tag,
-  Typography,
-} from "antd";
+import { EditOutlined } from "@ant-design/icons";
+import { Button, Card, Image, Space, Tag } from "antd";
 
+import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { useGetMeQuery } from "../../app/api/userApi";
 import { setLogout } from "../../app/features/userSlice";
+import { setCommonModal } from "../../app/slice/modalSlice";
 import { useAppDispatch } from "../../app/store/store";
 import user from "../../assets/user.png";
-import { useGetMeQuery } from "../../app/api/userApi";
-import dayjs from "dayjs";
-import { setCommonModal } from "../../app/slice/modalSlice";
 import UpdateEmployee from "../../modules/employee/components/UpdateEmployee";
 import ChangeEmployeePassword from "./ChangePassword";
 const ProfileSection = () => {
@@ -36,7 +26,7 @@ const ProfileSection = () => {
     employee_id,
     contact_no,
   } = data?.data || {};
-  // console.log(data?.data);
+  console.log(data?.data);
   const record = data?.data;
   const handleLogout = () => {
     dispatch(setLogout());

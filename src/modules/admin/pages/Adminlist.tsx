@@ -6,10 +6,7 @@ import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { generatePagination } from "../../../common/TablePagination copy";
-import {
-  useGetAdminsQuery,
-  useGetOverallAdminsQuery,
-} from "../api/adminEndPoint";
+import { useGetAdminsQuery } from "../api/adminEndPoint";
 import { IAdminParams } from "../types/adminTypes";
 import { AdminTableColumns } from "../utils/AdminTableColumns";
 const { Option } = Select;
@@ -43,7 +40,6 @@ const AdminList = () => {
   }, [page, pageSize, skipValue]);
 
   const { data, isLoading, isFetching } = useGetAdminsQuery({ ...filter });
-  const { data: allAdmins } = useGetOverallAdminsQuery();
 
   return (
     <>
@@ -83,52 +79,6 @@ const AdminList = () => {
               <Option value="DIPL">DIPL</Option>
               <Option value="Corporate Office">Corporate Office</Option>
             </Select>
-            <>
-              {/* <PDFDownload
-                PDFFileName="Admin_list"
-                fileHeader="Admin LIST"
-                PDFHeader={[
-                  "Admin ID",
-                  "Admin Name",
-                  "Department",
-                  "Designation",
-                  "Email",
-                  "Contact No",
-                  "Date of Joining",
-                  "Unit Name",
-                ]}
-                PDFData={
-                  allAdmins?.data?.length
-                    ? allAdmins?.data?.map(
-                        ({
-                          employee_id,
-                          name,
-                          department,
-                          designation,
-                          email,
-                          contact_no,
-                          joining_date,
-                          unit_name,
-                        }: any) => {
-                          const data = {
-                            "Admin ID": employee_id,
-                            "Admin Name": name,
-                            Department: department,
-                            Designation: designation,
-                            Email: email,
-                            "Contact No": contact_no,
-                            "Date of Joining":
-                              dayjs(joining_date).format("DD-MM-YYYY"),
-                            "Unit Name": unit_name,
-                          };
-                          return data;
-                        }
-                      )
-                    : []
-                }
-              /> */}
-            </>
-
             <Space>
               <ExcelDownload
                 excelName={"Admin_list"}
@@ -143,8 +93,8 @@ const AdminList = () => {
                   "Unit Name",
                 ]}
                 excelData={
-                  allAdmins?.data?.length
-                    ? allAdmins?.data?.map(
+                  data?.data?.length
+                    ? data?.data?.map(
                         ({
                           employee_id,
                           name,

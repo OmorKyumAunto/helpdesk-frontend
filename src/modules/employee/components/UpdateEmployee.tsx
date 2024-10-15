@@ -16,6 +16,7 @@ const { Option } = Select;
 const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
   const {
     id,
+    role_id,
     employee_id,
     name,
     designation,
@@ -49,7 +50,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
       contact_no,
       unit_name,
       status,
-      licenses: licenses?.map((item) => item.id),
+      licenses: licenses?.map((item) => item?.id),
       blood_group,
       business_type,
       line_of_business,
@@ -275,6 +276,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                   >
                     <Select
                       mode="multiple"
+                      disabled={role_id === 3 ? true : false}
                       placeholder="Select License"
                       value={selectedItems}
                       onChange={setSelectedItems}

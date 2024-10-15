@@ -38,6 +38,22 @@ export const AdminEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["Admin"],
     }),
+    assignUnitToAdmin: build.mutation<unknown, { id: number }>({
+      query: ({ id, body }) => {
+        return {
+          url: `/asset-unit/search-access/${id}`,
+          method: "POST",
+          body,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully unit assigned");
+        });
+      },
+      invalidatesTags: () => ["Admin"],
+    }),
   }),
 });
 
@@ -45,4 +61,5 @@ export const {
   useGetAdminsQuery,
   useGetOverallAdminsQuery,
   useDemoteToAdminMutation,
+  useAssignUnitToAdminMutation,
 } = AdminEndPoint;

@@ -1,13 +1,13 @@
-import { RootState } from "../store/store";
-import { setLogout } from "../features/userSlice";
 import {
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query";
+import { setLogout } from "../features/userSlice";
+import { RootState } from "../store/store";
 
-const baseURL = "http://192.168.22.12:3003/api/v1";
+const baseURL = "http://localhost:3003/api/v1";
 
 export const socket_url = "https://test.socket.com";
 

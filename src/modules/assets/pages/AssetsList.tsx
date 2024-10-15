@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import { useGetMeQuery } from "../../../app/api/userApi";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { CreateButton } from "../../../common/CommonButton";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
@@ -30,9 +31,15 @@ const AssetsList = () => {
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
+  const { data: profile } = useGetMeQuery();
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
+  const unitOptionForAdmin = unitData?.data?.filter((unit) =>
+    profile?.data?.searchAccess?.some((item) => item?.unit_id === unit?.id)
+  );
+  const unitOption =
+    profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
   const [filter, setFilter] = useState<IAssetParams>({
     limit: Number(pageSize),
     offset: skipValue,
@@ -114,7 +121,7 @@ const AssetsList = () => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={unitData?.data?.map((unit: any) => ({
+              options={unitOption?.map((unit: any) => ({
                 value: unit.id,
                 label: unit.title,
               }))}
@@ -257,7 +264,7 @@ const AssetsList = () => {
                 current: Number(page),
                 showSizeChanger: true,
                 defaultPageSize: 50,
-                pageSizeOptions: ["50", "100", "200", "300", "500","1000"],
+                pageSizeOptions: ["50", "100", "200", "300", "500", "1000"],
                 total: data ? Number(data?.total) : 0,
                 showTotal: (total) => `Total ${total} `,
               }}

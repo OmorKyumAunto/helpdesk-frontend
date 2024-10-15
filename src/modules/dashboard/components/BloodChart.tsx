@@ -34,9 +34,9 @@ const BloodTypeChart = () => {
   ];
 
   return (
-    <div className="w-full h-72 bg-white p-8 rounded-lg">
+    <div className="w-full h-[250px] bg-white p-8 rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Blood Type Distribution</h2>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="90%">
         <BarChart
           data={data}
           margin={{

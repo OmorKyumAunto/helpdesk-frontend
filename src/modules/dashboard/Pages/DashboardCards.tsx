@@ -271,12 +271,15 @@ const DashboardCards = () => {
               </Col>
             </Row>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={16}>
+          <Col xs={24} sm={24} md={16}>
+            <BloodTypeChart />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={24}>
             <Row>
               <Col xs={24} sm={24} md={24}>
                 <Card className="bg-[#1775bb] text-white py-8 h-full">
                   <Row gutter={[12, 6]}>
-                    <Col xs={24} sm={24} md={12} lg={11}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <div
                         style={{
                           display: "flex",
@@ -302,7 +305,7 @@ const DashboardCards = () => {
                         </div>
                       </div>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={13}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <div
                         style={{
                           display: "flex",
@@ -332,9 +335,6 @@ const DashboardCards = () => {
                 </Card>
               </Col>
             </Row>
-          </Col>
-          <Col xs={24} sm={24} md={24}>
-            <BloodTypeChart />
           </Col>
         </Row>
       )}

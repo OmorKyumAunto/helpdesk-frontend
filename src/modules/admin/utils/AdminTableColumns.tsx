@@ -1,9 +1,13 @@
+import { Button, Popconfirm, Space } from "antd";
 import { TableProps } from "antd/lib";
 import dayjs from "dayjs";
-import { IAdmin } from "../types/adminTypes";
-import { Button, Popconfirm, Space, Switch } from "antd";
+import { useDispatch } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useDemoteToAdminMutation } from "../api/adminEndPoint";
+import AssignUnitToAdmin from "../components/AssignUnitToAdmin";
+import { IAdmin } from "../types/adminTypes";
 export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
+  const dispatch = useDispatch();
   const [demote] = useDemoteToAdminMutation();
 
   return [
@@ -63,6 +67,26 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
               onChange={() => updateStatus(record.id)}
             /> */}
 
+            <Button
+              size="small"
+              type="primary"
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
+                    title: "Assign Unit",
+                    content: (
+                      <AssignUnitToAdmin
+                        id={record?.id}
+                        searchAccess={record?.searchAccess}
+                      />
+                    ),
+                    show: true,
+                  })
+                );
+              }}
+            >
+              Assign Unit
+            </Button>
             <Popconfirm
               title="Remove the admin"
               description="Are you sure to remove this admin?"
