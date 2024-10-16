@@ -11,6 +11,7 @@ export interface IUser {
   unit_name: string;
   role_id: number;
   status: number;
+  phone_number: number;
   created_by: null | string;
   created_at: string;
   total_assign_asset: number;
@@ -20,6 +21,7 @@ export interface IUser {
   };
   image: string;
   token: string;
+  searchAccess: any[];
 }
 
 export interface ILoginResponse<T> {

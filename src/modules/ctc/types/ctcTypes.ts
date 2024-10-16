@@ -41,4 +41,5 @@ export interface ICTCParams {
   limit?: number;
   offset?: number;
   key?: string;
+  unit_name?: string;
 }

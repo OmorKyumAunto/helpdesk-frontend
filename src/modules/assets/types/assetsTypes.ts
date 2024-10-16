@@ -36,6 +36,8 @@ export interface IAssetDetails {
   employee_designation: string;
   employee_unit: string;
   model: string;
+  price: number;
+  warranty: string;
   specification: string;
   history: History[];
 }

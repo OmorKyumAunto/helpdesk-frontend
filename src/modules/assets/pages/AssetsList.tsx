@@ -36,7 +36,7 @@ const AssetsList = () => {
     status: "active",
   });
   const unitOptionForAdmin = unitData?.data?.filter((unit) =>
-    profile?.data?.searchAccess?.some((item) => item?.unit_id === unit?.id)
+    profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
   );
   const unitOption =
     profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;

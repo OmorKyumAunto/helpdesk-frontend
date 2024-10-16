@@ -73,6 +73,8 @@ export const api = createApi({
     "asset",
     "dashboardTypes",
     "unit",
+    "CTC",
+    "license",
   ],
 });
 

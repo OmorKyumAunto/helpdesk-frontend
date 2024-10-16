@@ -38,7 +38,7 @@ export const AdminEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["Admin"],
     }),
-    assignUnitToAdmin: build.mutation<unknown, { id: number }>({
+    assignUnitToAdmin: build.mutation<unknown, { id: number; body: any }>({
       query: ({ id, body }) => {
         return {
           url: `/asset-unit/search-access/${id}`,

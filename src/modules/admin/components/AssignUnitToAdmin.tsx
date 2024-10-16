@@ -21,7 +21,7 @@ const AssignUnitToAdmin = ({ id, searchAccess }: any) => {
     if (searchAccess?.length > 0) {
       form.setFieldValue(
         "unit_id",
-        searchAccess?.map((item) => item?.unit_id)
+        searchAccess?.map((item: any) => item?.unit_id)
       );
     }
   }, [searchAccess, form]);
@@ -61,7 +61,7 @@ const AssignUnitToAdmin = ({ id, searchAccess }: any) => {
                     style={{ width: "100%" }}
                     filterOption={(
                       input: string,
-                      option?: { label: string; value: string }
+                      option?: { label: string; value: number }
                     ) =>
                       (option?.label ?? "")
                         .toLowerCase()

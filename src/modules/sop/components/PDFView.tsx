@@ -2,12 +2,12 @@ import { Card } from "antd";
 import { useState } from "react";
 import { FaRegFilePdf } from "react-icons/fa6";
 
-const PDFView = ({ pdf }) => {
+const PDFView = ({ pdf }: any) => {
   const [PDFPath, setPDFPath] = useState(null);
   return (
     <Card>
       <div className="grid grid-cols-4 md:grid-cols-6 gap-4 mb-10">
-        {pdf?.map((item) => (
+        {pdf?.map((item: any) => (
           <div key={item?.id}>
             <div
               className="border border-solid border-gray-300 flex justify-center items-center p-5 shadow-md cursor-pointer w-full h-full"

@@ -40,10 +40,7 @@ export const licenseEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["license"],
     }),
-    UpdateLicense: build.mutation<
-      unknown,
-      { title: string; id: number; price: number }
-    >({
+    UpdateLicense: build.mutation<unknown, { title: any; id: number }>({
       query: ({ title, id }) => {
         return {
           url: `/licenses/update/${id}`,

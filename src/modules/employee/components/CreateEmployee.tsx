@@ -228,7 +228,7 @@ const CreateEmployee = () => {
                       style={{ width: "100%" }}
                       filterOption={(
                         input: string,
-                        option?: { label: string; value: string }
+                        option?: { label: string; value: number }
                       ) =>
                         (option?.label ?? "")
                           .toLowerCase()

@@ -24,7 +24,7 @@ export const CTCTableColumns = (): TableProps<ICTC>["columns"] => {
     },
     {
       title: "Assets",
-      render: ({ assets }) => assets?.map((item) => item?.name).join(", "),
+      render: ({ assets }) => assets?.map((item: any) => item?.name).join(", "),
     },
     {
       title: "Unit Name",
@@ -43,7 +43,8 @@ export const CTCTableColumns = (): TableProps<ICTC>["columns"] => {
     },
     {
       title: "Licenses",
-      render: ({ licenses }) => licenses?.map((item) => item?.title).join(", "),
+      render: ({ licenses }) =>
+        licenses?.map((item: any) => item?.title).join(", "),
     },
     {
       title: "Monthly Licenses Cost",

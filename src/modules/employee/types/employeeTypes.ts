@@ -21,6 +21,7 @@ export interface IEmployee {
   grade: string;
   line_of_business: string;
   business_type: string;
+  pabx: number;
 }
 
 export interface IAdjustSalary {
@@ -98,5 +99,6 @@ export interface IEmployeeParams {
   offset?: number;
   key?: string;
   unit_name?: string;
+  blood_group?: string;
   status?: number;
 }
