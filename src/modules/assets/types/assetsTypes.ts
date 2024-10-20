@@ -12,6 +12,7 @@ export interface IAsset {
   status: number;
   remarks: string;
   unit_name: string;
+  unit_id: string;
 }
 export interface IAssetDetails {
   id: number;

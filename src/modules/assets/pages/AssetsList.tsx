@@ -55,6 +55,15 @@ const AssetsList = () => {
   const { data, isLoading, isFetching } = useGetAssetsQuery({ ...filter });
   // const { data: allAsset } = useGetOverallAssetsQuery();
 
+  const tableDataForAdmin = data?.data?.filter((singleData) =>
+    profile?.data?.searchAccess?.some(
+      (item: any) => item?.unit_id === Number(singleData?.unit_id)
+    )
+  );
+
+  const assetsTableData =
+    profile?.data?.role_id === 2 ? tableDataForAdmin : data?.data;
+
   const showModal = () => {
     dispatch(
       setCommonModal({
@@ -252,7 +261,7 @@ const AssetsList = () => {
               size="small"
               bordered
               loading={isLoading || isFetching}
-              dataSource={data?.data?.length ? data.data : []}
+              dataSource={assetsTableData?.length ? assetsTableData : []}
               columns={AssetsTableColumns()}
               scroll={{ x: true }}
               pagination={{
