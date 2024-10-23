@@ -14,6 +14,8 @@ import { IEmployee, IFromData } from "../types/employeeTypes";
 const { Option } = Select;
 
 const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
+  const { data: profile } = useGetMeQuery();
+  console.log(profile?.data?.role_id);
   const {
     id,
     role_id,
@@ -276,7 +278,11 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                   >
                     <Select
                       mode="multiple"
-                      disabled={role_id === 3 ? true : false}
+                      disabled={
+                        role_id === 3 && profile?.data?.role_id === 3
+                          ? true
+                          : false
+                      }
                       placeholder="Select License"
                       value={selectedItems}
                       onChange={setSelectedItems}

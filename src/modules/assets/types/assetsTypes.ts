@@ -47,7 +47,7 @@ export interface IAssetParams {
   limit?: number;
   offset?: number;
   key?: string;
-  unit?: string;
+  unit?: number;
   type?: string;
 }
 

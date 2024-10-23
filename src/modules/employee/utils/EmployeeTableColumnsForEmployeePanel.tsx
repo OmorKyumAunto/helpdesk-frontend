@@ -32,15 +32,20 @@ export const EmployeeTableColumnsForEmployeePanel =
         dataIndex: "designation",
         key: "designation",
       },
+      // {
+      //   title: "Email",
+      //   dataIndex: "email",
+      //   key: "email",
+      // },
+      // {
+      //   title: "Contact No",
+      //   dataIndex: "contact_no",
+      //   key: "contact_no",
+      // },
       {
-        title: "Email",
-        dataIndex: "email",
-        key: "email",
-      },
-      {
-        title: "Contact No",
-        dataIndex: "contact_no",
-        key: "contact_no",
+        title: "PABX",
+        dataIndex: "pabx",
+        key: "pabx",
       },
       {
         title: "Blood Group",

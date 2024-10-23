@@ -124,7 +124,7 @@ const AssetsList = () => {
               onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
               filterOption={(
                 input: string,
-                option?: { label: string; value: string }
+                option?: { label: string; value: number }
               ) =>
                 (option?.label ?? "")
                   .toLowerCase()
