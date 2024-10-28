@@ -20,6 +20,15 @@ export const assetsEndPoint = api.injectEndpoints({
       },
       providesTags: () => ["asset"],
     }),
+    getAssetsForAdmin: build.query<HTTPResponse<IAsset[]>, IAssetParams>({
+      query: (params) => {
+        return {
+          url: `/asset/admin-unit-assign-list`,
+          params,
+        };
+      },
+      providesTags: () => ["asset"],
+    }),
     getOverallAssets: build.query<HTTPResponse<IAsset[]>, void>({
       query: () => {
         return {
@@ -177,6 +186,7 @@ export const assetsEndPoint = api.injectEndpoints({
 
 export const {
   useGetAssetsQuery,
+  useGetAssetsForAdminQuery,
   useGetOverallAssetsQuery,
   useGetOverAllDistributedAssetQuery,
   useGetSingleDistributedAssetQuery,

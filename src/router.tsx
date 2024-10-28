@@ -122,77 +122,8 @@ export const routers = createBrowserRouter([
         element: <About />,
       },
       {
-        path: "sop",
-        children: [
-          {
-            path: "one",
-            element: <PageOne />,
-          },
-          {
-            path: "two",
-            element: <PageTwo />,
-          },
-          {
-            path: "three",
-            element: <PageThree />,
-          },
-          {
-            path: "four",
-            element: <PageFour />,
-          },
-          {
-            path: "five",
-            element: <PageFive />,
-          },
-          {
-            path: "six",
-            element: <PageSix />,
-          },
-          {
-            path: "seven",
-            element: <PageSeven />,
-          },
-          {
-            path: "eight",
-            element: <PageEight />,
-          },
-          {
-            path: "nine",
-            element: <PageNine />,
-          },
-          {
-            path: "ten",
-            element: <PageTen />,
-          },
-          {
-            path: "eleven",
-            element: <PageEleven />,
-          },
-          {
-            path: "twelve",
-            element: <PageTwelve />,
-          },
-          {
-            path: "thirteen",
-            element: <PageThirteen />,
-          },
-          {
-            path: "fourteen",
-            element: <PageFourteen />,
-          },
-          {
-            path: "fifteen",
-            element: <PageFifteen />,
-          },
-          {
-            path: "sixteen",
-            element: <PageSixteen />,
-          },
-          {
-            path: "seventeen",
-            element: <PageSeventeen />,
-          },
-        ],
+        path: "/sop/list",
+        element: <PageOne />,
       },
       {
         path: "settings",

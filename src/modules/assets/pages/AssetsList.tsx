@@ -10,7 +10,10 @@ import { CreateButton } from "../../../common/CommonButton";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { generatePagination } from "../../../common/TablePagination copy";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
-import { useGetAssetsQuery } from "../api/assetsEndPoint";
+import {
+  useGetAssetsForAdminQuery,
+  useGetAssetsQuery,
+} from "../api/assetsEndPoint";
 import CreateAsset from "../components/CreateAssets";
 import UploadAssetFile from "../components/UploadAssetFile";
 import { IAssetParams } from "../types/assetsTypes";
@@ -53,17 +56,14 @@ const AssetsList = () => {
     });
   }, [page, pageSize, skipValue]);
   const { data, isLoading, isFetching } = useGetAssetsQuery({ ...filter });
-  // const { data: allAsset } = useGetOverallAssetsQuery();
+  const {
+    data: adminData,
+    isLoading: adminLoading,
+    isFetching: adminFetching,
+  } = useGetAssetsForAdminQuery({ ...filter });
 
-  const tableDataForAdmin = data?.data?.filter((singleData) =>
-    profile?.data?.searchAccess?.some(
-      (item: any) => item?.unit_id === Number(singleData?.unit_id)
-    )
-  );
-
-  const assetsTableData =
-    profile?.data?.role_id === 2 ? tableDataForAdmin : data?.data;
-
+  const assetsTableData = profile?.data?.role_id === 2 ? adminData : data;
+  console.log(assetsTableData);
   const showModal = () => {
     dispatch(
       setCommonModal({
@@ -261,7 +261,9 @@ const AssetsList = () => {
               size="small"
               bordered
               loading={isLoading || isFetching}
-              dataSource={assetsTableData?.length ? assetsTableData : []}
+              dataSource={
+                assetsTableData?.data?.length ? assetsTableData?.data : []
+              }
               columns={AssetsTableColumns()}
               scroll={{ x: true }}
               pagination={{
@@ -274,7 +276,7 @@ const AssetsList = () => {
                 showSizeChanger: true,
                 defaultPageSize: 50,
                 pageSizeOptions: ["50", "100", "200", "300", "500", "1000"],
-                total: data ? Number(data?.total) : 0,
+                total: data ? Number(assetsTableData?.total) : 0,
                 showTotal: (total) => `Total ${total} `,
               }}
               onChange={(pagination) => {

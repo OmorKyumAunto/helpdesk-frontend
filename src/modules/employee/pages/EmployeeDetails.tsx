@@ -121,12 +121,16 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
                 <Tag color="error">Inactive</Tag>
               ),
           },
-          {
-            key: "10",
-            label: "Licenses",
-            children: licenses?.map((item) => item?.title).join(", "),
-            span: 2,
-          },
+          ...(roleId !== 3
+            ? [
+                {
+                  key: "10",
+                  label: "Licenses",
+                  children: licenses?.map((item) => item?.title).join(", "),
+                  span: 2,
+                },
+              ]
+            : []),
           ...(role_id === 3 && roleId === 1
             ? [
                 {
