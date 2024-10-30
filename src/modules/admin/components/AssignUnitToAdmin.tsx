@@ -12,7 +12,7 @@ const AssignUnitToAdmin = ({ id, searchAccess }: any) => {
   const [form] = Form.useForm();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [assign, { isLoading, isSuccess }] = useAssignUnitToAdminMutation();
-  const { data } = useGetUnitsQuery({});
+  const { data } = useGetUnitsQuery({ status: "active" });
   const onFinish = (value: any) => {
     // console.log(value);
     assign({ body: value, id });
@@ -23,6 +23,8 @@ const AssignUnitToAdmin = ({ id, searchAccess }: any) => {
         "unit_id",
         searchAccess?.map((item: any) => item?.unit_id)
       );
+    } else {
+      form.setFieldValue("unit_id", null);
     }
   }, [searchAccess, form]);
 
