@@ -6,9 +6,9 @@ import {
   MdListAlt,
   MdOutlineAssignment,
   MdOutlineFactCheck,
+  MdOutlineLocationOn,
   MdWebAsset,
 } from "react-icons/md";
-import { RxHamburgerMenu } from "react-icons/rx";
 import { TbLicense, TbUserHexagon } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { IMenuData } from "../../../Types/MenuData";
@@ -99,6 +99,11 @@ export const sideBarItems = (roleId: number) => {
                 label: <Link to="/settings/unit">Unit</Link>,
                 key: "/settings/unit",
                 icon: <FaRegListAlt size={16} />,
+              },
+              {
+                label: <Link to="/settings/location">Location</Link>,
+                key: "/settings/location",
+                icon: <MdOutlineLocationOn size={16} />,
               },
               {
                 label: <Link to="/settings/license">Licenses</Link>,

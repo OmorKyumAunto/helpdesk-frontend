@@ -18,6 +18,7 @@ import CreateAsset from "../components/CreateAssets";
 import UploadAssetFile from "../components/UploadAssetFile";
 import { IAssetParams } from "../types/assetsTypes";
 import { AssetsTableColumns } from "../utils/AssetsTableColumns";
+import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
 
 const AssetsList = () => {
   const { Option } = Select;
@@ -35,6 +36,8 @@ const AssetsList = () => {
   const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
   const { data: profile } = useGetMeQuery();
+  const { data: locationData, isLoading: locationIsLoading } =
+    useGetActiveLocationsQuery({});
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
@@ -136,58 +139,27 @@ const AssetsList = () => {
               }))}
               allowClear
             />
-            {/* <PDFDownload
-              PDFFileName="asset-list"
-              fileHeader="ASSET LIST"
-              PDFHeader={[
-                "Asset Name",
-                "Category",
-                "Model",
-                "Serial No",
-                "PO No",
-                "Specification",
-                "Remarks",
-                "Unit",
-                "Purchase Date",
-                "Price",
-                "Warranty",
-              ]}
-              PDFData={
-                data?.data?.length
-                  ? data?.data?.map(
-                      ({
-                        serial_number,
-                        remarks,
-                        model,
-                        category,
-                        po_number,
-                        specification,
-                        unit_name,
-                        name,
-                        purchase_date,
-                        price,
-                        warranty,
-                      }: any) => {
-                        const data = {
-                          "Asset Name": name,
-                          Category: category,
-                          Model: model,
-                          "Serial No": serial_number,
-                          "PO No": po_number,
-                          Specification: specification,
-                          Remarks: remarks,
-                          Unit: unit_name,
-                          "Purchase Date":
-                            dayjs(purchase_date).format("DD-MM-YYYY"),
-                          Price: price,
-                          Warranty: warranty,
-                        };
-                        return data;
-                      }
-                    )
-                  : []
+            <Select
+              style={{ width: "180px" }}
+              loading={locationIsLoading}
+              placeholder="Select Location"
+              showSearch
+              optionFilterProp="children"
+              onChange={(e) => setFilter({ ...filter, location: e, offset: 0 })}
+              filterOption={(
+                input: string,
+                option?: { label: string; value: number }
+              ) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
               }
-            /> */}
+              options={locationData?.data?.map((location: any) => ({
+                value: location.id,
+                label: location.location,
+              }))}
+              allowClear
+            />
 
             <ExcelDownload
               excelName={"asset-list"}

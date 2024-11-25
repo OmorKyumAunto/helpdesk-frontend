@@ -8,6 +8,8 @@ import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { generatePagination } from "../../../common/TablePagination copy";
 import { useGetAllDistributedAssetQuery } from "../api/assetsEndPoint";
 import { DistributedAssetsTableColumns } from "../utils/DistributedTableColumns";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import { useGetMeQuery } from "../../../app/api/userApi";
 const { Option } = Select;
 const DistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -22,6 +24,15 @@ const DistributedAsset = () => {
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
+  const { data: profile } = useGetMeQuery();
+  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
+    status: "active",
+  });
+  const unitOptionForAdmin = unitData?.data?.filter((unit) =>
+    profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
+  );
+  const unitOption =
+    profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
 
   const [filter, setFilter] = useState<any>({
     limit: Number(pageSize),
@@ -38,7 +49,6 @@ const DistributedAsset = () => {
   const { data, isLoading, isFetching } = useGetAllDistributedAssetQuery({
     ...filter,
   });
-  // const { data: allDistributedAsset } = useGetOverAllDistributedAssetQuery();
   return (
     <div>
       <Card
@@ -68,19 +78,34 @@ const DistributedAsset = () => {
           </div>
           <Select
             style={{ width: "180px" }}
-            onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
-            placeholder="Select Unit Name"
+            onChange={(e) =>
+              setFilter({ ...filter, employee_type: e, offset: 0 })
+            }
+            placeholder="Select Type"
           >
             <Option value="">All</Option>
-            <Option value="Sylhet EZ">Sylhet EZ</Option>
-            <Option value="DIPL">DIPL</Option>
-            <Option value="Corporate Office">Corporate Office</Option>
-            <Option value="EUDB">EUDB</Option>
-            <Option value="PPPL Plant">PPPL Plant</Option>
-            <Option value="DBTrims Plant">DBTrims Plant</Option>
-            <Option value="Thanbee Complex">Thanbee Complex</Option>
-            <Option value="Flamingo2">Flamingo2</Option>
+            <Option value={"management"}>Management</Option>
+            <Option value={"non-management"}>Non Management</Option>
           </Select>
+          <Select
+            style={{ width: "180px" }}
+            loading={unitIsLoading}
+            placeholder="Select Unit Name"
+            showSearch
+            optionFilterProp="children"
+            onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
+            filterOption={(
+              input: string,
+              option?: { label: string; value: number }
+            ) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={unitOption?.map((unit: any) => ({
+              value: unit.id,
+              label: unit.title,
+            }))}
+            allowClear
+          />
           <Select
             placeholder="Select Asset Type"
             style={{ width: "180px" }}
@@ -92,51 +117,6 @@ const DistributedAsset = () => {
             <Option value="Printer">Printer</Option>
             <Option value="Accessories">Accessories</Option>
           </Select>
-          {/* <PDFDownload
-            PDFFileName="distributed_asset_list"
-            fileHeader="Distributed ASSET LIST"
-            PDFHeader={[
-              "No",
-              "Employee ID",
-              "Employee Name",
-              "Department",
-              "Unit",
-              "Asset Type",
-              "Serial No",
-              "Assigning Date",
-            ]}
-            PDFData={
-              data?.data?.length
-                ? data?.data?.map(
-                    (
-                      {
-                        user_id_no,
-                        user_name,
-                        department,
-                        category,
-                        assign_date,
-                        serial_number,
-                        employee_unit_name,
-                      }: any,
-                      index
-                    ) => {
-                      const data = {
-                        No: index + 1,
-                        "Employee ID": user_id_no,
-                        "Employee Name": user_name,
-                        Department: department,
-                        Unit: employee_unit_name,
-                        "Asset Type": category,
-                        "Serial No": serial_number,
-                        "Assigning Date":
-                          dayjs(assign_date).format("DD-MM-YYYY"),
-                      };
-                      return data;
-                    }
-                  )
-                : []
-            }
-          /> */}
 
           <ExcelDownload
             excelName={"distributed_asset_list"}
@@ -196,7 +176,7 @@ const DistributedAsset = () => {
               current: Number(page),
               showSizeChanger: true,
               defaultPageSize: 50,
-              pageSizeOptions: ["50", "100", "200", "300", "500","1000"],
+              pageSizeOptions: ["50", "100", "200", "300", "500", "1000"],
               total: data ? Number(data?.total) : 0,
               showTotal: (total) => `Total ${total} `,
             }}

@@ -12,6 +12,7 @@ import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint
 import { useGetLicensesQuery } from "../../Licenses/api/licenseEndPoint";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useCreateAssetsMutation } from "../api/assetsEndPoint";
+import { useGetMeQuery } from "../../../app/api/userApi";
 const { Option } = Select;
 
 const CreateAsset = () => {
@@ -24,8 +25,13 @@ const CreateAsset = () => {
   const { data: unitData } = useGetUnitsQuery({ status: "active" });
   const { data: licenseData } = useGetLicensesQuery({ status: "active" });
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-
   const [create, { isLoading, isSuccess }] = useCreateAssetsMutation();
+  const { data: profile } = useGetMeQuery();
+  const unitOptionForAdmin = unitData?.data?.filter((unit) =>
+    profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
+  );
+  const unitOption =
+    profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
 
   const onFinish = (data: any) => {
     const { is_assign, is_new_employee, ...values } = data || {};
@@ -178,7 +184,7 @@ const CreateAsset = () => {
                         .toLowerCase()
                         .includes(input.toLowerCase())
                     }
-                    options={unitData?.data?.map((unit: any) => ({
+                    options={unitOption?.map((unit: any) => ({
                       value: unit.id,
                       label: unit.title,
                     }))}

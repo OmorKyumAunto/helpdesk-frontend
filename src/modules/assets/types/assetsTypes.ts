@@ -48,6 +48,7 @@ export interface IAssetParams {
   offset?: number;
   key?: string;
   unit?: number;
+  location?: number;
   type?: string;
 }
 

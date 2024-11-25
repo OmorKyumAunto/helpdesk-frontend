@@ -98,19 +98,30 @@ const EmployeeList = () => {
             <Select
               style={{ width: "160px" }}
               onChange={(e) =>
+                setFilter({ ...filter, employee_type: e, offset: 0 })
+              }
+              placeholder="Select Type"
+            >
+              <Option value="">All</Option>
+              <Option value={"management"}>Management</Option>
+              <Option value={"non-management"}>Non Management</Option>
+            </Select>
+            <Select
+              style={{ width: "160px" }}
+              onChange={(e) =>
                 setFilter({ ...filter, unit_name: e, offset: 0 })
               }
               placeholder="Select Unit Name"
             >
               <Option value="">All</Option>
               <Option value="JTML">JTML</Option>
-                    <Option value="DIPL">DIPL</Option>
-                    <Option value="Corporate Office">Corporate Office</Option>
-                    <Option value="DBTrims Plant">DBTrims Plant</Option>
-                    <Option value="PPPL Plant">PPPL Plant</Option>
-                    <Option value="EUDB">EUDB</Option>
-                    <Option value="Thanbee Complex">Thanbee Complex</Option>
-                    <Option value="Flamingo2">Flamingo2</Option>
+              <Option value="DIPL">DIPL</Option>
+              <Option value="Corporate Office">Corporate Office</Option>
+              <Option value="DBTrims Plant">DBTrims Plant</Option>
+              <Option value="PPPL Plant">PPPL Plant</Option>
+              <Option value="EUDB">EUDB</Option>
+              <Option value="Thanbee Complex">Thanbee Complex</Option>
+              <Option value="Flamingo2">Flamingo2</Option>
             </Select>
             <Select
               style={{ width: "160px" }}
@@ -284,7 +295,7 @@ const EmployeeList = () => {
                 current: Number(page),
                 showSizeChanger: true,
                 defaultPageSize: 50,
-                pageSizeOptions: ["50", "100", "200", "300", "500","1000"],
+                pageSizeOptions: ["50", "100", "200", "300", "500", "1000"],
                 total: data ? Number(data?.total) : 0,
                 showTotal: (total) => `Total ${total} `,
               }}

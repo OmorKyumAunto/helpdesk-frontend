@@ -100,5 +100,6 @@ export interface IEmployeeParams {
   key?: string;
   unit_name?: string;
   blood_group?: string;
+  employee_type?: string;
   status?: number;
 }

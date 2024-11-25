@@ -75,6 +75,7 @@ export const api = createApi({
     "unit",
     "CTC",
     "license",
+    "Location",
   ],
 });
 

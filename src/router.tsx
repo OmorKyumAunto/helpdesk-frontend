@@ -39,6 +39,7 @@ import PageTwo from "./modules/sop/page/pageTwo";
 import UnitList from "./modules/Unit/pages/UnitList";
 import ProtectedRoute from "./utils/ProtectRoute";
 import RequireUser from "./utils/requireUser";
+import LocationList from "./modules/location/pages/LocationList";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -131,6 +132,10 @@ export const routers = createBrowserRouter([
           {
             path: "unit",
             element: <UnitList />,
+          },
+          {
+            path: "location",
+            element: <LocationList />,
           },
           {
             path: "license",
