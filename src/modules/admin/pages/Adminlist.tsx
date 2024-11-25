@@ -74,10 +74,15 @@ const AdminList = () => {
               onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
               placeholder="Select Unit Name"
             >
-              <Option value="">All</Option>
-              <Option value="JTML">JTML</Option>
-              <Option value="DIPL">DIPL</Option>
-              <Option value="Corporate Office">Corporate Office</Option>
+            <Option value="">All</Option>
+            <Option value="Sylhet EZ">Sylhet EZ</Option>
+            <Option value="DIPL">DIPL</Option>
+            <Option value="Corporate Office">Corporate Office</Option>
+            <Option value="EUDB">EUDB</Option>
+            <Option value="PPPL Plant">PPPL Plant</Option>
+            <Option value="DBTrims Plant">DBTrims Plant</Option>
+            <Option value="Thanbee Complex">Thanbee Complex</Option>
+            <Option value="Flamingo2">Flamingo2</Option>
             </Select>
             <Space>
               <ExcelDownload

@@ -45,7 +45,7 @@ const GraphChartApex = () => {
           data: totalAsset,
         },
         {
-          name: "Total Assign Asset",
+          name: "Disbursed Assets",
           data: totalAssignAsset,
         },
       ],

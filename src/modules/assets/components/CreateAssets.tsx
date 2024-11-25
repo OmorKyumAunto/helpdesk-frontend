@@ -101,7 +101,10 @@ const CreateAsset = () => {
                   <Select placeholder="Select Category">
                     <Option value="Laptop">Laptop</Option>
                     <Option value="Desktop">Desktop</Option>
+                    <Option value="Monitor">Monitor</Option>
                     <Option value="Printer">Printer</Option>
+                    <Option value="Mouse">Mouse</Option>
+                    <Option value="Keyboard">Keyboard</Option>
                     <Option value="Accessories">Accessories</Option>
                   </Select>
                 </Form.Item>

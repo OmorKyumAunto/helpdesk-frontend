@@ -56,7 +56,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
         ),
     },
     {
-      title: "Unit",
+      title: "Buying Unit",
       dataIndex: "unit_name",
       key: "unit_name",
     },
@@ -100,8 +100,8 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
           </Button>
           {roleId === 1 && (
             <Popconfirm
-              title="Delete the asset"
-              description="Are you sure to delete this asset?"
+              title="Delete this Asset"
+              description="Are You Sure to Delete This?"
               onConfirm={() => confirm(record?.id)}
               okText="Yes"
               cancelText="No"

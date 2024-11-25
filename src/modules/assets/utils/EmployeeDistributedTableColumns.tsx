@@ -25,13 +25,13 @@ export const EmployeeDistributedAssetsTableColumns =
         key: "asset_name",
       },
       {
-        title: "Unit Name",
+        title: "Buying Unit",
         dataIndex: "asset_unit_name",
         key: "asset_unit_name",
       },
 
       {
-        title: "Unit Category",
+        title: "Category",
         dataIndex: "category",
         key: "category",
       },
@@ -46,7 +46,7 @@ export const EmployeeDistributedAssetsTableColumns =
         key: "po_number",
       },
       {
-        title: "Assigning Date",
+        title: "Assign Date",
         render: ({ assign_date }) => dayjs(assign_date).format("DD-MM-YYYY"),
       },
       {

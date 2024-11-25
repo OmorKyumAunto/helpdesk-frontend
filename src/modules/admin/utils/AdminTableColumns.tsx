@@ -50,7 +50,7 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
       render: (joining_date) => dayjs(joining_date).format("DD-MM-YYYY"),
     },
     {
-      title: "Unit Name",
+      title: "Location",
       dataIndex: "unit_name",
       key: "unit_name",
     },

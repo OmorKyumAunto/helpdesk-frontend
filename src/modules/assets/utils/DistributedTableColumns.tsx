@@ -32,7 +32,7 @@ export const DistributedAssetsTableColumns =
         key: "department",
       },
       {
-        title: "Unit",
+        title: "Location",
         dataIndex: "employee_unit_name",
         key: "employee_unit_name",
       },

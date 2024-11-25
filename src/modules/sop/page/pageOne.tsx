@@ -1,27 +1,11 @@
-// import pdf1 from "../../../../public/IT SOP/14. SOP1.0.1 ROLES AND RESPONSIBILITIES/SOP 1.0.1_ROLES AND RESPONSIBILITIES.pdf";
 
-// import PDFView from "../components/PDFView";
-
-// const PageOne = () => {
-//   const pdf = [
-//     {
-//       id: 1,
-//       name: "SOP 1.0.1_ROLES AND RESPONSIBILITIES.pdf",
-//       path: pdf1,
-//     },
-//   ];
-//   return (
-//     <>
-//       <PDFView pdf={pdf} />
-//     </>
-//   );
-// };
-
-// export default PageOne;
 
 // App.tsx
 import React, { useState } from "react";
 import { FaFilePdf, FaFolder } from "react-icons/fa";
+const pdf99 = "https://www.dropbox.com/scl/fi/4cgoh4u9cyouyezujmoer/APPENDIX-F-TID-FORMAT.pdf?rlkey=v28k9zbdx7t1t62ga4qu95imv&st=m16vpiw9&dl=0";
+
+
 
 import pdf1 from "../../../../public/IT SOP/1. SOP 1.0.2_IT SUPPORT/APPENDIX-A FIRST LEVEL IT SUPPORT.pdf";
 import pdf2 from "../../../../public/IT SOP/1. SOP 1.0.2_IT SUPPORT/APPENDIX-B HARDWARE REQUISITION FORM.pdf";
@@ -63,6 +47,12 @@ import pdf37 from "../../../../public/IT SOP/10. SOP 1.0.14_IT INVENTORY MANAGEM
 import pdf38 from "../../../../public/IT SOP/15. SOP 1.0.15_IT Procurement (Approved)/SOP 1.0.15_IT Procurement.pdf";
 import pdf39 from "../../../../public/IT SOP/SOP INDEX.pdf";
 import pdf40 from "../../../../public/IT SOP/SOP Saftey & Security.pdf";
+import pdf41 from "../../../../public/IT SOP/8. SOP 1.0.8_CHANGE MANAGEMENT/APPENDIX-A Change Management Board.pdf";
+import pdf42 from "../../../../public/IT SOP/8. SOP 1.0.8_CHANGE MANAGEMENT/APPENDIX-B Change Advisory Board.pdf";
+import pdf43 from "../../../../public/IT SOP/8. SOP 1.0.8_CHANGE MANAGEMENT/APPENDIX-C Change Manager.pdf";
+import pdf44 from "../../../../public/IT SOP/8. SOP 1.0.8_CHANGE MANAGEMENT/APPENDIX-D Change Request Submission Form.pdf";
+import pdf45 from "../../../../public/IT SOP/8. SOP 1.0.8_CHANGE MANAGEMENT/SOP 1.0.8_CHANGE MANAGEMENT.pdf";
+import pdf46 from "../../../../public/IT SOP/14. SOP1.0.1 ROLES AND RESPONSIBILITIES/SOP 1.0.1_ROLES AND RESPONSIBILITIES.pdf";
 
 interface Folder {
   name: string;
@@ -79,67 +69,101 @@ const PageOne: React.FC = () => {
     {
       name: "Roles and Responsibilities",
       pdfs: [
-        { name: "Coding Standards", file: "path/to/coding-standards.pdf" },
+        { name: "SOP 1.0.1_ROLES AND RESPONSIBILITIES", file: pdf46 },
       ],
     },
     {
       name: "IT Support",
       pdfs: [
-        { name: "User Manual", file: pdf8 },
-        { name: "User Manual2", file: pdf9 },
-        { name: "User Manual3", file: pdf10 },
-        { name: "User Manual4", file: pdf11 },
+        { name: "APPENDIX-A FIRST LEVEL IT SUPPORT", file: pdf1 },
+        { name: "APPENDIX-B HARDWARE REQUISITION FORM", file: pdf2 },
+        { name: "APPENDIX-C DEVICE PROVISIONING", file: pdf3 },
+        { name: "APPENDIX-D ESCLATION MATRIX", file: pdf4 },
+        { name: "APPENDIX-E IT HARDWARE REQUEST", file: pdf5 },
+        { name: "APPENDIX-F TID FORMAT", file: pdf6 },
+        { name: "SOP 1.0.2 IT SUPPORT", file: pdf7 },
       ],
     },
     {
       name: "Email User Creation and Deactivation",
-      pdfs: [{ name: "Annual Report", file: "path/to/annual-report.pdf" }],
+      pdfs: [{ name: "APPENDIX-A NEW JOINER'S EMAIL ID REQUEST- HR-TO-IT PROCESS FLOW", file: pdf8 },
+       { name: "APPENDIX-B EMAIL REQUISITION FORM", file: pdf9 },
+      { name: "HR LAPTOP-DESKTOP REQUEST TO IT PROCESS FLOW", file: pdf10 },
+       { name: "SOP 1.0.3 EMAIL USER CREATION AND DEACTIVATION", file: pdf11 }],
     },
     {
       name: "Email Archiving",
-      pdfs: [{ name: "Privacy Policy", file: "path/to/privacy-policy.pdf" }],
+      pdfs: [{ name: "SOP 1.0.4_EMAIL ARCHIVING", file: pdf12 }],
     },
     {
       name: "Network and Infrastructure Management",
       pdfs: [
-        { name: "Safety Procedures", file: "path/to/safety-procedures.pdf" },
+        { name: "SOP 1.0.5 Network and Infrastructure Management", file: pdf13 },
       ],
     },
     {
       name: "Firewall Configuration",
-      pdfs: [{ name: "Misc File", file: "path/to/misc.pdf" }],
+      pdfs: [{ name: "SOP 1.0.6 FIREWALL CONFIGURATION", file: pdf14 }],
     },
     {
       name: "Network Configuration",
-      pdfs: [{ name: "Misc File", file: "path/to/misc.pdf" }],
+      pdfs: [{ name: "Appendix-A Switch Configuration", file: pdf15 },
+        { name: "Network Configuration", file: pdf16 }
+      ],
     },
     {
       name: "Change Management",
-      pdfs: [{ name: "Misc File", file: "path/to/misc.pdf" }],
+      pdfs: [{ name: "APPENDIX-A Change Management Board", file: pdf41 },
+        { name: "APPENDIX-B Change Advisory Board", file: pdf42 },
+        { name: "APPENDIX-C Change Manager", file: pdf43 },
+        { name: "APPENDIX-D Change Request Submission Form", file: pdf44 },
+        { name: "SOP 1.0.8_CHANGE MANAGEMENT", file: pdf45 }
+      ],
     },
     {
       name: "Incident Response",
-      pdfs: [{ name: "Misc File", file: "path/to/misc.pdf" }],
+      pdfs: [{ name: "APPENDIX0-A INCIDENT RESPONSE TEAM", file: pdf17 },
+        { name: "APPENDIX0-B IT DRIVEN BUSINESS APPLICATION LIST", file: pdf18 },
+        { name: "SOP 1.0.9_INCIDENT RESPONSE", file: pdf19 }
+      ],
     },
     {
       name: "Data Backup and Recovery",
-      pdfs: [{ name: "Misc File", file: "path/to/misc.pdf" }],
+      pdfs: [{ name: "APPENDIX-A LIST OF STANDALONE SYSTEM", file: pdf20 },
+        { name: "APPENDIX-B DATA BACKUP REQUEST FORM", file: pdf21 },
+        { name: "APPENDIX-C DATA RESTORE FORM", file: pdf22 },
+        { name: "APPENDIX-D QUARTERLY, HALF YEARLY & YEARLY DATA BACKUP RECORD", file: pdf23 },
+        { name: "APPENDIX-E  LOGBOOK FOR STANDALONE SYSTEMUSER DATA RETENTION", file: pdf24 },
+        { name: "SOP 1.0.10_DATA BACKUP AND RECOVERY", file: pdf25 }
+
+      ],
     },
     {
       name: "IT Access Control",
-      pdfs: [{ name: "Misc File", file: "path/to/misc.pdf" }],
+      pdfs: [{ name: "APPENDIX A_USER ACCESS AUTHORIZATION FORM", file: pdf26 },
+        { name: "IT ACCESS CONTROL POLICY", file: pdf27 },
+        { name: "SOP 1.0.11_IT ACCESS CONTROL", file: pdf28 }
+      ],
     },
     {
       name: "IT Asset Management",
-      pdfs: [{ name: "Misc File", file: "path/to/misc.pdf" }],
+      pdfs: [{ name: "APPENDIX-A_Fixed Asset Policy", file: pdf29 },
+        { name: "APPENDIX-B_IT Policy Device and Reimbursement", file: pdf30 },
+        { name: "APPENDIX-C Vendor RFP Template", file: pdf31 },
+        { name: "SOP 1.0.12_IT ASSET MANAGEMENT", file: pdf32 }
+      ],
     },
     {
       name: "IT Vendor Management",
-      pdfs: [{ name: "Misc File", file: "path/to/misc.pdf" }],
+      pdfs: [{ name: "APPENDIX-C VENDOR RFP TEMPLATE", file: pdf33 },
+        { name: "APPENDIX-D VVENDOR SCORING TEMPLAT", file: pdf34 },
+        { name: "APPENDIX-E IT VENDOR EXIT STRATEGY", file: pdf35 },
+        { name: "SOP 1.0.13_IT VENDOR MANAGEMENT", file: pdf36 }
+      ],
     },
     {
       name: "IT Inventory Management",
-      pdfs: [{ name: "Misc File", file: "path/to/misc.pdf" }],
+      pdfs: [{ name: "SOP 1.0.14_IT INVENTORY MANAGEMENT SOP", file: pdf37 }],
     },
     {
       name: "IT Procurement (Approved)",

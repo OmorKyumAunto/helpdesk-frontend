@@ -44,9 +44,7 @@ const Register = () => {
 
   return (
     <>
-      <video className="video-background" autoPlay loop muted>
-        <source src={videoBg} type="video/mp4" />
-      </video>
+      
       <motion.div
         className="login-container"
         initial={{ opacity: 0 }}
