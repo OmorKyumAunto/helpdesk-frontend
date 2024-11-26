@@ -2,57 +2,59 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Card, Col, Input, Row, Typography } from "antd";
 import { saveAs } from "file-saver";
 import { useState } from "react";
+const AssetTemplate = "https://www.dropbox.com/scl/fi/iykaktg0604qbi1jx6ubs/Asset-Template.xlsx?rlkey=ogtg8gxmyehbz04rqrjivhzk6&st=cwsb0jv2&raw=1";
+const CsTemplate = "https://www.dropbox.com/scl/fi/evr2hkeyp8d4ynltvivki/cs-template.xlsx?rlkey=qwk6rzn1owtkkfsxkwm0bf6uk&st=zful9ih9&raw=1";
+const DemandSlip = "https://www.dropbox.com/scl/fi/j9j91q0757s6px9xm3ymr/demand-slip-bandhan.xlsx?rlkey=f8uzmsciqvwnd022jmuz75ptd&st=54578r5z&raw=1";
+const Emailrequisition = "https://www.dropbox.com/scl/fi/fpdg51xtrdbo50getei63/EMAIL-REQUISITION-FORM.pdf?rlkey=akt9zfq4ua1sfqckj4c9uyo1g&st=g7ubo668&raw=1";
+const EmployeeTemplate = "https://www.dropbox.com/scl/fi/n4dgm1d4bzqilc0dv7bmq/Employee-Template.xlsx?rlkey=kuwrg94j42jy021c0718nim2e&st=ph8qde68&raw=1";
+const HardwareRequisition = "https://www.dropbox.com/scl/fi/w8kiugw0k3g74rcowx9xg/HARDWARE-REQUISITION-FORM.pdf?rlkey=pfdamk4rth8zbh60zvuwnixo2&st=0q9mjt3e&raw=1";
+const MonthlyAchivements = "https://www.dropbox.com/scl/fi/r2j3t228ptdrwa4hmgnoz/monthly-achivement-template.pptx?rlkey=oxgdhlfyhdkhr03t23hgh3vj3&st=74wte32s&raw=1";
+const StationaryReq = "https://www.dropbox.com/scl/fi/rju8bhgl70sukkt75objf/stationary-requisition.xlsx?rlkey=3d6aa0e6f4b45bup28py13n27&st=2rnbhcj2&raw=1";
 
 const Forms = () => {
-  const handleDemandSlip = () => {
-    const pdfUrl = "/templates/demand-slip-bandhan.xlsx";
-    const pdfName = "demand-slip.xlsx";
-
-    saveAs(pdfUrl, pdfName);
-  };
-
+  
   const [searchTerm, setSearchTerm] = useState("");
   // Updated dummy template data
   const templates = [
     {
       title: "Hardware Requisition Form",
       description: "Template for Hardware requisition.",
-      file: "/templates/HARDWARE REQUISITION FORM.pdf",
+      file: HardwareRequisition,
     },
     {
       title: "Email Requisition Form",
       description: "Template for Email requisition.",
-      file: "/templates/EMAIL REQUISITION FORM.pdf",
+      file: Emailrequisition,
     },
     {
       title: "Stationary Requisition Form",
       description: "Template for Stationary requisition.",
-      file: "/templates/stationary-requisition.xlsx",
+      file: StationaryReq,
     },
     {
       title: "CS Template",
       description: "Template for CS.",
-      file: "/templates/cs-template.xlsx",
+      file: CsTemplate,
     },
     {
       title: "Monthly Achievements PPTX",
       description: "Template for monthly Achivements.",
-      file: "/templates/monthly-achivement-template.pptx",
+      file: MonthlyAchivements,
     },
     {
       title: "Employee Template",
       description: "Template for Employee Upload",
-      file: "/templates/Employee Template.xlsx",
+      file: EmployeeTemplate,
     },
     {
       title: "Asset Template",
       description: "Template for Asset Upload",
-      file: "/templates/Asset Template.xlsx",
+      file: AssetTemplate,
     },
     {
       title: "Demand Slip For Bandhan",
       description: "Demand Slip for Bandhan.",
-      file: "/templates/demand-slip-bandhan.xlsx",
+      file: DemandSlip,
     },
   ];
   const nums = [1, 2, 3, 4, 5];

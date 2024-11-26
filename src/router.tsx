@@ -19,27 +19,12 @@ import EmployeeList from "./modules/employee/pages/Employeelist";
 import EmployeeListForEmployeePanel from "./modules/employee/pages/EmployeeListForEmployeePanel";
 import Forms from "./modules/forms/page/Forms";
 import LicenseList from "./modules/Licenses/pages/LicenseList";
-import PageEight from "./modules/sop/page/pageEight";
-import PageEleven from "./modules/sop/page/pageEleven";
-import PageFifteen from "./modules/sop/page/pageFifteen";
-import PageFive from "./modules/sop/page/pageFive";
-import PageFour from "./modules/sop/page/pageFour";
-import PageFourteen from "./modules/sop/page/pageFourteen";
-import PageNine from "./modules/sop/page/pageNine";
-import PageOne from "./modules/sop/page/pageOne";
-import PageSeven from "./modules/sop/page/pageSeven";
-import PageSeventeen from "./modules/sop/page/pageSeventeen";
-import PageSix from "./modules/sop/page/pageSix";
-import PageSixteen from "./modules/sop/page/pageSixteen";
-import PageTen from "./modules/sop/page/pageTen";
-import PageThirteen from "./modules/sop/page/pageThirteen";
-import PageThree from "./modules/sop/page/pageThree";
-import PageTwelve from "./modules/sop/page/pageTwelve";
-import PageTwo from "./modules/sop/page/pageTwo";
+
 import UnitList from "./modules/Unit/pages/UnitList";
 import ProtectedRoute from "./utils/ProtectRoute";
 import RequireUser from "./utils/requireUser";
 import LocationList from "./modules/location/pages/LocationList";
+import ITSop from "./modules/sop/page/ITSop";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -124,7 +109,7 @@ export const routers = createBrowserRouter([
       },
       {
         path: "/sop/list",
-        element: <PageOne />,
+        element: <ITSop />,
       },
       {
         path: "settings",
