@@ -3,7 +3,7 @@
 // App.tsx
 import React, { useState } from "react";
 import { FaFilePdf, FaFolder } from "react-icons/fa";
-const pdf99 = "https://www.dropbox.com/scl/fi/4cgoh4u9cyouyezujmoer/APPENDIX-F-TID-FORMAT.pdf?rlkey=v28k9zbdx7t1t62ga4qu95imv&st=m16vpiw9&dl=0";
+const pdf99 = "https://1drv.ms/b/s!Ak7zNB-Vv-XvaNNBHDcHxRpbba0?e=qsYF73";
 
 
 
@@ -59,7 +59,7 @@ interface Folder {
   pdfs: { name: string; file: string }[];
 }
 
-const PageOne: React.FC = () => {
+const ITSop: React.FC = () => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [selectedPdf, setSelectedPdf] = useState<string | null>(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -200,7 +200,7 @@ const PageOne: React.FC = () => {
         style={{
           display: "flex",
           overflowX: "auto",
-          padding: "20px",
+          padding: "10px",
           gap: "10px",
           backgroundColor: "#f7f7f7",
           borderBottom: "1px solid #ccc",
@@ -238,8 +238,8 @@ const PageOne: React.FC = () => {
             onClick={() => setSelectedFolder(folder)}
             className="folder-card"
             style={{
-              minWidth: "150px",
-              padding: "15px",
+              minWidth: "120px",
+              padding: "10px",
               backgroundColor: "#ffffff",
               border: "1px solid #ccc",
               borderRadius: "8px",
@@ -250,12 +250,12 @@ const PageOne: React.FC = () => {
             }}
           >
             <FaFolder
-              size={30}
+              size={35}
               color="#ffcc00"
               style={{ marginBottom: "10px" }}
             />
             <span
-              style={{ fontSize: "16px", fontWeight: "bold", color: "#333" }}
+              style={{ fontSize: "14px", fontWeight: "bold", color: "#333" }}
             >
               {folder.name}
             </span>
@@ -371,4 +371,4 @@ const PageOne: React.FC = () => {
   );
 };
 
-export default PageOne;
+export default ITSop;

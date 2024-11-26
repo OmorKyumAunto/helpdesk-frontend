@@ -41,7 +41,7 @@ const GraphChartApex = () => {
       // colors: ["#FF5580", "#b5e550"],
       series: [
         {
-          name: "Total Asset",
+          name: "Total New Stock",
           data: totalAsset,
         },
         {
@@ -63,14 +63,14 @@ const GraphChartApex = () => {
         curve: "smooth",
       },
       title: {
-        text: "Asset and Disbursement Statistics",
+        text: "Stock and Disbursement Statistics",
         align: "left",
         style: {
           color: "#155E75",
         },
       },
       subtitle: {
-        text: "Last 12 months Asset and Disbursements",
+        text: "Last 12 months Stock and Disbursements",
         style: {
           color: "#155E75",
         },
