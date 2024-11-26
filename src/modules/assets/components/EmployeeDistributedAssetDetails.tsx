@@ -12,6 +12,7 @@ const EmployeeDistributedAssetDetails = ({ record }: { record: any }) => {
     specification,
     remarks,
     asset_name,
+    location_name,
   } = record || {};
   return (
     <div>
@@ -65,6 +66,11 @@ const EmployeeDistributedAssetDetails = ({ record }: { record: any }) => {
             key: "7",
             label: "Buying Unit",
             children: asset_unit_name,
+          },
+          {
+            key: "9",
+            label: "Location",
+            children: location_name,
           },
           {
             key: "8",

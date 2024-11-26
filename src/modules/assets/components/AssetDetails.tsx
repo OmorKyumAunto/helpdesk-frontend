@@ -19,6 +19,7 @@ const AssetDetails = ({ id }: { id: any }) => {
     history,
     price,
     warranty,
+    location_name,
   } = singleAsset?.data || {};
   const assetHistory = history?.map((item: any) => {
     return {
@@ -95,6 +96,11 @@ const AssetDetails = ({ id }: { id: any }) => {
             key: "7",
             label: "Buying Unit",
             children: unit_name,
+          },
+          {
+            key: "12",
+            label: "Location",
+            children: location_name,
           },
           {
             key: "9",

@@ -7,7 +7,7 @@ import {
 
 const DistributeAssetDetails = ({ id }: { id: any }) => {
   const { data: singleAsset } = useGetSingleDistributedAssetQuery(id);
-  console.log(singleAsset);
+  // console.log(singleAsset);
 
   const {
     category,
@@ -22,6 +22,7 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
     // employee_name,
     asset_name,
     history,
+    location_name,
   } = singleAsset?.data || {};
   const assetHistory = history?.map((item: any) => {
     return {
@@ -100,7 +101,12 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
             children: asset_unit_name,
           },
           {
-            key: "7",
+            key: "8",
+            label: "Location",
+            children: location_name,
+          },
+          {
+            key: "9",
             label: "Purchase Date",
             children: dayjs(purchase_date).format("DD-MM-YYYY"),
           },

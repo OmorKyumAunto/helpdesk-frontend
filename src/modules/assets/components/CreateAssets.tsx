@@ -13,6 +13,7 @@ import { useGetLicensesQuery } from "../../Licenses/api/licenseEndPoint";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useCreateAssetsMutation } from "../api/assetsEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
+import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
 const { Option } = Select;
 
 const CreateAsset = () => {
@@ -21,17 +22,24 @@ const CreateAsset = () => {
   const assignType = Form.useWatch("is_assign", form);
   const employeeType = Form.useWatch("is_new_employee", form);
   const licenseType = Form.useWatch("need_license", form);
+  const unitId = Form.useWatch("unit_id", form);
   const { data } = useGetOverallEmployeesQuery();
   const { data: unitData } = useGetUnitsQuery({ status: "active" });
   const { data: licenseData } = useGetLicensesQuery({ status: "active" });
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [create, { isLoading, isSuccess }] = useCreateAssetsMutation();
   const { data: profile } = useGetMeQuery();
+  const { data: location } = useGetActiveLocationsQuery({});
+
   const unitOptionForAdmin = unitData?.data?.filter((unit) =>
     profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
   );
   const unitOption =
     profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
+
+  const locationOption = location?.data?.filter(
+    (item) => item.unit_id === unitId
+  );
 
   const onFinish = (data: any) => {
     const { is_assign, is_new_employee, ...values } = data || {};
@@ -52,8 +60,8 @@ const CreateAsset = () => {
       }
     }
 
-    // console.log(formattedData);
-    create({ data: formattedData });
+    console.log(formattedData);
+    // create({ data: formattedData });
   };
 
   useEffect(() => {
@@ -187,6 +195,35 @@ const CreateAsset = () => {
                     options={unitOption?.map((unit: any) => ({
                       value: unit.id,
                       label: unit.title,
+                    }))}
+                    allowClear
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={8}>
+                <Form.Item
+                  label="Location"
+                  name="location"
+                  // rules={[
+                  //   { required: true, message: "Please Select Location" },
+                  // ]}
+                >
+                  <Select
+                    className="w-full "
+                    placeholder="Select Location"
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(
+                      input: string,
+                      option?: { label: string; value: string }
+                    ) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    options={locationOption?.map((location: any) => ({
+                      value: location.id,
+                      label: location.location,
                     }))}
                     allowClear
                   />

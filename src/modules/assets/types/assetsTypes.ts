@@ -13,6 +13,8 @@ export interface IAsset {
   remarks: string;
   unit_name: string;
   unit_id: string;
+  location: number;
+  location_name: string;
 }
 export interface IAssetDetails {
   id: number;
@@ -40,6 +42,8 @@ export interface IAssetDetails {
   price: number;
   warranty: string;
   specification: string;
+  location: number;
+  location_name: string;
   history: History[];
 }
 
@@ -76,6 +80,8 @@ export interface IDistributedSingle {
   employee_unit_name: string;
   licenses: string;
   status: number;
+  location: number;
+  location_name: string;
   history: History[];
 }
 

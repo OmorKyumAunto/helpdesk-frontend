@@ -14,6 +14,7 @@ import {
   useUpdateAssetsMutation,
 } from "../api/assetsEndPoint";
 import { IAsset } from "../types/assetsTypes";
+import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
 const { Option } = Select;
 
 const UpdateAsset = ({ asset }: { asset: IAsset }) => {
@@ -38,12 +39,20 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
     employee_id_no,
     unit_id,
     price,
+    location,
+    location_name,
   } = singleAsset?.data || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const assignType = Form.useWatch("assign_update", form);
+  const unitId = Form.useWatch("unit_id", form);
   const { data } = useGetOverallEmployeesQuery();
+  const { data: locations } = useGetActiveLocationsQuery({});
   const [Update, { isLoading, isSuccess }] = useUpdateAssetsMutation();
+
+  const locationOption = locations?.data?.filter(
+    (item) => item.unit_id === unitId
+  );
 
   useEffect(() => {
     form.setFieldsValue({
@@ -71,16 +80,31 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
         value: Number(unit_id),
       });
     }
+    if (location) {
+      form.setFieldValue("location", {
+        label: location_name,
+        value: Number(location),
+      });
+    }
   }, [
     name,
     category,
+    purchase_date,
     serial_number,
     po_number,
     asset_history,
     is_assign,
-    unit_name,
-    purchase_date,
+    user_id,
+    employee_name,
     assign_date,
+    unit_name,
+    model,
+    specification,
+    employee_id_no,
+    unit_id,
+    price,
+    location,
+    location_name,
   ]);
 
   // const setFileField = (field: string, path: any) => {
@@ -106,7 +130,11 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
       if (values[key]) {
         if (key === "purchase_date" || key === "assign_date") {
           formattedData[key] = dayjs(values[key]).format("YYYY-MM-DD");
-        } else if (key === "user_id" || key === "unit_id") {
+        } else if (
+          key === "user_id" ||
+          key === "unit_id" ||
+          key === "location"
+        ) {
           formattedData[key] = values[key]?.value || values[key];
         } else {
           formattedData[key] = values[key];
@@ -236,6 +264,35 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                       options={unitData?.data?.map((unit: any) => ({
                         value: unit.id,
                         label: unit.title,
+                      }))}
+                      allowClear
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    label="Location"
+                    name="location"
+                    // rules={[
+                    //   { required: true, message: "Please Select Location" },
+                    // ]}
+                  >
+                    <Select
+                      className="w-full "
+                      placeholder="Select Location"
+                      showSearch
+                      optionFilterProp="children"
+                      filterOption={(
+                        input: string,
+                        option?: { label: string; value: string }
+                      ) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={locationOption?.map((location: any) => ({
+                        value: location.id,
+                        label: location.location,
                       }))}
                       allowClear
                     />

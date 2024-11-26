@@ -10,6 +10,7 @@ import { useGetAllDistributedAssetQuery } from "../api/assetsEndPoint";
 import { DistributedAssetsTableColumns } from "../utils/DistributedTableColumns";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
+import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
 const { Option } = Select;
 const DistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -25,6 +26,8 @@ const DistributedAsset = () => {
   const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
   const { data: profile } = useGetMeQuery();
+  const { data: locationData, isLoading: locationIsLoading } =
+    useGetActiveLocationsQuery({});
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
@@ -37,8 +40,11 @@ const DistributedAsset = () => {
   const [filter, setFilter] = useState<any>({
     limit: Number(pageSize),
     offset: skipValue,
+    unit: null,
   });
-
+  const locationOption = locationData?.data?.filter(
+    (item) => item.unit_id === filter.unit
+  );
   useEffect(() => {
     setFilter({
       ...filter,
@@ -107,6 +113,25 @@ const DistributedAsset = () => {
             allowClear
           />
           <Select
+            style={{ width: "180px" }}
+            loading={locationIsLoading}
+            placeholder="Select Location"
+            showSearch
+            optionFilterProp="children"
+            onChange={(e) => setFilter({ ...filter, location: e, offset: 0 })}
+            filterOption={(
+              input: string,
+              option?: { label: string; value: number }
+            ) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={locationOption?.map((location: any) => ({
+              value: location.id,
+              label: location.location,
+            }))}
+            allowClear
+          />
+          <Select
             placeholder="Select Asset Type"
             style={{ width: "180px" }}
             onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
@@ -125,6 +150,7 @@ const DistributedAsset = () => {
               "Employee Name",
               "Department",
               "Unit",
+              "Location",
               "Asset Type",
               "Serial No",
               "Assigning Date",
@@ -140,12 +166,14 @@ const DistributedAsset = () => {
                       assign_date,
                       serial_number,
                       employee_unit_name,
+                      location_name,
                     }: any) => {
                       const data = {
                         "Employee ID": user_id_no,
                         "Employee Name": user_name,
                         Department: department,
                         Unit: employee_unit_name,
+                        Location: location_name,
                         "Asset Type": category,
                         "Serial No": serial_number,
                         "Assigning Date":

@@ -52,6 +52,11 @@ const AssetsList = () => {
     offset: skipValue,
     unit: null,
   });
+
+  const locationOption = locationData?.data?.filter(
+    (item) => item.unit_id === filter.unit
+  );
+
   console.log({ unitValue });
   useEffect(() => {
     // This will set the default value for unit when options are available
@@ -168,7 +173,7 @@ const AssetsList = () => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={locationData?.data?.map((location: any) => ({
+              options={locationOption?.map((location: any) => ({
                 value: location.id,
                 label: location.location,
               }))}
@@ -186,6 +191,7 @@ const AssetsList = () => {
                 "Specification",
                 "Remarks",
                 "Unit",
+                "Location",
                 "Purchase Date",
                 "Price",
                 "Warranty",
@@ -201,6 +207,7 @@ const AssetsList = () => {
                         po_number,
                         specification,
                         unit_name,
+                        location_name,
                         name,
                         purchase_date,
                         price,
@@ -215,6 +222,7 @@ const AssetsList = () => {
                           Specification: specification,
                           Remarks: remarks,
                           Unit: unit_name,
+                          Location: location_name,
                           "Purchase Date":
                             dayjs(purchase_date).format("DD-MM-YYYY"),
                           Price: price,
