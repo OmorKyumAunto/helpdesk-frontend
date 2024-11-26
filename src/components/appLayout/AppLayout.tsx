@@ -219,6 +219,28 @@ export const AppLayout = () => {
       </Link>
     </div>
   );
+  const itTicketing = (
+    <div>
+      {/* <Link to="#" target="_blank">
+        <Button style={{ marginTop: "10px", width: "100%" }} type="primary">
+          Dashboard
+        </Button>
+      </Link>
+      <br />
+      <Link to="#" target="_blank">
+        <Button style={{ marginTop: "10px", width: "100%" }} type="primary">
+          Tickets
+        </Button>
+      </Link>
+      <br /> */}
+      <Link to="#" target="_blank">
+        <Button style={{ marginTop: "10px", width: "100%" }} type="primary">
+          On Process!
+        </Button>
+      </Link>
+    </div>
+  );
+  
   const helpDesk = (
     <div>
       <Link to="http://192.168.153.249:8081/" target="_blank">
@@ -227,12 +249,7 @@ export const AppLayout = () => {
         </Button>
       </Link>
       <br />
-      <Link to="#" target="_blank">
-        <Button style={{ marginTop: "10px", width: "100%" }} type="primary">
-          IT Ticketing
-        </Button>
-      </Link>
-      <br />
+      
       
       
     </div>
@@ -431,12 +448,16 @@ export const AppLayout = () => {
                 />
               )}
             </div> */}
+            
             <Popover content={helpDesk}>
               <Button type="dashed">Help Desk</Button>
             </Popover>
 
             <Popover content={selfService}>
               <Button type="dashed">Self Service</Button>
+            </Popover>
+            <Popover content={itTicketing}>
+              <Button type="dashed">IT Ticketing</Button>
             </Popover>
             <Popover content={content}>
               <Button
