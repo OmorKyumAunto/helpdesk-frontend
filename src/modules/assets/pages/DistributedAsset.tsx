@@ -1,5 +1,5 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Card, Input, Select } from "antd";
+import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Card, Dropdown, Input, Select } from "antd";
 import { Table } from "antd/lib";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -58,7 +58,7 @@ const DistributedAsset = () => {
   return (
     <div>
       <Card
-        title={`Distributed Asset List `}
+        title="Distributed Asset List"
         style={{
           boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
           marginBottom: "1rem",
@@ -67,129 +67,136 @@ const DistributedAsset = () => {
         <div
           style={{
             display: "flex",
-            justifyContent: "right",
-            flexWrap: "wrap",
-            gap: 8,
+            justifyContent: "end",
+            alignItems: "center",
+            gap: 12,
             marginBottom: "12px",
           }}
         >
           <div>
-            <Input
-              prefix={<SearchOutlined />}
-              onChange={(e) =>
-                setFilter({ ...filter, key: e.target.value, offset: 0 })
+            <ExcelDownload
+              excelName="distributed_asset_list"
+              excelTableHead={[
+                "Employee ID",
+                "Employee Name",
+                "Department",
+                "Unit",
+                "Location",
+                "Asset Type",
+                "Serial No",
+                "Assigning Date",
+              ]}
+              excelData={
+                data?.data?.length
+                  ? data?.data?.map(
+                      ({
+                        user_id_no,
+                        user_name,
+                        department,
+                        category,
+                        assign_date,
+                        serial_number,
+                        employee_unit_name,
+                        location_name,
+                      }: any) => {
+                        return {
+                          "Employee ID": user_id_no,
+                          "Employee Name": user_name,
+                          Department: department,
+                          Unit: employee_unit_name,
+                          Location: location_name,
+                          "Asset Type": category,
+                          "Serial No": serial_number,
+                          "Assigning Date":
+                            dayjs(assign_date).format("DD-MM-YYYY"),
+                        };
+                      }
+                    )
+                  : []
               }
-              placeholder="Search..."
             />
           </div>
-          <Select
-            style={{ width: "180px" }}
-            onChange={(e) =>
-              setFilter({ ...filter, employee_type: e, offset: 0 })
-            }
-            placeholder="Select Type"
-          >
-            <Option value="">All</Option>
-            <Option value={"management"}>Management</Option>
-            <Option value={"non-management"}>Non Management</Option>
-          </Select>
-          <Select
-            style={{ width: "180px" }}
-            loading={unitIsLoading}
-            placeholder="Select Unit Name"
-            showSearch
-            optionFilterProp="children"
-            onChange={(e) => {
-              setFilter({ ...filter, unit: e, offset: 0 });
-            }}
-            filterOption={(
-              input: string,
-              option?: { label: string; value: number }
-            ) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            options={unitOption?.map((unit: any) => ({
-              value: unit.id,
-              label: unit.title,
-            }))}
-          />
-          <Select
-            style={{ width: "180px" }}
-            loading={locationIsLoading}
-            placeholder="Select Location"
-            showSearch
-            optionFilterProp="children"
-            onChange={(e) => setFilter({ ...filter, location: e, offset: 0 })}
-            filterOption={(
-              input: string,
-              option?: { label: string; value: number }
-            ) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            options={locationOption?.map((location: any) => ({
-              value: location.id,
-              label: location.location,
-            }))}
-            allowClear
-          />
-          <Select
-            placeholder="Select Asset Type"
-            style={{ width: "180px" }}
-            onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
-            allowClear
-          >
-            <Option value="Laptop">Laptop</Option>
-            <Option value="Desktop">Desktop</Option>
-            <Option value="Printer">Printer</Option>
-            <Option value="Accessories">Accessories</Option>
-          </Select>
-
-          <ExcelDownload
-            excelName={"distributed_asset_list"}
-            excelTableHead={[
-              "Employee ID",
-              "Employee Name",
-              "Department",
-              "Unit",
-              "Location",
-              "Asset Type",
-              "Serial No",
-              "Assigning Date",
-            ]}
-            excelData={
-              data?.data?.length
-                ? data?.data?.map(
-                    ({
-                      user_id_no,
-                      user_name,
-                      department,
-                      category,
-                      assign_date,
-                      serial_number,
-                      employee_unit_name,
-                      location_name,
-                    }: any) => {
-                      const data = {
-                        "Employee ID": user_id_no,
-                        "Employee Name": user_name,
-                        Department: department,
-                        Unit: employee_unit_name,
-                        Location: location_name,
-                        "Asset Type": category,
-                        "Serial No": serial_number,
-                        "Assigning Date":
-                          dayjs(assign_date).format("DD-MM-YYYY"),
-                      };
-                      return data;
+          <Dropdown
+            trigger={["hover"]}
+            dropdownRender={() => (
+              <div
+                style={{
+                  padding: 16,
+                  background: "#fff",
+                  borderRadius: 8,
+                  width: "200px",
+                  border: "1px solid #f2f2f2",
+                }}
+              >
+                <div style={{ marginBottom: 8 }}>
+                  <Input
+                    prefix={<SearchOutlined />}
+                    onChange={(e) =>
+                      setFilter({ ...filter, key: e.target.value, offset: 0 })
                     }
-                  )
-                : []
-            }
-          />
+                    placeholder="Search..."
+                  />
+                </div>
+                <Select
+                  style={{ width: "100%", marginBottom: 8 }}
+                  onChange={(e) =>
+                    setFilter({ ...filter, employee_type: e, offset: 0 })
+                  }
+                  placeholder="Select Type"
+                  allowClear
+                >
+                  <Option value="">All</Option>
+                  <Option value="management">Management</Option>
+                  <Option value="non-management">Non Management</Option>
+                </Select>
+                <Select
+                  style={{ width: "100%", marginBottom: 8 }}
+                  loading={unitIsLoading}
+                  placeholder="Select Unit Name"
+                  showSearch
+                  optionFilterProp="children"
+                  onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
+                  options={unitOption?.map((unit: any) => ({
+                    value: unit.id,
+                    label: unit.title,
+                  }))}
+                  allowClear
+                />
+                <Select
+                  style={{ width: "100%", marginBottom: 8 }}
+                  loading={locationIsLoading}
+                  placeholder="Select Location"
+                  showSearch
+                  optionFilterProp="children"
+                  onChange={(e) =>
+                    setFilter({ ...filter, location: e, offset: 0 })
+                  }
+                  options={locationOption?.map((location: any) => ({
+                    value: location.id,
+                    label: location.location,
+                  }))}
+                  allowClear
+                />
+                <Select
+                  placeholder="Select Asset Type"
+                  style={{ width: "100%", marginBottom: 8 }}
+                  onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
+                  allowClear
+                >
+                  <Option value="Laptop">Laptop</Option>
+                  <Option value="Desktop">Desktop</Option>
+                  <Option value="Printer">Printer</Option>
+                  <Option value="Accessories">Accessories</Option>
+                </Select>
+              </div>
+            )}
+          >
+            <Button icon={<FilterOutlined />}>Filters</Button>
+          </Dropdown>
         </div>
         <div>
           <Table
-            rowKey={"id"}
+            rowKey="id"
             size="small"
             bordered
             loading={isLoading || isFetching}

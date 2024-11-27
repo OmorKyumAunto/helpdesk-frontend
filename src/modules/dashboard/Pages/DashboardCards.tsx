@@ -7,7 +7,10 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { RootState } from "../../../app/store/store";
-import { useGetAllDashboardQuery } from "../api/dashboardEndPoints";
+import {
+  useGetAllDashboardQuery,
+  useGetDashboardAssetDataForAdminQuery,
+} from "../api/dashboardEndPoints";
 import GraphChartApex from "../components/ApexChart";
 import ApexPieChart from "../components/ApexPieChart";
 import BloodTypeChart from "../components/BloodChart";
@@ -15,6 +18,7 @@ import TopDash from "../components/TopDash";
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
+  const { data: asset } = useGetDashboardAssetDataForAdminQuery({});
   const { data } = useGetAllDashboardQuery();
   const { data: profile } = useGetMeQuery();
   const {
@@ -27,6 +31,7 @@ const DashboardCards = () => {
     joining_date,
     unit_name,
     status,
+    role_id,
   } = profile?.data || {};
   return (
     <>
@@ -55,7 +60,9 @@ const DashboardCards = () => {
                         marginTop: "4px",
                       }}
                     >
-                      {data?.data?.total_asset || 0}
+                      {role_id === 2
+                        ? asset?.data?.user_count || 0
+                        : data?.data?.total_asset || 0}
                     </p>
                   </div>
                   <div>

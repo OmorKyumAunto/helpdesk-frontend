@@ -4,13 +4,19 @@ import { useGetDashboardPieDataQuery } from "../api/dashboardEndPoints";
 
 const ReactPieChart = () => {
   const { data: pieData } = useGetDashboardPieDataQuery();
-  const { total_laptop, total_desktop, total_printer, total_accessories } =
-    pieData?.data || {};
+  const {
+    total_laptop,
+    total_desktop,
+    total_printer,
+    total_accessories,
+    total_monitors,
+  } = pieData?.data || {};
   const data = [
     { name: "Laptops", value: total_laptop },
     { name: "Desktops", value: total_desktop },
     { name: "Printers", value: total_printer },
     { name: "Accessories", value: total_accessories },
+    { name: "Monitors", value: total_monitors || 0 },
   ];
 
   const options: ApexOptions = {
@@ -19,7 +25,7 @@ const ReactPieChart = () => {
     },
     labels: data.map((item) => item.name),
     series: data.map((item) => item.value),
-    colors: ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"],
+    colors: ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"],
     legend: {
       position: "bottom",
     },

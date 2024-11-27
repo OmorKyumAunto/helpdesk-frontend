@@ -28,6 +28,12 @@ export const dashboardEndpoints = api.injectEndpoints({
       }),
       providesTags: () => [{ type: "dashboardTypes", id: "dashboard" }],
     }),
+    getDashboardAssetDataForAdmin: build.query<HTTPResponse<any>, any>({
+      query: () => ({
+        url: `/dashboard/admin-unit-wise-asset-count`,
+      }),
+      providesTags: () => [{ type: "dashboardTypes", id: "dashboard" }],
+    }),
     getDashboardEmployeeData: build.query<HTTPResponse<any>, any>({
       query: (params) => ({
         url: `/dashboard/dashboard-graph-data`,
@@ -44,4 +50,5 @@ export const {
   useGetDashboardBloodDataQuery,
   useGetDashboardPieDataQuery,
   useGetDashboardEmployeeDataQuery,
+  useGetDashboardAssetDataForAdminQuery,
 } = dashboardEndpoints;

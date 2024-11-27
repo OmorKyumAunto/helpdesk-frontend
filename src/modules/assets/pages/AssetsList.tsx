@@ -70,7 +70,7 @@ const AssetsList = () => {
   } = useGetAssetsForAdminQuery({ ...filter });
 
   const assetsTableData = profile?.data?.role_id === 2 ? adminData : data;
-  console.log(assetsTableData?.data);
+  // console.log(assetsTableData?.data);
   const showModal = () => {
     dispatch(
       setCommonModal({
