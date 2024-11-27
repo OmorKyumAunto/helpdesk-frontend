@@ -22,6 +22,7 @@ const DistributedAsset = () => {
     page: "1",
     pageSize: "50",
   });
+  const [unitValue, setUnitValue] = useState<number | null>(null);
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
@@ -45,6 +46,17 @@ const DistributedAsset = () => {
   const locationOption = locationData?.data?.filter(
     (item) => item.unit_id === filter.unit
   );
+
+  useEffect(() => {
+    if (unitOption?.length && unitValue === null) {
+      setUnitValue(unitOption[0].id);
+      setFilter((prevFilter: any) => ({
+        ...prevFilter,
+        unit: unitOption[0].id,
+      }));
+    }
+  }, [unitOption]);
+
   useEffect(() => {
     setFilter({
       ...filter,
@@ -98,8 +110,11 @@ const DistributedAsset = () => {
             loading={unitIsLoading}
             placeholder="Select Unit Name"
             showSearch
+            value={unitValue}
             optionFilterProp="children"
-            onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
+            onChange={(e) => {
+              setFilter({ ...filter, unit: e, offset: 0 }), setUnitValue(e);
+            }}
             filterOption={(
               input: string,
               option?: { label: string; value: number }
@@ -110,7 +125,6 @@ const DistributedAsset = () => {
               value: unit.id,
               label: unit.title,
             }))}
-            allowClear
           />
           <Select
             style={{ width: "180px" }}

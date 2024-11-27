@@ -49,11 +49,9 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
   const { data } = useGetOverallEmployeesQuery();
   const { data: locations } = useGetActiveLocationsQuery({});
   const [Update, { isLoading, isSuccess }] = useUpdateAssetsMutation();
-
   const locationOption = locations?.data?.filter(
-    (item) => item.unit_id === unitId
+    (item) => item.unit_id === (unitId?.value ? unitId?.value : unitId)
   );
-
   useEffect(() => {
     form.setFieldsValue({
       name,

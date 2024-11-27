@@ -60,8 +60,8 @@ const CreateAsset = () => {
       }
     }
 
-    console.log(formattedData);
-    // create({ data: formattedData });
+    // console.log(formattedData);
+    create({ data: formattedData });
   };
 
   useEffect(() => {

@@ -47,6 +47,7 @@ const AssetsList = () => {
   );
   const unitOption =
     profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
+
   const [filter, setFilter] = useState<IAssetParams>({
     limit: Number(pageSize),
     offset: skipValue,
@@ -57,9 +58,7 @@ const AssetsList = () => {
     (item) => item.unit_id === filter.unit
   );
 
-  console.log({ unitValue });
   useEffect(() => {
-    // This will set the default value for unit when options are available
     if (unitOption?.length && unitValue === null) {
       setUnitValue(unitOption[0].id);
       setFilter((prevFilter) => ({
@@ -103,7 +102,6 @@ const AssetsList = () => {
           title={`Assets List `}
           style={{
             boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
-            // marginBottom: "1rem",
           }}
         >
           <div
@@ -141,9 +139,11 @@ const AssetsList = () => {
               loading={unitIsLoading}
               placeholder="Select Unit Name"
               showSearch
-              defaultValue={Number(unitValue)}
+              value={unitValue}
               optionFilterProp="children"
-              onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
+              onChange={(e) => {
+                setFilter({ ...filter, unit: e, offset: 0 }), setUnitValue(e);
+              }}
               filterOption={(
                 input: string,
                 option?: { label: string; value: number }
@@ -156,7 +156,6 @@ const AssetsList = () => {
                 value: unit.id,
                 label: unit.title,
               }))}
-              allowClear
             />
             <Select
               style={{ width: "180px" }}
