@@ -42,10 +42,11 @@ const CreateAsset = () => {
   );
 
   const onFinish = (data: any) => {
-    const { is_assign, is_new_employee, ...values } = data || {};
+    const { is_assign, is_new_employee, price, ...values } = data || {};
     const formattedData: any = {};
     formattedData["is_assign"] = is_assign;
     formattedData["is_new_employee"] = is_new_employee;
+    formattedData["price"] = price;
     for (const key in values) {
       if (values[key]) {
         if (
@@ -82,6 +83,7 @@ const CreateAsset = () => {
             category: "Laptop",
             unit: "JTML",
             is_assign: 0,
+            price: 0,
             purchase_date: dayjs(),
             assign_date: dayjs(),
           }}

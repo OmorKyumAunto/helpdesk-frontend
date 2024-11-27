@@ -27,7 +27,7 @@ const UploadAssetFile = () => {
       }
     }
 
-    console.log(submittedData);
+    // console.log(submittedData);
     upload({ data: submittedData });
   };
 

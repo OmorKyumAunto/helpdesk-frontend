@@ -32,7 +32,6 @@ const AssetsList = () => {
     page: "1",
     pageSize: "50",
   });
-  const [unitValue, setUnitValue] = useState<number | null>(null);
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
@@ -47,26 +46,14 @@ const AssetsList = () => {
   );
   const unitOption =
     profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
-
   const [filter, setFilter] = useState<IAssetParams>({
     limit: Number(pageSize),
     offset: skipValue,
-    unit: null,
   });
 
   const locationOption = locationData?.data?.filter(
     (item) => item.unit_id === filter.unit
   );
-
-  useEffect(() => {
-    if (unitOption?.length && unitValue === null) {
-      setUnitValue(unitOption[0].id);
-      setFilter((prevFilter) => ({
-        ...prevFilter,
-        unit: unitOption[0].id,
-      }));
-    }
-  }, [unitOption]);
 
   useEffect(() => {
     setFilter({
@@ -83,7 +70,7 @@ const AssetsList = () => {
   } = useGetAssetsForAdminQuery({ ...filter });
 
   const assetsTableData = profile?.data?.role_id === 2 ? adminData : data;
-  // console.log(assetsTableData);
+  console.log(assetsTableData?.data);
   const showModal = () => {
     dispatch(
       setCommonModal({
@@ -139,10 +126,9 @@ const AssetsList = () => {
               loading={unitIsLoading}
               placeholder="Select Unit Name"
               showSearch
-              value={unitValue}
               optionFilterProp="children"
               onChange={(e) => {
-                setFilter({ ...filter, unit: e, offset: 0 }), setUnitValue(e);
+                setFilter({ ...filter, unit: e, offset: 0 });
               }}
               filterOption={(
                 input: string,
