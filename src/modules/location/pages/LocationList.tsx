@@ -14,7 +14,7 @@ const LocationList = () => {
     <>
       <div>
         <Card
-          title={`Location List`}
+          title={`Sub Unit List`}
           style={{
             boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
             marginBottom: "1rem",
@@ -30,11 +30,11 @@ const LocationList = () => {
             }}
           >
             <CreateButton
-              name="Create Location"
+              name="Create Sub Unit"
               onClick={() => {
                 dispatch(
                   setCommonModal({
-                    title: "Create Location",
+                    title: "Create Sub Unit",
                     content: <CreateLocation />,
                     show: true,
                     width: 500,

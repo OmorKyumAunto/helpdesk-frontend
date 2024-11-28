@@ -1,5 +1,5 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Card, Input, Select, Space, Table } from "antd";
+import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import { Card, Button, Input, Dropdown, Select, Space, Table } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -76,6 +76,7 @@ const EmployeeList = () => {
               marginBottom: "12px",
             }}
           >
+
             <div>
               <Input
                 style={{ width: "160px" }}
@@ -86,60 +87,82 @@ const EmployeeList = () => {
                 placeholder="Search..."
               />
             </div>
-            <Select
-              style={{ width: "160px" }}
-              onChange={(e) => setFilter({ ...filter, status: e, offset: 0 })}
-              placeholder="Select Status"
+            <Dropdown
+              trigger={["hover"]}
+              dropdownRender={() => (
+                <div
+                  style={{
+                    padding: 16,
+                    background: "#fff",
+                    borderRadius: 8,
+                    width: "160px",
+                    border: "1px solid #f2f2f2",
+                  }}
+                >
+
+
+                  <Select
+                    style={{ width: "160px" , marginBottom: 8}}
+                    onChange={(e) => setFilter({ ...filter, status: e, offset: 0 })}
+                    placeholder="Select Status"
+                  >
+                    <Option value="">All</Option>
+                    <Option value={1}>Active</Option>
+                    <Option value={2}>Inactive</Option>
+                  </Select>
+                  <Select
+                    style={{ width: "160px", marginBottom: 8 }}
+                    onChange={(e) =>
+                      setFilter({ ...filter, employee_type: e, offset: 0 })
+                    }
+                    placeholder="Employee Type"
+                  >
+                    <Option value="">All</Option>
+                    <Option value={"management"}>Management</Option>
+                    <Option value={"non-management"}>Non Management</Option>
+                  </Select>
+                  <Select
+                    style={{ width: "160px" , marginBottom: 8}}
+                    onChange={(e) =>
+                      setFilter({ ...filter, unit_name: e, offset: 0 })
+                    }
+                    placeholder="Select Unit Name"
+                  >
+                    <Option value="">All</Option>
+                    <Option value="JTML">JTML</Option>
+                    <Option value="DIPL">DIPL</Option>
+                    <Option value="Corporate Office">Corporate Office</Option>
+                    <Option value="DBTrims Plant">DBTrims Plant</Option>
+                    <Option value="PPPL Plant">PPPL Plant</Option>
+                    <Option value="EUDB">EUDB</Option>
+                    <Option value="Thanbee Complex">Thanbee Complex</Option>
+                    <Option value="Flamingo2">Flamingo2</Option>
+                  </Select>
+                  <Select
+                    style={{ width: "160px" , marginBottom: 8}}
+                    onChange={(e) =>
+                      setFilter({ ...filter, blood_group: e, offset: 0 })
+                    }
+                    placeholder="Select Blood Group"
+                  >
+                    <Option value="">All</Option>
+                    <Option value="A+">A+</Option>
+                    <Option value="A-">A-</Option>
+                    <Option value="B+">B+</Option>
+                    <Option value="B-">B-</Option>
+                    <Option value="AB+">AB+</Option>
+                    <Option value="AB-">AB-</Option>
+                    <Option value="O+">O+</Option>
+                    <Option value="O-">O-</Option>
+                  </Select>
+                </div>
+              )}
             >
-              <Option value="">All</Option>
-              <Option value={1}>Active</Option>
-              <Option value={2}>Inactive</Option>
-            </Select>
-            <Select
-              style={{ width: "160px" }}
-              onChange={(e) =>
-                setFilter({ ...filter, employee_type: e, offset: 0 })
-              }
-              placeholder="Select Type"
-            >
-              <Option value="">All</Option>
-              <Option value={"management"}>Management</Option>
-              <Option value={"non-management"}>Non Management</Option>
-            </Select>
-            <Select
-              style={{ width: "160px" }}
-              onChange={(e) =>
-                setFilter({ ...filter, unit_name: e, offset: 0 })
-              }
-              placeholder="Select Unit Name"
-            >
-              <Option value="">All</Option>
-              <Option value="JTML">JTML</Option>
-              <Option value="DIPL">DIPL</Option>
-              <Option value="Corporate Office">Corporate Office</Option>
-              <Option value="DBTrims Plant">DBTrims Plant</Option>
-              <Option value="PPPL Plant">PPPL Plant</Option>
-              <Option value="EUDB">EUDB</Option>
-              <Option value="Thanbee Complex">Thanbee Complex</Option>
-              <Option value="Flamingo2">Flamingo2</Option>
-            </Select>
-            <Select
-              style={{ width: "160px" }}
-              onChange={(e) =>
-                setFilter({ ...filter, blood_group: e, offset: 0 })
-              }
-              placeholder="Select Blood Group"
-            >
-              <Option value="">All</Option>
-              <Option value="A+">A+</Option>
-              <Option value="A-">A-</Option>
-              <Option value="B+">B+</Option>
-              <Option value="B-">B-</Option>
-              <Option value="AB+">AB+</Option>
-              <Option value="AB-">AB-</Option>
-              <Option value="O+">O+</Option>
-              <Option value="O-">O-</Option>
-            </Select>
+              <Button icon={<FilterOutlined />}>Filters</Button>
+            </Dropdown>
+
+
+
             <>
               {/* <PDFDownload
                 PDFFileName="employee_list"
@@ -222,42 +245,42 @@ const EmployeeList = () => {
                 excelData={
                   data?.data?.length
                     ? data?.data?.map(
-                        ({
-                          employee_id,
-                          name,
-                          department,
-                          designation,
-                          email,
-                          contact_no,
-                          joining_date,
-                          unit_name,
-                          licenses,
-                          blood_group,
-                          business_type,
-                          line_of_business,
-                          grade,
-                          pabx,
-                        }: any) => {
-                          const data = {
-                            "Employee ID": employee_id,
-                            "Employee Name": name,
-                            Department: department,
-                            Designation: designation,
-                            Email: email,
-                            "Contact No": contact_no,
-                            "Blood Group": blood_group,
-                            "Date of Joining":
-                              dayjs(joining_date).format("DD-MM-YYYY"),
-                            Location: unit_name,
-                            Licenses: licenses,
-                            "Business Type": business_type,
-                            "Line of Business": line_of_business,
-                            Grade: grade,
-                            PABX: pabx,
-                          };
-                          return data;
-                        }
-                      )
+                      ({
+                        employee_id,
+                        name,
+                        department,
+                        designation,
+                        email,
+                        contact_no,
+                        joining_date,
+                        unit_name,
+                        licenses,
+                        blood_group,
+                        business_type,
+                        line_of_business,
+                        grade,
+                        pabx,
+                      }: any) => {
+                        const data = {
+                          "Employee ID": employee_id,
+                          "Employee Name": name,
+                          Department: department,
+                          Designation: designation,
+                          Email: email,
+                          "Contact No": contact_no,
+                          "Blood Group": blood_group,
+                          "Date of Joining":
+                            dayjs(joining_date).format("DD-MM-YYYY"),
+                          Location: unit_name,
+                          Licenses: licenses,
+                          "Business Type": business_type,
+                          "Line of Business": line_of_business,
+                          Grade: grade,
+                          PABX: pabx,
+                        };
+                        return data;
+                      }
+                    )
                     : []
                 }
               />

@@ -101,7 +101,7 @@ export const sideBarItems = (roleId: number) => {
                 icon: <FaRegListAlt size={16} />,
               },
               {
-                label: <Link to="/settings/location">Location</Link>,
+                label: <Link to="/settings/location">Sub Unit</Link>,
                 key: "/settings/location",
                 icon: <MdOutlineLocationOn size={16} />,
               },

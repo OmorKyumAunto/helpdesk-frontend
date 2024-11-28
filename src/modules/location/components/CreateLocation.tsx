@@ -71,10 +71,10 @@ const CreateLocation = () => {
                 <Form.Item
                   name="location"
                   rules={[{ required: true }]}
-                  label="Location"
+                  label="Sub Unit"
                   required
                 >
-                  <Input placeholder="Enter Location Name" type="text" />
+                  <Input placeholder="Enter Sub Unit Name" type="text" />
                 </Form.Item>
               </Col>
             </Row>

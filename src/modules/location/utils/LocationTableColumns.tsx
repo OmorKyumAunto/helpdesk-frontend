@@ -30,7 +30,7 @@ export const LocationTableColumns = (): TableProps<ILocation>["columns"] => {
       key: "unit_name",
     },
     {
-      title: "Location",
+      title: "Sub Unit",
       dataIndex: "location",
       key: "location",
     },

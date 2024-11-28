@@ -1,5 +1,5 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Card, Input, Select, Table } from "antd";
+import { FilterOutlined,SearchOutlined } from "@ant-design/icons";
+import { Card, Button,Dropdown,Input, Select, Table } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -111,9 +111,23 @@ const AssetsList = () => {
               />
             </div>
 
-            <Select
+
+            <Dropdown
+            trigger={["hover"]}
+            dropdownRender={() => (
+              <div
+                style={{
+                  padding: 16,
+                  background: "#fff",
+                  borderRadius: 8,
+                  width: "190px",
+                  border: "1px solid #f2f2f2",
+                }}
+              >
+                
+                <Select
               allowClear
-              style={{ width: "180px" }}
+              style={{ width: "180px" , marginBottom: 8}}
               onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
               placeholder="Select Remark Type"
             >
@@ -122,7 +136,7 @@ const AssetsList = () => {
               <Option value="in_stock">In Stock</Option>
             </Select>
             <Select
-              style={{ width: "180px" }}
+              style={{ width: "180px" , marginBottom: 8}}
               loading={unitIsLoading}
               placeholder="Select Unit Name"
               showSearch
@@ -142,9 +156,10 @@ const AssetsList = () => {
                 value: unit.id,
                 label: unit.title,
               }))}
+              allowClear
             />
             <Select
-              style={{ width: "180px" }}
+              style={{ width: "180px" , marginBottom: 8}}
               loading={locationIsLoading}
               placeholder="Select Location"
               showSearch
@@ -164,6 +179,18 @@ const AssetsList = () => {
               }))}
               allowClear
             />
+              
+                
+              </div>
+            )}
+          >
+            <Button icon={<FilterOutlined />}>Filters</Button>
+          </Dropdown>
+
+
+
+
+           
 
             <ExcelDownload
               excelName={"asset-list"}

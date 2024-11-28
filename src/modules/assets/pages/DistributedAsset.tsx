@@ -73,62 +73,9 @@ const DistributedAsset = () => {
             marginBottom: "12px",
           }}
         >
-          <div>
-            <ExcelDownload
-              excelName="distributed_asset_list"
-              excelTableHead={[
-                "Employee ID",
-                "Employee Name",
-                "Department",
-                "Unit",
-                "Location",
-                "Asset Type",
-                "Serial No",
-                "Assigning Date",
-              ]}
-              excelData={
-                data?.data?.length
-                  ? data?.data?.map(
-                      ({
-                        user_id_no,
-                        user_name,
-                        department,
-                        category,
-                        assign_date,
-                        serial_number,
-                        employee_unit_name,
-                        location_name,
-                      }: any) => {
-                        return {
-                          "Employee ID": user_id_no,
-                          "Employee Name": user_name,
-                          Department: department,
-                          Unit: employee_unit_name,
-                          Location: location_name,
-                          "Asset Type": category,
-                          "Serial No": serial_number,
-                          "Assigning Date":
-                            dayjs(assign_date).format("DD-MM-YYYY"),
-                        };
-                      }
-                    )
-                  : []
-              }
-            />
-          </div>
-          <Dropdown
-            trigger={["hover"]}
-            dropdownRender={() => (
-              <div
-                style={{
-                  padding: 16,
-                  background: "#fff",
-                  borderRadius: 8,
-                  width: "200px",
-                  border: "1px solid #f2f2f2",
-                }}
-              >
-                <div style={{ marginBottom: 8 }}>
+         
+
+          <div style={{ width: "160px" }}>
                   <Input
                     prefix={<SearchOutlined />}
                     onChange={(e) =>
@@ -137,12 +84,25 @@ const DistributedAsset = () => {
                     placeholder="Search..."
                   />
                 </div>
+          <Dropdown
+            trigger={["hover"]}
+            dropdownRender={() => (
+              <div
+                style={{
+                  padding: 16,
+                  background: "#fff",
+                  borderRadius: 8,
+                  width: "160px",
+                  border: "1px solid #f2f2f2",
+                }}
+              >
+                
                 <Select
                   style={{ width: "100%", marginBottom: 8 }}
                   onChange={(e) =>
                     setFilter({ ...filter, employee_type: e, offset: 0 })
                   }
-                  placeholder="Select Type"
+                  placeholder="Employee Type"
                   allowClear
                 >
                   <Option value="">All</Option>
@@ -193,6 +153,49 @@ const DistributedAsset = () => {
           >
             <Button icon={<FilterOutlined />}>Filters</Button>
           </Dropdown>
+          <div>
+            <ExcelDownload
+              excelName="distributed_asset_list"
+              excelTableHead={[
+                "Employee ID",
+                "Employee Name",
+                "Department",
+                "Unit",
+                "Location",
+                "Asset Type",
+                "Serial No",
+                "Assigning Date",
+              ]}
+              excelData={
+                data?.data?.length
+                  ? data?.data?.map(
+                    ({
+                      user_id_no,
+                      user_name,
+                      department,
+                      category,
+                      assign_date,
+                      serial_number,
+                      employee_unit_name,
+                      location_name,
+                    }: any) => {
+                      return {
+                        "Employee ID": user_id_no,
+                        "Employee Name": user_name,
+                        Department: department,
+                        Unit: employee_unit_name,
+                        Location: location_name,
+                        "Asset Type": category,
+                        "Serial No": serial_number,
+                        "Assigning Date":
+                          dayjs(assign_date).format("DD-MM-YYYY"),
+                      };
+                    }
+                  )
+                  : []
+              }
+            />
+          </div>
         </div>
         <div>
           <Table
