@@ -99,7 +99,7 @@ const AssetDetails = ({ id }: { id: any }) => {
           },
           {
             key: "12",
-            label: "Location",
+            label: "Sub Unit",
             children: location_name,
           },
           {

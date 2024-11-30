@@ -84,6 +84,19 @@ const DistributedAsset = () => {
                     placeholder="Search..."
                   />
                 </div>
+                <Select
+                  style={{ width: "160px"}}
+                  loading={unitIsLoading}
+                  placeholder="Select Unit Name"
+                  showSearch
+                  optionFilterProp="children"
+                  onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
+                  options={unitOption?.map((unit: any) => ({
+                    value: unit.id,
+                    label: unit.title,
+                  }))}
+                  allowClear
+                />
           <Dropdown
             trigger={["hover"]}
             dropdownRender={() => (
@@ -109,19 +122,7 @@ const DistributedAsset = () => {
                   <Option value="management">Management</Option>
                   <Option value="non-management">Non Management</Option>
                 </Select>
-                <Select
-                  style={{ width: "100%", marginBottom: 8 }}
-                  loading={unitIsLoading}
-                  placeholder="Select Unit Name"
-                  showSearch
-                  optionFilterProp="children"
-                  onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
-                  options={unitOption?.map((unit: any) => ({
-                    value: unit.id,
-                    label: unit.title,
-                  }))}
-                  allowClear
-                />
+                
                 <Select
                   style={{ width: "100%", marginBottom: 8 }}
                   loading={locationIsLoading}

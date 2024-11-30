@@ -318,7 +318,7 @@ const ITSop: React.FC = () => {
                 <span
                   style={{
                     color: "#333",
-                    fontSize: "14px",
+                    fontSize: "13px",
                     textAlign: "center",
                   }}
                 >

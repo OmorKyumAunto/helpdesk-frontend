@@ -102,7 +102,7 @@ const AssetsList = () => {
           >
             <div>
               <Input
-                style={{ width: "100%" }}
+                style={{ width: "160px" }}
                 prefix={<SearchOutlined />}
                 onChange={(e) =>
                   setFilter({ ...filter, key: e.target.value, offset: 0 })
@@ -110,6 +110,29 @@ const AssetsList = () => {
                 placeholder="Search..."
               />
             </div>
+            <Select
+              style={{ width: "160px" , marginBottom: 8}}
+              loading={unitIsLoading}
+              placeholder="Select Unit Name"
+              showSearch
+              optionFilterProp="children"
+              onChange={(e) => {
+                setFilter({ ...filter, unit: e, offset: 0 });
+              }}
+              filterOption={(
+                input: string,
+                option?: { label: string; value: number }
+              ) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={unitOption?.map((unit: any) => ({
+                value: unit.id,
+                label: unit.title,
+              }))}
+              allowClear
+            />
 
 
             <Dropdown
@@ -135,29 +158,7 @@ const AssetsList = () => {
               <Option value="assigned">Assigned</Option>
               <Option value="in_stock">In Stock</Option>
             </Select>
-            <Select
-              style={{ width: "180px" , marginBottom: 8}}
-              loading={unitIsLoading}
-              placeholder="Select Unit Name"
-              showSearch
-              optionFilterProp="children"
-              onChange={(e) => {
-                setFilter({ ...filter, unit: e, offset: 0 });
-              }}
-              filterOption={(
-                input: string,
-                option?: { label: string; value: number }
-              ) =>
-                (option?.label ?? "")
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-              options={unitOption?.map((unit: any) => ({
-                value: unit.id,
-                label: unit.title,
-              }))}
-              allowClear
-            />
+            
             <Select
               style={{ width: "180px" , marginBottom: 8}}
               loading={locationIsLoading}
