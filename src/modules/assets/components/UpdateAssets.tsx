@@ -120,10 +120,11 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
   // };
 
   const onFinish = (data: any) => {
-    const { assign_update, ...values } = data;
+    const { assign_update, price, ...values } = data;
 
     const formattedData: any = {};
     formattedData["assign_update"] = assign_update;
+    formattedData["price"] = price;
     for (const key in values) {
       if (values[key]) {
         if (key === "purchase_date" || key === "assign_date") {

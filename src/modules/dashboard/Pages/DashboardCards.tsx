@@ -10,6 +10,7 @@ import { RootState } from "../../../app/store/store";
 import {
   useGetAllDashboardQuery,
   useGetDashboardAssetDataForAdminQuery,
+  useGetDashboardDistributedAssetDataForAdminQuery,
 } from "../api/dashboardEndPoints";
 import GraphChartApex from "../components/ApexChart";
 import ApexPieChart from "../components/ApexPieChart";
@@ -19,6 +20,8 @@ import TopDash from "../components/TopDash";
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const { data: asset } = useGetDashboardAssetDataForAdminQuery({});
+  const { data: distributedAsset } =
+    useGetDashboardDistributedAssetDataForAdminQuery({});
   const { data } = useGetAllDashboardQuery();
   const { data: profile } = useGetMeQuery();
   const {
@@ -150,7 +153,10 @@ const DashboardCards = () => {
                         marginTop: "4px",
                       }}
                     >
-                      {data?.data?.total_assign_asset || 0}
+                      {role_id === 2
+                        ? distributedAsset?.data?.employee_assign_asset_count ||
+                          0
+                        : data?.data?.total_assign_asset || 0}
                     </p>
                   </div>
                   <div>
