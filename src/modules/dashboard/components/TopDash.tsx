@@ -18,7 +18,6 @@ const TopDash = () => {
   useEffect(() => {
     const currentTime = dayjs();
     const currentHour = currentTime.hour();
-
     let greetingText = "";
     let timeOfDayText = "";
     let iconComponent = null;
@@ -26,12 +25,15 @@ const TopDash = () => {
     if (currentHour >= 5 && currentHour < 12) {
       greetingText = "Good Morning";
       timeOfDayText = "Morning";
-    } else if (currentHour >= 12 && currentHour < 17) {
+    } else if (currentHour >= 12 && currentHour < 18) {
       greetingText = "Good Afternoon";
       timeOfDayText = "Afternoon";
-    } else {
+    } else if (currentHour >= 18 && currentHour < 20) {
       greetingText = "Good Evening";
       timeOfDayText = "Evening";
+    } else {
+      greetingText = "Good Night";
+      timeOfDayText = "Night";
     }
 
     setGreeting(greetingText);
