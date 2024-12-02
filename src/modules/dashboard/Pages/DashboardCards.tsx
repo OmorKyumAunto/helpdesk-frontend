@@ -11,6 +11,7 @@ import {
   useGetAllDashboardQuery,
   useGetDashboardAssetDataForAdminQuery,
   useGetDashboardDistributedAssetDataForAdminQuery,
+  useGetDashboardEmployeeDataForEmployeeQuery,
 } from "../api/dashboardEndPoints";
 import GraphChartApex from "../components/ApexChart";
 import ApexPieChart from "../components/ApexPieChart";
@@ -22,7 +23,9 @@ const DashboardCards = () => {
   const { data: asset } = useGetDashboardAssetDataForAdminQuery({});
   const { data: distributedAsset } =
     useGetDashboardDistributedAssetDataForAdminQuery({});
+  const { data: empData } = useGetDashboardEmployeeDataForEmployeeQuery({});
   const { data } = useGetAllDashboardQuery();
+  console.log(empData);
   const { data: profile } = useGetMeQuery();
   const {
     total_assign_asset,
@@ -216,7 +219,7 @@ const DashboardCards = () => {
                             marginTop: "4px",
                           }}
                         >
-                          {data?.data?.total_employee || 0}
+                          {empData?.data?.total_asset_count || 0}
                         </p>
                       </div>
                       <div>
@@ -260,7 +263,7 @@ const DashboardCards = () => {
                             marginTop: "4px",
                           }}
                         >
-                          {total_assign_asset || 0}
+                          {empData?.data?.total_assign_count || 0}
                         </p>
                       </div>
                       <div>
