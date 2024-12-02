@@ -147,19 +147,7 @@ const AssetsList = () => {
                   border: "1px solid #f2f2f2",
                 }}
               >
-                
                 <Select
-              allowClear
-              style={{ width: "180px" , marginBottom: 8}}
-              onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
-              placeholder="Select Remark Type"
-            >
-              <Option value="">All</Option>
-              <Option value="assigned">Assigned</Option>
-              <Option value="in_stock">In Stock</Option>
-            </Select>
-            
-            <Select
               style={{ width: "180px" , marginBottom: 8}}
               loading={locationIsLoading}
               placeholder="Select Location"
@@ -180,6 +168,20 @@ const AssetsList = () => {
               }))}
               allowClear
             />
+                
+                <Select
+              allowClear
+              style={{ width: "180px" , marginBottom: 8}}
+              onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
+              placeholder="Select Remark Type"
+            >
+              <Option value="">All</Option>
+              <Option value="assigned">Assigned</Option>
+              <Option value="in_stock">In Stock</Option>
+            </Select>
+            
+            
+            
               
                 
               </div>

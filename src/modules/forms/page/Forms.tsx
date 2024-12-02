@@ -2,7 +2,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Card, Col, Input, Row, Typography } from "antd";
 import { saveAs } from "file-saver";
 import { useState } from "react";
-const AssetTemplate = "https://www.dropbox.com/scl/fi/iykaktg0604qbi1jx6ubs/Asset-Template.xlsx?rlkey=ogtg8gxmyehbz04rqrjivhzk6&st=cwsb0jv2&raw=1";
+const AssetTemplate = "https://www.dropbox.com/scl/fi/zm1mpibm9zadnneku8gap/Asset-Template.xlsx?rlkey=3i7p6yf51xnr36r71sdtvvxhw&st=a24wik45&raw=1";
 const CsTemplate = "https://www.dropbox.com/scl/fi/evr2hkeyp8d4ynltvivki/cs-template.xlsx?rlkey=qwk6rzn1owtkkfsxkwm0bf6uk&st=zful9ih9&raw=1";
 const DemandSlip = "https://www.dropbox.com/scl/fi/j9j91q0757s6px9xm3ymr/demand-slip-bandhan.xlsx?rlkey=f8uzmsciqvwnd022jmuz75ptd&st=54578r5z&raw=1";
 const Emailrequisition = "https://www.dropbox.com/scl/fi/fpdg51xtrdbo50getei63/EMAIL-REQUISITION-FORM.pdf?rlkey=akt9zfq4ua1sfqckj4c9uyo1g&st=g7ubo668&raw=1";
