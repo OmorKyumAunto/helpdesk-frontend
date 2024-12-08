@@ -134,11 +134,13 @@ const CreateEmployee = () => {
               </Col>
               <Col xs={24} sm={24} md={12}>
                 <Form.Item
-                  label="Unit Name"
+                  label="Payroll Unit"
                   name="unit_name"
                   rules={[{ required: true, message: "Please Select Unit" }]}
                 >
                   <Select placeholder="Select Unit Name">
+                  <Option value="FFL2">FFL2</Option>
+                  <Option value="Mawna Fashions Ltd">Mawna Fashions Ltd</Option>
                     <Option value="JTML">JTML</Option>
                     <Option value="DIPL">DIPL</Option>
                     <Option value="Corporate Office">Corporate Office</Option>
@@ -147,6 +149,8 @@ const CreateEmployee = () => {
                     <Option value="EUDB">EUDB</Option>
                     <Option value="Thanbee Complex">Thanbee Complex</Option>
                     <Option value="Flamingo2">Flamingo2</Option>
+                    <Option value="Matin Complex">Matin Complex</Option>
+                    <Option value="Mymun Complex">Mymun Complex</Option>
                   </Select>
                 </Form.Item>
               </Col>
