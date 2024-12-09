@@ -7,7 +7,7 @@ import {
 import { setLogout } from "../features/userSlice";
 import { RootState } from "../store/store";
 
-const baseURL = "http://175.29.126.123:4000/api/v1";
+const baseURL = "http://localhost:3003/api/v1";
 
 export const socket_url = "https://test.socket.com";
 
