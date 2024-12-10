@@ -25,6 +25,8 @@ import RequireUser from "./utils/requireUser";
 import LocationList from "./modules/location/pages/LocationList";
 import ITSop from "./modules/sop/page/ITSop";
 import CategoryList from "./modules/Category/pages/CategoryList";
+import AssignCategoryList from "./modules/assignCategory/pages/AssignCategoryList";
+import TicketMain from "./modules/ticket/page/TicketMain";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -96,8 +98,16 @@ export const routers = createBrowserRouter([
         element: <AdminList />,
       },
       {
+        path: "/tickets/ticket-list",
+        element: <TicketMain />,
+      },
+      {
         path: "/tickets/category",
         element: <CategoryList />,
+      },
+      {
+        path: "/tickets/assign-category",
+        element: <AssignCategoryList />,
       },
       {
         path: "/ctc/list",

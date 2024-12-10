@@ -1,20 +1,11 @@
-import { Card, Input, Select } from "antd";
+import { Card, Select } from "antd";
 import { Table } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { DistributedAssetsTableColumns } from "../utils/DistributedTableColumns";
-import {
-  useGetAllDistributedAssetQuery,
-  useGetEmployeeAllDistributedAssetQuery,
-  useGetOverAllDistributedAssetQuery,
-} from "../api/assetsEndPoint";
-import { generatePagination } from "../../../common/TablePagination copy";
-import { SearchOutlined } from "@ant-design/icons";
-import PDFDownload from "../../../common/PDFDownload/PDFDownload";
-import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
-import dayjs from "dayjs";
-import { EmployeeDistributedAssetsTableColumns } from "../utils/EmployeeDistributedTableColumns";
 import { useGetMeQuery } from "../../../app/api/userApi";
+import { generatePagination } from "../../../common/TablePagination copy";
+import { useGetEmployeeAllDistributedAssetQuery } from "../api/assetsEndPoint";
+import { EmployeeDistributedAssetsTableColumns } from "../utils/EmployeeDistributedTableColumns";
 const { Option } = Select;
 const EmployeeDistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -47,7 +38,6 @@ const EmployeeDistributedAsset = () => {
     useGetEmployeeAllDistributedAssetQuery({
       ...filter,
     });
-  //   const { data: allDistributedAsset } = useGetEmployeeAllDistributedAssetQuery();
   return (
     <div>
       <Card
@@ -65,123 +55,7 @@ const EmployeeDistributedAsset = () => {
             gap: 8,
             marginBottom: "12px",
           }}
-        >
-          {/* <div>
-            <Input
-              prefix={<SearchOutlined />}
-              onChange={(e) =>
-                setFilter({ ...filter, key: e.target.value, offset: 0 })
-              }
-              placeholder="Search..."
-            />
-          </div>
-          <Select
-            style={{ width: "180px" }}
-            onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
-            placeholder="Select Unit Name"
-            allowClear
-          >
-            <Option value="JTML">JTML</Option>
-            <Option value="DIPL">DIPL</Option>
-            <Option value="Corporate Office">Corporate Office</Option>
-          </Select>
-          <Select
-            placeholder="Select Asset Type"
-            style={{ width: "180px" }}
-            onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
-            allowClear
-          >
-            <Option value="Laptop">Laptop</Option>
-            <Option value="Desktop">Desktop</Option>
-            <Option value="Printer">Printer</Option>
-            <Option value="Accessories">Accessories</Option>
-          </Select>
-          <PDFDownload
-            PDFFileName="distributed_asset_list"
-            fileHeader="Distributed ASSET LIST"
-            PDFHeader={[
-              "No",
-              "Employee ID",
-              "Employee Name",
-              "Department",
-              "Unit",
-              "Asset Type",
-              "Serial No",
-              "Assigning Date",
-            ]}
-            PDFData={
-              allDistributedAsset?.data?.length
-                ? allDistributedAsset?.data?.map(
-                    (
-                      {
-                        employee_id_no,
-                        employee_name,
-                        employee_department,
-                        category,
-                        assign_date,
-                        serial_number,
-                        employee_unit,
-                      }: any,
-                      index
-                    ) => {
-                      const data = {
-                        No: index + 1,
-                        "Employee ID": employee_id_no,
-                        "Employee Name": employee_name,
-                        Department: employee_department,
-                        Unit: employee_unit,
-                        "Asset Type": category,
-                        "Serial No": serial_number,
-                        "Assigning Date":
-                          dayjs(assign_date).format("DD-MM-YYYY"),
-                      };
-                      return data;
-                    }
-                  )
-                : []
-            }
-          />
-
-          <ExcelDownload
-            excelName={"distributed_asset_list"}
-            excelTableHead={[
-              "Employee ID",
-              "Employee Name",
-              "Department",
-              "Unit",
-              "Asset Type",
-              "Serial No",
-              "Assigning Date",
-            ]}
-            excelData={
-              allDistributedAsset?.data?.length
-                ? allDistributedAsset?.data?.map(
-                    ({
-                      employee_id_no,
-                      employee_name,
-                      employee_department,
-                      category,
-                      assign_date,
-                      serial_number,
-                      employee_unit,
-                    }: any) => {
-                      const data = {
-                        "Employee ID": employee_id_no,
-                        "Employee Name": employee_name,
-                        Department: employee_department,
-                        Unit: employee_unit,
-                        "Asset Type": category,
-                        "Serial No": serial_number,
-                        "Assigning Date":
-                          dayjs(assign_date).format("DD-MM-YYYY"),
-                      };
-                      return data;
-                    }
-                  )
-                : []
-            }
-          /> */}
-        </div>
+        ></div>
         <div>
           <Table
             rowKey={"id"}

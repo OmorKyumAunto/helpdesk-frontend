@@ -77,6 +77,8 @@ export const api = createApi({
     "license",
     "Location",
     "category",
+    "assign-category",
+    "ticket",
   ],
 });
 

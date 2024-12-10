@@ -74,7 +74,7 @@ export const sideBarItems = (roleId: number) => {
             icon: <BsTicketDetailed size={20} />,
             children: [
               {
-                label: <Link to="/tickets/ticket-list">Test</Link>,
+                label: <Link to="/tickets/ticket-list">Ticket</Link>,
                 key: "/tickets/ticket-list",
                 icon: <FaRegListAlt size={16} />,
               },
@@ -88,13 +88,25 @@ export const sideBarItems = (roleId: number) => {
                     key: "/tickets/category",
                     icon: <FaRegListAlt size={16} />,
                   },
+                  {
+                    label: (
+                      <Link to="/tickets/assign-category">Assign Category</Link>
+                    ),
+                    key: "/tickets/assign-category",
+                    icon: <FaRegListAlt size={16} />,
+                  },
                 ],
               },
             ],
           },
         ]
-      : []),
-
+      : [
+          {
+            label: <Link to="/tickets/ticket-list">Ticket</Link>,
+            key: "/tickets/ticket-list",
+            icon: <FaRegListAlt size={16} />,
+          },
+        ]),
     ...(roleId !== 3
       ? [
           {
