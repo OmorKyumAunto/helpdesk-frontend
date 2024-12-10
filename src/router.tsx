@@ -24,6 +24,7 @@ import ProtectedRoute from "./utils/ProtectRoute";
 import RequireUser from "./utils/requireUser";
 import LocationList from "./modules/location/pages/LocationList";
 import ITSop from "./modules/sop/page/ITSop";
+import CategoryList from "./modules/Category/pages/CategoryList";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -93,6 +94,10 @@ export const routers = createBrowserRouter([
       {
         path: "/admin/list",
         element: <AdminList />,
+      },
+      {
+        path: "/tickets/category",
+        element: <CategoryList />,
       },
       {
         path: "/ctc/list",

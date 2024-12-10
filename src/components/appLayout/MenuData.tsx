@@ -12,6 +12,8 @@ import {
 import { TbLicense, TbUserHexagon } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { IMenuData } from "../../../Types/MenuData";
+import { BsTicketDetailed } from "react-icons/bs";
+import { GrConfigure } from "react-icons/gr";
 
 export const sideBarItems = (roleId: number) => {
   let menuData: IMenuData[] = [
@@ -65,6 +67,30 @@ export const sideBarItems = (roleId: number) => {
             label: <Link to="/admin/list">Admin Panel</Link>,
             key: "/admin/list",
             icon: <LiaUsersCogSolid size={20} />,
+          },
+          {
+            label: "Tickets",
+            key: "tickets",
+            icon: <BsTicketDetailed size={20} />,
+            children: [
+              {
+                label: <Link to="/tickets/ticket-list">Test</Link>,
+                key: "/tickets/ticket-list",
+                icon: <FaRegListAlt size={16} />,
+              },
+              {
+                label: "configuration",
+                key: "tickets/configuration",
+                icon: <GrConfigure size={20} />,
+                children: [
+                  {
+                    label: <Link to="/tickets/category">Category</Link>,
+                    key: "/tickets/category",
+                    icon: <FaRegListAlt size={16} />,
+                  },
+                ],
+              },
+            ],
           },
         ]
       : []),
