@@ -2,11 +2,11 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Card, Col, Input, Row, Typography } from "antd";
 import { saveAs } from "file-saver";
 import { useState } from "react";
-const AssetTemplate = "https://www.dropbox.com/scl/fi/zm1mpibm9zadnneku8gap/Asset-Template.xlsx?rlkey=3i7p6yf51xnr36r71sdtvvxhw&st=a24wik45&raw=1";
+const AssetTemplate = "https://www.dropbox.com/scl/fi/u0587ahdf260wux1y21et/Asset-Upload-Template.xlsx?rlkey=910wiu065jwvtf2q7kmchiroh&st=r9qjsow7&raw=1";
 const CsTemplate = "https://www.dropbox.com/scl/fi/evr2hkeyp8d4ynltvivki/cs-template.xlsx?rlkey=qwk6rzn1owtkkfsxkwm0bf6uk&st=zful9ih9&raw=1";
 const DemandSlip = "https://www.dropbox.com/scl/fi/j9j91q0757s6px9xm3ymr/demand-slip-bandhan.xlsx?rlkey=f8uzmsciqvwnd022jmuz75ptd&st=54578r5z&raw=1";
 const Emailrequisition = "https://www.dropbox.com/scl/fi/fpdg51xtrdbo50getei63/EMAIL-REQUISITION-FORM.pdf?rlkey=akt9zfq4ua1sfqckj4c9uyo1g&st=g7ubo668&raw=1";
-const EmployeeTemplate = "https://www.dropbox.com/scl/fi/n4dgm1d4bzqilc0dv7bmq/Employee-Template.xlsx?rlkey=kuwrg94j42jy021c0718nim2e&st=ph8qde68&raw=1";
+const EmployeeTemplate = "https://www.dropbox.com/scl/fi/y7d6361qlvbcrsdx64t3y/Employee-Upload-Template.xlsx?rlkey=oxkjp8q47xkr98ts49koil4m8&st=2xtm4u25&raw=1"
 const HardwareRequisition = "https://www.dropbox.com/scl/fi/w8kiugw0k3g74rcowx9xg/HARDWARE-REQUISITION-FORM.pdf?rlkey=pfdamk4rth8zbh60zvuwnixo2&st=0q9mjt3e&raw=1";
 const MonthlyAchivements = "https://www.dropbox.com/scl/fi/r2j3t228ptdrwa4hmgnoz/monthly-achivement-template.pptx?rlkey=oxgdhlfyhdkhr03t23hgh3vj3&st=74wte32s&raw=1";
 const StationaryReq = "https://www.dropbox.com/scl/fi/rju8bhgl70sukkt75objf/stationary-requisition.xlsx?rlkey=3d6aa0e6f4b45bup28py13n27&st=2rnbhcj2&raw=1";
@@ -42,12 +42,12 @@ const Forms = () => {
       file: MonthlyAchivements,
     },
     {
-      title: "Employee Template",
+      title: "Employee Upload Template",
       description: "Template for Employee Upload",
       file: EmployeeTemplate,
     },
     {
-      title: "Asset Template",
+      title: "Asset Upload Template",
       description: "Template for Asset Upload",
       file: AssetTemplate,
     },
