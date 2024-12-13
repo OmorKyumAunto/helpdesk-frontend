@@ -18,3 +18,32 @@ export interface IRaiseTicketList {
   asset_name: string;
   asset_category: string;
 }
+export interface IAdminTicketList {
+  user_id: number;
+  employee_id: string;
+  name: string;
+  email: string;
+  asset_unit_id: number;
+  asset_unit_title: string;
+  ticket_category_id: number;
+  ticket_category_title: string;
+  ticket_table_id: number;
+  asset_id: number;
+  ticket_id: string;
+  priority: string;
+  subject: string;
+  cc: string;
+  description: string;
+  attachment: string;
+  ticket_status: string;
+  ticket_created_by: number;
+  ticket_created_at: string;
+  ticket_updated_at: string;
+  asset_name: string;
+  asset_category: string;
+  asset_serial_number: string;
+  asset_purchase_date: string;
+  ticket_created_employee_id: string;
+  ticket_created_employee_name: string;
+  ticket_created_employee_email: string;
+}

@@ -1,5 +1,5 @@
-import { FilterOutlined,SearchOutlined } from "@ant-design/icons";
-import { Card, Button,Dropdown,Input, Select, Table } from "antd";
+import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import { Card, Button, Dropdown, Input, Select, Table } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -111,7 +111,7 @@ const AssetsList = () => {
               />
             </div>
             <Select
-              style={{ width: "160px" , marginBottom: 8}}
+              style={{ width: "160px", marginBottom: 8 }}
               loading={unitIsLoading}
               placeholder="Select Unit Name"
               showSearch
@@ -133,68 +133,59 @@ const AssetsList = () => {
               }))}
               allowClear
             />
-
-
             <Dropdown
-            trigger={["hover"]}
-            dropdownRender={() => (
-              <div
-                style={{
-                  padding: 16,
-                  background: "#fff",
-                  borderRadius: 8,
-                  width: "190px",
-                  border: "1px solid #f2f2f2",
-                }}
-              >
-                <Select
-              style={{ width: "180px" , marginBottom: 8}}
-              loading={locationIsLoading}
-              placeholder="Select Location"
-              showSearch
-              optionFilterProp="children"
-              onChange={(e) => setFilter({ ...filter, location: e, offset: 0 })}
-              filterOption={(
-                input: string,
-                option?: { label: string; value: number }
-              ) =>
-                (option?.label ?? "")
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-              options={locationOption?.map((location: any) => ({
-                value: location.id,
-                label: location.location,
-              }))}
-              allowClear
-            />
-                
-                <Select
-              allowClear
-              style={{ width: "180px" , marginBottom: 8}}
-              onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
-              placeholder="Select Remark Type"
+              trigger={["hover"]}
+              dropdownRender={() => (
+                <div
+                  style={{
+                    padding: 16,
+                    background: "#fff",
+                    borderRadius: 8,
+                    width: "190px",
+                    border: "1px solid #f2f2f2",
+                  }}
+                >
+                  <Select
+                    style={{ width: "180px", marginBottom: 8 }}
+                    loading={locationIsLoading}
+                    placeholder="Select Location"
+                    showSearch
+                    optionFilterProp="children"
+                    onChange={(e) =>
+                      setFilter({ ...filter, location: e, offset: 0 })
+                    }
+                    filterOption={(
+                      input: string,
+                      option?: { label: string; value: number }
+                    ) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    options={locationOption?.map((location: any) => ({
+                      value: location.id,
+                      label: location.location,
+                    }))}
+                    allowClear
+                  />
+
+                  <Select
+                    allowClear
+                    style={{ width: "180px", marginBottom: 8 }}
+                    onChange={(e) =>
+                      setFilter({ ...filter, type: e, offset: 0 })
+                    }
+                    placeholder="Select Remark Type"
+                  >
+                    <Option value="">All</Option>
+                    <Option value="assigned">Assigned</Option>
+                    <Option value="in_stock">In Stock</Option>
+                  </Select>
+                </div>
+              )}
             >
-              <Option value="">All</Option>
-              <Option value="assigned">Assigned</Option>
-              <Option value="in_stock">In Stock</Option>
-            </Select>
-            
-            
-            
-              
-                
-              </div>
-            )}
-          >
-            <Button icon={<FilterOutlined />}>Filters</Button>
-          </Dropdown>
-
-
-
-
-           
-
+              <Button icon={<FilterOutlined />}>Filters</Button>
+            </Dropdown>
             <ExcelDownload
               excelName={"asset-list"}
               excelTableHead={[

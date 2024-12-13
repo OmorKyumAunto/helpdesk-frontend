@@ -11,15 +11,25 @@ import {
   Select,
   Space,
 } from "antd";
-import { useGetRaiseTicketUserWiseQuery } from "../api/ticketEndpoint";
-import { IRaiseTicketList } from "../types/ticketTypes";
-import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  useGetRaiseTicketAdminWiseQuery,
+  useGetRaiseTicketSuperAdminWiseQuery,
+} from "../api/ticketEndpoint";
+import { IAdminTicketList, IRaiseTicketList } from "../types/ticketTypes";
+import {
+  EditOutlined,
+  FilterOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import UpdateTicketStatus from "../components/UpdateTicketStatus";
 
 interface CommentsState {
   [key: string]: string[];
 }
 const { Option } = Select;
-const RaiseTicketList: React.FC = () => {
+const SuperAdminTicketList: React.FC = () => {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [comments, setComments] = useState<CommentsState>({});
   const [newComment, setNewComment] = useState<string>("");
@@ -32,7 +42,8 @@ const RaiseTicketList: React.FC = () => {
     priority: "",
     status: "",
   });
-  const { data, isLoading } = useGetRaiseTicketUserWiseQuery({ ...filter });
+  const dispatch = useDispatch();
+  const { data, isLoading } = useGetRaiseTicketSuperAdminWiseQuery({});
   const handleExpand = (id: number): void => {
     setExpandedCard(expandedCard === id ? null : id);
   };
@@ -63,60 +74,60 @@ const RaiseTicketList: React.FC = () => {
     <Card
       loading={isLoading}
       style={{ width: "100%", padding: "1rem", backgroundColor: "#f5f5f5" }}
-      title="Ticket List"
-      extra={
-        <Space>
-          <Input
-            prefix={<SearchOutlined />}
-            style={{ width: "180px" }}
-            onChange={(e) => setFilter({ ...filter, key: e.target.value })}
-            placeholder="Search..."
-          />
-          <Dropdown
-            trigger={["hover"]}
-            dropdownRender={() => (
-              <div
-                style={{
-                  padding: 16,
-                  background: "#fff",
-                  borderRadius: 8,
-                  width: "190px",
-                  border: "1px solid #f2f2f2",
-                }}
-              >
-                <Select
-                  allowClear
-                  style={{ width: "180px", marginBottom: 8 }}
-                  onChange={(e) => setFilter({ ...filter, status: e })}
-                  placeholder="Select Status"
-                >
-                  <Option value="">All</Option>
-                  <Option value="solved">SOLVED</Option>
-                  <Option value="unsolved">UNSOLVED</Option>
-                  <Option value="forward">FORWARD</Option>
-                </Select>
-                <Select
-                  allowClear
-                  style={{ width: "180px", marginBottom: 8 }}
-                  onChange={(e) => setFilter({ ...filter, priority: e })}
-                  placeholder="Select Prioritay"
-                >
-                  <Option value="">All</Option>
-                  <Option value="low">Low</Option>
-                  <Option value="medium">Medium</Option>
-                  <Option value="high">High</Option>
-                </Select>
-              </div>
-            )}
-          >
-            <Button icon={<FilterOutlined />}>Filters</Button>
-          </Dropdown>
-        </Space>
-      }
+      title="Super Admin Ticket List"
+      //   extra={
+      //     <Space>
+      //       <Input
+      //         prefix={<SearchOutlined />}
+      //         style={{ width: "180px" }}
+      //         onChange={(e) => setFilter({ ...filter, key: e.target.value })}
+      //         placeholder="Search..."
+      //       />
+      //       <Dropdown
+      //         trigger={["hover"]}
+      //         dropdownRender={() => (
+      //           <div
+      //             style={{
+      //               padding: 16,
+      //               background: "#fff",
+      //               borderRadius: 8,
+      //               width: "190px",
+      //               border: "1px solid #f2f2f2",
+      //             }}
+      //           >
+      //             <Select
+      //               allowClear
+      //               style={{ width: "180px", marginBottom: 8 }}
+      //               onChange={(e) => setFilter({ ...filter, status: e })}
+      //               placeholder="Select Status"
+      //             >
+      //               <Option value="">All</Option>
+      //               <Option value="solved">SOLVED</Option>
+      //               <Option value="unsolved">UNSOLVED</Option>
+      //               <Option value="forward">FORWARD</Option>
+      //             </Select>
+      //             <Select
+      //               allowClear
+      //               style={{ width: "180px", marginBottom: 8 }}
+      //               onChange={(e) => setFilter({ ...filter, priority: e })}
+      //               placeholder="Select Prioritay"
+      //             >
+      //               <Option value="">All</Option>
+      //               <Option value="low">Low</Option>
+      //               <Option value="medium">Medium</Option>
+      //               <Option value="high">High</Option>
+      //             </Select>
+      //           </div>
+      //         )}
+      //       >
+      //         <Button icon={<FilterOutlined />}>Filters</Button>
+      //       </Dropdown>
+      //     </Space>
+      //   }
     >
-      {data?.data?.map((ticket: IRaiseTicketList, index: number) => (
+      {data?.data?.map((ticket: IAdminTicketList, index: number) => (
         <Card
-          key={ticket.id}
+          key={ticket.user_id}
           style={{
             marginBottom: "1rem",
             borderRadius: "12px",
@@ -127,7 +138,7 @@ const RaiseTicketList: React.FC = () => {
             backgroundColor: "#fff",
           }}
           hoverable
-          onClick={(e) => handleCardClick(e, ticket.id)}
+          onClick={(e) => handleCardClick(e, ticket.user_id)}
         >
           <div
             style={{
@@ -142,15 +153,32 @@ const RaiseTicketList: React.FC = () => {
               }`}</h2>
             </div>
             <div>
-              {ticket.ticket_status === "unsolved" && (
-                <Tag color="error">UNSOLVED</Tag>
-              )}
-              {ticket.ticket_status === "solved" && (
-                <Tag color="success">SOLVED</Tag>
-              )}
-              {ticket.ticket_status === "forward" && (
-                <Tag color="processing">FORWARD</Tag>
-              )}
+              <Space>
+                {ticket.ticket_status === "unsolved" && (
+                  <Tag color="error">UNSOLVED</Tag>
+                )}
+                {ticket.ticket_status === "solved" && (
+                  <Tag color="success">SOLVED</Tag>
+                )}
+                {ticket.ticket_status === "forward" && (
+                  <Tag color="processing">FORWARD</Tag>
+                )}
+                {/* <Button
+                  size="small"
+                  type="primary"
+                  onClick={() => {
+                    dispatch(
+                      setCommonModal({
+                        title: "Update Ticket Status",
+                        content: <UpdateTicketStatus single={ticket} />,
+                        show: true,
+                      })
+                    );
+                  }}
+                >
+                  <EditOutlined />
+                </Button> */}
+              </Space>
             </div>
           </div>
           <Divider style={{ margin: "6px 0px 12px" }} />
@@ -224,7 +252,7 @@ const RaiseTicketList: React.FC = () => {
                 }}
               >
                 <p style={{ color: "gray" }}>Category</p>
-                <p>{ticket.category_name}</p>
+                <p>{ticket.ticket_category_title}</p>
               </div>
             </Col>
             <Col xs={12} sm={12} md={8} lg={5}>
@@ -236,12 +264,12 @@ const RaiseTicketList: React.FC = () => {
                 }}
               >
                 <p style={{ color: "gray" }}>Unit Name</p>
-                <p>{ticket.unit_name}</p>
+                <p>{ticket.asset_unit_title}</p>
               </div>
             </Col>
           </Row>
           <div>
-            {expandedCard === ticket.id && (
+            {expandedCard === ticket.user_id && (
               <div
                 style={{
                   marginTop: "1rem",
@@ -257,7 +285,7 @@ const RaiseTicketList: React.FC = () => {
                 <div style={{ marginTop: "1rem" }}>
                   <strong>Comments:</strong>
                   <div style={{ marginBottom: "1rem", color: "#666" }}>
-                    {(comments[ticket.id] || []).map((comment, index) => (
+                    {(comments[ticket.user_id] || []).map((comment, index) => (
                       <p
                         key={index}
                         style={{
@@ -281,7 +309,7 @@ const RaiseTicketList: React.FC = () => {
                     type="primary"
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent card click
-                      handleAddComment(ticket.id);
+                      handleAddComment(ticket.user_id);
                     }}
                   >
                     Add Comment
@@ -296,4 +324,4 @@ const RaiseTicketList: React.FC = () => {
   );
 };
 
-export default RaiseTicketList;
+export default SuperAdminTicketList;

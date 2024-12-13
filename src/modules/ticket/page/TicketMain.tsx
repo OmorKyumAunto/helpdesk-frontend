@@ -5,6 +5,8 @@ import RaiseTicketForm from "./RaiseTicket";
 import { DashboardOutlined } from "@ant-design/icons";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import RaiseTicketList from "./RaiseTicketList";
+import SuperAdminTicketList from "./SuperAdminTicketList";
+import AdminTicketList from "./AdminTicketList";
 
 const onChange = (key: string) => {
   console.log(key);
@@ -25,7 +27,7 @@ const TicketMain: React.FC = () => {
           {
             key: "2",
             label: "All Tickets",
-            children: "tickets content",
+            children: <SuperAdminTicketList />,
           },
           {
             key: "3",
@@ -44,7 +46,7 @@ const TicketMain: React.FC = () => {
           {
             key: "5",
             label: "Ticket",
-            children: "ticketssadfsdfsadfsa content",
+            children: <AdminTicketList />,
           },
         ]
       : []),
