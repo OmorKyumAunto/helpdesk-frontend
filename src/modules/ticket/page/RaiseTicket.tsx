@@ -15,6 +15,8 @@ import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetCategoryActiveListQuery } from "../../Category/api/categoryEndPoint";
 import { useGetEmployeeAllDistributedAssetQuery } from "../../assets/api/assetsEndPoint";
 import { useCreateRaiseTicketMutation } from "../api/ticketEndpoint";
+import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
+import { IEmployee } from "../../employee/types/employeeTypes";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -24,6 +26,8 @@ const RaiseTicketForm = () => {
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
+  const { data: allEmployee, isLoading: empLoading } =
+    useGetOverallEmployeesQuery();
   const { data, isLoading } = useGetEmployeeAllDistributedAssetQuery({});
   const { data: categoryData, isLoading: categoryLoading } =
     useGetCategoryActiveListQuery({});
@@ -176,7 +180,25 @@ const RaiseTicketForm = () => {
               </Form.Item>
 
               <Form.Item label="CC" name="cc">
-                <Input placeholder="Enter CC" />
+                <Select
+                  loading={empLoading}
+                  placeholder="Select Employee"
+                  showSearch
+                  optionFilterProp="children"
+                  filterOption={(
+                    input: string,
+                    option?: { label: string; value: number }
+                  ) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={allEmployee?.data?.map((item: IEmployee) => ({
+                    value: item.id,
+                    label: `${item.name} (${item.email})`,
+                  }))}
+                  allowClear
+                />
               </Form.Item>
 
               <Form.Item

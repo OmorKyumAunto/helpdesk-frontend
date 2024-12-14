@@ -9,11 +9,13 @@ export interface IRaiseTicketList {
   attachment: string;
   status: number;
   ticket_status: string;
+  ticket_id: string;
   created_by: number;
   created_at: string;
   updated_at: string;
   asset_id: number;
   unit_name: string;
+  serial_number: string;
   category_name: string;
   asset_name: string;
   asset_category: string;
@@ -23,6 +25,7 @@ export interface IAdminTicketList {
   employee_id: string;
   name: string;
   email: string;
+  serial_number: string;
   asset_unit_id: number;
   asset_unit_title: string;
   ticket_category_id: number;

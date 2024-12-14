@@ -137,7 +137,7 @@ const RaiseTicketList: React.FC = () => {
             }}
           >
             <div>
-              <h2 style={{ color: "#1890ff" }}>{`#${index + 1} - ${
+              <h2 style={{ color: "#1890ff" }}>{`#${ticket.ticket_id + 1} - ${
                 ticket.subject
               }`}</h2>
             </div>
@@ -155,7 +155,7 @@ const RaiseTicketList: React.FC = () => {
           </div>
           <Divider style={{ margin: "6px 0px 12px" }} />
           <Row gutter={12}>
-            <Col xs={12} sm={12} md={8} lg={5}>
+            <Col xs={12} sm={12} md={8} lg={4}>
               <div
                 style={{
                   textAlign: "left",
@@ -164,10 +164,22 @@ const RaiseTicketList: React.FC = () => {
                 }}
               >
                 <p style={{ color: "gray" }}>Asset</p>
-                <p>{ticket.asset_name}</p>
+                <p>{ticket.asset_name || "N/A"}</p>
               </div>
             </Col>
-            <Col xs={12} sm={12} md={8} lg={5}>
+            <Col xs={12} sm={12} md={8} lg={4}>
+              <div
+                style={{
+                  textAlign: "left",
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                }}
+              >
+                <p style={{ color: "gray" }}>Serial Number</p>
+                <p>{ticket.serial_number || "N/A"}</p>
+              </div>
+            </Col>
+            <Col xs={12} sm={12} md={8} lg={4}>
               <div
                 style={{
                   textAlign: "left",
@@ -176,7 +188,7 @@ const RaiseTicketList: React.FC = () => {
                 }}
               >
                 <p style={{ color: "gray" }}>Asset Category</p>
-                <p>{ticket.asset_category}</p>
+                <p>{ticket.asset_category || "N/A"}</p>
               </div>
             </Col>
             <Col xs={12} sm={12} md={8} lg={4}>
@@ -215,7 +227,7 @@ const RaiseTicketList: React.FC = () => {
                 </Tag>
               </div>
             </Col> */}
-            <Col xs={12} sm={12} md={8} lg={5}>
+            <Col xs={12} sm={12} md={8} lg={4}>
               <div
                 style={{
                   textAlign: "left",
@@ -227,7 +239,7 @@ const RaiseTicketList: React.FC = () => {
                 <p>{ticket.category_name}</p>
               </div>
             </Col>
-            <Col xs={12} sm={12} md={8} lg={5}>
+            <Col xs={12} sm={12} md={8} lg={4}>
               <div
                 style={{
                   textAlign: "left",

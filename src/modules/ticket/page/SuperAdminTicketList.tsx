@@ -127,7 +127,7 @@ const SuperAdminTicketList: React.FC = () => {
     >
       {data?.data?.map((ticket: IAdminTicketList, index: number) => (
         <Card
-          key={ticket.user_id}
+          key={ticket.ticket_table_id}
           style={{
             marginBottom: "1rem",
             borderRadius: "12px",
@@ -138,7 +138,7 @@ const SuperAdminTicketList: React.FC = () => {
             backgroundColor: "#fff",
           }}
           hoverable
-          onClick={(e) => handleCardClick(e, ticket.user_id)}
+          onClick={(e) => handleCardClick(e, ticket.ticket_table_id)}
         >
           <div
             style={{
@@ -148,7 +148,7 @@ const SuperAdminTicketList: React.FC = () => {
             }}
           >
             <div>
-              <h2 style={{ color: "#1890ff" }}>{`#${index + 1} - ${
+              <h2 style={{ color: "#1890ff" }}>{`#${ticket.ticket_id + 1} - ${
                 ticket.subject
               }`}</h2>
             </div>
@@ -183,7 +183,7 @@ const SuperAdminTicketList: React.FC = () => {
           </div>
           <Divider style={{ margin: "6px 0px 12px" }} />
           <Row gutter={12}>
-            <Col xs={12} sm={12} md={8} lg={5}>
+            <Col xs={12} sm={12} md={8} lg={4}>
               <div
                 style={{
                   textAlign: "left",
@@ -192,10 +192,22 @@ const SuperAdminTicketList: React.FC = () => {
                 }}
               >
                 <p style={{ color: "gray" }}>Asset</p>
-                <p>{ticket.asset_name}</p>
+                <p>{ticket.asset_name || "N/A"}</p>
               </div>
             </Col>
-            <Col xs={12} sm={12} md={8} lg={5}>
+            <Col xs={12} sm={12} md={8} lg={4}>
+              <div
+                style={{
+                  textAlign: "left",
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                }}
+              >
+                <p style={{ color: "gray" }}>Serial Number</p>
+                <p>{ticket.serial_number || "N/A"}</p>
+              </div>
+            </Col>
+            <Col xs={12} sm={12} md={8} lg={4}>
               <div
                 style={{
                   textAlign: "left",
@@ -204,7 +216,7 @@ const SuperAdminTicketList: React.FC = () => {
                 }}
               >
                 <p style={{ color: "gray" }}>Asset Category</p>
-                <p>{ticket.asset_category}</p>
+                <p>{ticket.asset_category || "N/A"}</p>
               </div>
             </Col>
             <Col xs={12} sm={12} md={8} lg={4}>
@@ -243,7 +255,7 @@ const SuperAdminTicketList: React.FC = () => {
                 </Tag>
               </div>
             </Col> */}
-            <Col xs={12} sm={12} md={8} lg={5}>
+            <Col xs={12} sm={12} md={8} lg={4}>
               <div
                 style={{
                   textAlign: "left",
@@ -255,7 +267,7 @@ const SuperAdminTicketList: React.FC = () => {
                 <p>{ticket.ticket_category_title}</p>
               </div>
             </Col>
-            <Col xs={12} sm={12} md={8} lg={5}>
+            <Col xs={12} sm={12} md={8} lg={4}>
               <div
                 style={{
                   textAlign: "left",
@@ -269,7 +281,7 @@ const SuperAdminTicketList: React.FC = () => {
             </Col>
           </Row>
           <div>
-            {expandedCard === ticket.user_id && (
+            {expandedCard === ticket.ticket_table_id && (
               <div
                 style={{
                   marginTop: "1rem",
@@ -285,17 +297,19 @@ const SuperAdminTicketList: React.FC = () => {
                 <div style={{ marginTop: "1rem" }}>
                   <strong>Comments:</strong>
                   <div style={{ marginBottom: "1rem", color: "#666" }}>
-                    {(comments[ticket.user_id] || []).map((comment, index) => (
-                      <p
-                        key={index}
-                        style={{
-                          marginBottom: "0.5rem",
-                          fontStyle: "italic",
-                        }}
-                      >
-                        - {comment}
-                      </p>
-                    ))}
+                    {(comments[ticket.ticket_table_id] || []).map(
+                      (comment, index) => (
+                        <p
+                          key={index}
+                          style={{
+                            marginBottom: "0.5rem",
+                            fontStyle: "italic",
+                          }}
+                        >
+                          - {comment}
+                        </p>
+                      )
+                    )}
                   </div>
                   <Input.TextArea
                     rows={2}
@@ -309,7 +323,7 @@ const SuperAdminTicketList: React.FC = () => {
                     type="primary"
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent card click
-                      handleAddComment(ticket.user_id);
+                      handleAddComment(ticket.ticket_table_id);
                     }}
                   >
                     Add Comment
