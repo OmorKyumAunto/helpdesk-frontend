@@ -10,7 +10,7 @@ import { RootState } from "../store/store";
 const baseURL = "http://localhost:3003/api/v1";
 
 export const socket_url = "https://test.socket.com";
-
+export const imageURLNew = "http://localhost:3003";
 export const imageURL =
   "https://m360ict-ecommerce.s3.ap-south-1.amazonaws.com/amcham-storage/";
 export const baseQuery = fetchBaseQuery({

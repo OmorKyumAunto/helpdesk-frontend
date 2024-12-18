@@ -10,10 +10,12 @@ import {
   Dropdown,
   Select,
   Space,
+  Image,
 } from "antd";
 import { useGetRaiseTicketUserWiseQuery } from "../api/ticketEndpoint";
 import { IRaiseTicketList } from "../types/ticketTypes";
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import { imageURLNew } from "../../../app/slice/baseQuery";
 
 interface CommentsState {
   [key: string]: string[];
@@ -262,6 +264,18 @@ const RaiseTicketList: React.FC = () => {
                   borderRadius: "8px",
                 }}
               >
+                <p style={{ color: "#444" }}>
+                  <strong>Attachment:</strong>
+                  <Image
+                    src={`${imageURLNew}/uploads/${
+                      ticket?.attachment?.split("ticket\\")[1]
+                    }`}
+                    alt="attachment"
+                    width={30}
+                    style={{ maxHeight: "30px" }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </p>
                 <p style={{ color: "#444" }}>
                   <strong>Details:</strong> {ticket.description}
                 </p>

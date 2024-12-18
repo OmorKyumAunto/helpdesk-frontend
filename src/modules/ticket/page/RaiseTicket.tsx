@@ -212,7 +212,7 @@ const RaiseTicketForm = () => {
               </Form.Item>
 
               <Form.Item
-                // name="attachment"
+                name="attachment"
                 label="Upload Asset File"
                 valuePropName="fileList"
                 getValueFromEvent={normFile}
@@ -221,7 +221,7 @@ const RaiseTicketForm = () => {
                   beforeUpload={() => false}
                   maxCount={1}
                   listType="picture"
-                  //   accept=""
+                  accept="image/*,.pdf"
                   showUploadList={{ showRemoveIcon: true }}
                 >
                   <Button style={{ width: "100%" }} icon={<PlusOutlined />}>
