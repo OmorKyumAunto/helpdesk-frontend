@@ -10,6 +10,7 @@ import {
   Dropdown,
   Select,
   Space,
+  Image,
 } from "antd";
 import { useGetRaiseTicketAdminWiseQuery } from "../api/ticketEndpoint";
 import { IAdminTicketList } from "../types/ticketTypes";
@@ -21,6 +22,7 @@ import {
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import UpdateTicketStatus from "../components/UpdateTicketStatus";
+import { imageURLNew } from "../../../app/slice/baseQuery";
 
 interface CommentsState {
   [key: string]: string[];
@@ -287,6 +289,18 @@ const AdminTicketList: React.FC = () => {
                   borderRadius: "8px",
                 }}
               >
+                <p style={{ color: "#444" }}>
+                  <strong>Attachment:</strong>
+                  <Image
+                    src={`${imageURLNew}/uploads/${
+                      ticket?.attachment?.split("ticket\\")[1]
+                    }`}
+                    alt="attachment"
+                    width={30}
+                    style={{ maxHeight: "30px" }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </p>
                 <p style={{ color: "#444" }}>
                   <strong>Details:</strong> {ticket.description}
                 </p>

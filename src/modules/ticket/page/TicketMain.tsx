@@ -8,6 +8,7 @@ import RaiseTicketList from "./RaiseTicketList";
 import SuperAdminTicketList from "./SuperAdminTicketList";
 import AdminTicketList from "./AdminTicketList";
 import TicketDashboard from "./TicketDashboard";
+import { PiTicket } from "react-icons/pi";
 
 const onChange = (key: string) => {
   console.log(key);
@@ -22,8 +23,7 @@ const TicketMain: React.FC = () => {
           {
             key: "1",
             label: "Dashboard",
-            children: "super admin dashboard",
-            icon: <DashboardOutlined />,
+            children: <TicketDashboard />,
           },
           {
             key: "2",
@@ -42,7 +42,8 @@ const TicketMain: React.FC = () => {
           {
             key: "4",
             label: "Dashboard",
-            children: "dashboard Admin",
+            children: <TicketDashboard />,
+            icon: <DashboardOutlined />,
           },
           {
             key: "5",

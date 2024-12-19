@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { IMenuData } from "../../../Types/MenuData";
 import { BsTicketDetailed } from "react-icons/bs";
 import { GrConfigure } from "react-icons/gr";
+import { PiTicket } from "react-icons/pi";
 
 export const sideBarItems = (roleId: number) => {
   let menuData: IMenuData[] = [
@@ -71,7 +72,7 @@ export const sideBarItems = (roleId: number) => {
           {
             label: "Tickets",
             key: "tickets",
-            icon: <BsTicketDetailed size={20} />,
+            icon: <PiTicket size={20} />,
             children: [
               {
                 label: <Link to="/tickets/ticket-list">Ticket</Link>,
