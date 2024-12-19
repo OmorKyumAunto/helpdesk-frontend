@@ -2,13 +2,11 @@ import React from "react";
 import { Card, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import RaiseTicketForm from "./RaiseTicket";
-import { DashboardOutlined } from "@ant-design/icons";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import RaiseTicketList from "./RaiseTicketList";
 import SuperAdminTicketList from "./SuperAdminTicketList";
 import AdminTicketList from "./AdminTicketList";
 import TicketDashboard from "./TicketDashboard";
-import { PiTicket } from "react-icons/pi";
 
 const onChange = (key: string) => {
   console.log(key);
@@ -43,7 +41,6 @@ const TicketMain: React.FC = () => {
             key: "4",
             label: "Dashboard",
             children: <TicketDashboard />,
-            icon: <DashboardOutlined />,
           },
           {
             key: "5",

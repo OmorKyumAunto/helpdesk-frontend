@@ -11,6 +11,7 @@ import {
   Select,
   Space,
   Image,
+  Empty,
 } from "antd";
 import { useGetRaiseTicketAdminWiseQuery } from "../api/ticketEndpoint";
 import { IAdminTicketList } from "../types/ticketTypes";
@@ -23,6 +24,7 @@ import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import UpdateTicketStatus from "../components/UpdateTicketStatus";
 import { imageURLNew } from "../../../app/slice/baseQuery";
+import noImage from "../../../assets/No_Image.jpg";
 
 interface CommentsState {
   [key: string]: string[];
@@ -124,123 +126,127 @@ const AdminTicketList: React.FC = () => {
         </Space>
       }
     >
-      {data?.data?.map((ticket: IAdminTicketList, index: number) => (
-        <Card
-          key={ticket.ticket_table_id}
-          style={{
-            marginBottom: "1rem",
-            borderRadius: "12px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            overflow: "hidden",
-            transition: "transform 0.2s ease, box-shadow 0.2s ease",
-            cursor: "pointer",
-            backgroundColor: "#fff",
-          }}
-          hoverable
-          onClick={(e) => handleCardClick(e, ticket.ticket_table_id)}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <h2
-                style={{ color: "#1890ff" }}
-              >{`#${ticket.ticket_id} - ${ticket.subject}`}</h2>
-            </div>
-            <div>
-              <Space>
-                {ticket.ticket_status === "unsolved" && (
-                  <Tag color="error">UNSOLVED</Tag>
-                )}
-                {ticket.ticket_status === "solved" && (
-                  <Tag color="success">SOLVED</Tag>
-                )}
-                {ticket.ticket_status === "forward" && (
-                  <Tag color="processing">FORWARD</Tag>
-                )}
-                <Button
-                  size="small"
-                  type="primary"
-                  onClick={() => {
-                    dispatch(
-                      setCommonModal({
-                        title: "Update Ticket Status",
-                        content: <UpdateTicketStatus single={ticket} />,
-                        show: true,
-                      })
-                    );
+      {data?.data?.length ? (
+        <>
+          {data?.data?.map((ticket: IAdminTicketList, index: number) => {
+            const isPDF = ticket?.attachment?.endsWith(".pdf");
+            return (
+              <Card
+                key={ticket.ticket_table_id}
+                style={{
+                  marginBottom: "1rem",
+                  borderRadius: "12px",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  overflow: "hidden",
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                  cursor: "pointer",
+                  backgroundColor: "#fff",
+                }}
+                hoverable
+                onClick={(e) => handleCardClick(e, ticket.ticket_table_id)}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
-                  <EditOutlined />
-                </Button>
-              </Space>
-            </div>
-          </div>
-          <Divider style={{ margin: "6px 0px 12px" }} />
-          <Row gutter={12}>
-            <Col xs={12} sm={12} md={8} lg={4}>
-              <div
-                style={{
-                  textAlign: "left",
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                }}
-              >
-                <p style={{ color: "gray" }}>Asset</p>
-                <p>{ticket.asset_name || "N/A"}</p>
-              </div>
-            </Col>
-            <Col xs={12} sm={12} md={8} lg={4}>
-              <div
-                style={{
-                  textAlign: "left",
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                }}
-              >
-                <p style={{ color: "gray" }}>Serial Number</p>
-                <p>{ticket.serial_number || "N/A"}</p>
-              </div>
-            </Col>
-            <Col xs={12} sm={12} md={8} lg={4}>
-              <div
-                style={{
-                  textAlign: "left",
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                }}
-              >
-                <p style={{ color: "gray" }}>Asset Category</p>
-                <p>{ticket.asset_category}</p>
-              </div>
-            </Col>
-            <Col xs={12} sm={12} md={8} lg={4}>
-              <div
-                style={{
-                  textAlign: "left",
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                }}
-              >
-                <p style={{ color: "gray" }}>Priortiy</p>
-                <>
-                  {ticket.priority === "high" && (
-                    <Tag color="red-inverse">HIGHT</Tag>
-                  )}
-                  {ticket.priority === "medium" && (
-                    <Tag color="blue-inverse">MEDIUM</Tag>
-                  )}
-                  {ticket.priority === "low" && (
-                    <Tag color="green-inverse">LOW</Tag>
-                  )}
-                </>
-              </div>
-            </Col>
-            {/* <Col xs={12} sm={12} md={8} lg={4}>
+                  <div>
+                    <h2
+                      style={{ color: "#1890ff" }}
+                    >{`#${ticket.ticket_id} - ${ticket.subject}`}</h2>
+                  </div>
+                  <div>
+                    <Space>
+                      {ticket.ticket_status === "unsolved" && (
+                        <Tag color="error">UNSOLVED</Tag>
+                      )}
+                      {ticket.ticket_status === "solved" && (
+                        <Tag color="success">SOLVED</Tag>
+                      )}
+                      {ticket.ticket_status === "forward" && (
+                        <Tag color="processing">FORWARD</Tag>
+                      )}
+                      <Button
+                        size="small"
+                        type="primary"
+                        onClick={() => {
+                          dispatch(
+                            setCommonModal({
+                              title: "Update Ticket Status",
+                              content: <UpdateTicketStatus single={ticket} />,
+                              show: true,
+                            })
+                          );
+                        }}
+                      >
+                        <EditOutlined />
+                      </Button>
+                    </Space>
+                  </div>
+                </div>
+                <Divider style={{ margin: "6px 0px 12px" }} />
+                <Row gutter={12}>
+                  <Col xs={12} sm={12} md={8} lg={4}>
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <p style={{ color: "gray" }}>Asset</p>
+                      <p>{ticket.asset_name || "N/A"}</p>
+                    </div>
+                  </Col>
+                  <Col xs={12} sm={12} md={8} lg={4}>
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <p style={{ color: "gray" }}>Serial Number</p>
+                      <p>{ticket.serial_number || "N/A"}</p>
+                    </div>
+                  </Col>
+                  <Col xs={12} sm={12} md={8} lg={4}>
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <p style={{ color: "gray" }}>Asset Category</p>
+                      <p>{ticket.asset_category}</p>
+                    </div>
+                  </Col>
+                  <Col xs={12} sm={12} md={8} lg={4}>
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <p style={{ color: "gray" }}>Priortiy</p>
+                      <>
+                        {ticket.priority === "high" && (
+                          <Tag color="red-inverse">HIGHT</Tag>
+                        )}
+                        {ticket.priority === "medium" && (
+                          <Tag color="blue-inverse">MEDIUM</Tag>
+                        )}
+                        {ticket.priority === "low" && (
+                          <Tag color="green-inverse">LOW</Tag>
+                        )}
+                      </>
+                    </div>
+                  </Col>
+                  {/* <Col xs={12} sm={12} md={8} lg={4}>
               <div
                 style={{
                   textAlign: "left",
@@ -254,97 +260,122 @@ const AdminTicketList: React.FC = () => {
                 </Tag>
               </div>
             </Col> */}
-            <Col xs={12} sm={12} md={8} lg={4}>
-              <div
-                style={{
-                  textAlign: "left",
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                }}
-              >
-                <p style={{ color: "gray" }}>Category</p>
-                <p>{ticket.ticket_category_title}</p>
-              </div>
-            </Col>
-            <Col xs={12} sm={12} md={8} lg={4}>
-              <div
-                style={{
-                  textAlign: "left",
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                }}
-              >
-                <p style={{ color: "gray" }}>Unit Name</p>
-                <p>{ticket.asset_unit_title}</p>
-              </div>
-            </Col>
-          </Row>
-          <div>
-            {expandedCard === ticket.ticket_table_id && (
-              <div
-                style={{
-                  marginTop: "1rem",
-                  backgroundColor: "#f9f9f9",
-                  padding: "1rem",
-                  borderRadius: "8px",
-                }}
-              >
-                <p style={{ color: "#444" }}>
-                  <strong>Attachment:</strong>
-                  <Image
-                    src={`${imageURLNew}/uploads/${
-                      ticket?.attachment?.split("ticket\\")[1]
-                    }`}
-                    alt="attachment"
-                    width={30}
-                    style={{ maxHeight: "30px" }}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                </p>
-                <p style={{ color: "#444" }}>
-                  <strong>Details:</strong> {ticket.description}
-                </p>
+                  <Col xs={12} sm={12} md={8} lg={4}>
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <p style={{ color: "gray" }}>Category</p>
+                      <p>{ticket.ticket_category_title}</p>
+                    </div>
+                  </Col>
+                  <Col xs={12} sm={12} md={8} lg={4}>
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <p style={{ color: "gray" }}>Unit Name</p>
+                      <p>{ticket.asset_unit_title}</p>
+                    </div>
+                  </Col>
+                </Row>
+                <div>
+                  {expandedCard === ticket.ticket_table_id && (
+                    <div
+                      style={{
+                        marginTop: "1rem",
+                        backgroundColor: "#f9f9f9",
+                        padding: "1rem",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      <p style={{ color: "#444" }}>
+                        <strong>Attachment:</strong>
+                        {isPDF ? (
+                          <a
+                            href={`${imageURLNew}/uploads/${
+                              ticket?.attachment?.split("ticket\\")[1]
+                            }`}
+                            target="_blank"
+                          >
+                            <Button size="small">View PDF</Button>
+                          </a>
+                        ) : (
+                          <Image
+                            src={
+                              ticket.attachment
+                                ? `${imageURLNew}/uploads/${
+                                    ticket?.attachment?.split("ticket\\")[1]
+                                  }`
+                                : noImage
+                            }
+                            alt="attachment"
+                            width={30}
+                            style={{ maxHeight: "30px" }}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        )}
+                      </p>
+                      <p style={{ color: "#444" }}>
+                        <strong>Details:</strong> {ticket.description}
+                      </p>
 
-                <div style={{ marginTop: "1rem" }}>
-                  <strong>Comments:</strong>
-                  <div style={{ marginBottom: "1rem", color: "#666" }}>
-                    {(comments[ticket.ticket_table_id] || []).map(
-                      (comment, index) => (
-                        <p
-                          key={index}
+                      <div style={{ marginTop: "1rem" }}>
+                        <strong>Comments:</strong>
+                        <div style={{ marginBottom: "1rem", color: "#666" }}>
+                          {(comments[ticket.ticket_table_id] || []).map(
+                            (comment, index) => (
+                              <p
+                                key={index}
+                                style={{
+                                  marginBottom: "0.5rem",
+                                  fontStyle: "italic",
+                                }}
+                              >
+                                - {comment}
+                              </p>
+                            )
+                          )}
+                        </div>
+                        <Input.TextArea
+                          rows={2}
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          placeholder="Add a comment"
                           style={{
                             marginBottom: "0.5rem",
-                            fontStyle: "italic",
+                            borderRadius: "6px",
+                          }}
+                          onClick={(e) => e.stopPropagation()} // Prevent card click when interacting with input
+                        />
+                        <Button
+                          type="primary"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent card click
+                            handleAddComment(ticket.ticket_table_id);
                           }}
                         >
-                          - {comment}
-                        </p>
-                      )
-                    )}
-                  </div>
-                  <Input.TextArea
-                    rows={2}
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Add a comment"
-                    style={{ marginBottom: "0.5rem", borderRadius: "6px" }}
-                    onClick={(e) => e.stopPropagation()} // Prevent card click when interacting with input
-                  />
-                  <Button
-                    type="primary"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent card click
-                      handleAddComment(ticket.ticket_table_id);
-                    }}
-                  >
-                    Add Comment
-                  </Button>
+                          Add Comment
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
-          </div>
+              </Card>
+            );
+          })}
+        </>
+      ) : (
+        <Card>
+          <Empty />
         </Card>
-      ))}
+      )}
     </Card>
   );
 };
