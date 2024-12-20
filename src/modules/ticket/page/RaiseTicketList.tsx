@@ -103,7 +103,7 @@ const RaiseTicketList: React.FC = () => {
                   allowClear
                   style={{ width: "180px", marginBottom: 8 }}
                   onChange={(e) => setFilter({ ...filter, priority: e })}
-                  placeholder="Select Prioritay"
+                  placeholder="Select Priority"
                 >
                   <Option value="">All</Option>
                   <Option value="low">Low</Option>
@@ -207,7 +207,7 @@ const RaiseTicketList: React.FC = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      <p style={{ color: "gray" }}>Priortiy</p>
+                      <p style={{ color: "gray" }}>Priority</p>
                       <>
                         {ticket.priority === "high" && (
                           <Tag color="red-inverse">HIGHT</Tag>

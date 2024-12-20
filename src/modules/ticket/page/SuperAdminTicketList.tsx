@@ -81,61 +81,60 @@ const SuperAdminTicketList: React.FC = () => {
       loading={isLoading}
       style={{ width: "100%", padding: "1rem", backgroundColor: "#f5f5f5" }}
       title="Super Admin Ticket List"
-      //   extra={
-      //     <Space>
-      //       <Input
-      //         prefix={<SearchOutlined />}
-      //         style={{ width: "180px" }}
-      //         onChange={(e) => setFilter({ ...filter, key: e.target.value })}
-      //         placeholder="Search..."
-      //       />
-      //       <Dropdown
-      //         trigger={["hover"]}
-      //         dropdownRender={() => (
-      //           <div
-      //             style={{
-      //               padding: 16,
-      //               background: "#fff",
-      //               borderRadius: 8,
-      //               width: "190px",
-      //               border: "1px solid #f2f2f2",
-      //             }}
-      //           >
-      //             <Select
-      //               allowClear
-      //               style={{ width: "180px", marginBottom: 8 }}
-      //               onChange={(e) => setFilter({ ...filter, status: e })}
-      //               placeholder="Select Status"
-      //             >
-      //               <Option value="">All</Option>
-      //               <Option value="solved">SOLVED</Option>
-      //               <Option value="unsolved">UNSOLVED</Option>
-      //               <Option value="forward">FORWARD</Option>
-      //             </Select>
-      //             <Select
-      //               allowClear
-      //               style={{ width: "180px", marginBottom: 8 }}
-      //               onChange={(e) => setFilter({ ...filter, priority: e })}
-      //               placeholder="Select Prioritay"
-      //             >
-      //               <Option value="">All</Option>
-      //               <Option value="low">Low</Option>
-      //               <Option value="medium">Medium</Option>
-      //               <Option value="high">High</Option>
-      //             </Select>
-      //           </div>
-      //         )}
-      //       >
-      //         <Button icon={<FilterOutlined />}>Filters</Button>
-      //       </Dropdown>
-      //     </Space>
-      //   }
+      extra={
+        <Space>
+          <Input
+            prefix={<SearchOutlined />}
+            style={{ width: "180px" }}
+            onChange={(e) => setFilter({ ...filter, key: e.target.value })}
+            placeholder="Search..."
+          />
+          <Dropdown
+            trigger={["hover"]}
+            dropdownRender={() => (
+              <div
+                style={{
+                  padding: 16,
+                  background: "#fff",
+                  borderRadius: 8,
+                  width: "190px",
+                  border: "1px solid #f2f2f2",
+                }}
+              >
+                <Select
+                  allowClear
+                  style={{ width: "180px", marginBottom: 8 }}
+                  onChange={(e) => setFilter({ ...filter, status: e })}
+                  placeholder="Select Status"
+                >
+                  <Option value="">All</Option>
+                  <Option value="solved">SOLVED</Option>
+                  <Option value="unsolved">UNSOLVED</Option>
+                  <Option value="forward">FORWARD</Option>
+                </Select>
+                <Select
+                  allowClear
+                  style={{ width: "180px", marginBottom: 8 }}
+                  onChange={(e) => setFilter({ ...filter, priority: e })}
+                  placeholder="Select Priority"
+                >
+                  <Option value="">All</Option>
+                  <Option value="low">Low</Option>
+                  <Option value="medium">Medium</Option>
+                  <Option value="high">High</Option>
+                </Select>
+              </div>
+            )}
+          >
+            <Button icon={<FilterOutlined />}>Filters</Button>
+          </Dropdown>
+        </Space>
+      }
     >
       {data?.data?.length ? (
         <>
           {data?.data?.map((ticket: IAdminTicketList, index: number) => {
             const isPDF = ticket?.attachment?.endsWith(".pdf");
-            console.log(isPDF);
             return (
               <Card
                 key={ticket.ticket_table_id}
@@ -249,7 +248,7 @@ const SuperAdminTicketList: React.FC = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      <p style={{ color: "gray" }}>Priortiy</p>
+                      <p style={{ color: "gray" }}>Priority</p>
                       <>
                         {ticket.priority === "high" && (
                           <Tag color="red-inverse">HIGHT</Tag>
