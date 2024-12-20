@@ -9,33 +9,35 @@ import {
   Tooltip,
 } from "recharts";
 import PieChartWithLabels from "./PieChart";
+import { useGetTicketDashboardCountQuery } from "../api/ticketEndpoint";
 const TicketDashboard = () => {
   const { md, lg } = Grid.useBreakpoint();
+  const { data } = useGetTicketDashboardCountQuery();
   const ticketPriorityCards = [
     {
       id: 1,
       title: "All Ticket",
-      data: 78,
+      data: data?.data?.total_ticket,
     },
     {
       id: 2,
       title: "Solved",
-      data: 56,
+      data: data?.data?.total_solve,
     },
     {
       id: 3,
       title: "In Progress",
-      data: 14,
+      data: data?.data?.total_inprocess,
     },
     {
       id: 4,
       title: "Unsolved",
-      data: 6,
+      data: data?.data?.total_unsolved,
     },
     {
       id: 5,
       title: "Forward",
-      data: 2,
+      data: data?.data?.total_forward,
     },
   ];
   const ticketData = [

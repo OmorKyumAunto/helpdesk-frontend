@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Input,
@@ -13,10 +13,13 @@ import {
   Image,
   Popconfirm,
   Empty,
+  Pagination,
 } from "antd";
 import {
+  useCreateCommentMutation,
   useGetRaiseTicketAdminWiseQuery,
   useGetRaiseTicketSuperAdminWiseQuery,
+  useLazyGetCommentDataQuery,
 } from "../api/ticketEndpoint";
 import { IAdminTicketList, IRaiseTicketList } from "../types/ticketTypes";
 import {
@@ -30,37 +33,58 @@ import { setCommonModal } from "../../../app/slice/modalSlice";
 import UpdateTicketStatus from "../components/UpdateTicketStatus";
 import { imageURLNew } from "../../../app/slice/baseQuery";
 import noImage from "../../../assets/No_Image.jpg";
+import { useGetMeQuery } from "../../../app/api/userApi";
+import noUser from "../../../assets/avatar2.png";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
-interface CommentsState {
-  [key: string]: string[];
-}
 const { Option } = Select;
 const SuperAdminTicketList: React.FC = () => {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const skipValue = (page - 1) * pageSize;
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
-  const [comments, setComments] = useState<CommentsState>({});
   const [newComment, setNewComment] = useState<string>("");
   const [filter, setFilter] = useState<{
-    key: string;
-    priority: string;
-    status: string;
+    key?: string;
+    priority?: string;
+    status?: string;
+    limit: number;
+    offset: number;
   }>({
-    key: "",
-    priority: "",
-    status: "",
+    limit: Number(pageSize),
+    offset: skipValue,
   });
   const dispatch = useDispatch();
   const { data, isLoading } = useGetRaiseTicketSuperAdminWiseQuery({});
+  const [getComments, { data: commentData, isLoading: commentLoader }] =
+    useLazyGetCommentDataQuery();
+  const { data: { data: profile } = {} } = useGetMeQuery();
+
+  const [createComment, { isSuccess }] = useCreateCommentMutation();
   const handleExpand = (id: number): void => {
     setExpandedCard(expandedCard === id ? null : id);
   };
 
-  const handleAddComment = (id: number): void => {
-    setComments((prev) => ({
-      ...prev,
-      [id]: [...(prev[id] || []), newComment],
-    }));
-    setNewComment("");
+  const handlePaginationChange = (current: number, size: number) => {
+    setPage(current);
+    setPageSize(size);
+    setFilter({ ...filter, offset: (current - 1) * size, limit: size });
   };
+  const handleAddComment = (id: number): void => {
+    const body = {
+      ticket_id: id,
+      comment_text: newComment,
+    };
+    createComment(body);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setNewComment("");
+    }
+  }, [isSuccess]);
 
   const handleCardClick = (e: React.MouseEvent, id: number): void => {
     const target = e.target as HTMLElement;
@@ -73,6 +97,7 @@ const SuperAdminTicketList: React.FC = () => {
       e.stopPropagation();
       return;
     }
+    getComments(id);
     handleExpand(id);
   };
 
@@ -86,7 +111,9 @@ const SuperAdminTicketList: React.FC = () => {
           <Input
             prefix={<SearchOutlined />}
             style={{ width: "180px" }}
-            onChange={(e) => setFilter({ ...filter, key: e.target.value })}
+            onChange={(e) =>
+              setFilter({ ...filter, key: e.target.value, offset: 0 })
+            }
             placeholder="Search..."
           />
           <Dropdown
@@ -104,7 +131,9 @@ const SuperAdminTicketList: React.FC = () => {
                 <Select
                   allowClear
                   style={{ width: "180px", marginBottom: 8 }}
-                  onChange={(e) => setFilter({ ...filter, status: e })}
+                  onChange={(e) =>
+                    setFilter({ ...filter, status: e, offset: 0 })
+                  }
                   placeholder="Select Status"
                 >
                   <Option value="">All</Option>
@@ -115,7 +144,9 @@ const SuperAdminTicketList: React.FC = () => {
                 <Select
                   allowClear
                   style={{ width: "180px", marginBottom: 8 }}
-                  onChange={(e) => setFilter({ ...filter, priority: e })}
+                  onChange={(e) =>
+                    setFilter({ ...filter, priority: e, offset: 0 })
+                  }
                   placeholder="Select Priority"
                 >
                   <Option value="">All</Option>
@@ -342,22 +373,66 @@ const SuperAdminTicketList: React.FC = () => {
                         <strong>Details:</strong> {ticket.description}
                       </p>
 
-                      <div style={{ marginTop: "1rem" }}>
-                        <strong>Comments:</strong>
-                        <div style={{ marginBottom: "1rem", color: "#666" }}>
-                          {(comments[ticket.ticket_table_id] || []).map(
-                            (comment, index) => (
-                              <p
+                      <Card
+                        style={{
+                          marginTop: "1rem",
+                          // width: "50%",
+                          // margin: "0 auto",
+                        }}
+                        title="Comments"
+                      >
+                        <div>
+                          {commentData?.data?.map((comment, index) => (
+                            <>
+                              <Space
                                 key={index}
                                 style={{
-                                  marginBottom: "0.5rem",
-                                  fontStyle: "italic",
+                                  display: "flex",
+                                  gap: 4,
+                                  alignItems: "start",
+                                  marginBottom: "0.7rem",
                                 }}
                               >
-                                - {comment}
-                              </p>
-                            )
-                          )}
+                                <Image
+                                  src={noUser}
+                                  alt="user"
+                                  preview={false}
+                                  width={30}
+                                  height={30}
+                                  style={{ borderRadius: "50%" }}
+                                />
+                                <div>
+                                  <p
+                                    style={{
+                                      color:
+                                        profile?.employee_id ===
+                                        comment.employee_id
+                                          ? "white"
+                                          : "black",
+                                      backgroundColor:
+                                        profile?.employee_id ===
+                                        comment.employee_id
+                                          ? "#1775BB"
+                                          : "#E8E8E8",
+                                      padding: "4px 8px",
+                                      borderRadius: "16px",
+                                    }}
+                                  >
+                                    {comment.comment_text}
+                                  </p>
+                                  <span
+                                    style={{
+                                      fontSize: "11px",
+                                      fontStyle: "italic",
+                                    }}
+                                  >
+                                    {dayjs(comment.created_at).fromNow()}{" "}
+                                    {comment.is_edit === 1 && "(Edited)"}
+                                  </span>
+                                </div>
+                              </Space>
+                            </>
+                          ))}
                         </div>
                         <Input.TextArea
                           rows={2}
@@ -365,21 +440,21 @@ const SuperAdminTicketList: React.FC = () => {
                           onChange={(e) => setNewComment(e.target.value)}
                           placeholder="Add a comment"
                           style={{
-                            marginBottom: "0.5rem",
+                            marginBottom: "0.2rem",
                             borderRadius: "6px",
                           }}
-                          onClick={(e) => e.stopPropagation()} // Prevent card click when interacting with input
+                          onClick={(e) => e.stopPropagation()}
                         />
                         <Button
                           type="primary"
                           onClick={(e) => {
-                            e.stopPropagation(); // Prevent card click
+                            e.stopPropagation();
                             handleAddComment(ticket.ticket_table_id);
                           }}
                         >
                           Add Comment
                         </Button>
-                      </div>
+                      </Card>
                     </div>
                   )}
                 </div>
@@ -392,6 +467,17 @@ const SuperAdminTicketList: React.FC = () => {
           <Empty />
         </Card>
       )}
+      <Pagination
+        size="small"
+        align="end"
+        pageSizeOptions={["10", "20", "30", "50", "100"]}
+        current={page}
+        pageSize={pageSize}
+        total={data?.total || 0}
+        showTotal={(total) => `Total ${total}`}
+        onChange={handlePaginationChange}
+        showSizeChanger
+      />
     </Card>
   );
 };

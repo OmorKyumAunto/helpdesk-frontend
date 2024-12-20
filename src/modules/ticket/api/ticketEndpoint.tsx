@@ -2,7 +2,12 @@ import { api } from "../../../app/api/api";
 import { HTTPResponse } from "../../../app/types/commonTypes";
 import notification from "../../../common/utils/Notification";
 import asyncWrapper from "../../../utils/asyncWrapper";
-import { IAdminTicketList, IRaiseTicketList } from "../types/ticketTypes";
+import {
+  IAdminTicketList,
+  ICommentList,
+  IRaiseTicketList,
+  ITicketDashboardCount,
+} from "../types/ticketTypes";
 
 export const ticketEndpoint = api.injectEndpoints({
   endpoints: (build) => ({
@@ -26,6 +31,25 @@ export const ticketEndpoint = api.injectEndpoints({
         providesTags: () => ["ticket"],
       }
     ),
+    getCommentData: build.query<HTTPResponse<ICommentList[]>, number>({
+      query: (id) => {
+        return {
+          url: `/raise-ticket/comment-details/${id}`,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
+    getTicketDashboardCount: build.query<
+      HTTPResponse<ITicketDashboardCount>,
+      void
+    >({
+      query: () => {
+        return {
+          url: `/raise-ticket-deshboard/count-data`,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
     getRaiseTicketSuperAdminWise: build.query<
       HTTPResponse<IAdminTicketList[]>,
       any
@@ -50,6 +74,47 @@ export const ticketEndpoint = api.injectEndpoints({
         asyncWrapper(async () => {
           await queryFulfilled;
           notification("success", "Successfully ticket raised");
+        });
+      },
+      invalidatesTags: () => ["ticket"],
+    }),
+    createComment: build.mutation<
+      unknown,
+      { ticket_id: number; comment_text: string }
+    >({
+      query: (body) => {
+        return {
+          url: `/raise-ticket/comment`,
+          method: "POST",
+          body,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully comment posted");
+        });
+      },
+      invalidatesTags: () => ["ticket"],
+    }),
+    forwardTicket: build.mutation<
+      unknown,
+      {
+        body: { unit_id: number; remarks: string; category_id: number };
+        id: number;
+      }
+    >({
+      query: ({ body, id }) => {
+        return {
+          url: `/raise-ticket/ticket-forword/${id}`,
+          method: "POST",
+          body,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully ticket forwarded");
         });
       },
       invalidatesTags: () => ["ticket"],
@@ -109,8 +174,12 @@ export const ticketEndpoint = api.injectEndpoints({
 
 export const {
   useCreateRaiseTicketMutation,
+  useCreateCommentMutation,
+  useForwardTicketMutation,
+  useGetTicketDashboardCountQuery,
   useGetRaiseTicketUserWiseQuery,
   useGetRaiseTicketAdminWiseQuery,
   useGetRaiseTicketSuperAdminWiseQuery,
+  useLazyGetCommentDataQuery,
   useUpdateTicketAdminStatusMutation,
 } = ticketEndpoint;

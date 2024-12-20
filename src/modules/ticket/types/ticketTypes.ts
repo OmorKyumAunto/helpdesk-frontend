@@ -50,3 +50,21 @@ export interface IAdminTicketList {
   ticket_created_employee_name: string;
   ticket_created_employee_email: string;
 }
+export interface ICommentList {
+  id: number;
+  ticket_id: number;
+  employee_id: string;
+  admin_id: number;
+  comment_text: string;
+  is_edit: number;
+  created_at: string;
+  updated_at: string;
+  user_name: string;
+}
+export interface ITicketDashboardCount {
+  total_ticket: number;
+  total_solve: number;
+  total_unsolved: number;
+  total_forward: number;
+  total_inprocess: number;
+}
