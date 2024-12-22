@@ -27,6 +27,7 @@ import ITSop from "./modules/sop/page/ITSop";
 import CategoryList from "./modules/Category/pages/CategoryList";
 import AssignCategoryList from "./modules/assignCategory/pages/AssignCategoryList";
 import TicketMain from "./modules/ticket/page/TicketMain";
+import TicketConfig from "./modules/ticket/page/TicketConfig";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -98,17 +99,19 @@ export const routers = createBrowserRouter([
         element: <AdminList />,
       },
       {
-        path: "/tickets/ticket-list",
-        element: <TicketMain />,
+        path: "tickets",
+        children: [
+          {
+            path: "list",
+            element: <TicketMain />,
+          },
+          {
+            path: "configuration",
+            element: <TicketConfig />,
+          },
+        ],
       },
-      {
-        path: "/tickets/category",
-        element: <CategoryList />,
-      },
-      {
-        path: "/tickets/assign-category",
-        element: <AssignCategoryList />,
-      },
+
       {
         path: "/ctc/list",
         element: <CTCList />,

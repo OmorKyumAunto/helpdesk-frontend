@@ -75,28 +75,14 @@ export const sideBarItems = (roleId: number) => {
             icon: <PiTicket size={20} />,
             children: [
               {
-                label: <Link to="/tickets/ticket-list">Tickets</Link>,
-                key: "/tickets/ticket-list",
+                label: <Link to="/tickets/list">Tickets</Link>,
+                key: "/tickets/list",
                 icon: <FaRegListAlt size={16} />,
               },
               {
-                label: "Configuration",
-                key: "tickets/configuration",
-                icon: <GrConfigure size={20} />,
-                children: [
-                  {
-                    label: <Link to="/tickets/category">Category Create</Link>,
-                    key: "/tickets/category",
-                    icon: <FaRegListAlt size={16} />,
-                  },
-                  {
-                    label: (
-                      <Link to="/tickets/assign-category">Category Assign</Link>
-                    ),
-                    key: "/tickets/assign-category",
-                    icon: <FaRegListAlt size={16} />,
-                  },
-                ],
+                label: <Link to="/tickets/configuration">Configuration</Link>,
+                key: "/tickets/configuration",
+                icon: <GrConfigure size={16} />,
               },
             ],
           },
