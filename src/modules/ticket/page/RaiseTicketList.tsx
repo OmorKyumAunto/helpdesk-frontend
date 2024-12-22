@@ -361,10 +361,19 @@ const RaiseTicketList: React.FC = () => {
                                         comment.employee_id
                                           ? "#1775BB"
                                           : "#E8E8E8",
-                                      padding: "4px 8px",
+                                      padding: "6px 12px",
                                       borderRadius: "16px",
                                     }}
                                   >
+                                    <p
+                                      style={{
+                                        fontWeight: "bold",
+                                        marginBottom: "0px",
+                                      }}
+                                    >
+                                      {comment.user_name} ({comment.employee_id}
+                                      )
+                                    </p>
                                     {comment.comment_text}
                                   </p>
                                   <span

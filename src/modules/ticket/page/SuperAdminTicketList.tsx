@@ -418,10 +418,19 @@ const SuperAdminTicketList: React.FC = () => {
                                         comment.employee_id
                                           ? "#1775BB"
                                           : "#E8E8E8",
-                                      padding: "4px 8px",
+                                      padding: "6px 12px",
                                       borderRadius: "16px",
                                     }}
                                   >
+                                    <p
+                                      style={{
+                                        fontWeight: "bold",
+                                        marginBottom: "0px",
+                                      }}
+                                    >
+                                      {comment.user_name} ({comment.employee_id}
+                                      )
+                                    </p>
                                     {comment.comment_text}
                                   </p>
                                   <span
@@ -438,7 +447,7 @@ const SuperAdminTicketList: React.FC = () => {
                             </>
                           ))}
                         </div>
-                        <Input.TextArea
+                        {/* <Input.TextArea
                           rows={2}
                           value={newComment}
                           onChange={(e) => setNewComment(e.target.value)}
@@ -457,7 +466,7 @@ const SuperAdminTicketList: React.FC = () => {
                           }}
                         >
                           Add Comment
-                        </Button>
+                        </Button> */}
                       </Card>
                     </div>
                   )}
