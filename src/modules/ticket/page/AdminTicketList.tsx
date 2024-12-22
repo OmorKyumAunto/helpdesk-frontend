@@ -242,7 +242,7 @@ const AdminTicketList: React.FC = () => {
                       }}
                     >
                       <p style={{ color: "gray" }}>Serial Number</p>
-                      <p>{ticket.serial_number || "N/A"}</p>
+                      <p>{ticket.asset_serial_number || "N/A"}</p>
                     </div>
                   </Col>
                   <Col xs={12} sm={12} md={8} lg={4}>

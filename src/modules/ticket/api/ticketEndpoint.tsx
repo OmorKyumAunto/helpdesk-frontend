@@ -154,21 +154,21 @@ export const ticketEndpoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["ticket"],
     }),
-    // deleteCategory: build.mutation<unknown, number>({
-    //   query: (id) => {
-    //     return {
-    //       url: `/ticket-category/delete/${id}`,
-    //       method: "DELETE",
-    //     };
-    //   },
-    //   onQueryStarted: async (_arg, { queryFulfilled }) => {
-    //     asyncWrapper(async () => {
-    //       await queryFulfilled;
-    //       notification("success", "Successfully delete category");
-    //     });
-    //   },
-    //   invalidatesTags: () => ["category"],
-    // }),
+    deleteTicket: build.mutation<unknown, number>({
+      query: (id) => {
+        return {
+          url: `/raise-ticket/delete/${id}`,
+          method: "DELETE",
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully delete ticket");
+        });
+      },
+      invalidatesTags: () => ["ticket"],
+    }),
   }),
 });
 
@@ -182,4 +182,5 @@ export const {
   useGetRaiseTicketSuperAdminWiseQuery,
   useLazyGetCommentDataQuery,
   useUpdateTicketAdminStatusMutation,
+  useDeleteTicketMutation,
 } = ticketEndpoint;

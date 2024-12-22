@@ -1,5 +1,6 @@
 import { api } from "../../../app/api/api";
 import { HTTPResponse } from "../../../app/types/commonTypes";
+import { IPieChartDataForAdmin } from "../types/dashboardTypes";
 
 export const dashboardEndpoints = api.injectEndpoints({
   endpoints: (build) => ({
@@ -43,6 +44,15 @@ export const dashboardEndpoints = api.injectEndpoints({
       }),
       providesTags: () => [{ type: "dashboardTypes", id: "dashboard" }],
     }),
+    getDashboardPieChartDataForAdmin: build.query<
+      HTTPResponse<IPieChartDataForAdmin>,
+      void
+    >({
+      query: () => ({
+        url: `/dashboard/admin-unit-wise-accessories`,
+      }),
+      providesTags: () => [{ type: "dashboardTypes", id: "dashboard" }],
+    }),
     getDashboardEmployeeData: build.query<HTTPResponse<any>, any>({
       query: (params) => ({
         url: `/dashboard/dashboard-graph-data`,
@@ -67,6 +77,7 @@ export const {
   useGetDashboardPieDataQuery,
   useGetDashboardEmployeeDataQuery,
   useGetDashboardAssetDataForAdminQuery,
+  useGetDashboardPieChartDataForAdminQuery,
   useGetDashboardDistributedAssetDataForAdminQuery,
   useGetDashboardEmployeeDataForEmployeeQuery,
 } = dashboardEndpoints;

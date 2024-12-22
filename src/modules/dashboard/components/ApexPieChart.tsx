@@ -1,9 +1,16 @@
 import { ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
-import { useGetDashboardPieDataQuery } from "../api/dashboardEndPoints";
+import {
+  useGetDashboardPieChartDataForAdminQuery,
+  useGetDashboardPieDataQuery,
+} from "../api/dashboardEndPoints";
+import { useGetMeQuery } from "../../../app/api/userApi";
 
 const ReactPieChart = () => {
   const { data: pieData } = useGetDashboardPieDataQuery();
+  const { data: pieDataForAdmin } = useGetDashboardPieChartDataForAdminQuery();
+  const { data: profile } = useGetMeQuery();
+  const { role_id } = profile?.data || {};
   const {
     total_laptop,
     total_desktop,
@@ -11,12 +18,23 @@ const ReactPieChart = () => {
     total_accessories,
     total_monitors,
   } = pieData?.data || {};
+
+  const {
+    desktop_count,
+    laptop_count,
+    monitor_count,
+    printer_count,
+    accessories_count,
+  } = pieDataForAdmin?.data || {};
   const data = [
-    { name: "Laptops", value: total_laptop },
-    { name: "Desktops", value: total_desktop },
-    { name: "Printers", value: total_printer },
-    { name: "Accessories", value: total_accessories },
-    { name: "Monitors", value: total_monitors || 0 },
+    { name: "Laptops", value: role_id === 1 ? total_laptop : laptop_count },
+    { name: "Desktops", value: role_id === 1 ? total_desktop : desktop_count },
+    { name: "Printers", value: role_id === 1 ? total_printer : printer_count },
+    {
+      name: "Accessories",
+      value: role_id === 1 ? total_accessories : accessories_count || 0,
+    },
+    { name: "Monitors", value: role_id === 1 ? total_monitors : monitor_count },
   ];
 
   const options: ApexOptions = {

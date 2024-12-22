@@ -17,6 +17,7 @@ import {
 } from "antd";
 import {
   useCreateCommentMutation,
+  useDeleteTicketMutation,
   useGetRaiseTicketAdminWiseQuery,
   useGetRaiseTicketSuperAdminWiseQuery,
   useLazyGetCommentDataQuery,
@@ -56,8 +57,10 @@ const SuperAdminTicketList: React.FC = () => {
     limit: Number(pageSize),
     offset: skipValue,
   });
-  const dispatch = useDispatch();
-  const { data, isLoading } = useGetRaiseTicketSuperAdminWiseQuery({});
+  const [remove] = useDeleteTicketMutation();
+  const { data, isLoading } = useGetRaiseTicketSuperAdminWiseQuery({
+    ...filter,
+  });
   const [getComments, { data: commentData, isLoading: commentLoader }] =
     useLazyGetCommentDataQuery();
   const { data: { data: profile } = {} } = useGetMeQuery();
@@ -207,7 +210,7 @@ const SuperAdminTicketList: React.FC = () => {
                       <Popconfirm
                         title="Delete the ticket"
                         description="Are you sure to delete this ticket?"
-                        onConfirm={() => console.log("delete ticket")}
+                        onConfirm={() => remove(ticket.ticket_table_id)}
                         okText="Yes"
                         cancelText="No"
                       >
@@ -256,7 +259,7 @@ const SuperAdminTicketList: React.FC = () => {
                       }}
                     >
                       <p style={{ color: "gray" }}>Serial Number</p>
-                      <p>{ticket.serial_number || "N/A"}</p>
+                      <p>{ticket.asset_serial_number || "N/A"}</p>
                     </div>
                   </Col>
                   <Col xs={12} sm={12} md={8} lg={4}>

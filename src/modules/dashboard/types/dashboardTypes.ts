@@ -33,3 +33,10 @@ export interface INotification {
   read_status: boolean;
   created_at: string;
 }
+export interface IPieChartDataForAdmin {
+  accessories_count: number;
+  laptop_count: number;
+  monitor_count: number;
+  desktop_count: number;
+  printer_count: number;
+}
