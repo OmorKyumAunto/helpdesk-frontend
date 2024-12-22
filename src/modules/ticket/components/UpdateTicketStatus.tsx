@@ -71,6 +71,7 @@ const UpdateTicketStatus = ({ single }: { single: IAdminTicketList }) => {
                   ]}
                 >
                   <Select placeholder="Select Status">
+                    <Option value="inprogress">IN PROGRESS</Option>
                     <Option value="solved">SOLVED</Option>
                     <Option value="unsolved">UNSOLVED</Option>
                     <Option value="forward">FORWARD</Option>

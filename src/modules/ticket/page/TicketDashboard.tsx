@@ -9,10 +9,14 @@ import {
   Tooltip,
 } from "recharts";
 import PieChartWithLabels from "./PieChart";
-import { useGetTicketDashboardCountQuery } from "../api/ticketEndpoint";
+import {
+  useGetTicketDashboardCountQuery,
+  useGetTopTicketSolverQuery,
+} from "../api/ticketEndpoint";
 const TicketDashboard = () => {
   const { md, lg } = Grid.useBreakpoint();
   const { data } = useGetTicketDashboardCountQuery();
+  const { data: topSolver } = useGetTopTicketSolverQuery();
   const ticketPriorityCards = [
     {
       id: 1,
@@ -26,7 +30,7 @@ const TicketDashboard = () => {
     },
     {
       id: 3,
-      title: "In Progress",
+      title: "IN PROGRESS",
       data: data?.data?.total_inprocess,
     },
     {
@@ -180,34 +184,19 @@ const TicketDashboard = () => {
               bordered
               pagination={false}
               columns={[
-                // {
-                //   key: "1",
-                //   title: "SL",
-                //   dataIndex: "id",
-                // },
                 {
-                  key: "2",
                   title: "Name",
-                  dataIndex: "name",
+                  render: (record) => (
+                    <>{`${record?.solved_by_name} (${record?.employee_id})`}</>
+                  ),
                 },
                 {
                   key: "3",
                   title: "Total",
-                  dataIndex: "solved",
+                  dataIndex: "solved_ticket_count",
                 },
               ]}
-              dataSource={[
-                { id: 1, name: "Rahim", solved: 12 },
-                { id: 2, name: "Karim", solved: 15 },
-                { id: 3, name: "Jamal", solved: 10 },
-                { id: 4, name: "Kamal", solved: 8 },
-                { id: 5, name: "Salma", solved: 20 },
-                { id: 6, name: "Hasan", solved: 5 },
-                { id: 7, name: "Rima", solved: 18 },
-                // { id: 8, name: "Shakib", solved: 22 },
-                // { id: 9, name: "Nadia", solved: 9 },
-                // { id: 10, name: "Rashid", solved: 16 },
-              ]}
+              dataSource={topSolver?.data?.length ? topSolver?.data : []}
             />
           </Card>
         </Col>

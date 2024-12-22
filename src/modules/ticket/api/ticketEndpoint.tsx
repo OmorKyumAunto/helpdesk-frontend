@@ -50,6 +50,14 @@ export const ticketEndpoint = api.injectEndpoints({
       },
       providesTags: () => ["ticket"],
     }),
+    getTopTicketSolver: build.query<HTTPResponse<any>, void>({
+      query: () => {
+        return {
+          url: `/raise-ticket-deshboard/top-solve-ticket`,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
     getRaiseTicketSuperAdminWise: build.query<
       HTTPResponse<IAdminTicketList[]>,
       any
@@ -178,6 +186,7 @@ export const {
   useForwardTicketMutation,
   useGetTicketDashboardCountQuery,
   useGetRaiseTicketUserWiseQuery,
+  useGetTopTicketSolverQuery,
   useGetRaiseTicketAdminWiseQuery,
   useGetRaiseTicketSuperAdminWiseQuery,
   useLazyGetCommentDataQuery,

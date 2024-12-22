@@ -125,6 +125,7 @@ const RaiseTicketList: React.FC = () => {
                   placeholder="Select Status"
                 >
                   <Option value="">All</Option>
+                  <Option value="inprogress">IN PROGRESS</Option>
                   <Option value="solved">SOLVED</Option>
                   <Option value="unsolved">UNSOLVED</Option>
                   <Option value="forward">FORWARD</Option>
@@ -141,7 +142,6 @@ const RaiseTicketList: React.FC = () => {
                   <Option value="low">Low</Option>
                   <Option value="medium">Medium</Option>
                   <Option value="high">High</Option>
-                  
                 </Select>
               </div>
             )}

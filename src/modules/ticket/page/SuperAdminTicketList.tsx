@@ -140,6 +140,7 @@ const SuperAdminTicketList: React.FC = () => {
                   placeholder="Select Status"
                 >
                   <Option value="">All</Option>
+                  <Option value="inprogress">IN PROGRESS</Option>
                   <Option value="solved">SOLVED</Option>
                   <Option value="unsolved">UNSOLVED</Option>
                   <Option value="forward">FORWARD</Option>
