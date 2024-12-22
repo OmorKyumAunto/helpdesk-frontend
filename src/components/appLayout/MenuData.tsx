@@ -70,28 +70,28 @@ export const sideBarItems = (roleId: number) => {
             icon: <LiaUsersCogSolid size={20} />,
           },
           {
-            label: "Tickets",
+            label: "Ticketing System",
             key: "tickets",
             icon: <PiTicket size={20} />,
             children: [
               {
-                label: <Link to="/tickets/ticket-list">Ticket</Link>,
+                label: <Link to="/tickets/ticket-list">Tickets</Link>,
                 key: "/tickets/ticket-list",
                 icon: <FaRegListAlt size={16} />,
               },
               {
-                label: "configuration",
+                label: "Configuration",
                 key: "tickets/configuration",
                 icon: <GrConfigure size={20} />,
                 children: [
                   {
-                    label: <Link to="/tickets/category">Category</Link>,
+                    label: <Link to="/tickets/category">Category Create</Link>,
                     key: "/tickets/category",
                     icon: <FaRegListAlt size={16} />,
                   },
                   {
                     label: (
-                      <Link to="/tickets/assign-category">Assign Category</Link>
+                      <Link to="/tickets/assign-category">Category Assign</Link>
                     ),
                     key: "/tickets/assign-category",
                     icon: <FaRegListAlt size={16} />,

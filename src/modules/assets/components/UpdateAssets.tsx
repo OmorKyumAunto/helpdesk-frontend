@@ -185,10 +185,20 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                     ]}
                   >
                     <Select placeholder="Select Category">
-                      <Option value="Laptop">Laptop</Option>
-                      <Option value="Desktop">Desktop</Option>
-                      <Option value="Printer">Printer</Option>
-                      <Option value="Accessories">Accessories</Option>
+                     <Option value="Laptop">Laptop</Option>
+                    <Option value="Desktop">Desktop</Option>
+                    <Option value="Monitor">Monitor</Option>
+                    <Option value="Printer">Printer</Option>
+                    <Option value="Accessories">Accessories</Option>
+                    <Option value="TV">TV</Option>
+                    <Option value="Firewall">Firewall</Option>
+                    <Option value="Core Router">Core Router</Option>
+                    <Option value="Access Point">Access Point</Option>
+                    <Option value="Server">Server</Option>
+                    <Option value="Network Rack">Network Rack</Option>
+                    <Option value="24 Port Switch Managable">24 Port Switch Managable</Option>
+                    <Option value="48 Port Switch Managable">48 Port Switch Managable</Option>
+                    <Option value="Non Managable Switch">Non Managable Switch</Option>
                     </Select>
                   </Form.Item>
                 </Col>
