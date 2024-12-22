@@ -139,16 +139,19 @@ const CreateEmployee = () => {
                   rules={[{ required: true, message: "Please Select Unit" }]}
                 >
                   <Select placeholder="Select Unit Name">
-                  <Option value="FFL2">FFL2</Option>
-                  <Option value="Mawna Fashions Ltd">Mawna Fashions Ltd</Option>
-                    <Option value="JTML">JTML</Option>
-                    <Option value="DIPL">DIPL</Option>
+                    <Option value="JKL2">JKL2</Option>
+                    <Option value="Jinnat Knitting Ltd">Jinnat Knitting Ltd</Option>
+                    <Option value="FFL2">FFL2</Option>
+                    <Option value="DBLCL">DBLCL</Option>
+                    <Option value="Mawna Fashions Ltd">Mawna Fashions Ltd</Option>
+                    <Option value="Sylhet EZ">Sylhet EZ</Option>
+                    <Option value="Jinnat Complex">Jinnat Complex</Option>
+                    <Option value="DBL Pharma">DBL Pharma</Option>
                     <Option value="Corporate Office">Corporate Office</Option>
                     <Option value="DBTrims Plant">DBTrims Plant</Option>
                     <Option value="PPPL Plant">PPPL Plant</Option>
                     <Option value="EUDB">EUDB</Option>
                     <Option value="Thanbee Complex">Thanbee Complex</Option>
-                    <Option value="Flamingo2">Flamingo2</Option>
                     <Option value="Matin Complex">Matin Complex</Option>
                     <Option value="Mymun Complex">Mymun Complex</Option>
                   </Select>
@@ -185,9 +188,9 @@ const CreateEmployee = () => {
                 <Form.Item
                   label="Blood Group"
                   name="blood_group"
-                  // rules={[
-                  //   { required: true, message: "Please select blood group" },
-                  // ]}
+                // rules={[
+                //   { required: true, message: "Please select blood group" },
+                // ]}
                 >
                   <Select showSearch placeholder="Select Blood Group">
                     <Option value="A+">A+</Option>

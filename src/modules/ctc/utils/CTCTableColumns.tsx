@@ -24,9 +24,23 @@ export const CTCTableColumns = (): TableProps<ICTC>["columns"] => {
     },
     {
       title: "Assets",
-      render: ({ assets }) =>
-        assets?.map((item: any) => item?.category).join(", "),
+      render: ({ assets }) => {
+        if (!assets) return "";
+
+        const itemCount = assets.reduce((acc: Record<string, number>, item: any) => {
+          const category = item?.category;
+          if (category) {
+            acc[category] = (acc[category] || 0) + 1;
+          }
+          return acc;
+        }, {});
+
+        return Object.entries(itemCount)
+          .map(([category, count]) => `${count}x ${category}`)
+          .join(", ");
+      },
     },
+
     {
       title: "Location",
       dataIndex: "unit_name",
