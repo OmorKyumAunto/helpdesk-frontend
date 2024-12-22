@@ -1,10 +1,11 @@
-import { EyeOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
 import { TableProps } from "antd/lib";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import DistributeAssetDetails from "../components/DistributedAssetDetails";
 import { IAsset } from "../types/assetsTypes";
+import UpdateAsset from "../components/UpdateAssets";
 
 export const DistributedAssetsTableColumns =
   (): TableProps<IAsset>["columns"] => {
@@ -73,6 +74,22 @@ export const DistributedAssetsTableColumns =
               }}
             >
               <EyeOutlined />
+            </Button>
+            <Button
+              size="small"
+              style={{ color: "#1775BB" }}
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
+                    title: "Update Distributed Asset",
+                    content: <UpdateAsset asset={record} />,
+                    show: true,
+                    width: 678,
+                  })
+                );
+              }}
+            >
+              <EditOutlined />
             </Button>
           </Space>
         ),
