@@ -1,14 +1,9 @@
 import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
-
-const data = [
-  { name: "Group A", value: 400, color: "#FF6B6B" }, // Coral Red
-  { name: "Group B", value: 300, color: "#4ECDC4" }, // Turquoise
-  { name: "Group C", value: 300, color: "#45B7D1" }, // Sky Blue
-  { name: "Group D", value: 200, color: "#96CEB4" }, // Sage Green
-];
+import { useGetCategoryWiseDashboardDataQuery } from "../api/ticketEndpoint";
 
 const renderLabels = (props: any) => {
   const RADIAN = Math.PI / 180;
+
   const {
     cx,
     cy,
@@ -74,12 +69,34 @@ const renderLabels = (props: any) => {
 };
 
 const PieChartWithLabels = () => {
+  const { data: pieData } = useGetCategoryWiseDashboardDataQuery();
+  const colors = [
+    "#FF6B6B", // Red
+    "#4ECDC4", // Teal
+    "#45B7D1", // Sky Blue
+    "#96CEB4", // Light Green
+    "#FFB74D", // Orange
+    "#9575CD", // Purple
+    "#F06292", // Pink
+    "#A5D6A7", // Mint Green
+    "#FFD54F", // Yellow
+    "#64B5F6", // Light Blue
+  ];
+
+  const chartData = pieData?.data?.map((item, index) => {
+    return {
+      name: item.category_title,
+      value: item.ticket_count,
+      color: colors[index],
+    };
+  });
+
   return (
     <div className="w-full h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={data}
+            data={chartData}
             cx="50%"
             cy="50%"
             innerRadius={30}

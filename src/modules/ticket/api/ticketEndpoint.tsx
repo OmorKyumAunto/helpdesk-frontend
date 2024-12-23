@@ -4,6 +4,7 @@ import notification from "../../../common/utils/Notification";
 import asyncWrapper from "../../../utils/asyncWrapper";
 import {
   IAdminTicketList,
+  ICategoryWiseDashboard,
   ICommentList,
   IRaiseTicketList,
   ITicketDashboardCount,
@@ -66,6 +67,17 @@ export const ticketEndpoint = api.injectEndpoints({
         return {
           url: `/raise-ticket/raise-ticket`,
           params,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
+    getCategoryWiseDashboardData: build.query<
+      HTTPResponse<ICategoryWiseDashboard[]>,
+      void
+    >({
+      query: () => {
+        return {
+          url: `/raise-ticket-deshboard/priority-base-ticket`,
         };
       },
       providesTags: () => ["ticket"],
@@ -187,6 +199,7 @@ export const {
   useGetTicketDashboardCountQuery,
   useGetRaiseTicketUserWiseQuery,
   useGetTopTicketSolverQuery,
+  useGetCategoryWiseDashboardDataQuery,
   useGetRaiseTicketAdminWiseQuery,
   useGetRaiseTicketSuperAdminWiseQuery,
   useLazyGetCommentDataQuery,

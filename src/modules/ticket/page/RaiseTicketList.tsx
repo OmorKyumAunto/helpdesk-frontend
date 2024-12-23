@@ -27,6 +27,7 @@ import noUser from "../../../assets/avatar2.png";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { formatTimeDifference } from "../utils/timeFormat";
 dayjs.extend(relativeTime);
 
 const { Option } = Select;
@@ -142,6 +143,7 @@ const RaiseTicketList: React.FC = () => {
                   <Option value="low">Low</Option>
                   <Option value="medium">Medium</Option>
                   <Option value="high">High</Option>
+                  <Option value="urgent">Urgent</Option>
                 </Select>
               </div>
             )}
@@ -178,9 +180,13 @@ const RaiseTicketList: React.FC = () => {
                   }}
                 >
                   <div>
-                    <h2 style={{ color: "#1890ff" }}>{`#${
+                    <h3 style={{ color: "#1890ff" }}>{`Ticket Id: ${
                       ticket.ticket_id + 1
-                    } - ${ticket.subject}`}</h2>
+                    } - ${ticket.subject}`}</h3>
+                    <strong>
+                      Solved By: {ticket.ticket_solved_employee_name} (
+                      {ticket.ticket_solved_employee_id})
+                    </strong>
                   </div>
                   <div>
                     {ticket.ticket_status === "unsolved" && (
@@ -190,7 +196,10 @@ const RaiseTicketList: React.FC = () => {
                       <Tag color="success">SOLVED</Tag>
                     )}
                     {ticket.ticket_status === "forward" && (
-                      <Tag color="processing">FORWARD</Tag>
+                      <Tag color="pink">FORWARD</Tag>
+                    )}
+                    {ticket.ticket_status === "inprogress" && (
+                      <Tag color="processing">IN PROGRESS</Tag>
                     )}
                   </div>
                 </div>
@@ -242,8 +251,11 @@ const RaiseTicketList: React.FC = () => {
                     >
                       <p style={{ color: "gray" }}>Priority</p>
                       <>
+                        {ticket.priority === "urgent" && (
+                          <Tag color="red-inverse">URGENT</Tag>
+                        )}
                         {ticket.priority === "high" && (
-                          <Tag color="red-inverse">HIGHT</Tag>
+                          <Tag color="pink-inverse">HIGHT</Tag>
                         )}
                         {ticket.priority === "medium" && (
                           <Tag color="blue-inverse">MEDIUM</Tag>
@@ -290,6 +302,34 @@ const RaiseTicketList: React.FC = () => {
                       }}
                     >
                       <p style={{ color: "#444" }}>
+                        <strong>
+                          Ticket Created Time :{" "}
+                          {dayjs(ticket.created_at).format("DD MMM YYYY HH:mm")}{" "}
+                          ({dayjs(ticket.created_at).fromNow()})
+                        </strong>{" "}
+                      </p>
+                      <p style={{ color: "#444" }}>
+                        <strong>
+                          Ticket Last Updated Time :{" "}
+                          {dayjs(ticket.updated_at).format("DD MMM YYYY HH:mm")}{" "}
+                          ({dayjs(ticket.updated_at).fromNow()})
+                        </strong>{" "}
+                      </p>
+                      {ticket.ticket_status === "solved" && (
+                        <p style={{ color: "#444" }}>
+                          <strong>
+                            Ticket Solved in:{" "}
+                            {formatTimeDifference(
+                              dayjs(ticket.created_at),
+                              dayjs(ticket.updated_at)
+                            )}
+                          </strong>{" "}
+                        </p>
+                      )}
+                      <p style={{ color: "#444" }}>
+                        <strong>Details:</strong> {ticket.description}
+                      </p>
+                      <p style={{ color: "#444" }}>
                         <strong>Attachment:</strong>
                         {isPDF ? (
                           <a
@@ -316,10 +356,6 @@ const RaiseTicketList: React.FC = () => {
                           />
                         )}
                       </p>
-                      <p style={{ color: "#444" }}>
-                        <strong>Details:</strong> {ticket.description}
-                      </p>
-
                       <Card
                         style={{
                           marginTop: "1rem",

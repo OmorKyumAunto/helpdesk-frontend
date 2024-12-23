@@ -19,6 +19,8 @@ export interface IRaiseTicketList {
   category_name: string;
   asset_name: string;
   asset_category: string;
+  ticket_solved_employee_id: number;
+  ticket_solved_employee_name: string;
 }
 export interface IAdminTicketList {
   user_id: number;
@@ -67,4 +69,10 @@ export interface ITicketDashboardCount {
   total_unsolved: number;
   total_forward: number;
   total_inprocess: number;
+}
+export interface ICategoryWiseDashboard {
+  category_id: number;
+  category_title: string;
+  ticket_count: number;
+  percentage: string;
 }

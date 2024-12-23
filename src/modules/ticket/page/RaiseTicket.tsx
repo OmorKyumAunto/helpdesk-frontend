@@ -137,6 +137,7 @@ const RaiseTicketForm = () => {
                   <Option value="low">Low</Option>
                   <Option value="medium">Medium</Option>
                   <Option value="high">High</Option>
+                  <Option value="urgent">Urgent</Option>
                 </Select>
               </Form.Item>
 
