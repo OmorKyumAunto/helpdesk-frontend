@@ -17,6 +17,7 @@ import GraphChartApex from "../components/ApexChart";
 import ApexPieChart from "../components/ApexPieChart";
 import BloodTypeChart from "../components/BloodChart";
 import TopDash from "../components/TopDash";
+import GraphChartV2 from "../components/GraphChartV2";
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
@@ -190,7 +191,8 @@ const DashboardCards = () => {
             <BloodTypeChart />
           </Col>
           <Col xs={24} sm={24} md={24}>
-            <GraphChartApex />
+            {/* <GraphChartApex /> */}
+            <GraphChartV2 />
           </Col>
         </Row>
       ) : (

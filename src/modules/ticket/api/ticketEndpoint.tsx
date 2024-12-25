@@ -6,6 +6,9 @@ import {
   IAdminTicketList,
   ICategoryWiseDashboard,
   ICommentList,
+  IDashboardBarChart,
+  IPriorityWiseDashboard,
+  IRaiseSolvedDashboard,
   IRaiseTicketList,
   ITicketDashboardCount,
 } from "../types/ticketTypes";
@@ -77,7 +80,37 @@ export const ticketEndpoint = api.injectEndpoints({
     >({
       query: () => {
         return {
+          url: `/raise-ticket-deshboard/category-base-ticket`,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
+    getPriorityWiseDashboardData: build.query<
+      HTTPResponse<IPriorityWiseDashboard>,
+      void
+    >({
+      query: () => {
+        return {
           url: `/raise-ticket-deshboard/priority-base-ticket`,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
+    getRaiseSolveDashboardData: build.query<
+      HTTPResponse<IRaiseSolvedDashboard>,
+      void
+    >({
+      query: () => {
+        return {
+          url: `/raise-ticket-deshboard/raise-solve-ticket`,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
+    getDashboardBarData: build.query<HTTPResponse<IDashboardBarChart[]>, void>({
+      query: () => {
+        return {
+          url: `/raise-ticket-deshboard/ticket-dashboard-data`,
         };
       },
       providesTags: () => ["ticket"],
@@ -198,6 +231,9 @@ export const {
   useForwardTicketMutation,
   useGetTicketDashboardCountQuery,
   useGetRaiseTicketUserWiseQuery,
+  useGetRaiseSolveDashboardDataQuery,
+  useGetDashboardBarDataQuery,
+  useGetPriorityWiseDashboardDataQuery,
   useGetTopTicketSolverQuery,
   useGetCategoryWiseDashboardDataQuery,
   useGetRaiseTicketAdminWiseQuery,

@@ -180,37 +180,39 @@ const SuperAdminTicketList: React.FC = () => {
                   }}
                 >
                   <div>
-                    <h3 style={{ color: "#1890ff" }}>{`Ticket ID: ${ticket.ticket_id
-                      }`}</h3>
-                    <h3 style={{ color: "#000000" }}>{`Title : ${ticket.subject}`}</h3>
+                    <h3
+                      style={{ color: "#1890ff" }}
+                    >{`Ticket ID: ${ticket.ticket_id}`}</h3>
+                    <h3
+                      style={{ color: "#000000" }}
+                    >{`Title : ${ticket.subject}`}</h3>
                     <strong>
-                      Ticket Creator: {ticket.ticket_created_employee_name} ({ticket.ticket_created_employee_id})
+                      Ticket Creator: {ticket.ticket_created_employee_name} (
+                      {ticket.ticket_created_employee_id})
                       <div>
                         {ticket.ticket_status === "solved" && (
                           <strong>
-                            Solved By: {ticket.ticket_solved_employee_name} ({ticket.ticket_solved_employee_id})
+                            Solved By: {ticket.ticket_solved_employee_name} (
+                            {ticket.ticket_solved_employee_id})
                           </strong>
                         )}
                       </div>
-
                     </strong>
-
-
                   </div>
 
                   <div>
                     <Space>
                       {ticket.ticket_status === "unsolved" && (
-                        <Tag color="error">UNSOLVED</Tag>
+                        <Tag color="red-inverse">UNSOLVED</Tag>
                       )}
                       {ticket.ticket_status === "solved" && (
-                        <Tag color="success">SOLVED</Tag>
+                        <Tag color="green-inverse">SOLVED</Tag>
                       )}
                       {ticket.ticket_status === "forward" && (
-                        <Tag color="pink">FORWARD</Tag>
+                        <Tag color="pink-inverse">FORWARD</Tag>
                       )}
                       {ticket.ticket_status === "inprogress" && (
-                        <Tag color="processing">IN PROGRESS</Tag>
+                        <Tag color="blue-inverse">IN PROGRESS</Tag>
                       )}
                       <Popconfirm
                         title="Delete the ticket"
@@ -354,10 +356,9 @@ const SuperAdminTicketList: React.FC = () => {
                       }}
                     >
                       <p style={{ color: "#444" }}>
-                        <strong>CC Person : {ticket.cc}</strong> 
+                        <strong>CC Person : {ticket.cc}</strong>
                       </p>
                       <p style={{ color: "#444" }}>
-
                         <strong>
                           Assign Date :{" "}
                           {dayjs(ticket.ticket_created_at).format(
@@ -393,8 +394,9 @@ const SuperAdminTicketList: React.FC = () => {
                         <strong>Attachment:</strong>
                         {isPDF ? (
                           <a
-                            href={`${imageURLNew}/uploads/${ticket?.attachment?.split("ticket\\")[1]
-                              }`}
+                            href={`${imageURLNew}/uploads/${
+                              ticket?.attachment?.split("ticket\\")[1]
+                            }`}
                             target="_blank"
                           >
                             <Button size="small">View PDF</Button>
@@ -403,8 +405,9 @@ const SuperAdminTicketList: React.FC = () => {
                           <Image
                             src={
                               ticket.attachment
-                                ? `${imageURLNew}/uploads/${ticket?.attachment?.split("ticket\\")[1]
-                                }`
+                                ? `${imageURLNew}/uploads/${
+                                    ticket?.attachment?.split("ticket\\")[1]
+                                  }`
                                 : noImage
                             }
                             alt="attachment"
@@ -447,12 +450,12 @@ const SuperAdminTicketList: React.FC = () => {
                                     style={{
                                       color:
                                         profile?.employee_id ===
-                                          comment.employee_id
+                                        comment.employee_id
                                           ? "white"
                                           : "black",
                                       backgroundColor:
                                         profile?.employee_id ===
-                                          comment.employee_id
+                                        comment.employee_id
                                           ? "#1775BB"
                                           : "#E8E8E8",
                                       padding: "6px 12px",

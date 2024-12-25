@@ -10,6 +10,9 @@ import {
 } from "recharts";
 import PieChartWithLabels from "./PieChart";
 import {
+  useGetDashboardBarDataQuery,
+  useGetPriorityWiseDashboardDataQuery,
+  useGetRaiseSolveDashboardDataQuery,
   useGetTicketDashboardCountQuery,
   useGetTopTicketSolverQuery,
 } from "../api/ticketEndpoint";
@@ -17,6 +20,10 @@ const TicketDashboard = () => {
   const { md, lg } = Grid.useBreakpoint();
   const { data } = useGetTicketDashboardCountQuery();
   const { data: topSolver } = useGetTopTicketSolverQuery();
+  const { data: raiseSolved } = useGetRaiseSolveDashboardDataQuery();
+  const { data: priority } = useGetPriorityWiseDashboardDataQuery();
+  const { data: barData } = useGetDashboardBarDataQuery();
+
   const ticketPriorityCards = [
     {
       id: 1,
@@ -44,20 +51,7 @@ const TicketDashboard = () => {
       data: data?.data?.total_forward,
     },
   ];
-  const ticketData = [
-    { name: "Jan", raiseTickets: 100, solvedTickets: 80 },
-    { name: "Feb", raiseTickets: 380, solvedTickets: 20 },
-    { name: "Mar", raiseTickets: 50, solvedTickets: 30 },
-    { name: "Apr", raiseTickets: 40, solvedTickets: 20 },
-    { name: "May", raiseTickets: 280, solvedTickets: 250 },
-    { name: "Jun", raiseTickets: 300, solvedTickets: 280 },
-    { name: "Jul", raiseTickets: 150, solvedTickets: 100 },
-    { name: "Aug", raiseTickets: 400, solvedTickets: 350 },
-    { name: "Sep", raiseTickets: 250, solvedTickets: 200 },
-    { name: "Oct", raiseTickets: 350, solvedTickets: 300 },
-    { name: "Nov", raiseTickets: 750, solvedTickets: 400 },
-    { name: "Dec", raiseTickets: 500, solvedTickets: 450 },
-  ];
+  const ticketData = barData?.data || [];
 
   return (
     <Card style={{ width: "100%", backgroundColor: "#f5f5f5" }}>
@@ -70,7 +64,7 @@ const TicketDashboard = () => {
             <Card
               style={{
                 textAlign: "center",
-                backgroundColor: "#0B5345",
+                backgroundColor: "#ba45ba",
                 color: "white",
               }}
             >
@@ -124,7 +118,7 @@ const TicketDashboard = () => {
                       color: "#000",
                     }}
                   >
-                    6852
+                    {raiseSolved?.data?.total_ticket || 0}
                   </Typography.Text>
                   <Typography.Text
                     style={{
@@ -134,10 +128,15 @@ const TicketDashboard = () => {
                       color: "#000",
                     }}
                   >
-                    100%
+                    {raiseSolved?.data?.total_ticket_percent || 0}%
                   </Typography.Text>
                 </Space>
-                <Progress percent={100} style={{ color: "#1775bb" }} showInfo={false} status="normal" />
+                <Progress
+                  percent={raiseSolved?.data?.total_ticket_percent || 0}
+                  style={{ color: "#1775bb" }}
+                  showInfo={false}
+                  status="normal"
+                />
               </div>
               <div>
                 <Typography.Title level={5} style={{ margin: "0px" }}>
@@ -154,7 +153,7 @@ const TicketDashboard = () => {
                       color: "#000",
                     }}
                   >
-                    582
+                    {raiseSolved?.data?.total_solved || 0}
                   </Typography.Text>
                   <Typography.Text
                     style={{
@@ -164,17 +163,113 @@ const TicketDashboard = () => {
                       color: "#000",
                     }}
                   >
-                    90%
+                    {raiseSolved?.data?.total_solved_percent || 0}%
                   </Typography.Text>
                 </Space>
                 <Progress
-                  percent={90}
+                  percent={raiseSolved?.data?.total_solved_percent || 0}
                   style={{ color: "#8dc73f" }}
                   showInfo={false}
                   status="success"
                 />
               </div>
             </Space>
+          </Card>
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={6}>
+          <Card title="Priority Base Counts" style={{ height: "100%" }}>
+            <Space direction="vertical" style={{ width: "100%" }}>
+              <Card size="small">
+                <Space>
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      fontWeight: "bold",
+                      borderRadius: "50%",
+                      background: "#ff4d4f",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                    }}
+                  >
+                    {priority?.data?.priority_urgent || 0}
+                  </div>
+                  <span style={{ fontWeight: "bold" }}>URGENT</span>
+                </Space>
+              </Card>
+              <Card size="small">
+                <Space>
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      fontWeight: "bold",
+                      borderRadius: "50%",
+                      background: "#1890ff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                    }}
+                  >
+                    {priority?.data?.priority_high || 0}
+                  </div>
+                  <span style={{ fontWeight: "bold" }}>HIGH</span>
+                </Space>
+              </Card>
+              <Card size="small">
+                <Space>
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      fontWeight: "bold",
+                      borderRadius: "50%",
+                      background: "#F9629F",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                    }}
+                  >
+                    {priority?.data?.priority_medium || 0}
+                  </div>
+                  <span style={{ fontWeight: "bold" }}>MEDIUM</span>
+                </Space>
+              </Card>
+              <Card size="small">
+                <Space>
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      fontWeight: "bold",
+                      borderRadius: "50%",
+                      background: "#32de84",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                    }}
+                  >
+                    {priority?.data?.priority_low || 0}
+                  </div>
+                  <span style={{ fontWeight: "bold" }}>LOW</span>
+                </Space>
+              </Card>
+            </Space>
+          </Card>
+        </Col>
+
+        {/* Pie Chart Component */}
+        <Col xs={24} sm={24} md={24} lg={11}>
+          <Card
+            title="Category Wise Percentage"
+            style={{ width: "100%", height: "100%" }}
+          >
+            <PieChartWithLabels />
           </Card>
         </Col>
         <Col xs={24} sm={24} md={24} lg={7}>
@@ -198,98 +293,6 @@ const TicketDashboard = () => {
               ]}
               dataSource={topSolver?.data?.length ? topSolver?.data : []}
             />
-          </Card>
-        </Col>
-        {/* Pie Chart Component */}
-        <Col xs={24} sm={24} md={24} lg={10}>
-          <Card title="Category Wise Percentage" style={{ width: "100%", height: "100%" }}>
-            <PieChartWithLabels />
-          </Card>
-        </Col>
-        <Col xs={24} sm={24} md={24} lg={7}>
-          <Card title="Priority Base Counts" style={{ height: "100%" }}>
-            <Space direction="vertical" style={{ width: "100%" }}>
-              <Card size="small">
-                <Space>
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#ff4d4f",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                    }}
-                  >
-                    12
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>URGENT</span>
-                </Space>
-              </Card>
-              <Card size="small">
-                <Space>
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#1890ff",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                    }}
-                  >
-                    40
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>HIGH</span>
-                </Space>
-              </Card>
-              <Card size="small">
-                <Space>
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#F9629F",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                    }}
-                  >
-                    15
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>MEDIUM</span>
-                </Space>
-              </Card>
-              <Card size="small">
-                <Space>
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#32de84",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                    }}
-                  >
-                    10
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>LOW</span>
-                </Space>
-              </Card>
-            </Space>
           </Card>
         </Col>
       </Row>

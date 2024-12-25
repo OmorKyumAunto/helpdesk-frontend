@@ -78,3 +78,20 @@ export interface ICategoryWiseDashboard {
   ticket_count: number;
   percentage: string;
 }
+export interface IRaiseSolvedDashboard {
+  total_ticket: number;
+  total_ticket_percent: number;
+  total_solved: number;
+  total_solved_percent: number;
+}
+export interface IPriorityWiseDashboard {
+  priority_high: number;
+  priority_low: number;
+  priority_medium: number;
+  priority_urgent: number;
+}
+export interface IDashboardBarChart {
+  month: string;
+  total_solve: number;
+  total_raise: number;
+}
