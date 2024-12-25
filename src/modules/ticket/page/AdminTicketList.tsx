@@ -189,11 +189,12 @@ const AdminTicketList: React.FC = () => {
                   }}
                 >
                   <div>
-                    <h3 style={{ color: "#1890ff" }}>{`Ticket Id: ${
+                    <h3 style={{ color: "#1890ff" }}>{`Ticket ID: ${
                       ticket.ticket_id + 1
-                    } - ${ticket.subject}`}</h3>
+                    }`}</h3>
+                    <h3 style={{ color: "#000000" }}>{`Title: ${ticket.subject}`}</h3>
                     <strong>
-                      Created By: {ticket.name} ({ticket.employee_id})
+                     Ticket Creator: {ticket.ticket_created_employee_name} ({ticket.ticket_created_employee_id})
                     </strong>
                   </div>
                   <div>
@@ -327,8 +328,11 @@ const AdminTicketList: React.FC = () => {
                       }}
                     >
                       <p style={{ color: "#444" }}>
+                        <strong>CC Person : {ticket.cc}</strong> 
+                      </p>
+                      <p style={{ color: "#444" }}>
                         <strong>
-                          Ticket Created Time :{" "}
+                          Assign Date :{" "}
                           {dayjs(ticket.ticket_created_at).format(
                             "DD MMM YYYY HH:mm"
                           )}{" "}
@@ -337,7 +341,7 @@ const AdminTicketList: React.FC = () => {
                       </p>
                       <p style={{ color: "#444" }}>
                         <strong>
-                          Ticket Last Updated Time :{" "}
+                           Last Updated at :{" "}
                           {dayjs(ticket.ticket_updated_at).format(
                             "DD MMM YYYY HH:mm"
                           )}{" "}
@@ -347,7 +351,7 @@ const AdminTicketList: React.FC = () => {
                       {ticket.ticket_status === "solved" && (
                         <p style={{ color: "#444" }}>
                           <strong>
-                            Ticket Solved in:{" "}
+                          Time Taken :{" "}
                             {formatTimeDifference(
                               dayjs(ticket.ticket_created_at),
                               dayjs(ticket.ticket_updated_at)
@@ -356,7 +360,7 @@ const AdminTicketList: React.FC = () => {
                         </p>
                       )}
                       <p style={{ color: "#444" }}>
-                        <strong>Details:</strong> {ticket.description}
+                        <strong>Message:</strong> {ticket.description}
                       </p>
                       <p style={{ color: "#444" }}>
                         <strong>Attachment:</strong>

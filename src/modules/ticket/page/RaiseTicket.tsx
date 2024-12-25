@@ -137,7 +137,7 @@ const RaiseTicketForm = () => {
                   <Option value="low">Low</Option>
                   <Option value="medium">Medium</Option>
                   <Option value="high">High</Option>
-                  <Option value="urgent">Urgent</Option>
+                  {/* <Option value="urgent">Urgent</Option> */}
                 </Select>
               </Form.Item>
 
@@ -203,7 +203,7 @@ const RaiseTicketForm = () => {
               </Form.Item>
 
               <Form.Item
-                label="Description"
+                label="Message"
                 name="description"
                 rules={[
                   { required: true, message: "Please enter a description!" },
@@ -214,7 +214,7 @@ const RaiseTicketForm = () => {
 
               <Form.Item
                 name="attachment"
-                label="Upload Asset File"
+                label="Attachment(Optional)"
                 valuePropName="fileList"
                 getValueFromEvent={normFile}
               >
