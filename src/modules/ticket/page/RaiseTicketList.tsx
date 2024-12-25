@@ -13,6 +13,8 @@ import {
   Image,
   Empty,
   Pagination,
+  Radio,
+  Descriptions,
 } from "antd";
 import {
   useCreateCommentMutation,
@@ -89,7 +91,13 @@ const RaiseTicketList: React.FC = () => {
     getComments(id);
     handleExpand(id);
   };
-
+  const options = [
+    { label: "All", value: "" },
+    { label: "In Progress", value: "inprogress" },
+    { label: "Solved", value: "solved" },
+    { label: "Unsolved", value: "unsolved" },
+    { label: "Forward", value: "forward" },
+  ];
   return (
     <Card
       loading={isLoading}
@@ -97,59 +105,36 @@ const RaiseTicketList: React.FC = () => {
       title="Ticket List"
       extra={
         <Space>
+          <Radio.Group
+            // block
+            options={options}
+            defaultValue=""
+            optionType="button"
+            buttonStyle="solid"
+            onChange={(e) =>
+              setFilter({ ...filter, status: e.target.value, offset: 0 })
+            }
+          />
           <Input
             prefix={<SearchOutlined />}
-            style={{ width: "180px" }}
+            style={{ width: "160px" }}
             onChange={(e) =>
               setFilter({ ...filter, key: e.target.value, offset: 0 })
             }
             placeholder="Search..."
           />
-          <Dropdown
-            trigger={["hover"]}
-            dropdownRender={() => (
-              <div
-                style={{
-                  padding: 16,
-                  background: "#fff",
-                  borderRadius: 8,
-                  width: "190px",
-                  border: "1px solid #f2f2f2",
-                }}
-              >
-                <Select
-                  allowClear
-                  style={{ width: "180px", marginBottom: 8 }}
-                  onChange={(e) =>
-                    setFilter({ ...filter, status: e, offset: 0 })
-                  }
-                  placeholder="Select Status"
-                >
-                  <Option value="">All</Option>
-                  <Option value="inprogress">IN PROGRESS</Option>
-                  <Option value="solved">SOLVED</Option>
-                  <Option value="unsolved">UNSOLVED</Option>
-                  <Option value="forward">FORWARD</Option>
-                </Select>
-                <Select
-                  allowClear
-                  style={{ width: "180px", marginBottom: 8 }}
-                  onChange={(e) =>
-                    setFilter({ ...filter, priority: e, offset: 0 })
-                  }
-                  placeholder="Select Priority"
-                >
-                  <Option value="">All</Option>
-                  <Option value="low">Low</Option>
-                  <Option value="medium">Medium</Option>
-                  <Option value="high">High</Option>
-                  <Option value="urgent">Urgent</Option>
-                </Select>
-              </div>
-            )}
+          <Select
+            allowClear
+            style={{ width: "160px" }}
+            onChange={(e) => setFilter({ ...filter, priority: e, offset: 0 })}
+            placeholder="Select Priority"
           >
-            <Button icon={<FilterOutlined />}>Filters</Button>
-          </Dropdown>
+            <Option value="">All</Option>
+            <Option value="low">Low</Option>
+            <Option value="medium">Medium</Option>
+            <Option value="high">High</Option>
+            <Option value="urgent">Urgent</Option>
+          </Select>
         </Space>
       }
     >
@@ -197,16 +182,16 @@ const RaiseTicketList: React.FC = () => {
                   </div>
                   <div>
                     {ticket.ticket_status === "unsolved" && (
-                      <Tag color="error">UNSOLVED</Tag>
+                      <Tag color="red-inverse">UNSOLVED</Tag>
                     )}
                     {ticket.ticket_status === "solved" && (
-                      <Tag color="success">SOLVED</Tag>
+                      <Tag color="green-inverse">SOLVED</Tag>
                     )}
                     {ticket.ticket_status === "forward" && (
-                      <Tag color="pink">FORWARD</Tag>
+                      <Tag color="pink-inverse">FORWARD</Tag>
                     )}
                     {ticket.ticket_status === "inprogress" && (
-                      <Tag color="processing">IN PROGRESS</Tag>
+                      <Tag color="blue-inverse">IN PROGRESS</Tag>
                     )}
                   </div>
                 </div>
@@ -308,64 +293,94 @@ const RaiseTicketList: React.FC = () => {
                         borderRadius: "8px",
                       }}
                     >
-                      <p style={{ color: "#444" }}>
-                        <strong>CC Person : {ticket.cc}</strong>
-                      </p>
-                      <p style={{ color: "#444" }}>
-                        <strong>
-                          Assign Date :{" "}
-                          {dayjs(ticket.created_at).format("DD MMM YYYY HH:mm")}{" "}
-                          ({dayjs(ticket.created_at).fromNow()})
-                        </strong>{" "}
-                      </p>
-                      <p style={{ color: "#444" }}>
-                        <strong>
-                          Last Updated at :{" "}
-                          {dayjs(ticket.updated_at).format("DD MMM YYYY HH:mm")}{" "}
-                          ({dayjs(ticket.updated_at).fromNow()})
-                        </strong>{" "}
-                      </p>
-                      {ticket.ticket_status === "solved" && (
-                        <p style={{ color: "#444" }}>
-                          <strong>
-                            Time Taken :{" "}
-                            {formatTimeDifference(
-                              dayjs(ticket.created_at),
-                              dayjs(ticket.updated_at)
+                      <Descriptions
+                        bordered
+                        size="small"
+                        items={[
+                          {
+                            key: "1",
+                            label: "CC Person",
+                            children: ticket.cc,
+                          },
+                          {
+                            key: "2",
+                            label: " Assign Date",
+                            children: dayjs(ticket.created_at).format(
+                              "DD MMM YYYY HH:mm"
+                            ),
+                          },
+                          {
+                            key: "3",
+                            label: "Last Updated at",
+                            children: `${dayjs(ticket.updated_at).format(
+                              "DD MMM YYYY HH:mm"
                             )}
-                          </strong>{" "}
-                        </p>
-                      )}
-                      <p style={{ color: "#444" }}>
-                        <strong>Message:</strong> {ticket.description}
-                      </p>
-                      <p style={{ color: "#444" }}>
-                        <strong>Attachment:</strong>
-                        {isPDF ? (
-                          <a
-                            href={`${imageURLNew}/uploads/${
-                              ticket?.attachment?.split("ticket\\")[1]
-                            }`}
-                            target="_blank"
-                          >
-                            <Button size="small">View PDF</Button>
-                          </a>
-                        ) : (
-                          <Image
-                            src={
-                              ticket.attachment
-                                ? `${imageURLNew}/uploads/${
-                                    ticket?.attachment?.split("ticket\\")[1]
-                                  }`
-                                : noImage
-                            }
-                            alt="attachment"
-                            width={30}
-                            style={{ maxHeight: "30px" }}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        )}
-                      </p>
+                          (${dayjs(ticket.updated_at).fromNow()})`,
+                          },
+                          ...(ticket.ticket_status === "solved"
+                            ? [
+                                {
+                                  key: "4",
+                                  label: " Time Taken",
+                                  children: formatTimeDifference(
+                                    dayjs(ticket.created_at),
+                                    dayjs(ticket.updated_at)
+                                  ),
+                                },
+                              ]
+                            : []),
+                        ]}
+                      />
+                      <Divider />
+                      <Descriptions
+                        bordered
+                        layout="vertical"
+                        size="small"
+                        items={[
+                          {
+                            key: "1",
+                            label: "Attachment",
+                            span: 1, // 1 part out of 5 (20%)
+                            children: (
+                              <>
+                                {isPDF ? (
+                                  <a
+                                    href={`${imageURLNew}/uploads/${
+                                      ticket?.attachment?.split("ticket\\")[1]
+                                    }`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <Button size="small">View PDF</Button>
+                                  </a>
+                                ) : (
+                                  <Image
+                                    src={
+                                      ticket.attachment
+                                        ? `${imageURLNew}/uploads/${
+                                            ticket?.attachment?.split(
+                                              "ticket\\"
+                                            )[1]
+                                          }`
+                                        : noImage
+                                    }
+                                    alt="attachment"
+                                    width={30}
+                                    style={{ maxHeight: "30px" }}
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                )}
+                              </>
+                            ),
+                          },
+                          {
+                            key: "2",
+                            label: "Message",
+                            span: 4, // 4 parts out of 5 (80%)
+                            children: ticket.description,
+                          },
+                        ]}
+                      />
                       <Card
                         style={{
                           marginTop: "1rem",
