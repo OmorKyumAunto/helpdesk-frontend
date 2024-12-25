@@ -14,6 +14,7 @@ import {
   Popconfirm,
   Empty,
   Pagination,
+  Radio,
 } from "antd";
 import {
   useCreateCommentMutation,
@@ -104,6 +105,13 @@ const SuperAdminTicketList: React.FC = () => {
     getComments(id);
     handleExpand(id);
   };
+  const options = [
+    { label: "All", value: "" },
+    { label: "In Progress", value: "inprogress" },
+    { label: "Solved", value: "solved" },
+    { label: "Unsolved", value: "unsolved" },
+    { label: "Forward", value: "forward" },
+  ];
 
   return (
     <Card
@@ -112,59 +120,36 @@ const SuperAdminTicketList: React.FC = () => {
       title="Super Admin Ticket List"
       extra={
         <Space>
+          <Radio.Group
+            // block
+            options={options}
+            defaultValue=""
+            optionType="button"
+            buttonStyle="solid"
+            onChange={(e) =>
+              setFilter({ ...filter, status: e.target.value, offset: 0 })
+            }
+          />
           <Input
             prefix={<SearchOutlined />}
-            style={{ width: "180px" }}
+            style={{ width: "160px" }}
             onChange={(e) =>
               setFilter({ ...filter, key: e.target.value, offset: 0 })
             }
             placeholder="Search..."
           />
-          <Dropdown
-            trigger={["hover"]}
-            dropdownRender={() => (
-              <div
-                style={{
-                  padding: 16,
-                  background: "#fff",
-                  borderRadius: 8,
-                  width: "190px",
-                  border: "1px solid #f2f2f2",
-                }}
-              >
-                <Select
-                  allowClear
-                  style={{ width: "180px", marginBottom: 8 }}
-                  onChange={(e) =>
-                    setFilter({ ...filter, status: e, offset: 0 })
-                  }
-                  placeholder="Select Status"
-                >
-                  <Option value="">All</Option>
-                  <Option value="inprogress">IN PROGRESS</Option>
-                  <Option value="solved">SOLVED</Option>
-                  <Option value="unsolved">UNSOLVED</Option>
-                  <Option value="forward">FORWARD</Option>
-                </Select>
-                <Select
-                  allowClear
-                  style={{ width: "180px", marginBottom: 8 }}
-                  onChange={(e) =>
-                    setFilter({ ...filter, priority: e, offset: 0 })
-                  }
-                  placeholder="Select Priority"
-                >
-                  <Option value="">All</Option>
-                  <Option value="low">Low</Option>
-                  <Option value="medium">Medium</Option>
-                  <Option value="high">High</Option>
-                  <Option value="urgent">Urgent</Option>
-                </Select>
-              </div>
-            )}
+          <Select
+            allowClear
+            style={{ width: "160px" }}
+            onChange={(e) => setFilter({ ...filter, priority: e, offset: 0 })}
+            placeholder="Select Priority"
           >
-            <Button icon={<FilterOutlined />}>Filters</Button>
-          </Dropdown>
+            <Option value="">All</Option>
+            <Option value="low">Low</Option>
+            <Option value="medium">Medium</Option>
+            <Option value="high">High</Option>
+            <Option value="urgent">Urgent</Option>
+          </Select>
         </Space>
       }
     >

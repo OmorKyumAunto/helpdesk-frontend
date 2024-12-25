@@ -183,10 +183,13 @@ const RaiseTicketList: React.FC = () => {
                     <h3 style={{ color: "#1890ff" }}>{`Ticket Id: ${
                       ticket.ticket_id + 1
                     } - ${ticket.subject}`}</h3>
-                    <strong>
-                      Solved By: {ticket.ticket_solved_employee_name} (
-                      {ticket.ticket_solved_employee_id})
-                    </strong>
+                    {ticket.ticket_solved_employee_name &&
+                      ticket.ticket_solved_employee_id && (
+                        <strong>
+                          Solved By: {ticket.ticket_solved_employee_name} (
+                          {ticket.ticket_solved_employee_id})
+                        </strong>
+                      )}
                   </div>
                   <div>
                     {ticket.ticket_status === "unsolved" && (
