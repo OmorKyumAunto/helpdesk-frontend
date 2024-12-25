@@ -147,6 +147,7 @@ const CreateEmployee = () => {
                     <Option value="Sylhet EZ">Sylhet EZ</Option>
                     <Option value="Jinnat Complex">Jinnat Complex</Option>
                     <Option value="DBL Pharma">DBL Pharma</Option>
+                    <Option value="eco Plant">eco Plant</Option>
                     <Option value="Corporate Office">Corporate Office</Option>
                     <Option value="DBTrims Plant">DBTrims Plant</Option>
                     <Option value="PPPL Plant">PPPL Plant</Option>

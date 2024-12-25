@@ -121,6 +121,8 @@ const CreateAsset = () => {
                     <Option value="Printer">Printer</Option>
                     <Option value="Accessories">Accessories</Option>
                     <Option value="TV">TV</Option>
+                    <Option value="Speaker">Speaker</Option>
+                    <Option value="Scanner">Scanner</Option>
                     <Option value="Camera">Camera</Option>
                     <Option value="NVR/DVR">NVR/DVR</Option>
                     <Option value="Conference System">Conference System</Option>

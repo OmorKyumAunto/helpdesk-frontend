@@ -190,7 +190,7 @@ const AdminTicketList: React.FC = () => {
                 >
                   <div>
                     <h3 style={{ color: "#1890ff" }}>{`Ticket ID: ${
-                      ticket.ticket_id + 1
+                      ticket.ticket_id
                     }`}</h3>
                     <h3 style={{ color: "#000000" }}>{`Title: ${ticket.subject}`}</h3>
                     <strong>
