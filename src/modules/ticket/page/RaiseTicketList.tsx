@@ -93,7 +93,7 @@ const RaiseTicketList: React.FC = () => {
   };
   const options = [
     { label: "All", value: "" },
-    { label: "In Progress", value: "inprogress" },
+    // { label: "In Progress", value: "inprogress" },
     { label: "Solved", value: "solved" },
     { label: "Unsolved", value: "unsolved" },
     { label: "Forward", value: "forward" },
@@ -133,7 +133,7 @@ const RaiseTicketList: React.FC = () => {
             <Option value="low">Low</Option>
             <Option value="medium">Medium</Option>
             <Option value="high">High</Option>
-            <Option value="urgent">Urgent</Option>
+            {/* <Option value="urgent">Urgent</Option> */}
           </Select>
         </Space>
       }
@@ -243,9 +243,9 @@ const RaiseTicketList: React.FC = () => {
                     >
                       <p style={{ color: "gray" }}>Priority</p>
                       <>
-                        {ticket.priority === "urgent" && (
+                        {/* {ticket.priority === "urgent" && (
                           <Tag color="red-inverse">URGENT</Tag>
-                        )}
+                        )} */}
                         {ticket.priority === "high" && (
                           <Tag color="pink-inverse">HIGHT</Tag>
                         )}
@@ -296,11 +296,12 @@ const RaiseTicketList: React.FC = () => {
                       <Descriptions
                         bordered
                         size="small"
+                        column={2}
                         items={[
                           {
                             key: "1",
                             label: "CC Person",
-                            children: ticket.cc,
+                            children: ticket.cc ? ticket.cc : "Null",
                           },
                           {
                             key: "2",
@@ -336,51 +337,47 @@ const RaiseTicketList: React.FC = () => {
                         bordered
                         layout="vertical"
                         size="small"
-                        items={[
-                          {
-                            key: "1",
-                            label: "Attachment",
-                            span: 1, // 1 part out of 5 (20%)
-                            children: (
-                              <>
-                                {isPDF ? (
-                                  <a
-                                    href={`${imageURLNew}/uploads/${
-                                      ticket?.attachment?.split("ticket\\")[1]
-                                    }`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <Button size="small">View PDF</Button>
-                                  </a>
-                                ) : (
-                                  <Image
-                                    src={
-                                      ticket.attachment
-                                        ? `${imageURLNew}/uploads/${
-                                            ticket?.attachment?.split(
-                                              "ticket\\"
-                                            )[1]
-                                          }`
-                                        : noImage
-                                    }
-                                    alt="attachment"
-                                    width={30}
-                                    style={{ maxHeight: "30px" }}
-                                    onClick={(e) => e.stopPropagation()}
-                                  />
-                                )}
-                              </>
-                            ),
-                          },
-                          {
-                            key: "2",
-                            label: "Message",
-                            span: 4, // 4 parts out of 5 (80%)
-                            children: ticket.description,
-                          },
-                        ]}
-                      />
+                      >
+                        <Descriptions.Item
+                          label="Attachment"
+                          key="1"
+                        >
+                          <div style={{ maxWidth: '50px', textAlign: 'center' }}>
+                            {isPDF ? (
+                              <a
+                                href={`${imageURLNew}/uploads/${ticket?.attachment?.split("ticket\\")[1]
+                                  }`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Button size="small" style={{ fontSize: '8px', padding: '0 5px' }}>PDF</Button>
+                              </a>
+                            ) : (
+                              <Image
+                                src={
+                                  ticket.attachment
+                                    ? `${imageURLNew}/uploads/${ticket?.attachment?.split("ticket\\")[1]
+                                    }`
+                                    : noImage
+                                }
+                                alt="attachment"
+                                width={40}
+                                style={{ maxHeight: '40px' }}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            )}
+                          </div>
+                        </Descriptions.Item>
+
+                        <Descriptions.Item
+                          label="Message"
+                          key="2"
+                        >
+                          <div style={{ minWidth: '500px', wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+                            {ticket.description}
+                          </div>
+                        </Descriptions.Item>
+                      </Descriptions>
                       <Card
                         style={{
                           marginTop: "1rem",
