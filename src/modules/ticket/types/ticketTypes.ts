@@ -51,6 +51,8 @@ export interface IAdminTicketList {
   ticket_created_employee_id: string;
   ticket_created_employee_name: string;
   ticket_created_employee_email: string;
+  ticket_solved_employee_id: number;
+  ticket_solved_employee_name: string;
 }
 export interface ICommentList {
   id: number;

@@ -81,6 +81,11 @@ const PieChartWithLabels = () => {
     "#A5D6A7", // Mint Green
     "#FFD54F", // Yellow
     "#64B5F6", // Light Blue
+    "#000000", // Black
+    "#00FF00", // Lime
+    "#800000", // Maroon
+    "#FFD700", // Gold
+    "#B22222", // FireBrick
   ];
 
   const chartData = pieData?.data?.map((item, index) => {

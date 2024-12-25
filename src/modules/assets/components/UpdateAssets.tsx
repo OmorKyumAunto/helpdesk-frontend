@@ -191,6 +191,11 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                     <Option value="Printer">Printer</Option>
                     <Option value="Accessories">Accessories</Option>
                     <Option value="TV">TV</Option>
+                    <Option value="Speaker">Speaker</Option>
+                    <Option value="Scanner">Scanner</Option>
+                    <Option value="Camera">Camera</Option>
+                    <Option value="NVR/DVR">NVR/DVR</Option>
+                    <Option value="Conference System">Conference System</Option>
                     <Option value="Firewall">Firewall</Option>
                     <Option value="Core Router">Core Router</Option>
                     <Option value="Access Point">Access Point</Option>

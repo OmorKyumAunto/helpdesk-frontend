@@ -70,7 +70,7 @@ const TicketDashboard = () => {
             <Card
               style={{
                 textAlign: "center",
-                backgroundColor: "#1775BB",
+                backgroundColor: "#0B5345",
                 color: "white",
               }}
             >
@@ -93,12 +93,12 @@ const TicketDashboard = () => {
                   <Tooltip />
                   <Bar
                     dataKey="raiseTickets"
-                    fill="#1890ff"
+                    fill="#1775bb"
                     name="Raise Tickets"
                   />
                   <Bar
                     dataKey="solvedTickets"
-                    fill="#ff4d4f"
+                    fill="#8dc73f"
                     name="Solved Tickets"
                   />
                 </BarChart>
@@ -137,7 +137,7 @@ const TicketDashboard = () => {
                     100%
                   </Typography.Text>
                 </Space>
-                <Progress percent={100} showInfo={false} status="normal" />
+                <Progress percent={100} style={{ color: "#1775bb" }} showInfo={false} status="normal" />
               </div>
               <div>
                 <Typography.Title level={5} style={{ margin: "0px" }}>
@@ -169,7 +169,7 @@ const TicketDashboard = () => {
                 </Space>
                 <Progress
                   percent={90}
-                  style={{ color: "green" }}
+                  style={{ color: "#8dc73f" }}
                   showInfo={false}
                   status="success"
                 />
@@ -202,7 +202,7 @@ const TicketDashboard = () => {
         </Col>
         {/* Pie Chart Component */}
         <Col xs={24} sm={24} md={24} lg={10}>
-          <Card title="Category Wise Percentage" style={{ height: "100%" }}>
+          <Card title="Category Wise Percentage" style={{ width: "100%", height: "100%" }}>
             <PieChartWithLabels />
           </Card>
         </Col>
