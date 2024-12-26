@@ -89,7 +89,7 @@ export const sideBarItems = (roleId: number) => {
         ]
       : [
           {
-            label: <Link to="/tickets/list">Ticket</Link>,
+            label: <Link to="/tickets/list">Ticketing System</Link>,
             key: "/tickets/list",
             icon: <FaRegListAlt size={16} />,
           },

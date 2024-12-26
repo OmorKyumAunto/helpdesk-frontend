@@ -47,22 +47,24 @@ const DashboardCards = () => {
         <Row gutter={[12, 12]}>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Link to={"/assets/list"}>
-              <Card className="bg-[#ba45ba] text-white">
+              <Card className="bg-[#ba45ba] text-white card-hover">
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    padding: "16px", // Ensures padding is applied to the card content
+                    position: "relative",
                   }}
                 >
                   <div>
-                    <Typography.Title style={{ color: "white" }} level={3}>
+                    <Typography.Title style={{ color: "white" }} level={4}>
                       Total Asset
                     </Typography.Title>
                     <p
                       style={{
                         textAlign: "center",
-                        fontSize: "24px",
+                        fontSize: "22px",
                         fontWeight: "bold",
                         marginTop: "4px",
                       }}
@@ -89,26 +91,63 @@ const DashboardCards = () => {
                   </div>
                 </div>
               </Card>
+
+              <style>
+                {`
+    .card-hover {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px; /* More rounded corners */
+      transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth zoom-in/out and background transition */
+    }
+
+    .card-hover:hover {
+      transform: scale(1.05);  /* Slight zoom-in effect */
+      background-color: #9f33a0;  /* Subtle background color change */
+    }
+
+    .card-hover::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
+      border-radius: 15px; /* Matching rounded corners */
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;  /* Prevent interaction with inner border */
+    }
+
+    .card-hover:hover::before {
+      opacity: 0;  /* Fade in the inner border */
+    }
+  `}
+              </style>
+
             </Link>
           </Col>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Link to={"/employee/list"}>
-              <Card className="bg-[#ffa500] text-white">
+              <Card className="bg-[#ffa500] text-white card-hover-employee">
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    padding: "16px", // Ensures padding is applied to the card content
+                    position: "relative",
                   }}
                 >
                   <div>
-                    <Typography.Title style={{ color: "white" }} level={3}>
+                    <Typography.Title style={{ color: "white" }} level={4}>
                       Total Employee
                     </Typography.Title>
                     <p
                       style={{
                         textAlign: "center",
-                        fontSize: "24px",
+                        fontSize: "22px",
                         fontWeight: "bold",
                         marginTop: "4px",
                       }}
@@ -133,33 +172,69 @@ const DashboardCards = () => {
                   </div>
                 </div>
               </Card>
+
+              <style>
+                {`
+    .card-hover-employee {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px; /* More rounded corners */
+      transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth zoom-in/out and background transition */
+    }
+
+    .card-hover-employee:hover {
+      transform: scale(1.05);  /* Slight zoom-in effect */
+      background-color: #e68900;  /* Slight background color change */
+    }
+
+    .card-hover-employee::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
+      border-radius: 15px; /* Matching rounded corners */
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;  /* Prevent interaction with inner border */
+    }
+
+    .card-hover-employee:hover::before {
+      opacity: 0;  /* Fade in the inner border */
+    }
+  `}
+              </style>
+
             </Link>
           </Col>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Link to={"/assets/distributed"}>
-              <Card className="bg-[#8dc73f] text-white">
+              <Card className="bg-[#8dc73f] text-white card-hover-disbursements">
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    padding: "16px", // Ensures padding is applied to the card content
+                    position: "relative",
                   }}
                 >
                   <div>
-                    <Typography.Title style={{ color: "white" }} level={3}>
+                    <Typography.Title style={{ color: "white" }} level={4}>
                       Total Disbursements
                     </Typography.Title>
                     <p
                       style={{
                         textAlign: "center",
-                        fontSize: "24px",
+                        fontSize: "22px",
                         fontWeight: "bold",
                         marginTop: "4px",
                       }}
                     >
                       {role_id === 2
-                        ? distributedAsset?.data?.employee_assign_asset_count ||
-                          0
+                        ? distributedAsset?.data?.employee_assign_asset_count || 0
                         : data?.data?.total_assign_asset || 0}
                     </p>
                   </div>
@@ -180,6 +255,41 @@ const DashboardCards = () => {
                   </div>
                 </div>
               </Card>
+
+              <style>
+                {`
+    .card-hover-disbursements {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px; /* More rounded corners */
+      transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth zoom-in/out and background transition */
+    }
+
+    .card-hover-disbursements:hover {
+      transform: scale(1.05);  /* Slight zoom-in effect */
+      background-color: #72b92b;  /* Slight background color change */
+    }
+
+    .card-hover-disbursements::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
+      border-radius: 15px; /* Matching rounded corners */
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;  /* Prevent interaction with inner border */
+    }
+
+    .card-hover-disbursements:hover::before {
+      opacity: 0;  /* Fade in the inner border */
+    }
+  `}
+              </style>
+
             </Link>
           </Col>
           <Col xs={24} sm={24} md={24} lg={8}>
@@ -201,27 +311,29 @@ const DashboardCards = () => {
             <Row gutter={[6, 12]}>
               <Col xs={24} sm={24} md={24}>
                 <Link to={"/employee/employee-list"}>
-                  <Card className="bg-[#ffa500] text-white h-full">
+                  <Card className="bg-[#ffa500] text-white card-hover-employee">
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
+                        padding: "16px", // Ensures padding is applied to the card content
+                        position: "relative",
                       }}
                     >
                       <div>
-                        <Typography.Title style={{ color: "white" }} level={3}>
+                        <Typography.Title style={{ color: "white" }} level={4}>
                           Total Employee
                         </Typography.Title>
                         <p
                           style={{
                             textAlign: "center",
-                            fontSize: "24px",
+                            fontSize: "22px",
                             fontWeight: "bold",
                             marginTop: "4px",
                           }}
                         >
-                          {empData?.data?.total_asset_count || 0}
+                          {data?.data?.total_employee || 0}
                         </p>
                       </div>
                       <div>
@@ -241,20 +353,56 @@ const DashboardCards = () => {
                       </div>
                     </div>
                   </Card>
+
+                  <style>
+                    {`
+    .card-hover-employee {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px; /* More rounded corners */
+      transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth zoom-in/out and background transition */
+    }
+
+    .card-hover-employee:hover {
+      transform: scale(1.05);  /* Slight zoom-in effect */
+      background-color: #e68900;  /* Slight background color change */
+    }
+
+    .card-hover-employee::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
+      border-radius: 15px; /* Matching rounded corners */
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;  /* Prevent interaction with inner border */
+    }
+
+    .card-hover-employee:hover::before {
+      opacity: 0;  /* Fade in the inner border */
+    }
+  `}
+                  </style>
                 </Link>
               </Col>
               <Col xs={24} sm={24} md={24}>
                 <Link to={"/employee/distributed"}>
-                  <Card className="bg-[#8dc73f] text-white h-full">
+                  <Card className="bg-[#8dc73f] text-white h-full card-hover-disbursements">
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
+                        padding: "16px", // Ensures consistent padding
+                        position: "relative",
                       }}
                     >
                       <div>
-                        <Typography.Title style={{ color: "white" }} level={3}>
+                        <Typography.Title style={{ color: "white" }} level={4}>
                           Total Disbursements
                         </Typography.Title>
                         <p
@@ -284,7 +432,42 @@ const DashboardCards = () => {
                         </div>
                       </div>
                     </div>
+
+                    <style>
+                      {`
+      .card-hover-disbursements {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px; /* Rounded corners */
+        transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth hover transitions */
+      }
+
+      .card-hover-disbursements:hover {
+        transform: scale(1.05); /* Zoom-in effect */
+        background-color: #72b92b; /* Subtle background color change */
+      }
+
+      .card-hover-disbursements::before {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
+        border-radius: 15px; /* Matching rounded corners */
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Prevent interaction */
+      }
+
+      .card-hover-disbursements:hover::before {
+        opacity: 0; /* Fade-in inner border on hover */
+      }
+    `}
+                    </style>
                   </Card>
+
                 </Link>
               </Col>
             </Row>

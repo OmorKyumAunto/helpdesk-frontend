@@ -62,10 +62,13 @@ const TicketDashboard = () => {
             style={{ width: lg ? "20%" : md ? "50%" : "100%" }}
           >
             <Card
+              className="bg-[#ba45ba] text-white card-hover-stat"
               style={{
+                
                 textAlign: "center",
-                backgroundColor: "#ba45ba",
+                backgroundColor: "#0d3c6e",
                 color: "white",
+                borderRadius: "15px", // Keep rounded corners as before
               }}
             >
               <div>
@@ -74,6 +77,51 @@ const TicketDashboard = () => {
               <h3>{item.title}</h3>
               <h1>{item.data}</h1>
             </Card>
+
+            <style>
+              {`
+    .card-hover-stat {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px; /* Rounded corners */
+      transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth zoom-in/out and background transition */
+    }
+
+    .card-hover-stat:hover {
+      transform: scale(1.05);  /* Zoom-in effect on hover */
+      background-color: #9f33a0;  /* Subtle background color change */
+    }
+
+    .card-hover-stat::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
+      border-radius: 15px; /* Matching rounded corners */
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;  /* Prevent interaction with inner border */
+    }
+
+    .card-hover-stat:hover::before {
+      opacity: 0;  /* Fade in the inner border on hover */
+    }
+
+    .card-hover-stat h3 {
+      font-size: 18px;  /* Smaller title font */
+    }
+
+    .card-hover-stat h1 {
+      font-size: 24px;  /* Adjusted font size */
+      font-weight: bold;
+      margin-top: 4px;
+    }
+  `}
+            </style>
+
           </Col>
         ))}
 
@@ -177,90 +225,121 @@ const TicketDashboard = () => {
           </Card>
         </Col>
         <Col xs={24} sm={24} md={24} lg={6}>
-          <Card title="Priority Base Counts" style={{ height: "100%" }}>
-            <Space direction="vertical" style={{ width: "100%" }}>
-              <Card size="small">
-                <Space>
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#ff4d4f",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                    }}
-                  >
-                    {priority?.data?.priority_urgent || 0}
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>URGENT</span>
-                </Space>
-              </Card>
-              <Card size="small">
-                <Space>
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#1890ff",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                    }}
-                  >
-                    {priority?.data?.priority_high || 0}
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>HIGH</span>
-                </Space>
-              </Card>
-              <Card size="small">
-                <Space>
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#F9629F",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                    }}
-                  >
-                    {priority?.data?.priority_medium || 0}
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>MEDIUM</span>
-                </Space>
-              </Card>
-              <Card size="small">
-                <Space>
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#32de84",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                    }}
-                  >
-                    {priority?.data?.priority_low || 0}
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>LOW</span>
-                </Space>
-              </Card>
-            </Space>
-          </Card>
+          <Card
+      title="Priority Base Counts"
+      style={{ height: "100%" }}
+    >
+      <Space direction="vertical" style={{ width: "100%" }}>
+        <Card
+          className="zoom-card"
+          size="small"
+          style={{
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          }}
+          hoverable
+        >
+          <Space>
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                fontWeight: "bold",
+                borderRadius: "50%",
+                background: "#ff4d4f",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+              }}
+            >
+              {priority?.data?.priority_urgent || 0}
+            </div>
+            <span style={{ fontWeight: "bold" }}>URGENT</span>
+          </Space>
+        </Card>
+        <Card
+          className="zoom-card"
+          size="small"
+          style={{
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          }}
+          hoverable
+        >
+          <Space>
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                fontWeight: "bold",
+                borderRadius: "50%",
+                background: "#1890ff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+              }}
+            >
+              {priority?.data?.priority_high || 0}
+            </div>
+            <span style={{ fontWeight: "bold" }}>HIGH</span>
+          </Space>
+        </Card>
+        <Card
+          className="zoom-card"
+          size="small"
+          style={{
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          }}
+          hoverable
+        >
+          <Space>
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                fontWeight: "bold",
+                borderRadius: "50%",
+                background: "#F9629F",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+              }}
+            >
+              {priority?.data?.priority_medium || 0}
+            </div>
+            <span style={{ fontWeight: "bold" }}>MEDIUM</span>
+          </Space>
+        </Card>
+        <Card
+          className="zoom-card"
+          size="small"
+          style={{
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+          }}
+          hoverable
+        >
+          <Space>
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                fontWeight: "bold",
+                borderRadius: "50%",
+                background: "#32de84",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+              }}
+            >
+              {priority?.data?.priority_low || 0}
+            </div>
+            <span style={{ fontWeight: "bold" }}>LOW</span>
+          </Space>
+        </Card>
+      </Space>
+    </Card>
         </Col>
 
         {/* Pie Chart Component */}
