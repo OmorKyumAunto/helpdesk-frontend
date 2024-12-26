@@ -1,13 +1,17 @@
-import { Card, Table } from "antd";
+import { Card, Select, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { CreateButton } from "../../../common/CommonButton";
 import { useGetLocationsQuery } from "../api/locationEndPoint";
 import { LocationTableColumns } from "../utils/LocationTableColumns";
 import CreateLocation from "../components/CreateLocation";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 
 const LocationList = () => {
   const dispatch = useDispatch();
+  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
+    status: "active",
+  });
   const { data, isLoading, isFetching } = useGetLocationsQuery({});
 
   return (
@@ -29,6 +33,29 @@ const LocationList = () => {
               marginBottom: "12px",
             }}
           >
+            <Select
+              style={{ width: "200px", marginBottom: 8 }}
+              loading={unitIsLoading}
+              placeholder="Select Unit Name"
+              showSearch
+              optionFilterProp="children"
+              // onChange={(e) => {
+              //   setFilter({ ...filter, unit: e, offset: 0 });
+              // }}
+              filterOption={(
+                input: string,
+                option?: { label: string; value: number }
+              ) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={unitData?.data?.map((unit: any) => ({
+                value: unit.id,
+                label: unit.title,
+              }))}
+              allowClear
+            />
             <CreateButton
               name="Create Sub Unit"
               onClick={() => {

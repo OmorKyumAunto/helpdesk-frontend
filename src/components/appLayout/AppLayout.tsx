@@ -219,7 +219,7 @@ export const AppLayout = () => {
       </Link>
     </div>
   );
-  
+
   const handleResizeStart = (e: any) => {
     e.preventDefault();
     const startX = e.clientX;
@@ -413,12 +413,14 @@ export const AppLayout = () => {
                 />
               )}
             </div> */}
-            
+            <Link to={"/tickets/list"}>
+              <Button type="dashed">Ticketing System</Button>
+            </Link>
 
             <Popover content={selfService}>
               <Button type="dashed">Self Service</Button>
             </Popover>
-            
+
             <Popover content={content}>
               <Button
                 icon={<UserOutlined />}

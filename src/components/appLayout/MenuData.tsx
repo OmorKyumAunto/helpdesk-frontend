@@ -69,31 +69,8 @@ export const sideBarItems = (roleId: number) => {
             key: "/admin/list",
             icon: <LiaUsersCogSolid size={20} />,
           },
-          {
-            label: "Ticketing System",
-            key: "tickets",
-            icon: <PiTicket size={20} />,
-            children: [
-              {
-                label: <Link to="/tickets/list">Tickets</Link>,
-                key: "/tickets/list",
-                icon: <FaRegListAlt size={16} />,
-              },
-              {
-                label: <Link to="/tickets/configuration">Configuration</Link>,
-                key: "/tickets/configuration",
-                icon: <GrConfigure size={16} />,
-              },
-            ],
-          },
         ]
-      : [
-          {
-            label: <Link to="/tickets/list">Ticketing System</Link>,
-            key: "/tickets/list",
-            icon: <FaRegListAlt size={16} />,
-          },
-        ]),
+      : []),
     ...(roleId !== 3
       ? [
           {
@@ -134,6 +111,15 @@ export const sideBarItems = (roleId: number) => {
                 label: <Link to="/settings/license">Licenses</Link>,
                 key: "/settings/license",
                 icon: <TbLicense size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/settings/tickets-config">
+                    Ticket Configuration
+                  </Link>
+                ),
+                key: "/settings/tickets-config",
+                icon: <GrConfigure size={16} />,
               },
             ],
           },

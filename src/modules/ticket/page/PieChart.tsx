@@ -87,15 +87,15 @@ const PieChartWithLabels = () => {
     "#FFD700", // Gold
     "#B22222", // FireBrick
   ];
-
+  const activeIndex: number[] = [];
   const chartData = pieData?.data?.map((item, index) => {
+    activeIndex.push(index);
     return {
       name: item.category_title,
       value: item.ticket_count,
       color: colors[index],
     };
   });
-
   return (
     <div className="w-full h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
@@ -108,7 +108,7 @@ const PieChartWithLabels = () => {
             outerRadius={60}
             dataKey="value"
             activeShape={renderLabels}
-            activeIndex={[0, 1, 2, 3]}
+            activeIndex={activeIndex}
           />
         </PieChart>
       </ResponsiveContainer>

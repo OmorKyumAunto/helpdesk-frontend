@@ -99,19 +99,9 @@ export const routers = createBrowserRouter([
         element: <AdminList />,
       },
       {
-        path: "tickets",
-        children: [
-          {
-            path: "list",
-            element: <TicketMain />,
-          },
-          {
-            path: "configuration",
-            element: <TicketConfig />,
-          },
-        ],
+        path: "/tickets/list",
+        element: <TicketMain />,
       },
-
       {
         path: "/ctc/list",
         element: <CTCList />,
@@ -142,6 +132,10 @@ export const routers = createBrowserRouter([
           {
             path: "license",
             element: <LicenseList />,
+          },
+          {
+            path: "tickets-config",
+            element: <TicketConfig />,
           },
         ],
       },
