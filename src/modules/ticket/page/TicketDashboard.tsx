@@ -38,7 +38,7 @@ const TicketDashboard = () => {
     {
       id: 3,
       title: "IN PROGRESS",
-      data: data?.data?.total_inprocess,
+      data: data?.data?.total_inprogress,
     },
     {
       id: 4,
@@ -64,7 +64,6 @@ const TicketDashboard = () => {
             <Card
               className="bg-[#ba45ba] text-white card-hover-stat"
               style={{
-                
                 textAlign: "center",
                 backgroundColor: "#0d3c6e",
                 color: "white",
@@ -121,7 +120,6 @@ const TicketDashboard = () => {
     }
   `}
             </style>
-
           </Col>
         ))}
 
@@ -225,121 +223,118 @@ const TicketDashboard = () => {
           </Card>
         </Col>
         <Col xs={24} sm={24} md={24} lg={6}>
-          <Card
-      title="Priority Base Counts"
-      style={{ height: "100%" }}
-    >
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <Card
-          className="zoom-card"
-          size="small"
-          style={{
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          }}
-          hoverable
-        >
-          <Space>
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                fontWeight: "bold",
-                borderRadius: "50%",
-                background: "#ff4d4f",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-              }}
-            >
-              {priority?.data?.priority_urgent || 0}
-            </div>
-            <span style={{ fontWeight: "bold" }}>URGENT</span>
-          </Space>
-        </Card>
-        <Card
-          className="zoom-card"
-          size="small"
-          style={{
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          }}
-          hoverable
-        >
-          <Space>
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                fontWeight: "bold",
-                borderRadius: "50%",
-                background: "#1890ff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-              }}
-            >
-              {priority?.data?.priority_high || 0}
-            </div>
-            <span style={{ fontWeight: "bold" }}>HIGH</span>
-          </Space>
-        </Card>
-        <Card
-          className="zoom-card"
-          size="small"
-          style={{
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          }}
-          hoverable
-        >
-          <Space>
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                fontWeight: "bold",
-                borderRadius: "50%",
-                background: "#F9629F",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-              }}
-            >
-              {priority?.data?.priority_medium || 0}
-            </div>
-            <span style={{ fontWeight: "bold" }}>MEDIUM</span>
-          </Space>
-        </Card>
-        <Card
-          className="zoom-card"
-          size="small"
-          style={{
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          }}
-          hoverable
-        >
-          <Space>
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                fontWeight: "bold",
-                borderRadius: "50%",
-                background: "#32de84",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-              }}
-            >
-              {priority?.data?.priority_low || 0}
-            </div>
-            <span style={{ fontWeight: "bold" }}>LOW</span>
-          </Space>
-        </Card>
-      </Space>
-    </Card>
+          <Card title="Priority Base Counts" style={{ height: "100%" }}>
+            <Space direction="vertical" style={{ width: "100%" }}>
+              <Card
+                className="zoom-card"
+                size="small"
+                style={{
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                }}
+                hoverable
+              >
+                <Space>
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      fontWeight: "bold",
+                      borderRadius: "50%",
+                      background: "#ff4d4f",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                    }}
+                  >
+                    {priority?.data?.priority_urgent || 0}
+                  </div>
+                  <span style={{ fontWeight: "bold" }}>URGENT</span>
+                </Space>
+              </Card>
+              <Card
+                className="zoom-card"
+                size="small"
+                style={{
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                }}
+                hoverable
+              >
+                <Space>
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      fontWeight: "bold",
+                      borderRadius: "50%",
+                      background: "#1890ff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                    }}
+                  >
+                    {priority?.data?.priority_high || 0}
+                  </div>
+                  <span style={{ fontWeight: "bold" }}>HIGH</span>
+                </Space>
+              </Card>
+              <Card
+                className="zoom-card"
+                size="small"
+                style={{
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                }}
+                hoverable
+              >
+                <Space>
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      fontWeight: "bold",
+                      borderRadius: "50%",
+                      background: "#F9629F",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                    }}
+                  >
+                    {priority?.data?.priority_medium || 0}
+                  </div>
+                  <span style={{ fontWeight: "bold" }}>MEDIUM</span>
+                </Space>
+              </Card>
+              <Card
+                className="zoom-card"
+                size="small"
+                style={{
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                }}
+                hoverable
+              >
+                <Space>
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      fontWeight: "bold",
+                      borderRadius: "50%",
+                      background: "#32de84",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                    }}
+                  >
+                    {priority?.data?.priority_low || 0}
+                  </div>
+                  <span style={{ fontWeight: "bold" }}>LOW</span>
+                </Space>
+              </Card>
+            </Space>
+          </Card>
         </Col>
 
         {/* Pie Chart Component */}

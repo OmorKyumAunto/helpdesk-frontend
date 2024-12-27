@@ -18,6 +18,8 @@ import ApexPieChart from "../components/ApexPieChart";
 import BloodTypeChart from "../components/BloodChart";
 import TopDash from "../components/TopDash";
 import GraphChartV2 from "../components/GraphChartV2";
+import CategoryPieChart from "../components/CategoryPieChat";
+import TicketPieChart from "../components/TicketPieChart";
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
@@ -44,7 +46,7 @@ const DashboardCards = () => {
     <>
       <TopDash />
       {roleId !== 3 ? (
-        <Row style={{marginTop:"7px"}} gutter={[12, 12]}>
+        <Row style={{ marginTop: "7px" }} gutter={[12, 12]}>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Link to={"/assets/list"}>
               <Card className="bg-[#ba45ba] text-white card-hover">
@@ -125,7 +127,6 @@ const DashboardCards = () => {
     }
   `}
               </style>
-
             </Link>
           </Col>
           <Col xs={24} sm={24} md={24} lg={8}>
@@ -206,7 +207,6 @@ const DashboardCards = () => {
     }
   `}
               </style>
-
             </Link>
           </Col>
           <Col xs={24} sm={24} md={24} lg={8}>
@@ -234,7 +234,8 @@ const DashboardCards = () => {
                       }}
                     >
                       {role_id === 2
-                        ? distributedAsset?.data?.employee_assign_asset_count || 0
+                        ? distributedAsset?.data?.employee_assign_asset_count ||
+                          0
                         : data?.data?.total_assign_asset || 0}
                     </p>
                   </div>
@@ -289,16 +290,18 @@ const DashboardCards = () => {
     }
   `}
               </style>
-
             </Link>
           </Col>
           <Col xs={24} sm={24} md={24} lg={8}>
-            <Card title="Asset Category Statistics">
-              <ApexPieChart />
+            <Card title="Ticketing Statistics">
+              <TicketPieChart />
             </Card>
           </Col>
           <Col xs={24} sm={24} md={24} lg={16}>
-            <BloodTypeChart />
+            {/* <BloodTypeChart /> */}
+            <Card title="Asset Category Statistics" style={{ height: "100%" }}>
+              <CategoryPieChart />
+            </Card>
           </Col>
           <Col xs={24} sm={24} md={24}>
             {/* <GraphChartApex /> */}
@@ -467,13 +470,15 @@ const DashboardCards = () => {
     `}
                     </style>
                   </Card>
-
                 </Link>
               </Col>
             </Row>
           </Col>
           <Col xs={24} sm={24} md={16}>
-            <BloodTypeChart />
+            {/* <BloodTypeChart /> */}
+            <Card title="Available Blood Group">
+              <ApexPieChart />
+            </Card>
           </Col>
           <Col xs={24} sm={24} md={24} lg={24}>
             <Row>

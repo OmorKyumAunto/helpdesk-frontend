@@ -1,35 +1,35 @@
 import { ApexOptions } from "apexcharts";
 import ReactApexChart from "react-apexcharts";
-import { useGetDashboardBloodDataQuery } from "../api/dashboardEndPoints";
+import { useGetTicketDashboardCountQuery } from "../../ticket/api/ticketEndpoint";
 
-const ReactPieChart = () => {
-  const { data: bloodData } = useGetDashboardBloodDataQuery();
-  const {
-    total_a_positive,
-    total_b_positive,
-    total_ab_positive,
-    total_o_positive,
-    total_a_negative,
-    total_b_negative,
-    total_ab_negative,
-    total_0_negative,
-  } = bloodData?.data || {};
-  const data = [
-    { name: "A+", value: total_a_positive },
-    { name: "A-", value: total_a_negative },
-    { name: "B+", value: total_b_positive },
-    { name: "B-", value: total_b_negative },
-    { name: "AB+", value: total_ab_positive },
-    { name: "AB-", value: total_ab_negative },
-    { name: "O+", value: total_o_positive },
-    { name: "O-", value: total_0_negative },
+const TicketPieChart = () => {
+  const { data } = useGetTicketDashboardCountQuery();
+  const { total_solve, total_forward, total_inprogress, total_unsolved } =
+    data?.data || {};
+  const ticketData = [
+    {
+      name: "Solved",
+      value: total_solve || 0,
+    },
+    {
+      name: "IN PROGRESS",
+      value: total_inprogress || 0,
+    },
+    {
+      name: "Unsolved",
+      value: total_unsolved || 0,
+    },
+    {
+      name: "Forward",
+      value: total_forward || 0,
+    },
   ];
   const options: ApexOptions = {
     chart: {
       type: "pie",
     },
-    labels: data.map((item) => item.name),
-    series: data.map((item) => item.value),
+    labels: ticketData?.map((item) => item?.name),
+    series: ticketData?.map((item) => item?.value),
     colors: ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"],
     legend: {
       position: "bottom",
@@ -71,4 +71,4 @@ const ReactPieChart = () => {
   );
 };
 
-export default ReactPieChart;
+export default TicketPieChart;

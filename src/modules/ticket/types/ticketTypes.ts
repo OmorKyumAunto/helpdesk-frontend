@@ -70,7 +70,7 @@ export interface ITicketDashboardCount {
   total_solve: number;
   total_unsolved: number;
   total_forward: number;
-  total_inprocess: number;
+  total_inprogress: number;
 }
 export interface ICategoryWiseDashboard {
   category_id: number;
