@@ -7,6 +7,7 @@ import RaiseTicketList from "./RaiseTicketList";
 import SuperAdminTicketList from "./SuperAdminTicketList";
 import AdminTicketList from "./AdminTicketList";
 import TicketDashboard from "./TicketDashboard";
+import TicketReport from "./TicketReport";
 
 const onChange = (key: string) => {
   console.log(key);
@@ -31,7 +32,7 @@ const TicketMain: React.FC = () => {
           {
             key: "3",
             label: "Reports",
-            children: "reports content",
+            children: <TicketReport />,
           },
         ]
       : []),

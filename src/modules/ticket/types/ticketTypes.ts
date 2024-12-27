@@ -95,3 +95,20 @@ export interface IDashboardBarChart {
   total_solve: number;
   total_raise: number;
 }
+export interface ITicketDashboardReport {
+  ticket_table_id: number;
+  ticket_id: string;
+  ticket_status: string;
+  subject: string;
+  priority: string;
+  ticket_category_title: string;
+  asset_serial_number: string;
+  ticket_created_employee_name: string;
+  ticket_created_employee_id: string;
+  ticket_solved_employee_name: string;
+  ticket_solved_employee_id: string;
+  asset_unit_title: string;
+  ticket_updated_at: Date;
+  asset_unit_id: number;
+  ticket_created_at: Date;
+}

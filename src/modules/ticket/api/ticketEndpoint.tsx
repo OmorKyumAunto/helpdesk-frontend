@@ -11,6 +11,7 @@ import {
   IRaiseSolvedDashboard,
   IRaiseTicketList,
   ITicketDashboardCount,
+  ITicketDashboardReport,
 } from "../types/ticketTypes";
 
 export const ticketEndpoint = api.injectEndpoints({
@@ -111,6 +112,15 @@ export const ticketEndpoint = api.injectEndpoints({
       query: () => {
         return {
           url: `/raise-ticket-deshboard/ticket-dashboard-data`,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
+    getTicketReport: build.query<HTTPResponse<ITicketDashboardReport[]>, any>({
+      query: (params) => {
+        return {
+          url: `/raise-ticket/super-admin-ticket-report`,
+          params,
         };
       },
       providesTags: () => ["ticket"],
@@ -229,6 +239,7 @@ export const {
   useCreateRaiseTicketMutation,
   useCreateCommentMutation,
   useForwardTicketMutation,
+  useGetTicketReportQuery,
   useGetTicketDashboardCountQuery,
   useGetRaiseTicketUserWiseQuery,
   useGetRaiseSolveDashboardDataQuery,

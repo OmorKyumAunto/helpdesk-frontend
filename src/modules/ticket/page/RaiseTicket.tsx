@@ -88,8 +88,12 @@ const RaiseTicketForm = () => {
                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
                 transition: "transform 0.3s ease",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "scale(1.03)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "scale(1)")
+              }
             >
               <Form.Item
                 label="Select Unit"
@@ -117,7 +121,9 @@ const RaiseTicketForm = () => {
               <Form.Item
                 label="Select Category"
                 name="category_id"
-                rules={[{ required: true, message: "Please select a category!" }]}
+                rules={[
+                  { required: true, message: "Please select a category!" },
+                ]}
               >
                 <Select
                   loading={categoryLoading}
@@ -140,13 +146,15 @@ const RaiseTicketForm = () => {
               <Form.Item
                 label="Select Priority"
                 name="priority"
-                rules={[{ required: true, message: "Please select a priority!" }]}
+                rules={[
+                  { required: true, message: "Please select a priority!" },
+                ]}
               >
                 <Select placeholder="Select Priority">
                   <Option value="low">Low</Option>
                   <Option value="medium">Medium</Option>
                   <Option value="high">High</Option>
-                  
+                  <Option value="urgent">Urgent</Option>
                 </Select>
               </Form.Item>
 
@@ -182,8 +190,12 @@ const RaiseTicketForm = () => {
                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
                 transition: "transform 0.3s ease",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "scale(1.03)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "scale(1)")
+              }
             >
               <Form.Item
                 label="Subject"
@@ -215,7 +227,9 @@ const RaiseTicketForm = () => {
               <Form.Item
                 label="Message"
                 name="description"
-                rules={[{ required: true, message: "Please enter a description!" }]}
+                rules={[
+                  { required: true, message: "Please enter a description!" },
+                ]}
               >
                 <TextArea rows={4} placeholder="Enter Description" />
               </Form.Item>
@@ -248,8 +262,12 @@ const RaiseTicketForm = () => {
                   fontWeight: "bold",
                   transition: "background-color 0.3s ease",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#144b8b")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#1775bb")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#144b8b")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#1775bb")
+                }
               >
                 Raise a Ticket
               </Button>

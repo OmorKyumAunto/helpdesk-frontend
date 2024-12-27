@@ -124,7 +124,7 @@ import React, { useState } from "react";
 import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
 import { useGetCategoryWiseDashboardDataQuery } from "../api/ticketEndpoint";
 
-const renderActiveShape = (props) => {
+const renderActiveShape = (props: any) => {
   const RADIAN = Math.PI / 180;
   const {
     cx,
@@ -194,7 +194,7 @@ const PieChartWithLabels = () => {
       color: colors[index],
     }));
 
-  const onPieEnter = (_, index) => {
+  const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
   };
 
@@ -231,7 +231,7 @@ const PieChartWithLabels = () => {
                 className="w-4 h-4 mr-2"
                 style={{ backgroundColor: entry.color }}
               />
-              <span className="text-sm">
+              <span className="text-[12px]">
                 {entry.name}
                 {activeIndex === index && (
                   <span className="ml-2 font-medium">({entry.value})</span>

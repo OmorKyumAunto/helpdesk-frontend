@@ -119,7 +119,7 @@ const CategoryPieChart = () => {
             cx="50%"
             cy="50%"
             innerRadius={60}
-            outerRadius={120}
+            outerRadius={100}
             dataKey="value"
             activeShape={renderLabels}
             activeIndex={[0, 1, 2, 3, 4]}

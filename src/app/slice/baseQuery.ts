@@ -7,10 +7,10 @@ import {
 import { setLogout } from "../features/userSlice";
 import { RootState } from "../store/store";
 
-const baseURL = "https://helpdesk.dbl-group.com:3003/api/v1";
+const baseURL = "http://localhost:3003/api/v1";
 
 export const socket_url = "https://test.socket.com";
-export const imageURLNew = "https://helpdesk.dbl-group.com:3003"; //! avoid / end of the line otherwise image and pdf won't work!
+export const imageURLNew = "http://localhost:3003"; //! avoid / end of the line otherwise image and pdf won't work!
 export const imageURL =
   "https://m360ict-ecommerce.s3.ap-south-1.amazonaws.com/amcham-storage/";
 export const baseQuery = fetchBaseQuery({
