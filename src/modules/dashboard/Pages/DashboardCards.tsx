@@ -44,7 +44,7 @@ const DashboardCards = () => {
     <>
       <TopDash />
       {roleId !== 3 ? (
-        <Row gutter={[12, 12]}>
+        <Row style={{marginTop:"7px"}} gutter={[12, 12]}>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Link to={"/assets/list"}>
               <Card className="bg-[#ba45ba] text-white card-hover">

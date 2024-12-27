@@ -320,15 +320,15 @@ const RaiseTicketList: React.FC = () => {
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
-                                {
-                                  key: "4",
-                                  label: " Time Taken",
-                                  children: formatTimeDifference(
-                                    dayjs(ticket.created_at),
-                                    dayjs(ticket.updated_at)
-                                  ),
-                                },
-                              ]
+                              {
+                                key: "4",
+                                label: " Time Taken",
+                                children: formatTimeDifference(
+                                  dayjs(ticket.created_at),
+                                  dayjs(ticket.updated_at)
+                                ),
+                              },
+                            ]
                             : []),
                         ]}
                       />
@@ -338,33 +338,36 @@ const RaiseTicketList: React.FC = () => {
                         layout="vertical"
                         size="small"
                       >
-                        <Descriptions.Item
-                          label="Attachment"
-                          key="1"
-                        >
+                        <Descriptions.Item label="Attachment" key="1">
                           <div style={{ maxWidth: '50px', textAlign: 'center' }}>
-                            {isPDF ? (
-                              <a
-                                href={`${imageURLNew}/uploads/${ticket?.attachment?.split("ticket\\")[1]
-                                  }`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <Button size="small" style={{ fontSize: '8px', padding: '0 5px' }}>PDF</Button>
-                              </a>
+                            {ticket?.attachment ? (
+                              isPDF ? (
+                                <a
+                                  href={ticket.attachment.startsWith("https")
+                                    ? ticket.attachment
+                                    : `${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                      ? ticket.attachment.split("ticket\\")[1]
+                                      : ticket.attachment}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <Button size="small" style={{ fontSize: '8px', padding: '0 5px' }}>PDF</Button>
+                                </a>
+                              ) : (
+                                <a>
+                                  <Image
+                                    src={`${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                      ? ticket.attachment.split("ticket\\")[1]
+                                      : ticket.attachment}`}
+                                    alt="attachment"
+                                    width={40}
+                                    style={{ maxHeight: '40px' }}
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                </a>
+                              )
                             ) : (
-                              <Image
-                                src={
-                                  ticket.attachment
-                                    ? `${imageURLNew}/uploads/${ticket?.attachment?.split("ticket\\")[1]
-                                    }`
-                                    : noImage
-                                }
-                                alt="attachment"
-                                width={40}
-                                style={{ maxHeight: '40px' }}
-                                onClick={(e) => e.stopPropagation()}
-                              />
+                              <span>No File</span>
                             )}
                           </div>
                         </Descriptions.Item>
@@ -411,12 +414,12 @@ const RaiseTicketList: React.FC = () => {
                                     style={{
                                       color:
                                         profile?.employee_id ===
-                                        comment.employee_id
+                                          comment.employee_id
                                           ? "white"
                                           : "black",
                                       backgroundColor:
                                         profile?.employee_id ===
-                                        comment.employee_id
+                                          comment.employee_id
                                           ? "#1775BB"
                                           : "#E8E8E8",
                                       padding: "6px 12px",

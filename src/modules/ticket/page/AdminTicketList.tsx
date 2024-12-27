@@ -407,33 +407,36 @@ const AdminTicketList: React.FC = () => {
                         layout="vertical"
                         size="small"
                       >
-                        <Descriptions.Item
-                          label="Attachment"
-                          key="1"
-                        >
+                        <Descriptions.Item label="Attachment" key="1">
                           <div style={{ maxWidth: '50px', textAlign: 'center' }}>
-                            {isPDF ? (
-                              <a
-                                href={`${imageURLNew}/uploads/${ticket?.attachment?.split("ticket\\")[1]
-                                  }`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <Button size="small" style={{ fontSize: '8px', padding: '0 5px' }}>PDF</Button>
-                              </a>
+                            {ticket?.attachment ? (
+                              isPDF ? (
+                                <a
+                                  href={ticket.attachment.startsWith("https")
+                                    ? ticket.attachment
+                                    : `${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                      ? ticket.attachment.split("ticket\\")[1]
+                                      : ticket.attachment}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <Button size="small" style={{ fontSize: '8px', padding: '0 5px' }}>PDF</Button>
+                                </a>
+                              ) : (
+                                <a>
+                                  <Image
+                                    src={`${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                      ? ticket.attachment.split("ticket\\")[1]
+                                      : ticket.attachment}`}
+                                    alt="attachment"
+                                    width={40}
+                                    style={{ maxHeight: '40px' }}
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                </a>
+                              )
                             ) : (
-                              <Image
-                                src={
-                                  ticket.attachment
-                                    ? `${imageURLNew}/uploads/${ticket?.attachment?.split("ticket\\")[1]
-                                    }`
-                                    : noImage
-                                }
-                                alt="attachment"
-                                width={40}
-                                style={{ maxHeight: '40px' }}
-                                onClick={(e) => e.stopPropagation()}
-                              />
+                              <span>No File</span>
                             )}
                           </div>
                         </Descriptions.Item>

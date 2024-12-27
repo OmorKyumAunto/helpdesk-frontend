@@ -29,11 +29,11 @@ const TopDash = () => {
       greetingText = "Good Morning";
       timeOfDayText = "Morning";
       iconPath = MorningSunIcon;
-    } else if (currentHour >= 12 && currentHour < 18) {
+    } else if (currentHour >= 12 && currentHour < 17) {
       greetingText = "Good Afternoon";
       timeOfDayText = "Afternoon";
       iconPath = AfternoonSunIcon;
-    } else if (currentHour >= 18 && currentHour < 20) {
+    } else if (currentHour >= 17 && currentHour < 20) {
       greetingText = "Good Evening";
       timeOfDayText = "Evening";
       iconPath = EveningMoonIcon;
@@ -82,7 +82,7 @@ const StyledCard = styled(Card)`
   padding: 20px;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, opacity 0.4s ease-out;
-  animation: cardBounce 1s ease-in-out infinite alternate;
+  animation: cardBounce 2s ease-in-out infinite alternate;
   font-family: 'Poppins', sans-serif; /* Updated font family to Poppins */
 
   &:hover {
