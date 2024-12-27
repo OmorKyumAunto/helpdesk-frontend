@@ -72,6 +72,16 @@ const TicketReport = () => {
             marginBottom: "12px",
           }}
         >
+          <DatePicker.RangePicker
+                  onChange={(_, e) =>
+                    setFilter({
+                      ...filter,
+                      from_date: e[0],
+                      to_date: e[1],
+                      offset: 0,
+                    })
+                  }
+                />
           <div style={{ width: "160px" }}>
             <Input
               prefix={<SearchOutlined />}
@@ -147,16 +157,7 @@ const TicketReport = () => {
                   allowClear
                 />
 
-                <DatePicker.RangePicker
-                  onChange={(_, e) =>
-                    setFilter({
-                      ...filter,
-                      from_date: e[0],
-                      to_date: e[1],
-                      offset: 0,
-                    })
-                  }
-                />
+                
               </div>
             )}
           >

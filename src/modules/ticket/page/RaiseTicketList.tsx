@@ -243,9 +243,9 @@ const RaiseTicketList: React.FC = () => {
                     >
                       <p style={{ color: "gray" }}>Priority</p>
                       <>
-                        {/* {ticket.priority === "urgent" && (
+                        {ticket.priority === "urgent" && (
                           <Tag color="red-inverse">URGENT</Tag>
-                        )} */}
+                        )}
                         {ticket.priority === "high" && (
                           <Tag color="pink-inverse">HIGHT</Tag>
                         )}

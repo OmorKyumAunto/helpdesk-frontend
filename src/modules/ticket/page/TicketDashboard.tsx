@@ -37,7 +37,7 @@ const TicketDashboard = () => {
     },
     {
       id: 3,
-      title: "IN PROGRESS",
+      title: "In Progress",
       data: data?.data?.total_inprogress,
     },
     {
@@ -219,134 +219,126 @@ const TicketDashboard = () => {
                   status="success"
                 />
               </div>
-            </Space>
-          </Card>
-        </Col>
-        <Col xs={24} sm={24} md={24} lg={6}>
-          <Card title="Priority Base Counts" style={{ height: "100%" }}>
-            <Space direction="vertical" style={{ width: "100%" }}>
-              <Card
-                className="zoom-card"
-                size="small"
-                style={{
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                }}
-                hoverable
-              >
-                <Space>
-                  <div
+              <div>
+                <Typography.Title level={5} style={{ margin: "0px" }}>
+                  Unsolved Tickets
+                </Typography.Title>
+                <Space
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography.Text
                     style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#ff4d4f",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
+                      margin: "0px",
+                      fontSize: "16px",
+                      fontWeight: 600,
+                      color: "#000",
                     }}
                   >
-                    {priority?.data?.priority_urgent || 0}
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>URGENT</span>
-                </Space>
-              </Card>
-              <Card
-                className="zoom-card"
-                size="small"
-                style={{
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                }}
-                hoverable
-              >
-                <Space>
-                  <div
+                    {raiseSolved?.data?.total_unsolved || 0}
+                  </Typography.Text>
+                  <Typography.Text
                     style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#1890ff",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
+                      margin: "0px",
+                      fontSize: "16px",
+                      fontWeight: 600,
+                      color: "#000",
                     }}
                   >
-                    {priority?.data?.priority_high || 0}
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>HIGH</span>
+                    {raiseSolved?.data?.total_unsolved_percent || 0}%
+                  </Typography.Text>
                 </Space>
-              </Card>
-              <Card
-                className="zoom-card"
-                size="small"
-                style={{
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                }}
-                hoverable
-              >
-                <Space>
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#F9629F",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                    }}
-                  >
-                    {priority?.data?.priority_medium || 0}
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>MEDIUM</span>
-                </Space>
-              </Card>
-              <Card
-                className="zoom-card"
-                size="small"
-                style={{
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                }}
-                hoverable
-              >
-                <Space>
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      fontWeight: "bold",
-                      borderRadius: "50%",
-                      background: "#32de84",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                    }}
-                  >
-                    {priority?.data?.priority_low || 0}
-                  </div>
-                  <span style={{ fontWeight: "bold" }}>LOW</span>
-                </Space>
-              </Card>
+                <Progress
+                  percent={raiseSolved?.data?.total_unsolved_percent || 0}
+                  style={{ color: "#ff4d4f" }}
+                  showInfo={false}
+                  status="exception"
+                />
+              </div>
             </Space>
           </Card>
         </Col>
 
-        {/* Pie Chart Component */}
-        <Col xs={24} sm={24} md={24} lg={11}>
+
+
+        {/* Priorty based */}
+        <Col xs={24} sm={24} md={24} lg={5}>
           <Card
-            title="Category Wise Percentage"
+            title={<span style={{ fontWeight: "600", fontSize: "18px", color: "#333" }}>Priority Overview</span>}
+            style={{
+              height: "100%",
+              borderRadius: "16px",
+              boxShadow: "0 6px 15px rgba(0, 0, 0, 0.1)",
+              border: "none"
+            }}
+            bodyStyle={{ padding: "15px" }}
+          >
+            <Space direction="vertical" style={{ width: "100%" }}>
+              {[
+                { label: "Urgent", count: priority?.data?.priority_urgent || 0, color: "#ff4d4f" },
+                { label: "High", count: priority?.data?.priority_high || 0, color: "#1890ff" },
+                { label: "Medium", count: priority?.data?.priority_medium || 0, color: "#faad14" },
+                { label: "Low", count: priority?.data?.priority_low || 0, color: "#52c41a" },
+              ].map(({ label, count, color }) => (
+                <Card
+                  key={label}
+                  style={{
+                    borderRadius: "12px",
+                    background: "#fff",
+                    border: "1px solid #f0f0f0",
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                    cursor: "pointer",
+                    overflow: "hidden",
+                  }}
+                  hoverable
+                  bodyStyle={{ display: "flex", alignItems: "center", padding: "16px" }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.15)";
+                    e.currentTarget.style.transform = "scale(1.02)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.1)";
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: "50%",
+                      background: color,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                      fontWeight: "bold",
+                      fontSize: "18px",
+                      marginRight: "16px",
+                    }}
+                  >
+                    {count}
+                  </div>
+                  <div>
+                    <span style={{ fontWeight: "600", fontSize: "16px", color: "#333" }}>{label}</span>
+                    <br />
+                    <span style={{ fontSize: "14px", color: "#666" }}>Tickets</span>
+                  </div>
+                </Card>
+              ))}
+            </Space>
+          </Card>
+        </Col>
+
+
+        {/* Pie Chart Component */}
+        <Col xs={24} sm={24} md={24} lg={13}>
+          <Card
+            title="Category Wise Tickets"
             style={{ width: "100%", height: "100%" }}
           >
             <PieChartWithLabels />
           </Card>
         </Col>
-        <Col xs={24} sm={24} md={24} lg={7}>
+        <Col xs={24} sm={24} md={24} lg={6}>
           <Card title="Top Ticket Solvers" style={{ height: "100%" }}>
             <Table
               size="small"

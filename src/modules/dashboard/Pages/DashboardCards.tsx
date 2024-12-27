@@ -235,7 +235,7 @@ const DashboardCards = () => {
                     >
                       {role_id === 2
                         ? distributedAsset?.data?.employee_assign_asset_count ||
-                          0
+                        0
                         : data?.data?.total_assign_asset || 0}
                     </p>
                   </div>
@@ -298,7 +298,7 @@ const DashboardCards = () => {
             </Card>
           </Col>
           <Col xs={24} sm={24} md={24} lg={16}>
-            {/* <BloodTypeChart /> */}
+            {/* category statistics /> */}
             <Card title="Asset Category Statistics" style={{ height: "100%" }}>
               <CategoryPieChart />
             </Card>
@@ -309,7 +309,7 @@ const DashboardCards = () => {
           </Col>
         </Row>
       ) : (
-        <Row gutter={[12, 6]}>
+        <Row style={{ marginTop: "5px" }} gutter={[12, 6]}>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Row gutter={[6, 12]}>
               <Col xs={24} sm={24} md={24}>
@@ -481,59 +481,110 @@ const DashboardCards = () => {
             </Card>
           </Col>
           <Col xs={24} sm={24} md={24} lg={24}>
-            <Row>
-              <Col xs={24} sm={24} md={24}>
-                <Card className="bg-[#1775bb] text-white py-8 h-full">
-                  <Row gutter={[12, 6]}>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div className="flex ">
-                          <div className="text-lg md:text-xl font-bold">
-                            <p className="mb-2">Employee ID</p>
-                            <p className="mb-2">Designation</p>
-                            <p className="mb-2">Department</p>
-                            <p className="mb-3">Joining Date</p>
-                          </div>
-                          <div className="text-lg md:text-xl ml-4">
-                            <p className="mb-2">: {employee_id}</p>
-                            <p className="mb-2">: {designation}</p>
-                            <p className="mb-2">: {department}</p>
-                            <p className="mb-3">
-                              : {dayjs(joining_date).format("DD-MM-YYYY")}
-                            </p>
-                          </div>
+            <Row style={{ marginTop: "4px" }}justify="center">
+              <Col xs={24} sm={22} md={20} lg={24}>
+                <Card
+                  style={{
+                    background: "linear-gradient(145deg, #ffffff, #f0f4f7)", // Light gray background
+                    border: "1px solid #e0e0e0", // Subtle border
+                    borderRadius: "16px",
+                    boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
+                    padding: "24px",
+                    transition: "all 0.3s ease-in-out",
+                    cursor: "pointer",
+                  }}
+                  className="employee-detail-card"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-5px)";
+                    e.currentTarget.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 6px 15px rgba(0, 0, 0, 0.1)";
+                  }}
+                >
+                  <Row gutter={[24, 24]}>
+                    {/* Left Section */}
+                    <Col xs={24} sm={12}>
+                      <div>
+                        <h3
+                          style={{
+                            fontSize: "1.2rem",
+                            fontWeight: "600",
+                            marginBottom: "16px",
+                            color: "#333",
+                            borderBottom: "2px solid #d6d6d6",
+                            paddingBottom: "4px",
+                          }}
+                        >
+                          Your Information
+                        </h3>
+                        <div style={{ marginBottom: "12px" }}>
+                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                            <strong>Employee ID:</strong> {employee_id}
+                          </p>
+                        </div>
+                        <div style={{ marginBottom: "12px" }}>
+                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                            <strong>Designation:</strong> {designation}
+                          </p>
+                        </div>
+                        <div style={{ marginBottom: "12px" }}>
+                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                            <strong>Department:</strong> {department}
+                          </p>
+                        </div>
+                        <div style={{ marginBottom: "12px" }}>
+                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                            <strong>Joining Date:</strong>{" "}
+                            {dayjs(joining_date).format("DD-MM-YYYY")}
+                          </p>
                         </div>
                       </div>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <div className="flex ">
-                          <div className="text-lg md:text-xl font-bold">
-                            <p className="mb-2">Phone</p>
-                            <p className="mb-2">Email</p>
-                            <p className="mb-2">Unit Name</p>
-                            <p className="mb-3">Status</p>
-                          </div>
-                          <div className="text-lg md:text-xl ml-4">
-                            <p className="mb-2">: {contact_no}</p>
-                            <p className="mb-2">: {email}</p>
-                            <p className="mb-2">: {unit_name}</p>
-                            <p className="mb-3">
-                              : {status === 1 ? "Active" : "Inactive"}
-                            </p>
-                          </div>
+
+                    {/* Right Section */}
+                    <Col xs={24} sm={12}>
+                      <div>
+                        <h3
+                          style={{
+                            fontSize: "1.2rem",
+                            fontWeight: "600",
+                            marginBottom: "16px",
+                            color: "#333",
+                            borderBottom: "2px solid #d6d6d6",
+                            paddingBottom: "4px",
+                          }}
+                        >
+                          Contact Details
+                        </h3>
+                        <div style={{ marginBottom: "12px" }}>
+                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                            <strong>Phone:</strong> {contact_no}
+                          </p>
+                        </div>
+                        <div style={{ marginBottom: "12px" }}>
+                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                            <strong>Email:</strong> {email}
+                          </p>
+                        </div>
+                        <div style={{ marginBottom: "12px" }}>
+                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                            <strong>Unit Name:</strong> {unit_name}
+                          </p>
+                        </div>
+                        <div style={{ marginBottom: "12px" }}>
+                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                            <strong>Status:</strong>{" "}
+                            <span
+                              style={{
+                                fontWeight: "600",
+                                color: status === 1 ? "#28a745" : "#dc3545",
+                              }}
+                            >
+                              {status === 1 ? "Active" : "Inactive"}
+                            </span>
+                          </p>
                         </div>
                       </div>
                     </Col>
@@ -542,6 +593,7 @@ const DashboardCards = () => {
               </Col>
             </Row>
           </Col>
+
         </Row>
       )}
     </>

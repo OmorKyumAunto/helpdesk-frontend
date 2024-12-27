@@ -203,7 +203,7 @@ const PieChartWithLabels = () => {
   };
 
   return (
-    <div className="flex items-center justify-between w-full h-[400px]">
+    <div className="flex items-center justify-between w-full h-[300px]">
       <div className="w-2/3 h-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -211,7 +211,7 @@ const PieChartWithLabels = () => {
               data={chartData}
               cx="50%"
               cy="50%"
-              innerRadius={60}
+              innerRadius={50}
               outerRadius={80}
               dataKey="value"
               onMouseEnter={onPieEnter}
@@ -223,18 +223,18 @@ const PieChartWithLabels = () => {
         </ResponsiveContainer>
       </div>
 
-      <div className="w-1/3 pl-4">
+      <div className="w-1/3 pl-1">
         <div className="space-y-2">
           {chartData?.map((entry, index) => (
             <div key={entry.name} className="flex items-center">
               <div
-                className="w-4 h-4 mr-2"
+                className="w-3 h-3 mr-2"
                 style={{ backgroundColor: entry.color }}
               />
-              <span className="text-[12px]">
+              <span className="text-[11px]">
                 {entry.name}
                 {activeIndex === index && (
-                  <span className="ml-2 font-medium">({entry.value})</span>
+                  <span className="ml-1 font-medium">({entry.value})</span>
                 )}
               </span>
             </div>

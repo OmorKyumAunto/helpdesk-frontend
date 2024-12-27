@@ -12,7 +12,7 @@ const TicketPieChart = () => {
       value: total_solve || 0,
     },
     {
-      name: "IN PROGRESS",
+      name: "In Progress",
       value: total_inprogress || 0,
     },
     {
@@ -30,7 +30,8 @@ const TicketPieChart = () => {
     },
     labels: ticketData?.map((item) => item?.name),
     series: ticketData?.map((item) => item?.value),
-    colors: ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"],
+    colors: ["#72b92b", "#0088FE", "#FF0000", "#FFA500", "#8884d8"],
+    // colors: ["", "", "#FFBB28", "#FF8042", "#8884d8"],
     legend: {
       position: "bottom",
     },
