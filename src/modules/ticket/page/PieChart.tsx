@@ -65,7 +65,6 @@ const ApexChart = () => {
       className="chart-container"
       style={{
         padding: "10px",
-        border: "1px solid red",
       }}
     >
       <div
