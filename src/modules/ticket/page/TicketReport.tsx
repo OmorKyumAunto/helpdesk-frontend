@@ -72,7 +72,7 @@ const TicketReport = () => {
             marginBottom: "12px",
           }}
         >
-          <DatePicker.RangePicker
+          {/* <DatePicker.RangePicker
                   onChange={(_, e) =>
                     setFilter({
                       ...filter,
@@ -81,7 +81,7 @@ const TicketReport = () => {
                       offset: 0,
                     })
                   }
-                />
+                /> */}
           <div style={{ width: "160px" }}>
             <Input
               prefix={<SearchOutlined />}

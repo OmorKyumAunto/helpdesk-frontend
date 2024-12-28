@@ -15,6 +15,11 @@ export interface IAsset {
   unit_id: string;
   location: number;
   location_name: string;
+  designation:string;
+  department:string;
+  email:string;
+  contact_no:string;
+  employee_unit_name:string;
 }
 export interface IAssetDetails {
   id: number;
@@ -45,6 +50,7 @@ export interface IAssetDetails {
   location: number;
   location_name: string;
   history: History[];
+  
 }
 
 export interface IAssetParams {
@@ -83,6 +89,7 @@ export interface IDistributedSingle {
   location: number;
   location_name: string;
   history: History[];
+  
 }
 
 export interface History {

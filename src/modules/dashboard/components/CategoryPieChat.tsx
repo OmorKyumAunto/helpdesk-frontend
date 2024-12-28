@@ -108,7 +108,7 @@ const CategoryPieChart = () => {
       value: role_id === 1 ? total_monitors : monitor_count,
       color: "#9575CD",
     },
-  ];
+  ].filter(item => item.value > 0);
 
   return (
     <div className="w-full h-[300px]">

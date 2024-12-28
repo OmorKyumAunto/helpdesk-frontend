@@ -263,7 +263,7 @@ const TicketDashboard = () => {
           <Card
             title={
               <span
-                style={{ fontWeight: "600", fontSize: "18px", color: "#333" }}
+                style={{ fontWeight: "600", fontSize: "16px", color: "#333" }}
               >
                 Priority Overview
               </span>

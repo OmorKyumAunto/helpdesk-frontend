@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Tooltip } from "antd";
 import {
   Card,
   Input,
@@ -180,7 +181,10 @@ const SuperAdminTicketList: React.FC = () => {
                     alignItems: "center",
                   }}
                 >
-                  <div>
+
+
+
+                  {/* <div>
                     <h3
                       style={{ color: "#1890ff" }}
                     >{`Ticket ID: ${ticket.ticket_id}`}</h3>
@@ -199,7 +203,40 @@ const SuperAdminTicketList: React.FC = () => {
                         )}
                       </div>
                     </strong>
-                  </div>
+                  </div> */}
+                  <div>
+                    <h3 style={{ color: "#1890ff" }}>{`Ticket ID: ${ticket.ticket_id}`}</h3>
+                    <h3 style={{ color: "#000000" }}>{`Title : ${ticket.subject}`}</h3>
+                    <strong>
+                      <Tooltip
+                        title={
+                          <div>
+                            <p><strong>Name:</strong> {ticket.ticket_created_employee_name}</p>
+                            <p><strong>ID:</strong> {ticket.ticket_created_employee_id}</p>
+                            <p><strong>Email:</strong> {ticket.ticket_created_employee_email}</p>
+                            <p><strong>Phone No:</strong> {ticket.created_employee_contact_no}</p>
+                            <p><strong>Unit:</strong> {ticket.created_employee_unit_name}</p>
+                          </div>
+                        }
+                      >
+                        <span>
+                          Ticket Creator: {ticket.ticket_created_employee_name} (
+                          {ticket.ticket_created_employee_id})
+                        </span>
+                      </Tooltip>
+                      <div>
+                        {ticket.ticket_status === "solved" && (
+                          <strong>
+                            Solved By: {ticket.ticket_solved_employee_name} (
+                            {ticket.ticket_solved_employee_id})
+                          </strong>
+                        )}
+                      </div>
+                    </strong>
+                  </div>;
+
+
+
 
                   <div>
                     <Space>
@@ -383,15 +420,15 @@ const SuperAdminTicketList: React.FC = () => {
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
-                                {
-                                  key: "4",
-                                  label: " Time Taken",
-                                  children: formatTimeDifference(
-                                    dayjs(ticket.ticket_created_at),
-                                    dayjs(ticket.ticket_updated_at)
-                                  ),
-                                },
-                              ]
+                              {
+                                key: "4",
+                                label: " Time Taken",
+                                children: formatTimeDifference(
+                                  dayjs(ticket.ticket_created_at),
+                                  dayjs(ticket.ticket_updated_at)
+                                ),
+                              },
+                            ]
                             : []),
                         ]}
                       />
@@ -407,13 +444,12 @@ const SuperAdminTicketList: React.FC = () => {
                                   href={
                                     ticket.attachment.startsWith("https")
                                       ? ticket.attachment
-                                      : `${imageURLNew}/uploads/${
-                                          ticket.attachment.includes("ticket\\")
-                                            ? ticket.attachment.split(
-                                                "ticket\\"
-                                              )[1]
-                                            : ticket.attachment
-                                        }`
+                                      : `${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                        ? ticket.attachment.split(
+                                          "ticket\\"
+                                        )[1]
+                                        : ticket.attachment
+                                      }`
                                   }
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -431,11 +467,10 @@ const SuperAdminTicketList: React.FC = () => {
                               ) : (
                                 <a>
                                   <Image
-                                    src={`${imageURLNew}/uploads/${
-                                      ticket.attachment.includes("ticket\\")
-                                        ? ticket.attachment.split("ticket\\")[1]
-                                        : ticket.attachment
-                                    }`}
+                                    src={`${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                      ? ticket.attachment.split("ticket\\")[1]
+                                      : ticket.attachment
+                                      }`}
                                     alt="attachment"
                                     width={40}
                                     style={{ maxHeight: "40px" }}
@@ -525,12 +560,12 @@ const SuperAdminTicketList: React.FC = () => {
                                     style={{
                                       color:
                                         profile?.employee_id ===
-                                        comment.employee_id
+                                          comment.employee_id
                                           ? "white"
                                           : "black",
                                       backgroundColor:
                                         profile?.employee_id ===
-                                        comment.employee_id
+                                          comment.employee_id
                                           ? "#1775BB"
                                           : "#E8E8E8",
                                       padding: "6px 12px",

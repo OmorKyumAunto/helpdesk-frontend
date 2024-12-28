@@ -66,7 +66,7 @@ const DashboardCards = () => {
                     <p
                       style={{
                         textAlign: "center",
-                        fontSize: "22px",
+                        fontSize: "20px",
                         fontWeight: "bold",
                         marginTop: "4px",
                       }}
@@ -80,15 +80,15 @@ const DashboardCards = () => {
                     <div
                       className="bg-[#cf7dcf]"
                       style={{
-                        height: "80px",
-                        width: "80px",
+                        height: "70px",
+                        width: "70px",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: "50%",
                       }}
                     >
-                      <FaComputer size={52} />
+                      <FaComputer size={50} />
                     </div>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ const DashboardCards = () => {
                     <p
                       style={{
                         textAlign: "center",
-                        fontSize: "22px",
+                        fontSize: "20px",
                         fontWeight: "bold",
                         marginTop: "4px",
                       }}
@@ -160,15 +160,15 @@ const DashboardCards = () => {
                     <div
                       className="bg-[#ffc14d]"
                       style={{
-                        height: "80px",
-                        width: "80px",
+                        height: "70px",
+                        width: "70px",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: "50%",
                       }}
                     >
-                      <LuUsers2 size={52} />
+                      <LuUsers2 size={50} />
                     </div>
                   </div>
                 </div>
@@ -228,7 +228,7 @@ const DashboardCards = () => {
                     <p
                       style={{
                         textAlign: "center",
-                        fontSize: "22px",
+                        fontSize: "20px",
                         fontWeight: "bold",
                         marginTop: "4px",
                       }}
@@ -243,15 +243,15 @@ const DashboardCards = () => {
                     <div
                       className="bg-[#acd775]"
                       style={{
-                        height: "80px",
-                        width: "80px",
+                        height: "70px",
+                        width: "70px",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: "50%",
                       }}
                     >
-                      <MdOutlineAssignmentTurnedIn size={52} />
+                      <MdOutlineAssignmentTurnedIn size={50} />
                     </div>
                   </div>
                 </div>
@@ -331,7 +331,7 @@ const DashboardCards = () => {
                         <p
                           style={{
                             textAlign: "center",
-                            fontSize: "22px",
+                            fontSize: "20px",
                             fontWeight: "bold",
                             marginTop: "4px",
                           }}
@@ -343,15 +343,15 @@ const DashboardCards = () => {
                         <div
                           className="bg-[#ffc14d]"
                           style={{
-                            height: "80px",
-                            width: "80px",
+                            height: "70px",
+                            width: "70px",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                             borderRadius: "50%",
                           }}
                         >
-                          <LuUsers2 size={52} />
+                          <LuUsers2 size={50} />
                         </div>
                       </div>
                     </div>
@@ -411,7 +411,7 @@ const DashboardCards = () => {
                         <p
                           style={{
                             textAlign: "center",
-                            fontSize: "24px",
+                            fontSize: "20px",
                             fontWeight: "bold",
                             marginTop: "4px",
                           }}
@@ -423,15 +423,15 @@ const DashboardCards = () => {
                         <div
                           className="bg-[#acd775]"
                           style={{
-                            height: "80px",
-                            width: "80px",
+                            height: "70px",
+                            width: "70px",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                             borderRadius: "50%",
                           }}
                         >
-                          <MdOutlineAssignmentTurnedIn size={52} />
+                          <MdOutlineAssignmentTurnedIn size={50} />
                         </div>
                       </div>
                     </div>
