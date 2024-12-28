@@ -258,26 +258,46 @@ const TicketDashboard = () => {
           </Card>
         </Col>
 
-
-
-        {/* Priorty based */}
+        {/* Priority based */}
         <Col xs={24} sm={24} md={24} lg={5}>
           <Card
-            title={<span style={{ fontWeight: "600", fontSize: "18px", color: "#333" }}>Priority Overview</span>}
+            title={
+              <span
+                style={{ fontWeight: "600", fontSize: "18px", color: "#333" }}
+              >
+                Priority Overview
+              </span>
+            }
             style={{
               height: "100%",
               borderRadius: "16px",
               boxShadow: "0 6px 15px rgba(0, 0, 0, 0.1)",
-              border: "none"
+              border: "none",
             }}
             bodyStyle={{ padding: "15px" }}
           >
             <Space direction="vertical" style={{ width: "100%" }}>
               {[
-                { label: "Urgent", count: priority?.data?.priority_urgent || 0, color: "#ff4d4f" },
-                { label: "High", count: priority?.data?.priority_high || 0, color: "#1890ff" },
-                { label: "Medium", count: priority?.data?.priority_medium || 0, color: "#faad14" },
-                { label: "Low", count: priority?.data?.priority_low || 0, color: "#52c41a" },
+                {
+                  label: "Urgent",
+                  count: priority?.data?.priority_urgent || 0,
+                  color: "#ff4d4f",
+                },
+                {
+                  label: "High",
+                  count: priority?.data?.priority_high || 0,
+                  color: "#1890ff",
+                },
+                {
+                  label: "Medium",
+                  count: priority?.data?.priority_medium || 0,
+                  color: "#faad14",
+                },
+                {
+                  label: "Low",
+                  count: priority?.data?.priority_low || 0,
+                  color: "#52c41a",
+                },
               ].map(({ label, count, color }) => (
                 <Card
                   key={label}
@@ -290,13 +310,19 @@ const TicketDashboard = () => {
                     overflow: "hidden",
                   }}
                   hoverable
-                  bodyStyle={{ display: "flex", alignItems: "center", padding: "16px" }}
+                  bodyStyle={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "16px",
+                  }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.15)";
+                    e.currentTarget.style.boxShadow =
+                      "0 8px 20px rgba(0, 0, 0, 0.15)";
                     e.currentTarget.style.transform = "scale(1.02)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.1)";
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 10px rgba(0, 0, 0, 0.1)";
                     e.currentTarget.style.transform = "scale(1)";
                   }}
                 >
@@ -318,9 +344,19 @@ const TicketDashboard = () => {
                     {count}
                   </div>
                   <div>
-                    <span style={{ fontWeight: "600", fontSize: "16px", color: "#333" }}>{label}</span>
+                    <span
+                      style={{
+                        fontWeight: "600",
+                        fontSize: "16px",
+                        color: "#333",
+                      }}
+                    >
+                      {label}
+                    </span>
                     <br />
-                    <span style={{ fontSize: "14px", color: "#666" }}>Tickets</span>
+                    <span style={{ fontSize: "14px", color: "#666" }}>
+                      Tickets
+                    </span>
                   </div>
                 </Card>
               ))}
@@ -328,12 +364,14 @@ const TicketDashboard = () => {
           </Card>
         </Col>
 
-
         {/* Pie Chart Component */}
         <Col xs={24} sm={24} md={24} lg={13}>
           <Card
             title="Category Wise Tickets"
-            style={{ width: "100%", height: "100%" }}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
           >
             <PieChartWithLabels />
           </Card>

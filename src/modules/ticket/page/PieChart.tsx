@@ -1,26 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import ReactApexChart from 'react-apexcharts';
-import { useGetCategoryWiseDashboardDataQuery } from '../api/ticketEndpoint'; // Assuming this query is set up for fetching data
+import { useState, useEffect } from "react";
+import ReactApexChart from "react-apexcharts";
+import { useGetCategoryWiseDashboardDataQuery } from "../api/ticketEndpoint";
 
 const ApexChart = () => {
-  const { data, error, isLoading } = useGetCategoryWiseDashboardDataQuery(); // Fetch the data from API
+  const { data, error, isLoading } = useGetCategoryWiseDashboardDataQuery();
 
-  const [state, setState] = useState({
+  const [state, setState] = useState<{
+    series: number[];
+    options: ApexCharts.ApexOptions;
+  }>({
     series: [],
     options: {
       chart: {
-        width: '100%',
-        type: 'donut',
+        width: "100%",
+        type: "donut",
       },
       dataLabels: {
         enabled: false,
       },
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 680,
           options: {
             chart: {
-              width: '100%',
+              width: "100%",
             },
             legend: {
               show: false,
@@ -29,27 +32,28 @@ const ApexChart = () => {
         },
       ],
       legend: {
-        position: 'right',
+        position: "right",
         offsetY: 0,
-        height: 230,
+        height: 300,
       },
     },
   });
 
-  // Effect hook to update chart data when API data is fetched
   useEffect(() => {
     if (data) {
-      // Extract category titles and ticket counts
-      const categories = data.data.map((item: any) => item.category_title);
-      const ticketCounts = data.data.map((item: any) => item.ticket_count);
+      const categories =
+        data?.data?.map((item: any) => item.category_title || "") || [];
 
-      setState({
-        series: ticketCounts,
+      const ticketCounts =
+        data?.data?.map((item: any) => item.ticket_count || 0) || [];
+
+      setState((prevState) => ({
+        series: ticketCounts as number[],
         options: {
-          ...state.options,
-          labels: categories, // Dynamically set labels
+          ...prevState.options,
+          labels: categories as string[],
         },
-      });
+      }));
     }
   }, [data]);
 
@@ -57,9 +61,17 @@ const ApexChart = () => {
   if (error) return <div>Error loading data</div>;
 
   return (
-    <div className="chart-container" style= {{ padding: '10px' }}>
-      {/* Chart Container */}
-      <div className="chart-wrap" style={{ maxWidth: '500px', margin: '0 auto' }}>
+    <div
+      className="chart-container"
+      style={{
+        padding: "10px",
+        border: "1px solid red",
+      }}
+    >
+      <div
+        className="chart-wrap"
+        style={{ maxWidth: "500px", margin: "0 auto" }}
+      >
         <ReactApexChart
           options={state.options}
           series={state.series}

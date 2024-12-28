@@ -13,4 +13,5 @@ export interface ILocationParams {
   limit?: number;
   offset?: number;
   key?: string;
+  unit?: number;
 }

@@ -83,6 +83,8 @@ export interface IRaiseSolvedDashboard {
   total_ticket_percent: number;
   total_solved: number;
   total_solved_percent: number;
+  total_unsolved: number;
+  total_unsolved_percent: number;
 }
 export interface IPriorityWiseDashboard {
   priority_high: number;
