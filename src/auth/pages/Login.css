@@ -77,7 +77,6 @@
   padding: 25px;
   background: #fff;
   border-radius: 8px;
-  background-image: url("/src/assets/amchambg.jpg") !important;
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -88,7 +87,6 @@
     padding: 25px;
     background: #fff;
     border-radius: 8px;
-    background-image: url("/src/assets/amchambg.jpg") !important;
     background-size: contain;
     background-repeat: no-repeat;
     margin: 8px;

@@ -1,75 +1,69 @@
-import { ApexOptions } from "apexcharts";
+import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import { useGetTicketDashboardCountQuery } from "../../ticket/api/ticketEndpoint";
+import { ApexOptions } from "apexcharts";
 
-const TicketPieChart = () => {
+const TicketDonutChart = () => {
   const { data } = useGetTicketDashboardCountQuery();
-  const { total_solve, total_forward, total_inprogress, total_unsolved } =
-    data?.data || {};
-  const ticketData = [
-    {
-      name: "Solved",
-      value: total_solve || 0,
-    },
-    {
-      name: "In Progress",
-      value: total_inprogress || 0,
-    },
-    {
-      name: "Unsolved",
-      value: total_unsolved || 0,
-    },
-    {
-      name: "Forward",
-      value: total_forward || 0,
-    },
-  ];
-  const options: ApexOptions = {
-    chart: {
-      type: "pie",
-    },
-    labels: ticketData?.map((item) => item?.name),
-    series: ticketData?.map((item) => item?.value),
-    colors: ["#72b92b", "#0088FE", "#FF0000", "#FFA500", "#8884d8"],
-    // colors: ["", "", "#FFBB28", "#FF8042", "#8884d8"],
-    legend: {
-      position: "bottom",
-    },
-    dataLabels: {
-      enabled: true,
-      formatter: function (val: any, opts: any) {
-        return (
-          opts.w.config.labels[opts.seriesIndex] +
-          ": " +
-          opts.w.config.series[opts.seriesIndex]
-        );
+  const { total_solve = 0, total_forward = 0, total_inprogress = 0, total_unsolved = 0 } = data?.data || {};
+
+  const [state, setState] = useState<{
+    series: number[];
+    options: ApexOptions;
+  }>({
+    series: [44, 55, 41, 17, 15], // Default static data, replaced dynamically
+    options: {
+      chart: {
+        type: "donut",
       },
-    },
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 300,
-          },
-          legend: {
-            position: "bottom",
+      labels: ["Solved", "In Progress", "Unsolved", "Forward"], // Default labels
+      colors: ["#72b92b", "#0088FE", "#FF0000", "#FFA500"],
+      legend: {
+        position: "bottom",
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: "bottom",
+            },
           },
         },
+      ],
+    },
+  });
+
+  useEffect(() => {
+    const ticketData = [
+      { name: "Solved", value: total_solve },
+      { name: "In Progress", value: total_inprogress },
+      { name: "Unsolved", value: total_unsolved },
+      { name: "Forward", value: total_forward },
+    ];
+
+    setState((prevState) => ({
+      ...prevState,
+      series: ticketData.map((item) => item.value),
+      options: {
+        ...prevState.options,
+        labels: ticketData.map((item) => item.name),
       },
-    ],
-  };
+    }));
+  }, [data]);
 
   return (
-    <div>
-      <ReactApexChart
-        options={options}
-        series={options.series}
-        type="pie"
-        height={400}
-      />
+    <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+      <div id="chart">
+        <ReactApexChart
+          options={state.options} // This will now have the correct type
+          series={state.series}
+          type="donut"
+          height={400}
+        />
+      </div>
     </div>
   );
 };
 
-export default TicketPieChart;
+export default TicketDonutChart;
