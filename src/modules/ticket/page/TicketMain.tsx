@@ -21,17 +21,17 @@ const TicketMain: React.FC = () => {
       ? [
           {
             key: "1",
-            label: "Dashboard",
+            label: <span style={{ fontSize: "16px", fontWeight: "600" }}>Dashboard</span>,
             children: <TicketDashboard />,
           },
           {
             key: "2",
-            label: "All Tickets",
+            label: <span style={{ fontSize: "16px", fontWeight: "600" }}>All Tickets</span>,
             children: <SuperAdminTicketList />,
           },
           {
             key: "3",
-            label: "Reports",
+            label: <span style={{ fontSize: "16px", fontWeight: "600" }}>Reports</span>,
             children: <TicketReport />,
           },
         ]
@@ -40,12 +40,12 @@ const TicketMain: React.FC = () => {
       ? [
           {
             key: "4",
-            label: "Dashboard",
+            label: <span style={{ fontSize: "16px", fontWeight: "600" }}>Dashboard</span>,
             children: <TicketDashboard />,
           },
           {
             key: "5",
-            label: "Ticket",
+            label: <span style={{ fontSize: "16px", fontWeight: "600" }}>My Tickets</span>,
             children: <AdminTicketList />,
           },
         ]
@@ -54,12 +54,12 @@ const TicketMain: React.FC = () => {
       ? [
           {
             key: "6",
-            label: "Raise A Ticket",
+            label: <span style={{ fontSize: "16px", fontWeight: "600" }}>Raise a Ticket</span>,
             children: <RaiseTicketForm />,
           },
           {
             key: "7",
-            label: "Tickets",
+            label: <span style={{ fontSize: "16px", fontWeight: "600" }}>My Tickets</span>,
             children: <RaiseTicketList />,
           },
         ]

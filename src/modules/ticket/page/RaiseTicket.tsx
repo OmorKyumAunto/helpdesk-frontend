@@ -63,20 +63,14 @@ const RaiseTicketForm = () => {
   };
 
   return (
-    <Card
-      style={{
-        backgroundColor: "#f5f5f5",
-        borderRadius: "10px",
-        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-      }}
-    >
+    
       <Form
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        style={{ maxWidth: 1200, margin: "auto" }}
+        style={{ maxWidth: "100%", margin: "auto" }}
       >
-        <Row gutter={[16, 16]}>
+        <Row gutter={[16,16]}>
           {/* Left Card */}
           <Col xs={24} md={8}>
             <Card
@@ -84,7 +78,7 @@ const RaiseTicketForm = () => {
               hoverable
               style={{
                 borderRadius: "8px",
-                padding: "16px",
+                padding: "3px",
                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
                 transition: "transform 0.3s ease",
               }}
@@ -99,6 +93,7 @@ const RaiseTicketForm = () => {
                 label="Select Unit"
                 name="unit_id"
                 rules={[{ required: true, message: "Please select a unit!" }]}
+                style={{ marginBottom: "8px" }}
               >
                 <Select
                   loading={unitIsLoading}
@@ -114,6 +109,7 @@ const RaiseTicketForm = () => {
                     value: unit.id,
                     label: unit.title,
                   }))}
+                  
                   allowClear
                 />
               </Form.Item>
@@ -121,6 +117,7 @@ const RaiseTicketForm = () => {
               <Form.Item
                 label="Select Category"
                 name="category_id"
+                style={{ marginBottom: "8px" }}
                 rules={[
                   { required: true, message: "Please select a category!" },
                 ]}
@@ -146,6 +143,7 @@ const RaiseTicketForm = () => {
               <Form.Item
                 label="Select Priority"
                 name="priority"
+                style={{ marginBottom: "8px" }}
                 rules={[
                   { required: true, message: "Please select a priority!" },
                 ]}
@@ -164,6 +162,7 @@ const RaiseTicketForm = () => {
                   placeholder="Select Asset Name"
                   showSearch
                   optionFilterProp="children"
+                  
                   filterOption={(input, option) =>
                     (option?.label ?? "")
                       .toLowerCase()
@@ -186,7 +185,7 @@ const RaiseTicketForm = () => {
               hoverable
               style={{
                 borderRadius: "8px",
-                padding: "16px",
+                padding: "3px",
                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
                 transition: "transform 0.3s ease",
               }}
@@ -200,16 +199,19 @@ const RaiseTicketForm = () => {
               <Form.Item
                 label="Subject"
                 name="subject"
+                style={{ marginBottom: "8px" }}
                 rules={[{ required: true, message: "Please enter a subject!" }]}
               >
                 <Input placeholder="Enter Subject" />
               </Form.Item>
 
-              <Form.Item label="CC" name="cc">
+              <Form.Item label="CC" name="cc"
+              style={{ marginBottom: "8px" }}>
                 <Select
                   loading={empLoading}
                   placeholder="Select Employee"
                   showSearch
+                  
                   optionFilterProp="children"
                   filterOption={(input, option) =>
                     (option?.label ?? "")
@@ -227,6 +229,7 @@ const RaiseTicketForm = () => {
               <Form.Item
                 label="Message"
                 name="description"
+                style={{ marginBottom: "8px" }}
                 rules={[
                   { required: true, message: "Please enter a description!" },
                 ]}
@@ -238,6 +241,7 @@ const RaiseTicketForm = () => {
                 name="attachment"
                 label="Attachment (Optional)"
                 valuePropName="fileList"
+                style={{ marginBottom: "8px" }}
                 getValueFromEvent={normFile}
               >
                 <Upload
@@ -260,6 +264,7 @@ const RaiseTicketForm = () => {
                   backgroundColor: "#1775bb",
                   borderColor: "#1775bb",
                   fontWeight: "bold",
+                  
                   transition: "background-color 0.3s ease",
                 }}
                 onMouseEnter={(e) =>
@@ -275,7 +280,7 @@ const RaiseTicketForm = () => {
           </Col>
         </Row>
       </Form>
-    </Card>
+    
   );
 };
 
