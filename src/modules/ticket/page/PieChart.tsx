@@ -20,7 +20,7 @@ const ApexChart = () => {
       },
       responsive: [
         {
-          breakpoint: 680,
+          breakpoint: 480,
           options: {
             chart: {
               width: "100%",

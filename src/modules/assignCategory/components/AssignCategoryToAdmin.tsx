@@ -6,8 +6,15 @@ import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useAssignCategoryMutation } from "../api/assignCategoryEndPoint";
 import { useGetCategoryActiveListQuery } from "../../Category/api/categoryEndPoint";
+import { IAssignCategory } from "../types/assignCategoryTypes";
 
-const AssignCategoryToAdmin = ({ id, searchAccess }: any) => {
+const AssignCategoryToAdmin = ({
+  id,
+  assign_category,
+}: {
+  id: number;
+  assign_category: IAssignCategory[];
+}) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
@@ -16,16 +23,16 @@ const AssignCategoryToAdmin = ({ id, searchAccess }: any) => {
   const onFinish = (value: { category_id: number[] }) => {
     assign({ body: value, id });
   };
-  //   useEffect(() => {
-  //     if (searchAccess?.length > 0) {
-  //       form.setFieldValue(
-  //         "category_id",
-  //         searchAccess?.map((item: any) => item?.category_id)
-  //       );
-  //     } else {
-  //       form.setFieldValue("category_id", null);
-  //     }
-  //   }, [searchAccess, form]);
+  useEffect(() => {
+    if (assign_category?.length > 0) {
+      form.setFieldValue(
+        "category_id",
+        assign_category?.map((item: IAssignCategory) => item?.access_id)
+      );
+    } else {
+      form.setFieldValue("category_id", null);
+    }
+  }, [assign_category, form]);
 
   useEffect(() => {
     if (isSuccess) {

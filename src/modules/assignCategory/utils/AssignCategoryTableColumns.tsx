@@ -80,7 +80,7 @@ export const AssignCategoryTableColumns =
                     content: (
                       <AssignCategoryToAdmin
                         id={record?.user_id}
-                        searchAccess={record}
+                        assign_category={record?.assign_category}
                       />
                     ),
                     show: true,
