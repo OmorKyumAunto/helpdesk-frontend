@@ -27,7 +27,7 @@ const AssignCategoryToAdmin = ({
     if (assign_category?.length > 0) {
       form.setFieldValue(
         "category_id",
-        assign_category?.map((item: IAssignCategory) => item?.access_id)
+        assign_category?.map((item: IAssignCategory) => item?.category_id)
       );
     } else {
       form.setFieldValue("category_id", null);
