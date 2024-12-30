@@ -11,6 +11,7 @@ import {
   Image,
   Layout,
   Menu,
+  Dropdown,
   MenuProps,
   Popover,
   theme,
@@ -43,6 +44,38 @@ export const AppLayout = () => {
   const gridBreak = useBreakpoint();
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const dispatch = useAppDispatch();
+  const menu = (
+    <Menu>
+      <Menu.Item key="1">
+        <a
+          href="https://www.dropbox.com/scl/fi/l7lnay7rzddpzog2lskn4/Server-Summary.pdf?rlkey=wqnp9p1s4xbqpfqxeoeuzx9la&st=0r46kgkv&raw=1"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Server Summary
+        </a>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <a
+          href="https://www.dropbox.com/scl/fi/lvd8dmnarnvcp6i1cokm5/Ticketing-Process.pdf?rlkey=mohf6fbh8fr3mr32ck6sgoyzy&st=ark1vuvi&raw=1"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ticketing Process
+        </a>
+      </Menu.Item>
+      <Menu.Item key="3">
+        <a
+          href="https://www.dropbox.com/scl/fi/zuc9t8nw4ukig3pvmmhmf/Profile-Update.pdf?rlkey=ov4fb53f44mt6j7sic3yl05qs&st=m01ldu63&raw=1"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Profile Update
+        </a>
+      </Menu.Item>
+    </Menu>
+  );
+
   const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(setLogout());
@@ -206,17 +239,17 @@ export const AppLayout = () => {
   );
   const selfService = (
     <div>
-      <Link to="https://www.google.com/" target="_blank">
+      <Link to="https://www.youtube.com/playlist?list=PL1I5_y65vLeHbVZMV3EmR_hLkKms_AWTD" target="_blank">
         <Button style={{ marginTop: "10px", width: "100%" }} type="primary">
-          Link One
+          Video Tutorial
         </Button>
       </Link>
       <br />
-      <Link to="https://www.youtube.com/" target="_blank">
+      <Dropdown overlay={menu} trigger={["hover"]}>
         <Button style={{ marginTop: "10px", width: "100%" }} type="primary">
-          Link Two
+          User Guide
         </Button>
-      </Link>
+      </Dropdown>
     </div>
   );
 
@@ -261,9 +294,8 @@ export const AppLayout = () => {
           position: "sticky",
           top: 0,
           left: 0,
-          display: `${
-            grid.xs && !collapsed ? "block" : grid.md ? "block" : "none"
-          }`,
+          display: `${grid.xs && !collapsed ? "block" : grid.md ? "block" : "none"
+            }`,
         }}
       >
         <div>

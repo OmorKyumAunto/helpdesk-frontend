@@ -223,7 +223,7 @@ const DashboardCards = () => {
                 >
                   <div>
                     <Typography.Title style={{ color: "white" }} level={4}>
-                      Total Disbursements
+                      Disbursements
                     </Typography.Title>
                     <p
                       style={{
@@ -406,7 +406,7 @@ const DashboardCards = () => {
                     >
                       <div>
                         <Typography.Title style={{ color: "white" }} level={4}>
-                          Total Disbursements
+                          Disbursements
                         </Typography.Title>
                         <p
                           style={{
