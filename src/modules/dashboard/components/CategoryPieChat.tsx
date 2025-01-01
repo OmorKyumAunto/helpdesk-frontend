@@ -86,27 +86,27 @@ const CategoryPieChart = () => {
     {
       name: "Laptops",
       value: role_id === 1 ? total_laptop : laptop_count,
-      color: "#FF6B6B",
+      color: "#72b92b",
     },
     {
       name: "Desktops",
       value: role_id === 1 ? total_desktop : desktop_count,
-      color: "#A5D6A7",
+      color: "#0088FE",
     },
     {
       name: "Printers",
       value: role_id === 1 ? total_printer : printer_count,
-      color: "#45B7D1",
+      color: "#FF0000",
     },
     {
       name: "Accessories",
       value: role_id === 1 ? total_accessories : accessories_count || 0,
-      color: "#FFB74D",
+      color: "#FFA500",
     },
     {
       name: "Monitors",
       value: role_id === 1 ? total_monitors : monitor_count,
-      color: "#9575CD",
+      color: "#ba45ba",
     },
   ].filter(item => item.value > 0);
 
