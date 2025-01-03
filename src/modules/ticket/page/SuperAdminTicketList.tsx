@@ -233,7 +233,7 @@ const SuperAdminTicketList: React.FC = () => {
                         )}
                       </div>
                     </strong>
-                  </div>;
+                  </div>
 
 
 

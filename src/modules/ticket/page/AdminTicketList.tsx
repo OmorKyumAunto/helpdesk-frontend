@@ -216,7 +216,7 @@ const AdminTicketList: React.FC = () => {
                         )}
                       </div>
                     </strong>
-                  </div>;
+                  </div>
 
 
 
