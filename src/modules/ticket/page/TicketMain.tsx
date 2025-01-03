@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, Tabs } from "antd";
+import { Card, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import RaiseTicketForm from "./RaiseTicket";
 import { useGetMeQuery } from "../../../app/api/userApi";
@@ -13,7 +13,10 @@ const TicketMain: React.FC = () => {
   const { data: profile } = useGetMeQuery();
   const roleID = profile?.data?.role_id;
 
-  const [activeKey, setActiveKey] = useState("1");
+  const [activeKey, setActiveKey] = useState(
+    roleID === 1 ? "1" : roleID === 2 ? "4" : "6"
+  );
+  const [ticketValue, setTicketValue] = useState("");
 
   const onChange = (key: string) => {
     setActiveKey(key);
@@ -29,7 +32,13 @@ const TicketMain: React.FC = () => {
                 Dashboard
               </span>
             ),
-            children: <TicketDashboard setActiveKey={setActiveKey} />,
+            children: (
+              <TicketDashboard
+                setActiveKey={setActiveKey}
+                roleID={roleID}
+                setTicketValue={setTicketValue}
+              />
+            ),
           },
           {
             key: "2",
@@ -38,7 +47,7 @@ const TicketMain: React.FC = () => {
                 All Tickets
               </span>
             ),
-            children: <SuperAdminTicketList />,
+            children: <SuperAdminTicketList ticketValue={ticketValue} />,
           },
           {
             key: "3",
@@ -60,7 +69,13 @@ const TicketMain: React.FC = () => {
                 Dashboard
               </span>
             ),
-            children: <TicketDashboard />,
+            children: (
+              <TicketDashboard
+                setActiveKey={setActiveKey}
+                roleID={roleID}
+                setTicketValue={setTicketValue}
+              />
+            ),
           },
           {
             key: "5",
@@ -69,7 +84,7 @@ const TicketMain: React.FC = () => {
                 My Tickets
               </span>
             ),
-            children: <AdminTicketList />,
+            children: <AdminTicketList ticketValue={ticketValue} />,
           },
         ]
       : []),
@@ -98,7 +113,6 @@ const TicketMain: React.FC = () => {
   ];
   return (
     <Card>
-      {/* <Button onClick={() => setActiveKey("3")}>Change</Button> */}
       <Tabs activeKey={activeKey} items={items} onChange={onChange} />
     </Card>
   );

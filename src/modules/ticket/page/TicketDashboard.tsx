@@ -18,10 +18,16 @@ import {
 } from "../api/ticketEndpoint";
 
 interface TicketDashboardProps {
-  setActiveKey?: (key: string) => void;
+  setActiveKey: (key: string) => void;
+  setTicketValue: (key: string) => void;
+  roleID: number;
 }
 
-const TicketDashboard = ({ setActiveKey }: TicketDashboardProps) => {
+const TicketDashboard = ({
+  setActiveKey,
+  roleID,
+  setTicketValue,
+}: TicketDashboardProps) => {
   const { md, lg } = Grid.useBreakpoint();
   const { data } = useGetTicketDashboardCountQuery();
   const { data: topSolver } = useGetTopTicketSolverQuery();
@@ -33,26 +39,31 @@ const TicketDashboard = ({ setActiveKey }: TicketDashboardProps) => {
     {
       id: 1,
       title: "All Ticket",
+      value: "",
       data: data?.data?.total_ticket,
     },
     {
       id: 2,
       title: "Solved",
+      value: "solved",
       data: data?.data?.total_solve,
     },
     {
       id: 3,
       title: "In Progress",
+      value: "inprogress",
       data: data?.data?.total_inprogress,
     },
     {
       id: 4,
       title: "Unsolved",
+      value: "unsolved",
       data: data?.data?.total_unsolved,
     },
     {
       id: 5,
       title: "Forward",
+      value: "forward",
       data: data?.data?.total_forward,
     },
   ];
@@ -68,7 +79,10 @@ const TicketDashboard = ({ setActiveKey }: TicketDashboardProps) => {
           >
             <Card
               className="bg-[#ba45ba] text-white card-hover-stat"
-              onClick={() => setActiveKey && setActiveKey("2")}
+              onClick={() => {
+                setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
+                setTicketValue && setTicketValue(item.value);
+              }}
               style={{
                 textAlign: "center",
                 backgroundColor: "#0d3c6e",

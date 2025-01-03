@@ -1,56 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { Tooltip } from "antd";
+import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import {
-  Card,
-  Input,
   Button,
-  Divider,
-  Tag,
-  Row,
+  Card,
   Col,
-  Dropdown,
+  Descriptions,
+  Divider,
+  Empty,
+  Image,
+  Input,
+  Pagination,
+  Popconfirm,
+  Radio,
+  Row,
   Select,
   Space,
-  Image,
-  Popconfirm,
-  Empty,
-  Pagination,
-  Radio,
-  Descriptions,
+  Tag,
+  Tooltip,
 } from "antd";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import React, { useEffect, useState } from "react";
+import { useGetMeQuery } from "../../../app/api/userApi";
+import { imageURLNew } from "../../../app/slice/baseQuery";
+import noUser from "../../../assets/avatar2.png";
 import {
-  useCreateCommentMutation,
   useDeleteTicketMutation,
-  useGetRaiseTicketAdminWiseQuery,
   useGetRaiseTicketSuperAdminWiseQuery,
   useLazyGetCommentDataQuery,
 } from "../api/ticketEndpoint";
-import { IAdminTicketList, IRaiseTicketList } from "../types/ticketTypes";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  FilterOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import { setCommonModal } from "../../../app/slice/modalSlice";
-import UpdateTicketStatus from "../components/UpdateTicketStatus";
-import { imageURLNew } from "../../../app/slice/baseQuery";
-import noImage from "../../../assets/No_Image.jpg";
-import { useGetMeQuery } from "../../../app/api/userApi";
-import noUser from "../../../assets/avatar2.png";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import { IAdminTicketList } from "../types/ticketTypes";
 import { formatTimeDifference } from "../utils/timeFormat";
 dayjs.extend(relativeTime);
 
 const { Option } = Select;
-const SuperAdminTicketList: React.FC = () => {
+const SuperAdminTicketList = ({ ticketValue }: { ticketValue: string }) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const skipValue = (page - 1) * pageSize;
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
-  const [newComment, setNewComment] = useState<string>("");
   const [filter, setFilter] = useState<{
     key?: string;
     priority?: string;
@@ -69,7 +56,6 @@ const SuperAdminTicketList: React.FC = () => {
     useLazyGetCommentDataQuery();
   const { data: { data: profile } = {} } = useGetMeQuery();
 
-  const [createComment, { isSuccess }] = useCreateCommentMutation();
   const handleExpand = (id: number): void => {
     setExpandedCard(expandedCard === id ? null : id);
   };
@@ -79,19 +65,6 @@ const SuperAdminTicketList: React.FC = () => {
     setPageSize(size);
     setFilter({ ...filter, offset: (current - 1) * size, limit: size });
   };
-  const handleAddComment = (id: number): void => {
-    const body = {
-      ticket_id: id,
-      comment_text: newComment,
-    };
-    createComment(body);
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      setNewComment("");
-    }
-  }, [isSuccess]);
 
   const handleCardClick = (e: React.MouseEvent, id: number): void => {
     const target = e.target as HTMLElement;
@@ -115,6 +88,12 @@ const SuperAdminTicketList: React.FC = () => {
     { label: "Forward", value: "forward" },
   ];
 
+  useEffect(() => {
+    if (ticketValue) {
+      setFilter({ ...filter, status: ticketValue, offset: 0 });
+    }
+  }, [ticketValue]);
+
   return (
     <Card
       loading={isLoading}
@@ -125,7 +104,7 @@ const SuperAdminTicketList: React.FC = () => {
           <Radio.Group
             // block
             options={options}
-            defaultValue=""
+            value={ticketValue}
             optionType="button"
             buttonStyle="solid"
             onChange={(e) =>
@@ -181,10 +160,7 @@ const SuperAdminTicketList: React.FC = () => {
                     alignItems: "center",
                   }}
                 >
-
-
-
-                  {/* <div>
+                  <div>
                     <h3
                       style={{ color: "#1890ff" }}
                     >{`Ticket ID: ${ticket.ticket_id}`}</h3>
@@ -192,36 +168,35 @@ const SuperAdminTicketList: React.FC = () => {
                       style={{ color: "#000000" }}
                     >{`Title : ${ticket.subject}`}</h3>
                     <strong>
-                      Ticket Creator: {ticket.ticket_created_employee_name} (
-                      {ticket.ticket_created_employee_id})
-                      <div>
-                        {ticket.ticket_status === "solved" && (
-                          <strong>
-                            Solved By: {ticket.ticket_solved_employee_name} (
-                            {ticket.ticket_solved_employee_id})
-                          </strong>
-                        )}
-                      </div>
-                    </strong>
-                  </div> */}
-                  <div>
-                    <h3 style={{ color: "#1890ff" }}>{`Ticket ID: ${ticket.ticket_id}`}</h3>
-                    <h3 style={{ color: "#000000" }}>{`Title : ${ticket.subject}`}</h3>
-                    <strong>
                       <Tooltip
                         title={
                           <div>
-                            <p><strong>Name:</strong> {ticket.ticket_created_employee_name}</p>
-                            <p><strong>ID:</strong> {ticket.ticket_created_employee_id}</p>
-                            <p><strong>Email:</strong> {ticket.ticket_created_employee_email}</p>
-                            <p><strong>Phone No:</strong> {ticket.created_employee_contact_no}</p>
-                            <p><strong>Unit:</strong> {ticket.created_employee_unit_name}</p>
+                            <p>
+                              <strong>Name:</strong>{" "}
+                              {ticket.ticket_created_employee_name}
+                            </p>
+                            <p>
+                              <strong>ID:</strong>{" "}
+                              {ticket.ticket_created_employee_id}
+                            </p>
+                            <p>
+                              <strong>Email:</strong>{" "}
+                              {ticket.ticket_created_employee_email}
+                            </p>
+                            <p>
+                              <strong>Phone No:</strong>{" "}
+                              {ticket.created_employee_contact_no}
+                            </p>
+                            <p>
+                              <strong>Unit:</strong>{" "}
+                              {ticket.created_employee_unit_name}
+                            </p>
                           </div>
                         }
                       >
                         <span>
-                          Ticket Creator: {ticket.ticket_created_employee_name} (
-                          {ticket.ticket_created_employee_id})
+                          Ticket Creator: {ticket.ticket_created_employee_name}{" "}
+                          ({ticket.ticket_created_employee_id})
                         </span>
                       </Tooltip>
                       <div>
@@ -234,9 +209,6 @@ const SuperAdminTicketList: React.FC = () => {
                       </div>
                     </strong>
                   </div>
-
-
-
 
                   <div>
                     <Space>
@@ -263,21 +235,6 @@ const SuperAdminTicketList: React.FC = () => {
                           <DeleteOutlined />
                         </Button>
                       </Popconfirm>
-                      {/* <Button
-                  size="small"
-                  type="primary"
-                  onClick={() => {
-                    dispatch(
-                      setCommonModal({
-                        title: "Update Ticket Status",
-                        content: <UpdateTicketStatus single={ticket} />,
-                        show: true,
-                      })
-                    );
-                  }}
-                >
-                  <EditOutlined />
-                </Button> */}
                     </Space>
                   </div>
                 </div>
@@ -344,20 +301,7 @@ const SuperAdminTicketList: React.FC = () => {
                       </>
                     </div>
                   </Col>
-                  {/* <Col xs={12} sm={12} md={8} lg={4}>
-              <div
-                style={{
-                  textAlign: "left",
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                }}
-              >
-                <p style={{ color: "gray" }}>Status</p>
-                <Tag color={ticket.status === 1 ? "success" : "error"}>
-                  {ticket.status === 1 ? "ACTIVE" : "INACTIVE"}
-                </Tag>
-              </div>
-            </Col> */}
+
                   <Col xs={12} sm={12} md={8} lg={4}>
                     <div
                       style={{
@@ -420,15 +364,15 @@ const SuperAdminTicketList: React.FC = () => {
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
-                              {
-                                key: "4",
-                                label: " Time Taken",
-                                children: formatTimeDifference(
-                                  dayjs(ticket.ticket_created_at),
-                                  dayjs(ticket.ticket_updated_at)
-                                ),
-                              },
-                            ]
+                                {
+                                  key: "4",
+                                  label: " Time Taken",
+                                  children: formatTimeDifference(
+                                    dayjs(ticket.ticket_created_at),
+                                    dayjs(ticket.ticket_updated_at)
+                                  ),
+                                },
+                              ]
                             : []),
                         ]}
                       />
@@ -444,12 +388,13 @@ const SuperAdminTicketList: React.FC = () => {
                                   href={
                                     ticket.attachment.startsWith("https")
                                       ? ticket.attachment
-                                      : `${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
-                                        ? ticket.attachment.split(
-                                          "ticket\\"
-                                        )[1]
-                                        : ticket.attachment
-                                      }`
+                                      : `${imageURLNew}/uploads/${
+                                          ticket.attachment.includes("ticket\\")
+                                            ? ticket.attachment.split(
+                                                "ticket\\"
+                                              )[1]
+                                            : ticket.attachment
+                                        }`
                                   }
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -467,10 +412,11 @@ const SuperAdminTicketList: React.FC = () => {
                               ) : (
                                 <a>
                                   <Image
-                                    src={`${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
-                                      ? ticket.attachment.split("ticket\\")[1]
-                                      : ticket.attachment
-                                      }`}
+                                    src={`${imageURLNew}/uploads/${
+                                      ticket.attachment.includes("ticket\\")
+                                        ? ticket.attachment.split("ticket\\")[1]
+                                        : ticket.attachment
+                                    }`}
                                     alt="attachment"
                                     width={40}
                                     style={{ maxHeight: "40px" }}
@@ -483,38 +429,6 @@ const SuperAdminTicketList: React.FC = () => {
                             )}
                           </div>
                         </Descriptions.Item>
-
-                        {/* <Descriptions.Item
-                          label="Attachment"
-                          key="1"
-                        >
-                          <div style={{ maxWidth: '50px', textAlign: 'center' }}>
-                            {isPDF ? (
-                              <a
-                                href={`${imageURLNew}/uploads/${ticket?.attachment?.split("ticket\\")[1]
-                                  }`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <Button size="small" style={{ fontSize: '8px', padding: '0 5px' }}>PDF</Button>
-                              </a>
-                            ) : (
-                              <Image
-                                src={
-                                  ticket.attachment
-                                    ? `${imageURLNew}/uploads/${ticket?.attachment?.split("ticket\\")[1]
-                                    }`
-                                    : noImage
-                                }
-                                alt="attachment"
-                                width={40}
-                                style={{ maxHeight: '40px' }}
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                            )}
-                          </div>
-                        </Descriptions.Item> */}
-
                         <Descriptions.Item label="Message" key="2">
                           <div
                             style={{
@@ -530,8 +444,6 @@ const SuperAdminTicketList: React.FC = () => {
                       <Card
                         style={{
                           marginTop: "1rem",
-                          // width: "50%",
-                          // margin: "0 auto",
                         }}
                         title="Comments"
                       >
@@ -560,12 +472,12 @@ const SuperAdminTicketList: React.FC = () => {
                                     style={{
                                       color:
                                         profile?.employee_id ===
-                                          comment.employee_id
+                                        comment.employee_id
                                           ? "white"
                                           : "black",
                                       backgroundColor:
                                         profile?.employee_id ===
-                                          comment.employee_id
+                                        comment.employee_id
                                           ? "#1775BB"
                                           : "#E8E8E8",
                                       padding: "6px 12px",
@@ -597,26 +509,6 @@ const SuperAdminTicketList: React.FC = () => {
                             </>
                           ))}
                         </div>
-                        {/* <Input.TextArea
-                          rows={2}
-                          value={newComment}
-                          onChange={(e) => setNewComment(e.target.value)}
-                          placeholder="Add a comment"
-                          style={{
-                            marginBottom: "0.2rem",
-                            borderRadius: "6px",
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                        <Button
-                          type="primary"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddComment(ticket.ticket_table_id);
-                          }}
-                        >
-                          Add Comment
-                        </Button> */}
                       </Card>
                     </div>
                   )}
