@@ -16,7 +16,12 @@ import {
   useGetTicketDashboardCountQuery,
   useGetTopTicketSolverQuery,
 } from "../api/ticketEndpoint";
-const TicketDashboard = () => {
+
+interface TicketDashboardProps {
+  setActiveKey?: (key: string) => void;
+}
+
+const TicketDashboard = ({ setActiveKey }: TicketDashboardProps) => {
   const { md, lg } = Grid.useBreakpoint();
   const { data } = useGetTicketDashboardCountQuery();
   const { data: topSolver } = useGetTopTicketSolverQuery();
@@ -63,11 +68,13 @@ const TicketDashboard = () => {
           >
             <Card
               className="bg-[#ba45ba] text-white card-hover-stat"
+              onClick={() => setActiveKey && setActiveKey("2")}
               style={{
                 textAlign: "center",
                 backgroundColor: "#0d3c6e",
                 color: "white",
-                borderRadius: "15px", // Keep rounded corners as before
+                borderRadius: "15px",
+                cursor: "pointer",
               }}
             >
               <div>
