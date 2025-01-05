@@ -355,6 +355,11 @@ const SuperAdminTicketList = ({
                         bordered
                         size="small"
                         column={2}
+                        labelStyle={{
+                          fontWeight: "bold",
+                          backgroundColor: "#e6f2ff",
+                        }}
+                        contentStyle={{ backgroundColor: "#ffffff" }}
                         items={[
                           {
                             key: "1",
@@ -392,7 +397,12 @@ const SuperAdminTicketList = ({
                       />
                       <Divider />
                       <Descriptions bordered layout="vertical" size="small">
-                        <Descriptions.Item label="Attachment" key="1">
+                        <Descriptions.Item
+                          style={{ backgroundColor: "#ffffff" }}
+                          labelStyle={{ fontWeight: "bold" }}
+                          label="Attachment"
+                          key="1"
+                        >
                           <div
                             style={{ maxWidth: "50px", textAlign: "center" }}
                           >
@@ -443,7 +453,12 @@ const SuperAdminTicketList = ({
                             )}
                           </div>
                         </Descriptions.Item>
-                        <Descriptions.Item label="Message" key="2">
+                        <Descriptions.Item
+                          style={{ backgroundColor: "#ffffff" }}
+                          labelStyle={{ fontWeight: "bold" }}
+                          label="Message"
+                          key="2"
+                        >
                           <div
                             style={{
                               minWidth: "500px",
