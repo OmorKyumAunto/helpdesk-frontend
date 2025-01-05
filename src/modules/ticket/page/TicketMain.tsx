@@ -54,7 +54,7 @@ const TicketMain: React.FC = () => {
             ),
             children: (
               <SuperAdminTicketList
-                // ticketPriorityValue={ticketPriorityValue}
+                ticketPriorityValue={ticketPriorityValue}
                 ticketValue={ticketValue}
               />
             ),
@@ -95,7 +95,12 @@ const TicketMain: React.FC = () => {
                 My Tickets
               </span>
             ),
-            children: <AdminTicketList ticketValue={ticketValue} />,
+            children: (
+              <AdminTicketList
+                ticketPriorityValue={ticketPriorityValue}
+                ticketValue={ticketValue}
+              />
+            ),
           },
         ]
       : []),

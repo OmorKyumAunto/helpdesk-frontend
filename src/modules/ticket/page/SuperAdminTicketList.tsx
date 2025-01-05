@@ -35,9 +35,11 @@ dayjs.extend(relativeTime);
 const { Option } = Select;
 const SuperAdminTicketList = ({
   ticketValue,
+  ticketPriorityValue,
   setTicketValue,
 }: {
   ticketValue: string;
+  ticketPriorityValue: string;
   setTicketValue?: (key: string) => void;
 }) => {
   const [page, setPage] = useState(1);
@@ -98,7 +100,10 @@ const SuperAdminTicketList = ({
     if (ticketValue) {
       setFilter({ ...filter, status: ticketValue, offset: 0 });
     }
-  }, [ticketValue]);
+    if (ticketPriorityValue) {
+      setFilter({ ...filter, priority: ticketPriorityValue, offset: 0 });
+    }
+  }, [ticketValue, ticketPriorityValue]);
 
   return (
     <Card
@@ -129,6 +134,7 @@ const SuperAdminTicketList = ({
           />
           <Select
             allowClear
+            value={ticketPriorityValue}
             style={{ width: "160px" }}
             onChange={(e) => setFilter({ ...filter, priority: e, offset: 0 })}
             placeholder="Select Priority"

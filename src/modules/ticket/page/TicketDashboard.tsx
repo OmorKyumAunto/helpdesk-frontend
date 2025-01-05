@@ -328,9 +328,10 @@ const TicketDashboard = ({
               ].map(({ label, count, color, value }) => (
                 <Card
                   key={label}
-                  onClick={() =>
-                    setTicketPriorityValue && setTicketPriorityValue(value)
-                  }
+                  onClick={() => {
+                    setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
+                    setTicketPriorityValue && setTicketPriorityValue(value);
+                  }}
                   style={{
                     borderRadius: "12px",
                     background: "#fff",

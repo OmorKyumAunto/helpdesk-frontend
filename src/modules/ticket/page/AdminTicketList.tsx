@@ -41,7 +41,13 @@ import { formatTimeDifference } from "../utils/timeFormat";
 dayjs.extend(relativeTime);
 
 const { Option } = Select;
-const AdminTicketList = ({ ticketValue }: { ticketValue: string }) => {
+const AdminTicketList = ({
+  ticketValue,
+  ticketPriorityValue,
+}: {
+  ticketValue: string;
+  ticketPriorityValue: string;
+}) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const skipValue = (page - 1) * pageSize;
@@ -113,7 +119,10 @@ const AdminTicketList = ({ ticketValue }: { ticketValue: string }) => {
     if (ticketValue) {
       setFilter({ ...filter, status: ticketValue, offset: 0 });
     }
-  }, [ticketValue]);
+    if (ticketPriorityValue) {
+      setFilter({ ...filter, priority: ticketPriorityValue, offset: 0 });
+    }
+  }, [ticketValue, ticketPriorityValue]);
 
   return (
     <Card
@@ -125,7 +134,7 @@ const AdminTicketList = ({ ticketValue }: { ticketValue: string }) => {
           <Radio.Group
             // block
             options={options}
-            value={ticketValue}
+            defaultValue={ticketValue}
             optionType="button"
             buttonStyle="solid"
             onChange={(e) =>
@@ -142,6 +151,7 @@ const AdminTicketList = ({ ticketValue }: { ticketValue: string }) => {
           />
           <Select
             allowClear
+            value={ticketPriorityValue}
             style={{ width: "160px" }}
             onChange={(e) => setFilter({ ...filter, priority: e, offset: 0 })}
             placeholder="Select Priority"
