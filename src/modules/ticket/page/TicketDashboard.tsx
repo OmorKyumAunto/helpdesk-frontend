@@ -20,6 +20,7 @@ import {
 interface TicketDashboardProps {
   setActiveKey: (key: string) => void;
   setTicketValue: (key: string) => void;
+  setTicketPriorityValue: (key: string) => void;
   roleID: number;
 }
 
@@ -27,6 +28,7 @@ const TicketDashboard = ({
   setActiveKey,
   roleID,
   setTicketValue,
+  setTicketPriorityValue,
 }: TicketDashboardProps) => {
   const { md, lg } = Grid.useBreakpoint();
   const { data } = useGetTicketDashboardCountQuery();
@@ -303,25 +305,32 @@ const TicketDashboard = ({
                   label: "Urgent",
                   count: priority?.data?.priority_urgent || 0,
                   color: "#ff4d4f",
+                  value: "urgent",
                 },
                 {
                   label: "High",
                   count: priority?.data?.priority_high || 0,
                   color: "#1890ff",
+                  value: "high",
                 },
                 {
                   label: "Medium",
                   count: priority?.data?.priority_medium || 0,
                   color: "#faad14",
+                  value: "medium",
                 },
                 {
                   label: "Low",
                   count: priority?.data?.priority_low || 0,
                   color: "#52c41a",
+                  value: "low",
                 },
-              ].map(({ label, count, color }) => (
+              ].map(({ label, count, color, value }) => (
                 <Card
                   key={label}
+                  onClick={() =>
+                    setTicketPriorityValue && setTicketPriorityValue(value)
+                  }
                   style={{
                     borderRadius: "12px",
                     background: "#fff",

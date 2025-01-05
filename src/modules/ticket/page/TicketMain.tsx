@@ -17,9 +17,13 @@ const TicketMain: React.FC = () => {
     roleID === 1 ? "1" : roleID === 2 ? "4" : "6"
   );
   const [ticketValue, setTicketValue] = useState("");
+  const [ticketPriorityValue, setTicketPriorityValue] = useState("");
 
   const onChange = (key: string) => {
     setActiveKey(key);
+    if (key === "1" || key === "4") {
+      window.location.reload();
+    }
   };
 
   const items: TabsProps["items"] = [
@@ -37,6 +41,7 @@ const TicketMain: React.FC = () => {
                 setActiveKey={setActiveKey}
                 roleID={roleID}
                 setTicketValue={setTicketValue}
+                setTicketPriorityValue={setTicketPriorityValue}
               />
             ),
           },
@@ -47,7 +52,12 @@ const TicketMain: React.FC = () => {
                 All Tickets
               </span>
             ),
-            children: <SuperAdminTicketList ticketValue={ticketValue} />,
+            children: (
+              <SuperAdminTicketList
+                // ticketPriorityValue={ticketPriorityValue}
+                ticketValue={ticketValue}
+              />
+            ),
           },
           {
             key: "3",
@@ -74,6 +84,7 @@ const TicketMain: React.FC = () => {
                 setActiveKey={setActiveKey}
                 roleID={roleID}
                 setTicketValue={setTicketValue}
+                setTicketPriorityValue={setTicketPriorityValue}
               />
             ),
           },

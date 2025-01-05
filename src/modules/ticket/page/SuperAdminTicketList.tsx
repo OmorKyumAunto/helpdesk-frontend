@@ -33,7 +33,13 @@ import { formatTimeDifference } from "../utils/timeFormat";
 dayjs.extend(relativeTime);
 
 const { Option } = Select;
-const SuperAdminTicketList = ({ ticketValue }: { ticketValue: string }) => {
+const SuperAdminTicketList = ({
+  ticketValue,
+  setTicketValue,
+}: {
+  ticketValue: string;
+  setTicketValue?: (key: string) => void;
+}) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const skipValue = (page - 1) * pageSize;
@@ -104,12 +110,14 @@ const SuperAdminTicketList = ({ ticketValue }: { ticketValue: string }) => {
           <Radio.Group
             // block
             options={options}
-            value={ticketValue}
+            defaultValue={ticketValue}
+            // value={ticketValue}
             optionType="button"
             buttonStyle="solid"
-            onChange={(e) =>
-              setFilter({ ...filter, status: e.target.value, offset: 0 })
-            }
+            onChange={(e) => {
+              setFilter({ ...filter, status: e.target.value, offset: 0 });
+              setTicketValue && setTicketValue(e.target.value);
+            }}
           />
           <Input
             prefix={<SearchOutlined />}
