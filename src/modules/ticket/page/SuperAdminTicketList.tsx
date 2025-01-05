@@ -358,13 +358,14 @@ const SuperAdminTicketList = ({
                         labelStyle={{
                           fontWeight: "bold",
                           backgroundColor: "#e6f2ff",
+                          color: "#000000",
                         }}
                         contentStyle={{ backgroundColor: "#ffffff" }}
                         items={[
                           {
                             key: "1",
                             label: "CC Person",
-                            children: ticket.cc ? ticket.cc : "Null",
+                            children: ticket.cc ? ticket.cc : "N/A",
                           },
                           {
                             key: "2",
@@ -399,7 +400,10 @@ const SuperAdminTicketList = ({
                       <Descriptions bordered layout="vertical" size="small">
                         <Descriptions.Item
                           style={{ backgroundColor: "#ffffff" }}
-                          labelStyle={{ fontWeight: "bold" }}
+                          labelStyle={{
+                            fontWeight: "bold",
+                            color: "#000000",
+                          }}
                           label="Attachment"
                           key="1"
                         >
@@ -455,7 +459,10 @@ const SuperAdminTicketList = ({
                         </Descriptions.Item>
                         <Descriptions.Item
                           style={{ backgroundColor: "#ffffff" }}
-                          labelStyle={{ fontWeight: "bold" }}
+                          labelStyle={{
+                            fontWeight: "bold",
+                            color: "#000000",
+                          }}
                           label="Message"
                           key="2"
                         >

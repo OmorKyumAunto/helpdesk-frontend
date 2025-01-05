@@ -388,11 +388,17 @@ const AdminTicketList = ({
                         bordered
                         size="small"
                         column={2} // Two items per row
+                        labelStyle={{
+                          fontWeight: "bold",
+                          backgroundColor: "#e6f2ff",
+                          color: "#000000",
+                        }}
+                        contentStyle={{ backgroundColor: "#ffffff" }}
                         items={[
                           {
                             key: "1",
                             label: "CC Person",
-                            children: ticket.cc ? ticket.cc : "Null",
+                            children: ticket.cc ? ticket.cc : "N/A",
                           },
                           {
                             key: "2",
@@ -472,7 +478,15 @@ const AdminTicketList = ({
                         ]}
                       /> */}
                       <Descriptions bordered layout="vertical" size="small">
-                        <Descriptions.Item label="Attachment" key="1">
+                        <Descriptions.Item
+                          style={{ backgroundColor: "#ffffff" }}
+                          labelStyle={{
+                            fontWeight: "bold",
+                            color: "#000000",
+                          }}
+                          label="Attachment"
+                          key="1"
+                        >
                           <div
                             style={{ maxWidth: "50px", textAlign: "center" }}
                           >
@@ -524,7 +538,15 @@ const AdminTicketList = ({
                           </div>
                         </Descriptions.Item>
 
-                        <Descriptions.Item label="Message" key="2">
+                        <Descriptions.Item
+                          style={{ backgroundColor: "#ffffff" }}
+                          labelStyle={{
+                            fontWeight: "bold",
+                            color: "#000000",
+                          }}
+                          label="Message"
+                          key="2"
+                        >
                           <div
                             style={{
                               minWidth: "500px",
