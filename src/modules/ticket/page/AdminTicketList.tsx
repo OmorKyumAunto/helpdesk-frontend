@@ -151,7 +151,7 @@ const AdminTicketList = ({
           />
           <Select
             allowClear
-            value={ticketPriorityValue}
+            defaultValue={ticketPriorityValue}
             style={{ width: "160px" }}
             onChange={(e) => setFilter({ ...filter, priority: e, offset: 0 })}
             placeholder="Select Priority"
