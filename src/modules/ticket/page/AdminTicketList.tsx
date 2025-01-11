@@ -216,24 +216,19 @@ const AdminTicketList = ({
                         title={
                           <div>
                             <p>
-                              <strong>Name:</strong>{" "}
-                              {ticket.ticket_created_employee_name}
+                              <strong>Name:</strong> {ticket.ticket_created_employee_name}
                             </p>
                             <p>
-                              <strong>ID:</strong>{" "}
-                              {ticket.ticket_created_employee_id}
+                              <strong>ID:</strong> {ticket.ticket_created_employee_id}
                             </p>
                             <p>
-                              <strong>Email:</strong>{" "}
-                              {ticket.ticket_created_employee_email}
+                              <strong>Email:</strong> {ticket.ticket_created_employee_email}
                             </p>
                             <p>
-                              <strong>Phone No:</strong>{" "}
-                              {ticket.created_employee_contact_no}
+                              <strong>Phone No:</strong> {ticket.created_employee_contact_no}
                             </p>
                             <p>
-                              <strong>Unit:</strong>{" "}
-                              {ticket.created_employee_unit_name}
+                              <strong>Unit:</strong> {ticket.created_employee_unit_name}
                             </p>
                           </div>
                         }
@@ -245,13 +240,36 @@ const AdminTicketList = ({
                       </Tooltip>
                       <div>
                         {ticket.ticket_status === "solved" && (
-                          <strong>
-                            Solved By: {ticket.ticket_solved_employee_name} (
-                            {ticket.ticket_solved_employee_id})
-                          </strong>
+                          <Tooltip
+                            title={
+                              <div>
+                                <p>
+                                  <strong>Name:</strong> {ticket.ticket_solved_employee_name}
+                                </p>
+                                <p>
+                                  <strong>ID:</strong> {ticket.ticket_solved_employee_id}
+                                </p>
+                                <p>
+                                  <strong>Email:</strong> {ticket.solved_employee_email}
+                                </p>
+                                <p>
+                                  <strong>Phone No:</strong> {ticket.solved_employee_contact_no}
+                                </p>
+                                <p>
+                                  <strong>Unit:</strong> {ticket.solved_employee_unit_name}
+                                </p>
+                              </div>
+                            }
+                          >
+                            <span>
+                              Solved By: {ticket.ticket_solved_employee_name} (
+                              {ticket.ticket_solved_employee_id})
+                            </span>
+                          </Tooltip>
                         )}
                       </div>
                     </strong>
+
                   </div>
 
                   <div>
@@ -416,15 +434,15 @@ const AdminTicketList = ({
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
-                                {
-                                  key: "4",
-                                  label: "Time Taken",
-                                  children: formatTimeDifference(
-                                    dayjs(ticket.ticket_created_at),
-                                    dayjs(ticket.ticket_updated_at)
-                                  ),
-                                },
-                              ]
+                              {
+                                key: "4",
+                                label: "Time Taken",
+                                children: formatTimeDifference(
+                                  dayjs(ticket.ticket_created_at),
+                                  dayjs(ticket.ticket_updated_at)
+                                ),
+                              },
+                            ]
                             : []),
                         ]}
                       />
@@ -496,13 +514,12 @@ const AdminTicketList = ({
                                   href={
                                     ticket.attachment.startsWith("https")
                                       ? ticket.attachment
-                                      : `${imageURLNew}/uploads/${
-                                          ticket.attachment.includes("ticket\\")
-                                            ? ticket.attachment.split(
-                                                "ticket\\"
-                                              )[1]
-                                            : ticket.attachment
-                                        }`
+                                      : `${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                        ? ticket.attachment.split(
+                                          "ticket\\"
+                                        )[1]
+                                        : ticket.attachment
+                                      }`
                                   }
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -520,11 +537,10 @@ const AdminTicketList = ({
                               ) : (
                                 <a>
                                   <Image
-                                    src={`${imageURLNew}/uploads/${
-                                      ticket.attachment.includes("ticket\\")
+                                    src={`${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
                                         ? ticket.attachment.split("ticket\\")[1]
                                         : ticket.attachment
-                                    }`}
+                                      }`}
                                     alt="attachment"
                                     width={40}
                                     style={{ maxHeight: "40px" }}
@@ -619,12 +635,12 @@ const AdminTicketList = ({
                                     style={{
                                       color:
                                         profile?.employee_id ===
-                                        comment.employee_id
+                                          comment.employee_id
                                           ? "white"
                                           : "black",
                                       backgroundColor:
                                         profile?.employee_id ===
-                                        comment.employee_id
+                                          comment.employee_id
                                           ? "#1775BB"
                                           : "#E8E8E8",
                                       padding: "6px 12px",

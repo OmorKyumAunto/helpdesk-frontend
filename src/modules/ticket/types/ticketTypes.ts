@@ -21,6 +21,9 @@ export interface IRaiseTicketList {
   asset_category: string;
   ticket_solved_employee_id: number;
   ticket_solved_employee_name: string;
+  solved_employee_email:string;
+  solved_employee_contact_no:string;
+  solved_employee_unit_name:string;
 }
 export interface IAdminTicketList {
   user_id: number;
@@ -53,6 +56,9 @@ export interface IAdminTicketList {
   ticket_created_employee_email: string;
   ticket_solved_employee_id: number;
   ticket_solved_employee_name: string;
+  solved_employee_email:string;
+  solved_employee_contact_no:string;
+  solved_employee_unit_name:string;
   created_employee_contact_no:string;
   created_employee_unit_name:string;
 }
@@ -111,6 +117,9 @@ export interface ITicketDashboardReport {
   ticket_created_employee_id: string;
   ticket_solved_employee_name: string;
   ticket_solved_employee_id: string;
+  solved_employee_email:string;
+  solved_employee_contact_no:string;
+  solved_employee_unit_name:string;
   asset_unit_title: string;
   ticket_updated_at: Date;
   asset_unit_id: number;

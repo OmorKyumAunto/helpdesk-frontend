@@ -1,4 +1,5 @@
 import { Card, Col, Grid, Progress, Row, Space, Table, Typography } from "antd";
+import { Tooltip as AntdTooltip } from "antd";
 import { FaSquarePollVertical } from "react-icons/fa6";
 import {
   BarChart,
@@ -146,6 +147,7 @@ const TicketDashboard = ({
           </Col>
         ))}
 
+        {/* Bar Chart */}
         <Col xs={24} sm={24} md={24} lg={18}>
           <Card title="Last 12 Months Ticket Count">
             <div style={{ height: 250 }}>
@@ -164,11 +166,19 @@ const TicketDashboard = ({
                     fill="#8dc73f"
                     name="Solved Tickets"
                   />
+                  <Bar
+                    dataKey="unsolvedTickets"
+                    fill="#ff4d4f"
+                    name="Solved Tickets"
+                  />
+
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </Card>
         </Col>
+
+        {/* Last 30 Days */}
         <Col xs={24} sm={24} md={24} lg={6}>
           <Card title="Last 30 Days" style={{ height: "100%" }}>
             <Space direction="vertical" style={{ width: "100%" }}>
@@ -292,14 +302,21 @@ const TicketDashboard = ({
               </span>
             }
             style={{
-              height: "100%",
+              height: "auto",
               borderRadius: "16px",
               boxShadow: "0 6px 15px rgba(0, 0, 0, 0.1)",
               border: "none",
             }}
-            bodyStyle={{ padding: "15px" }}
+            bodyStyle={{ padding: "10px" }} // Reduced padding
           >
-            <Space direction="vertical" style={{ width: "100%" }}>
+            <Space
+              direction="vertical"
+              style={{
+                width: "100%",
+                gap: "8px", // Reduced gap between cards
+                marginTop: "0px", // Ensures no extra space above the first card
+              }}
+            >
               {[
                 {
                   label: "Urgent",
@@ -336,7 +353,6 @@ const TicketDashboard = ({
                     borderRadius: "12px",
                     background: "#fff",
                     border: "1px solid #f0f0f0",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
                     cursor: "pointer",
                     overflow: "hidden",
                   }}
@@ -344,7 +360,7 @@ const TicketDashboard = ({
                   bodyStyle={{
                     display: "flex",
                     alignItems: "center",
-                    padding: "16px",
+                    padding: "12px",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow =
@@ -359,8 +375,8 @@ const TicketDashboard = ({
                 >
                   <div
                     style={{
-                      width: 50,
-                      height: 50,
+                      width: 40,
+                      height: 40,
                       borderRadius: "50%",
                       background: color,
                       display: "flex",
@@ -368,8 +384,8 @@ const TicketDashboard = ({
                       justifyContent: "center",
                       color: "white",
                       fontWeight: "bold",
-                      fontSize: "18px",
-                      marginRight: "16px",
+                      fontSize: "16px",
+                      marginRight: "12px",
                     }}
                   >
                     {count}
@@ -378,14 +394,14 @@ const TicketDashboard = ({
                     <span
                       style={{
                         fontWeight: "600",
-                        fontSize: "16px",
+                        fontSize: "14px",
                         color: "#333",
                       }}
                     >
                       {label}
                     </span>
                     <br />
-                    <span style={{ fontSize: "14px", color: "#666" }}>
+                    <span style={{ fontSize: "12px", color: "#666" }}>
                       Tickets
                     </span>
                   </div>
@@ -394,6 +410,7 @@ const TicketDashboard = ({
             </Space>
           </Card>
         </Col>
+
 
         {/* Pie Chart Component */}
         <Col xs={24} sm={24} md={24} lg={13}>
@@ -407,29 +424,84 @@ const TicketDashboard = ({
             <PieChartWithLabels />
           </Card>
         </Col>
+
+        {/* Top Ticket Solver  */}
+
         <Col xs={24} sm={24} md={24} lg={6}>
-          <Card title="Top Ticket Solvers" style={{ height: "100%" }}>
+          <Card
+            title="Top Ticket Solvers"
+            style={{
+              height: "100%",
+              borderRadius: "12px",
+              boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
+              border: "1px solid #f0f0f0",
+            }}
+          >
             <Table
               size="small"
-              bordered
+              bordered={false}
               pagination={false}
               columns={[
                 {
                   title: "Name",
                   render: (record) => (
-                    <>{`${record?.solved_by_name} (${record?.employee_id})`}</>
+                    <AntdTooltip
+                      title={
+                        <div style={{ lineHeight: "1.6" }}>
+                          <p><strong>Name:</strong> {record?.solved_by_name}</p>
+                          <p><strong>ID:</strong> {record?.employee_id}</p>
+                          <p><strong>Email:</strong> {record?.email}</p>
+                          <p><strong>Phone No:</strong> {record?.contact_no}</p>
+                          <p><strong>Unit:</strong> {record?.unit_name}</p>
+                          <p><strong>Total Solved Tickets:</strong> {record?.solved_ticket_count}</p>
+                        </div>
+                      }
+                    >
+                      <span
+                        style={{
+                          fontWeight: 500,
+                          cursor: "pointer",
+                          color: "#1775bb",
+                          transition: "color 0.3s ease",
+                        }}
+                        onMouseEnter={(e) => (e.target as HTMLSpanElement).style.color = "#0056b3"}
+                        onMouseLeave={(e) => (e.target as HTMLSpanElement).style.color = "#1775bb"}
+                      >
+                        {record?.solved_by_name}
+                      </span>
+                    </AntdTooltip>
                   ),
                 },
                 {
-                  key: "3",
                   title: "Total",
                   dataIndex: "solved_ticket_count",
+                  render: (text) => (
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        color: "#8dc73f",
+                        fontSize: "1.1em",
+                      }}
+                    >
+                      {text}
+                    </span>
+                  ),
                 },
               ]}
               dataSource={topSolver?.data?.length ? topSolver?.data : []}
+              rowClassName={(record, index) =>
+                index % 2 === 0 ? "table-row-light" : "table-row-dark"
+              }
+              style={{
+                borderRadius: "10px",
+                overflow: "hidden",
+                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+              }}
             />
           </Card>
         </Col>
+
+
       </Row>
       {/* <ServiceDashboard /> */}
     </Card>
