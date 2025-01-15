@@ -55,7 +55,7 @@ const TicketMain: React.FC = () => {
             ),
             children: (
               <SuperAdminTicketList
-                key={activeKey} // Force reloading by changing key
+                key={activeKey}
                 ticketPriorityValue={ticketPriorityValue}
                 ticketValue={ticketValue}
               />
@@ -99,6 +99,7 @@ const TicketMain: React.FC = () => {
             ),
             children: (
               <AdminTicketList
+                key={activeKey}
                 ticketPriorityValue={ticketPriorityValue}
                 ticketValue={ticketValue}
               />
