@@ -169,7 +169,7 @@ const TicketDashboard = ({
                   <Bar
                     dataKey="unsolvedTickets"
                     fill="#ff4d4f"
-                    name="Solved Tickets"
+                    name="Unsolved Tickets"
                   />
 
                 </BarChart>
