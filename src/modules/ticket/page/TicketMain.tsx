@@ -21,6 +21,10 @@ const TicketMain: React.FC = () => {
 
   const onChange = (key: string) => {
     setActiveKey(key);
+    if (key !== "2" && key !== "5") {
+      setTicketValue("");
+      setTicketPriorityValue("");
+    }
   };
 
   const items: TabsProps["items"] = [

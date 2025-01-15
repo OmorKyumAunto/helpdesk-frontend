@@ -36,11 +36,9 @@ const { Option } = Select;
 const SuperAdminTicketList = ({
   ticketValue,
   ticketPriorityValue,
-  setTicketValue,
 }: {
   ticketValue: string;
   ticketPriorityValue: string;
-  setTicketValue?: (key: string) => void;
 }) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -101,10 +99,9 @@ const SuperAdminTicketList = ({
       ...prevFilter,
       status: ticketValue || prevFilter.status,
       priority: ticketPriorityValue || prevFilter.priority,
-      offset: 0, // Reset the offset on changes
+      offset: 0,
     }));
   }, [ticketValue, ticketPriorityValue]);
-  
 
   return (
     <Card
@@ -117,12 +114,10 @@ const SuperAdminTicketList = ({
             // block
             options={options}
             defaultValue={ticketValue}
-            // value={ticketValue}
             optionType="button"
             buttonStyle="solid"
             onChange={(e) => {
               setFilter({ ...filter, status: e.target.value, offset: 0 });
-              setTicketValue && setTicketValue(e.target.value);
             }}
           />
           <Input
@@ -187,19 +182,24 @@ const SuperAdminTicketList = ({
                         title={
                           <div>
                             <p>
-                              <strong>Name:</strong> {ticket.ticket_created_employee_name}
+                              <strong>Name:</strong>{" "}
+                              {ticket.ticket_created_employee_name}
                             </p>
                             <p>
-                              <strong>ID:</strong> {ticket.ticket_created_employee_id}
+                              <strong>ID:</strong>{" "}
+                              {ticket.ticket_created_employee_id}
                             </p>
                             <p>
-                              <strong>Email:</strong> {ticket.ticket_created_employee_email}
+                              <strong>Email:</strong>{" "}
+                              {ticket.ticket_created_employee_email}
                             </p>
                             <p>
-                              <strong>Phone No:</strong> {ticket.created_employee_contact_no}
+                              <strong>Phone No:</strong>{" "}
+                              {ticket.created_employee_contact_no}
                             </p>
                             <p>
-                              <strong>Unit:</strong> {ticket.created_employee_unit_name}
+                              <strong>Unit:</strong>{" "}
+                              {ticket.created_employee_unit_name}
                             </p>
                           </div>
                         }
@@ -215,19 +215,24 @@ const SuperAdminTicketList = ({
                             title={
                               <div>
                                 <p>
-                                  <strong>Name:</strong> {ticket.ticket_solved_employee_name}
+                                  <strong>Name:</strong>{" "}
+                                  {ticket.ticket_solved_employee_name}
                                 </p>
                                 <p>
-                                  <strong>ID:</strong> {ticket.ticket_solved_employee_id}
+                                  <strong>ID:</strong>{" "}
+                                  {ticket.ticket_solved_employee_id}
                                 </p>
                                 <p>
-                                  <strong>Email:</strong> {ticket.solved_employee_email}
+                                  <strong>Email:</strong>{" "}
+                                  {ticket.solved_employee_email}
                                 </p>
                                 <p>
-                                  <strong>Phone No:</strong> {ticket.solved_employee_contact_no}
+                                  <strong>Phone No:</strong>{" "}
+                                  {ticket.solved_employee_contact_no}
                                 </p>
                                 <p>
-                                  <strong>Unit:</strong> {ticket.solved_employee_unit_name}
+                                  <strong>Unit:</strong>{" "}
+                                  {ticket.solved_employee_unit_name}
                                 </p>
                               </div>
                             }
@@ -240,7 +245,6 @@ const SuperAdminTicketList = ({
                         )}
                       </div>
                     </strong>
-
                   </div>
 
                   <div>
@@ -403,15 +407,15 @@ const SuperAdminTicketList = ({
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
-                              {
-                                key: "4",
-                                label: " Time Taken",
-                                children: formatTimeDifference(
-                                  dayjs(ticket.ticket_created_at),
-                                  dayjs(ticket.ticket_updated_at)
-                                ),
-                              },
-                            ]
+                                {
+                                  key: "4",
+                                  label: " Time Taken",
+                                  children: formatTimeDifference(
+                                    dayjs(ticket.ticket_created_at),
+                                    dayjs(ticket.ticket_updated_at)
+                                  ),
+                                },
+                              ]
                             : []),
                         ]}
                       />
@@ -435,12 +439,13 @@ const SuperAdminTicketList = ({
                                   href={
                                     ticket.attachment.startsWith("https")
                                       ? ticket.attachment
-                                      : `${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
-                                        ? ticket.attachment.split(
-                                          "ticket\\"
-                                        )[1]
-                                        : ticket.attachment
-                                      }`
+                                      : `${imageURLNew}/uploads/${
+                                          ticket.attachment.includes("ticket\\")
+                                            ? ticket.attachment.split(
+                                                "ticket\\"
+                                              )[1]
+                                            : ticket.attachment
+                                        }`
                                   }
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -458,10 +463,11 @@ const SuperAdminTicketList = ({
                               ) : (
                                 <a>
                                   <Image
-                                    src={`${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                    src={`${imageURLNew}/uploads/${
+                                      ticket.attachment.includes("ticket\\")
                                         ? ticket.attachment.split("ticket\\")[1]
                                         : ticket.attachment
-                                      }`}
+                                    }`}
                                     alt="attachment"
                                     width={40}
                                     style={{ maxHeight: "40px" }}
@@ -525,12 +531,12 @@ const SuperAdminTicketList = ({
                                     style={{
                                       color:
                                         profile?.employee_id ===
-                                          comment.employee_id
+                                        comment.employee_id
                                           ? "white"
                                           : "black",
                                       backgroundColor:
                                         profile?.employee_id ===
-                                          comment.employee_id
+                                        comment.employee_id
                                           ? "#1775BB"
                                           : "#E8E8E8",
                                       padding: "6px 12px",
