@@ -6,6 +6,8 @@ export interface IAsset {
   purchase_date: Date;
   serial_number: string;
   po_number: string;
+  asset_no:string;
+  specification: string;
   asset_history: string;
   is_assign: number;
   created_at: Date;
@@ -28,6 +30,7 @@ export interface IAssetDetails {
   purchase_date: Date;
   serial_number: string;
   po_number: string;
+  asset_no:string;
   asset_history: string;
   licenses: string;
   is_assign: number;
@@ -69,6 +72,7 @@ export interface IDistributedSingle {
   purchase_date: string;
   serial_number: string;
   po_number: string;
+  asset_no:string;
   asset_create_date: string;
   remarks: string;
   asset_unit_id: string;

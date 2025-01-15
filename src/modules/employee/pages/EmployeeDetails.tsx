@@ -84,13 +84,13 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
             label: "Unit Name",
             children: unit_name,
           },
-          {
-            key: "8",
-            label: "Joining Date",
-            children: joining_date
-              ? dayjs(joining_date).format("DD-MM-YYYY")
-              : "N/A",
-          },
+          // {
+          //   key: "8",
+          //   label: "Joining Date",
+          //   children: joining_date
+          //     ? dayjs(joining_date).format("DD-MM-YYYY")
+          //     : "N/A",
+          // },
           {
             key: "12",
             label: "Business Type",

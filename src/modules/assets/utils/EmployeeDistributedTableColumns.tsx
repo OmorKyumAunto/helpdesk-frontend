@@ -46,6 +46,11 @@ export const EmployeeDistributedAssetsTableColumns =
         key: "po_number",
       },
       {
+        title: "Asset No",
+        dataIndex: "asset_no",
+        key: "asset_no",
+      },
+      {
         title: "Assign Date",
         render: ({ assign_date }) => dayjs(assign_date).format("DD-MM-YYYY"),
       },

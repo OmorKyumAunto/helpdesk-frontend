@@ -14,6 +14,7 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
     purchase_date,
     serial_number,
     po_number,
+    asset_no,
     asset_unit_name,
     model,
     specification,
@@ -79,6 +80,11 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
             key: "4",
             label: "PO Number",
             children: po_number,
+          },
+          {
+            key: "13",
+            label: "Asset No",
+            children: asset_no,
           },
           {
             key: "5",

@@ -97,13 +97,14 @@ const SuperAdminTicketList = ({
   ];
 
   useEffect(() => {
-    if (ticketValue) {
-      setFilter({ ...filter, status: ticketValue, offset: 0 });
-    }
-    if (ticketPriorityValue) {
-      setFilter({ ...filter, priority: ticketPriorityValue, offset: 0 });
-    }
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      status: ticketValue || prevFilter.status,
+      priority: ticketPriorityValue || prevFilter.priority,
+      offset: 0, // Reset the offset on changes
+    }));
   }, [ticketValue, ticketPriorityValue]);
+  
 
   return (
     <Card

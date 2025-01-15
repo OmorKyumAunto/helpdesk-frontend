@@ -183,14 +183,14 @@ const ProfileSection = () => {
                 : {unit_name}
               </p>
             </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+            {/* <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
               <p style={{ width: "20%", fontSize: "16px", color: "#555" }}>
                 Joining Date
               </p>
               <p style={{ fontWeight: 700, fontSize: "16px", color: "#333" }}>
                 : {dayjs(joining_date).format("DD MMM YYYY")}
               </p>
-            </div>
+            </div> */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
               <p style={{ width: "20%", fontSize: "16px", color: "#555" }}>
                 Role

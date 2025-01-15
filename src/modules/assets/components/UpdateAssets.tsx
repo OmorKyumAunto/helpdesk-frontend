@@ -28,6 +28,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
     purchase_date,
     serial_number,
     po_number,
+    asset_no,
     asset_history,
     is_assign,
     user_id,
@@ -59,6 +60,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
       price,
       serial_number,
       po_number,
+      asset_no,
       asset_history,
       assign_update: is_assign,
       model,
@@ -90,6 +92,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
     purchase_date,
     serial_number,
     po_number,
+    asset_no,
     asset_history,
     is_assign,
     user_id,
@@ -257,6 +260,15 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                     // rules={[{ required: true }]}
                   >
                     <Input placeholder="Enter serial no" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={12}>
+                  <Form.Item
+                    label="Asset No"
+                    name="asset_no"
+                    // rules={[{ required: true }]}
+                  >
+                    <Input placeholder="Enter Asset No" />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={24} md={12}>

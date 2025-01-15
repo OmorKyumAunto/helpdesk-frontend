@@ -193,6 +193,15 @@ const CreateAsset = () => {
               </Col>
               <Col xs={24} sm={24} md={8}>
                 <Form.Item
+                  label="Asset No"
+                  name="asset_no"
+                  // rules={[{ required: true }]}
+                >
+                  <Input placeholder="Enter Asset No" />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={8}>
+                <Form.Item
                   label="Buying Unit"
                   name="unit_id"
                   rules={[{ required: true, message: "Please Select Unit" }]}

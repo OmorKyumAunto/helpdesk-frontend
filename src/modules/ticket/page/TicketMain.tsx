@@ -21,9 +21,6 @@ const TicketMain: React.FC = () => {
 
   const onChange = (key: string) => {
     setActiveKey(key);
-    if (key === "1" || key === "4") {
-      window.location.reload();
-    }
   };
 
   const items: TabsProps["items"] = [
@@ -54,6 +51,7 @@ const TicketMain: React.FC = () => {
             ),
             children: (
               <SuperAdminTicketList
+                key={activeKey} // Force reloading by changing key
                 ticketPriorityValue={ticketPriorityValue}
                 ticketValue={ticketValue}
               />
@@ -127,6 +125,7 @@ const TicketMain: React.FC = () => {
         ]
       : []),
   ];
+
   return (
     <Card>
       <Tabs activeKey={activeKey} items={items} onChange={onChange} />
