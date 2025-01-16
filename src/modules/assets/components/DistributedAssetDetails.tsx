@@ -24,6 +24,7 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
     asset_name,
     history,
     location_name,
+    device_remarks,
   } = singleAsset?.data || {};
   const assetHistory = history?.map((item: any) => {
     return {
@@ -115,6 +116,12 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
             key: "9",
             label: "Purchase Date",
             children: dayjs(purchase_date).format("DD-MM-YYYY"),
+          },
+          {
+            key: "14",
+            label: "Device Remarks",
+            children: device_remarks,
+            span: 4,
           },
         ]}
       />

@@ -20,6 +20,7 @@ const AssetDetails = ({ id }: { id: any }) => {
     history,
     price,
     warranty,
+    device_remarks,
     location_name,
   } = singleAsset?.data || {};
   const assetHistory = history?.map((item: any) => {
@@ -122,6 +123,12 @@ const AssetDetails = ({ id }: { id: any }) => {
             key: "10",
             label: "Remaining Warranty",
             children: warranty,
+          },
+          {
+            key: "14",
+            label: "Device Remarks",
+            children: device_remarks,
+            span: 4,
           },
         ]}
       />

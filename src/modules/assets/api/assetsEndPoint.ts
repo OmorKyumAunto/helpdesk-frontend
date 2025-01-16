@@ -143,6 +143,21 @@ export const assetsEndPoint = api.injectEndpoints({
         { type: "dashboardTypes", id: "dashboard" },
       ],
     }),
+    UpdateAssetStatus: build.mutation<unknown, { id: number }>({
+      query: (id) => {
+        return {
+          url: `/asset/changeStatus/${id}`,
+          method: "PUT",
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully update asset status");
+        });
+      },
+      invalidatesTags: () => ["employee"],
+    }),
     assignEmployee: build.mutation<unknown, { data: any; id: number }>({
       query: ({ data, id }) => {
         return {
@@ -198,4 +213,5 @@ export const {
   useAssignEmployeeMutation,
   useUpdateAssetsMutation,
   useDeleteAssetsMutation,
+  useUpdateAssetStatusMutation,
 } = assetsEndPoint;
