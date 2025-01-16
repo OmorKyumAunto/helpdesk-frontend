@@ -20,6 +20,7 @@ export interface IAsset {
   designation:string;
   department:string;
   email:string;
+  device_remarks:string;
   contact_no:string;
   employee_unit_name:string;
 }
