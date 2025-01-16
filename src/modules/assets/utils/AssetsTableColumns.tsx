@@ -37,21 +37,23 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
         </Tooltip>
       ),
     },
+    
     {
       title: "Serial No",
       dataIndex: "serial_number",
       key: "serial_number",
     },
     {
-      title: "PO No",
-      dataIndex: "po_number",
-      key: "po_number",
-    },
-    {
       title: "Asset No",
       dataIndex: "asset_no",
       key: "asset_no",
     },
+    {
+      title: "PO No",
+      dataIndex: "po_number",
+      key: "po_number",
+    },
+    
     {
       title: "Remarks",
       render: ({ remarks }) =>

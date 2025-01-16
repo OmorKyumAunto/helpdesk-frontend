@@ -57,7 +57,12 @@ const AssetDetails = ({ id }: { id: any }) => {
             key: "12",
             label: "Name",
             children: name,
-            span: 4,
+            
+          },
+          {
+            key: "13",
+            label: "Asset No",
+            children: asset_no,
           },
           {
             key: "2",
@@ -79,16 +84,8 @@ const AssetDetails = ({ id }: { id: any }) => {
             label: "PO Number",
             children: po_number,
           },
-          {
-            key: "13",
-            label: "Asset No",
-            children: asset_no,
-          },
-          {
-            key: "5",
-            label: "Specification",
-            children: specification,
-          },
+          
+          
           {
             key: "6",
             label: "Remarks",
@@ -123,6 +120,12 @@ const AssetDetails = ({ id }: { id: any }) => {
             key: "10",
             label: "Remaining Warranty",
             children: warranty,
+          },
+          {
+            key: "5",
+            label: "Specification",
+            children: specification,
+            span: 4,
           },
           {
             key: "14",

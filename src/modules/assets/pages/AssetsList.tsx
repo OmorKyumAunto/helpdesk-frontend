@@ -212,6 +212,7 @@ const AssetsList = () => {
                 "Purchase Date",
                 "Price",
                 "Warranty",
+                "Device Remarks"
               ]}
               excelData={
                 data?.data?.length
@@ -230,6 +231,7 @@ const AssetsList = () => {
                       purchase_date,
                       price,
                       warranty,
+                      device_remarks,
                     }: any) => {
                       const data = {
                         "Asset Name": name,
@@ -246,6 +248,8 @@ const AssetsList = () => {
                           dayjs(purchase_date).format("DD-MM-YYYY"),
                         Price: price,
                         Warranty: warranty,
+                        "Device Remarks": device_remarks,
+
                       };
                       return data;
                     }
