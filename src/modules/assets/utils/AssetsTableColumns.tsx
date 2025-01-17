@@ -1,7 +1,7 @@
-import { Button, Popconfirm, Space, Tag, Tooltip } from "antd";
+import { Button, Popconfirm, Space, Tag, Tooltip,Switch } from "antd";
 import { TableProps } from "antd/lib";
 import { IAsset } from "../types/assetsTypes";
-import { useDeleteAssetsMutation } from "../api/assetsEndPoint";
+import { useDeleteAssetsMutation,useUpdateAssetStatusMutation } from "../api/assetsEndPoint";
 import UpdateAsset from "../components/UpdateAssets";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { setCommonModal } from "../../../app/slice/modalSlice";
@@ -14,7 +14,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
   const dispatch = useDispatch();
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const [deleteAsset] = useDeleteAssetsMutation();
-
+  const [updateStatus] = useUpdateAssetStatusMutation();
   const confirm = (id: number) => {
     if (id) {
       deleteAsset(id);
@@ -37,21 +37,23 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
         </Tooltip>
       ),
     },
+    
     {
       title: "Serial No",
       dataIndex: "serial_number",
       key: "serial_number",
     },
     {
-      title: "PO No",
-      dataIndex: "po_number",
-      key: "po_number",
-    },
-    {
       title: "Asset No",
       dataIndex: "asset_no",
       key: "asset_no",
     },
+    {
+      title: "PO No",
+      dataIndex: "po_number",
+      key: "po_number",
+    },
+    
     {
       title: "Remarks",
       render: ({ remarks }) =>
@@ -103,6 +105,13 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
           >
             <EditOutlined />
           </Button>
+          <>
+            <Switch
+              defaultChecked={record.status === 1 ? true : false}
+              style={{ background: record.status === 1 ? "green" : "red" }}
+              onChange={() => updateStatus(record.id)}
+            />
+          </>
           {roleId === 1 && (
             <Popconfirm
               title="Delete this Asset"

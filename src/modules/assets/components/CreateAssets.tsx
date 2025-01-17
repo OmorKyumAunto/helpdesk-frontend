@@ -549,7 +549,7 @@ const CreateAsset = () => {
                   )}
                 </>
               )}
-
+              
               <Col xs={24} sm={24} md={24}>
                 <Form.Item
                   name="specification"
@@ -557,6 +557,15 @@ const CreateAsset = () => {
                   label="Specification"
                 >
                   <TextArea placeholder="Enter Specification" />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={24}>
+                <Form.Item
+                  name="device_remarks"
+                  // rules={[{ required: true }]}
+                  label="Device Remarks"
+                >
+                  <TextArea placeholder="Enter Device Remarks (If Any)" />
                 </Form.Item>
               </Col>
             </Row>

@@ -27,7 +27,6 @@ const AssetsList = () => {
     current: 1,
     pageSize: 50,
   });
-
   const [searchParams, setSearchParams] = useSearchParams({
     page: "1",
     pageSize: "50",
@@ -110,6 +109,17 @@ const AssetsList = () => {
                 placeholder="Search..."
               />
             </div>
+            <Select
+              style={{ width: "160px", marginBottom: 8 }}
+              onChange={(e) => setFilter({ ...filter, status: e, offset: 0 })}
+              placeholder="Select Status"
+              allowClear
+              
+            >
+              <Option value={1}>Active</Option>
+              <Option value={2}>Inactive</Option>
+              
+            </Select>
             <Select
               style={{ width: "160px", marginBottom: 8 }}
               loading={unitIsLoading}
@@ -202,44 +212,48 @@ const AssetsList = () => {
                 "Purchase Date",
                 "Price",
                 "Warranty",
+                "Device Remarks"
               ]}
               excelData={
                 data?.data?.length
                   ? data?.data?.map(
-                      ({
-                        serial_number,
-                        remarks,
-                        model,
-                        category,
-                        po_number,
-                        asset_no,
-                        specification,
-                        unit_name,
-                        location_name,
-                        name,
-                        purchase_date,
-                        price,
-                        warranty,
-                      }: any) => {
-                        const data = {
-                          "Asset Name": name,
-                          Category: category,
-                          Model: model,
-                          "Serial No": serial_number,
-                          "PO No": po_number,
-                          "Asset No": asset_no,
-                          Specification: specification,
-                          Remarks: remarks,
-                          Unit: unit_name,
-                          Location: location_name,
-                          "Purchase Date":
-                            dayjs(purchase_date).format("DD-MM-YYYY"),
-                          Price: price,
-                          Warranty: warranty,
-                        };
-                        return data;
-                      }
-                    )
+                    ({
+                      serial_number,
+                      remarks,
+                      model,
+                      category,
+                      po_number,
+                      asset_no,
+                      specification,
+                      unit_name,
+                      location_name,
+                      name,
+                      purchase_date,
+                      price,
+                      warranty,
+                      device_remarks,
+                    }: any) => {
+                      const data = {
+                        "Asset Name": name,
+                        Category: category,
+                        Model: model,
+                        "Serial No": serial_number,
+                        "PO No": po_number,
+                        "Asset No": asset_no,
+                        Specification: specification,
+                        Remarks: remarks,
+                        Unit: unit_name,
+                        Location: location_name,
+                        "Purchase Date":
+                          dayjs(purchase_date).format("DD-MM-YYYY"),
+                        Price: price,
+                        Warranty: warranty,
+                        "Device Remarks": device_remarks,
+
+                      };
+                      return data;
+                    }
+                  )
                   : []
               }
             />
@@ -278,7 +292,7 @@ const AssetsList = () => {
                 current: Number(page),
                 showSizeChanger: true,
                 defaultPageSize: 50,
-                pageSizeOptions: ["50", "100", "200", "300", "500", "1000"],
+                pageSizeOptions: ["50", "100", "200", "300", "500", "1000","3000"],
                 total: data ? Number(assetsTableData?.total) : 0,
                 showTotal: (total) => `Total ${total} `,
               }}

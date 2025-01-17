@@ -42,6 +42,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
     price,
     location,
     location_name,
+    device_remarks,
   } = singleAsset?.data || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -65,6 +66,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
       assign_update: is_assign,
       model,
       specification,
+      device_remarks,
       purchase_date: dayjs(purchase_date),
       assign_date: assign_date ? dayjs(assign_date) : null,
     });
@@ -105,6 +107,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
     unit_id,
     price,
     location,
+    device_remarks,
     location_name,
   ]);
 
@@ -399,6 +402,15 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                     label="Specification"
                   >
                     <TextArea placeholder="Enter Specification" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={24} md={24}>
+                  <Form.Item
+                    name="device_remarks"
+                    // rules={[{ required: true }]}
+                    label="Device Remarks"
+                  >
+                    <TextArea placeholder="Enter Device Remarks (If Any)" />
                   </Form.Item>
                 </Col>
               </Row>

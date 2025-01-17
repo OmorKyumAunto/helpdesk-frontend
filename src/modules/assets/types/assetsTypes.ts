@@ -20,6 +20,7 @@ export interface IAsset {
   designation:string;
   department:string;
   email:string;
+  device_remarks:string;
   contact_no:string;
   employee_unit_name:string;
 }
@@ -52,6 +53,7 @@ export interface IAssetDetails {
   specification: string;
   location: number;
   location_name: string;
+  device_remarks:string;
   history: History[];
   
 }
@@ -63,6 +65,7 @@ export interface IAssetParams {
   unit?: number | null;
   location?: number;
   type?: string;
+  status?: number;
 }
 
 export interface IDistributedSingle {
@@ -92,6 +95,7 @@ export interface IDistributedSingle {
   status: number;
   location: number;
   location_name: string;
+  device_remarks:string;
   history: History[];
   
 }
