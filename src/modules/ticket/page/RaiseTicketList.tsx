@@ -308,6 +308,7 @@ const RaiseTicketList: React.FC = () => {
                             key: "1",
                             label: "CC Person",
                             children: ticket.cc ? ticket.cc : "N/A",
+                            span:2,
                           },
                           {
                             key: "2",
@@ -315,6 +316,7 @@ const RaiseTicketList: React.FC = () => {
                             children: dayjs(ticket.created_at).format(
                               "DD MMM YYYY HH:mm"
                             ),
+                            span:2,
                           },
                           {
                             key: "3",
@@ -323,6 +325,7 @@ const RaiseTicketList: React.FC = () => {
                               "DD MMM YYYY HH:mm"
                             )}
                           (${dayjs(ticket.updated_at).fromNow()})`,
+                          span:2,
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
@@ -333,7 +336,9 @@ const RaiseTicketList: React.FC = () => {
                                     dayjs(ticket.created_at),
                                     dayjs(ticket.updated_at)
                                   ),
+                                  span:2,
                                 },
+                                
                               ]
                             : []),
                         ]}

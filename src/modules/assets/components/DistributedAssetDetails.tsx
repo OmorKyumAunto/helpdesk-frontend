@@ -60,38 +60,39 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
             key: "12",
             label: "Name",
             children: asset_name,
-            span: 4,
+            span:2,
           },
           {
             key: "2",
             label: "Category",
             children: category,
+            span:2,
           },
           {
             key: "1",
             label: "Model",
             children: model,
+            span:2,
           },
           {
             key: "3",
             label: "Serial No",
             children: serial_number,
+            span:2,
           },
           {
             key: "4",
             label: "PO Number",
             children: po_number,
+            span:2,
           },
           {
             key: "13",
             label: "Asset No",
             children: asset_no,
+            span:2,
           },
-          {
-            key: "5",
-            label: "Specification",
-            children: specification,
-          },
+          
           {
             key: "6",
             label: "Remarks",
@@ -101,21 +102,31 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
               ) : (
                 <Tag color="processing">In Stock</Tag>
               ),
+              span:2,
           },
           {
             key: "7",
             label: "Buying Unit",
             children: asset_unit_name,
+            span:2,
           },
           {
             key: "8",
             label: "Location",
             children: location_name,
+            span:2,
           },
           {
             key: "9",
             label: "Purchase Date",
             children: dayjs(purchase_date).format("DD-MM-YYYY"),
+            span:2,
+          },
+          {
+            key: "5",
+            label: "Specification",
+            children: specification,
+            span: 4,
           },
           {
             key: "14",

@@ -427,6 +427,7 @@ const AdminTicketList = ({
                             key: "1",
                             label: "CC Person",
                             children: ticket.cc ? ticket.cc : "N/A",
+                            span:2,
                           },
                           {
                             key: "2",
@@ -434,6 +435,7 @@ const AdminTicketList = ({
                             children: dayjs(ticket.ticket_created_at).format(
                               "DD MMM YYYY HH:mm"
                             ),
+                            span:2,
                           },
                           {
                             key: "3",
@@ -441,6 +443,7 @@ const AdminTicketList = ({
                             children: `${dayjs(ticket.ticket_updated_at).format(
                               "DD MMM YYYY HH:mm"
                             )} (${dayjs(ticket.ticket_updated_at).fromNow()})`,
+                            span:2,
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
@@ -451,6 +454,7 @@ const AdminTicketList = ({
                                     dayjs(ticket.ticket_created_at),
                                     dayjs(ticket.ticket_updated_at)
                                   ),
+                                  span:2,
                                 },
                               ]
                             : []),

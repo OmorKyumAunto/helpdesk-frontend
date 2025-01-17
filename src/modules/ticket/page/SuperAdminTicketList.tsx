@@ -391,6 +391,7 @@ const SuperAdminTicketList = ({
                             key: "1",
                             label: "CC Person",
                             children: ticket.cc ? ticket.cc : "N/A",
+                            span:2,
                           },
                           {
                             key: "2",
@@ -398,6 +399,7 @@ const SuperAdminTicketList = ({
                             children: dayjs(ticket.ticket_created_at).format(
                               "DD MMM YYYY HH:mm"
                             ),
+                            span:2,
                           },
                           {
                             key: "3",
@@ -406,6 +408,7 @@ const SuperAdminTicketList = ({
                               "DD MMM YYYY HH:mm"
                             )}
                           (${dayjs(ticket.ticket_updated_at).fromNow()})`,
+                          span:2,
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
@@ -417,8 +420,10 @@ const SuperAdminTicketList = ({
                                     dayjs(ticket.ticket_updated_at)
                                   ),
                                 },
+                                
                               ]
                             : []),
+                            
                         ]}
                       />
                       <Divider />

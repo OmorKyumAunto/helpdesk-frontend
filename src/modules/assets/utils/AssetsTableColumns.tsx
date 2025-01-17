@@ -1,7 +1,7 @@
-import { Button, Popconfirm, Space, Tag, Tooltip,Switch } from "antd";
+import { Button, Popconfirm, Space, Tag, Tooltip, Switch } from "antd";
 import { TableProps } from "antd/lib";
 import { IAsset } from "../types/assetsTypes";
-import { useDeleteAssetsMutation,useUpdateAssetStatusMutation } from "../api/assetsEndPoint";
+import { useDeleteAssetsMutation, useUpdateAssetStatusMutation } from "../api/assetsEndPoint";
 import UpdateAsset from "../components/UpdateAssets";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { setCommonModal } from "../../../app/slice/modalSlice";
@@ -37,7 +37,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
         </Tooltip>
       ),
     },
-    
+
     {
       title: "Serial No",
       dataIndex: "serial_number",
@@ -53,7 +53,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
       dataIndex: "po_number",
       key: "po_number",
     },
-    
+
     {
       title: "Remarks",
       render: ({ remarks }) =>
@@ -105,13 +105,16 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
           >
             <EditOutlined />
           </Button>
-          <>
-            <Switch
-              defaultChecked={record.status === 1 ? true : false}
-              style={{ background: record.status === 1 ? "green" : "red" }}
-              onChange={() => updateStatus(record.id)}
-            />
-          </>
+          {roleId === 1 && (
+            <>
+              <Switch
+                defaultChecked={record.status === 1 ? true : false}
+                style={{ background: record.status === 1 ? "green" : "red" }}
+                onChange={() => updateStatus(record.id)}
+              />
+            </>
+          )}
+
           {roleId === 1 && (
             <Popconfirm
               title="Delete this Asset"
