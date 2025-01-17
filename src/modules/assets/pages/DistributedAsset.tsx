@@ -69,34 +69,33 @@ const DistributedAsset = () => {
             display: "flex",
             justifyContent: "end",
             alignItems: "center",
+            flexWrap: "wrap",
             gap: 12,
             marginBottom: "12px",
           }}
         >
-         
-
           <div style={{ width: "160px" }}>
-                  <Input
-                    prefix={<SearchOutlined />}
-                    onChange={(e) =>
-                      setFilter({ ...filter, key: e.target.value, offset: 0 })
-                    }
-                    placeholder="Search..."
-                  />
-                </div>
-                <Select
-                  style={{ width: "160px"}}
-                  loading={unitIsLoading}
-                  placeholder="Select Unit Name"
-                  showSearch
-                  optionFilterProp="children"
-                  onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
-                  options={unitOption?.map((unit: any) => ({
-                    value: unit.id,
-                    label: unit.title,
-                  }))}
-                  allowClear
-                />
+            <Input
+              prefix={<SearchOutlined />}
+              onChange={(e) =>
+                setFilter({ ...filter, key: e.target.value, offset: 0 })
+              }
+              placeholder="Search..."
+            />
+          </div>
+          <Select
+            style={{ width: "160px" }}
+            loading={unitIsLoading}
+            placeholder="Select Unit Name"
+            showSearch
+            optionFilterProp="children"
+            onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
+            options={unitOption?.map((unit: any) => ({
+              value: unit.id,
+              label: unit.title,
+            }))}
+            allowClear
+          />
           <Dropdown
             trigger={["hover"]}
             dropdownRender={() => (
@@ -109,7 +108,6 @@ const DistributedAsset = () => {
                   border: "1px solid #f2f2f2",
                 }}
               >
-                
                 <Select
                   style={{ width: "100%", marginBottom: 8 }}
                   onChange={(e) =>
@@ -122,7 +120,7 @@ const DistributedAsset = () => {
                   <Option value="management">Management</Option>
                   <Option value="non-management">Non Management</Option>
                 </Select>
-                
+
                 <Select
                   style={{ width: "100%", marginBottom: 8 }}
                   loading={locationIsLoading}
@@ -173,29 +171,29 @@ const DistributedAsset = () => {
               excelData={
                 data?.data?.length
                   ? data?.data?.map(
-                    ({
-                      user_id_no,
-                      user_name,
-                      department,
-                      category,
-                      assign_date,
-                      serial_number,
-                      employee_unit_name,
-                      location_name,
-                    }: any) => {
-                      return {
-                        "Employee ID": user_id_no,
-                        "Employee Name": user_name,
-                        Department: department,
-                        Unit: employee_unit_name,
-                        Location: location_name,
-                        "Asset Type": category,
-                        "Serial No": serial_number,
-                        "Assigning Date":
-                          dayjs(assign_date).format("DD-MM-YYYY"),
-                      };
-                    }
-                  )
+                      ({
+                        user_id_no,
+                        user_name,
+                        department,
+                        category,
+                        assign_date,
+                        serial_number,
+                        employee_unit_name,
+                        location_name,
+                      }: any) => {
+                        return {
+                          "Employee ID": user_id_no,
+                          "Employee Name": user_name,
+                          Department: department,
+                          Unit: employee_unit_name,
+                          Location: location_name,
+                          "Asset Type": category,
+                          "Serial No": serial_number,
+                          "Assigning Date":
+                            dayjs(assign_date).format("DD-MM-YYYY"),
+                        };
+                      }
+                    )
                   : []
               }
             />

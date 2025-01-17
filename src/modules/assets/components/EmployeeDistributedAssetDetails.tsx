@@ -20,7 +20,7 @@ const EmployeeDistributedAssetDetails = ({ record }: { record: any }) => {
       <Descriptions
         size="middle"
         bordered
-        column={2}
+        column={{ sm: 1, md: 2 }}
         items={[
           {
             key: "12",

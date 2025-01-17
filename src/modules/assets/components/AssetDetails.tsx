@@ -51,13 +51,12 @@ const AssetDetails = ({ id }: { id: any }) => {
       <Descriptions
         size="middle"
         bordered
-        column={2}
+        column={{ sm: 1, md: 2 }}
         items={[
           {
             key: "12",
             label: "Name",
             children: name,
-            
           },
           {
             key: "13",
@@ -84,8 +83,7 @@ const AssetDetails = ({ id }: { id: any }) => {
             label: "PO Number",
             children: po_number,
           },
-          
-          
+
           {
             key: "6",
             label: "Remarks",

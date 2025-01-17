@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Tooltip } from "antd";
+import { Grid, Tooltip } from "antd";
 import {
   Card,
   Input,
@@ -52,6 +52,7 @@ const AdminTicketList = ({
   const [pageSize, setPageSize] = useState(10);
   const skipValue = (page - 1) * pageSize;
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
+  const { sm } = Grid.useBreakpoint();
   const [newComment, setNewComment] = useState<string>("");
   const [filter, setFilter] = useState<{
     key?: string;
@@ -130,7 +131,7 @@ const AdminTicketList = ({
       style={{ width: "100%", padding: "1rem", backgroundColor: "#f5f5f5" }}
       title="Admin Ticket List"
       extra={
-        <Space>
+        <Space direction={!sm ? "vertical" : "horizontal"}>
           <Radio.Group
             // block
             options={options}
@@ -414,7 +415,7 @@ const AdminTicketList = ({
                       <Descriptions
                         bordered
                         size="small"
-                        column={2} // Two items per row
+                        column={{ sm: 1, md: 2 }}
                         labelStyle={{
                           fontWeight: "bold",
                           backgroundColor: "#e6f2ff",

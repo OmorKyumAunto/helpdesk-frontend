@@ -63,14 +63,13 @@ const RaiseTicketForm = () => {
   };
 
   return (
-
     <Form
       form={form}
       layout="vertical"
       onFinish={handleSubmit}
       style={{ maxWidth: "100%", margin: "auto" }}
     >
-      <Row gutter={[16,16]}>
+      <Row gutter={[16, 16]}>
         {/* Left Card */}
         <Col xs={24} md={8}>
           <Card
@@ -85,9 +84,7 @@ const RaiseTicketForm = () => {
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.03)")
             }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.transform = "scale(1)")
-            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             <Form.Item
               label="Select Unit"
@@ -109,7 +106,6 @@ const RaiseTicketForm = () => {
                   value: unit.id,
                   label: unit.title,
                 }))}
-
                 allowClear
               />
             </Form.Item>
@@ -118,9 +114,7 @@ const RaiseTicketForm = () => {
               label="Select Category"
               name="category_id"
               style={{ marginBottom: "8px" }}
-              rules={[
-                { required: true, message: "Please select a category!" },
-              ]}
+              rules={[{ required: true, message: "Please select a category!" }]}
             >
               <Select
                 loading={categoryLoading}
@@ -144,9 +138,7 @@ const RaiseTicketForm = () => {
               label="Select Priority"
               name="priority"
               style={{ marginBottom: "8px" }}
-              rules={[
-                { required: true, message: "Please select a priority!" },
-              ]}
+              rules={[{ required: true, message: "Please select a priority!" }]}
             >
               <Select placeholder="Select Priority">
                 <Option value="low">Low</Option>
@@ -162,7 +154,6 @@ const RaiseTicketForm = () => {
                 placeholder="Select Asset Name"
                 showSearch
                 optionFilterProp="children"
-
                 filterOption={(input, option) =>
                   (option?.label ?? "")
                     .toLowerCase()
@@ -170,7 +161,7 @@ const RaiseTicketForm = () => {
                 }
                 options={data?.data?.map((item: any) => ({
                   value: item.id,
-                  label: item.asset_name,
+                  label: `${item.asset_name} (${item.serial_number})`,
                 }))}
                 allowClear
               />
@@ -192,9 +183,7 @@ const RaiseTicketForm = () => {
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.03)")
             }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.transform = "scale(1)")
-            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             <Form.Item
               label="Subject"
@@ -205,13 +194,11 @@ const RaiseTicketForm = () => {
               <Input placeholder="Enter Subject" />
             </Form.Item>
 
-            <Form.Item label="CC" name="cc"
-              style={{ marginBottom: "8px" }}>
+            <Form.Item label="CC" name="cc" style={{ marginBottom: "8px" }}>
               <Select
                 loading={empLoading}
                 placeholder="Select Employee"
                 showSearch
-
                 optionFilterProp="children"
                 filterOption={(input, option) =>
                   (option?.label ?? "")
@@ -255,7 +242,8 @@ const RaiseTicketForm = () => {
                   Click to Upload
                 </Button>
                 <span style={{ fontSize: "12px", color: "#888" }}>
-                  Only JPG, JPEG, PNG, and PDF files are allowed. Maximum size: 2MB.
+                  Only JPG, JPEG, PNG, and PDF files are allowed. Maximum size:
+                  2MB.
                 </span>
               </Upload>
             </Form.Item>
@@ -283,7 +271,6 @@ const RaiseTicketForm = () => {
         </Col>
       </Row>
     </Form>
-
   );
 };
 

@@ -14,11 +14,16 @@ import {
   InputNumber,
   Statistic,
   Flex,
+  Button,
+  message,
 } from "antd";
 import { motion } from "framer-motion"; // Import motion from framer-motion
 import "./Login.css";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useMatchOtpMutation } from "../../forget_api/forgetApi";
+import {
+  useGetOTPMutation,
+  useMatchOtpMutation,
+} from "../../forget_api/forgetApi";
 type IForget = {
   email: string;
   type: string;
@@ -26,20 +31,20 @@ type IForget = {
 };
 import SubmitButton from "../../components/submitButton/SubmitButton";
 import logo from "../../assets/logo.png";
-import { LockOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
 import { CountdownProps } from "antd/lib";
 import { OTPProps } from "antd/es/input/OTP";
+import { useEffect, useState } from "react";
 
 const SendOtp = () => {
   const [matchOtp, { isSuccess, isLoading, data }] = useMatchOtpMutation();
+  const [getOTP, { isSuccess: otpSuccess }] = useGetOTPMutation();
   const [query] = useSearchParams();
   const email = query.get("email");
   const navigate = useNavigate();
   const onFinish = (values: IForget) => {
     const body = {
       email: email,
-      otp: values.otp,
-      type: "reset_admin",
+      otp: Number(values.otp),
     };
     matchOtp(body);
   };
@@ -50,22 +55,23 @@ const SendOtp = () => {
   }
   const { Countdown } = Statistic;
 
-  const deadline = Date.now() + 10 * 10 * 60 * 25 * 2 + 1000 * 30;
+  const [deadline, setDeadline] = useState(Date.now() + 5 * 60 * 1000);
 
   const onFinishTime: CountdownProps["onFinish"] = () => {
-    console.log("finished!");
+    message.error("OTP has been invalid. Resent for new OTP!");
   };
-  const onChange: OTPProps["onChange"] = (text) => {
-    console.log("onChange:", text);
+  const handleResendOtp = async () => {
+    try {
+      await getOTP({ email });
+    } catch (error) {
+      message.error("An error occurred while resending OTP.");
+    }
   };
-
-  const onInput: OTPProps["onInput"] = (value) => {
-    console.log("onInput:", value);
-  };
-  const sharedProps: OTPProps = {
-    onChange,
-    onInput,
-  };
+  useEffect(() => {
+    if (otpSuccess) {
+      setDeadline(Date.now() + 5 * 60 * 1000);
+    }
+  }, [otpSuccess]);
   return (
     <>
       <motion.div
@@ -119,16 +125,16 @@ const SendOtp = () => {
                           required: true,
                           message: "Please enter your otp!",
                         },
+                        {
+                          pattern: /^\d+$/,
+                          message: "OTP must be a numeric value!",
+                        },
                       ]}
                     >
-                      <Input.OTP
-                        style={{ width: "100%" }}
-                        formatter={(str) => str.toUpperCase()}
-                        {...sharedProps}
-                      />
+                      <Input.OTP style={{ width: "100%" }} />
                     </Form.Item>
                   </Col>
-                  <Col xs={24}>
+                  {/* <Col xs={24}>
                     <Form.Item
                       name="email"
                       label="Email"
@@ -136,7 +142,7 @@ const SendOtp = () => {
                     >
                       <Input readOnly placeholder="Your Email" />
                     </Form.Item>
-                  </Col>
+                  </Col> */}
 
                   <Col xs={24}>
                     <Form.Item>
@@ -146,17 +152,34 @@ const SendOtp = () => {
                         <SubmitButton
                           style={{ width: "100%" }}
                           loading={isLoading}
-                          label="Send"
+                          label="Verify"
                           block
                         />
                       </div>
                     </Form.Item>
                   </Col>
                   <Col xs={24}>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      <span>
+                    <div style={{ textAlign: "center" }}>
+                      <p>
+                        <Button
+                          type="text"
+                          style={{ color: "#1775BB" }}
+                          onClick={handleResendOtp}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.textDecoration = "underline")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.textDecoration = "none")
+                          }
+                        >
+                          {" "}
+                          Resend
+                        </Button>
+                      </p>
+
+                      <p>
                         Go to <Link to="/login"> Login</Link>
-                      </span>
+                      </p>
                     </div>
                   </Col>
                 </Row>

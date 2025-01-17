@@ -28,7 +28,6 @@ const ForgotPassword = () => {
   const onFinish = (values: IForget) => {
     const body = {
       email: values.email.toLowerCase().replace(/\s/g, ""),
-      type: "reset_admin",
     };
     getOTP(body);
   };

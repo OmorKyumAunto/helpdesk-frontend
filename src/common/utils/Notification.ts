@@ -4,7 +4,7 @@ type NotificationType = "success" | "info" | "warning" | "error";
 const notification = (
   type: NotificationType,
   content: string,
-  duration?: number
+  duration: number = 3
 ) => {
   const showMessage = () => {
     message[type]({

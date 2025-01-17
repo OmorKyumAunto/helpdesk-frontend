@@ -1,5 +1,5 @@
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Card, DatePicker, Dropdown, Input,Space, Select } from "antd";
+import { Button, Card, DatePicker, Dropdown, Input, Space, Select } from "antd";
 import { Table } from "antd/lib";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -68,20 +68,21 @@ const TicketReport = () => {
             display: "flex",
             justifyContent: "end",
             alignItems: "center",
+            flexWrap: "wrap",
             gap: 12,
             marginBottom: "12px",
           }}
         >
           <DatePicker.RangePicker
-                  onChange={(_, e) =>
-                    setFilter({
-                      ...filter,
-                      from_date: e[0],
-                      to_date: e[1],
-                      offset: 0,
-                    })
-                  }
-                />
+            onChange={(_, e) =>
+              setFilter({
+                ...filter,
+                from_date: e[0],
+                to_date: e[1],
+                offset: 0,
+              })
+            }
+          />
           <div style={{ width: "160px" }}>
             <Input
               prefix={<SearchOutlined />}
@@ -156,8 +157,6 @@ const TicketReport = () => {
                   }))}
                   allowClear
                 />
-
-
               </div>
             )}
           >
@@ -183,61 +182,65 @@ const TicketReport = () => {
               excelData={
                 data?.data?.length
                   ? data?.data?.map(
-                    ({
-                      ticket_id,
-                      ticket_status,
-                      subject,
-                      priority,
-                      ticket_category_title,
-                      asset_serial_number,
-                      ticket_created_employee_name,
-                      ticket_created_employee_id,
-                      ticket_solved_employee_name,
-                      ticket_solved_employee_id,
-                      asset_unit_title,
-                      ticket_updated_at,
-                      ticket_created_at,
-                    }) => {
-                      // Parse timestamps
-                      const updatedAt = new Date(ticket_updated_at);
-                      const createdAt = new Date(ticket_created_at);
+                      ({
+                        ticket_id,
+                        ticket_status,
+                        subject,
+                        priority,
+                        ticket_category_title,
+                        asset_serial_number,
+                        ticket_created_employee_name,
+                        ticket_created_employee_id,
+                        ticket_solved_employee_name,
+                        ticket_solved_employee_id,
+                        asset_unit_title,
+                        ticket_updated_at,
+                        ticket_created_at,
+                      }) => {
+                        // Parse timestamps
+                        const updatedAt = new Date(ticket_updated_at);
+                        const createdAt = new Date(ticket_created_at);
 
-                      // Calculate time difference in milliseconds
-                      const timeDifference = updatedAt.getTime() - createdAt.getTime();
+                        // Calculate time difference in milliseconds
+                        const timeDifference =
+                          updatedAt.getTime() - createdAt.getTime();
 
-                      // Convert time difference to human-readable format (e.g., hours, minutes)
-                      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-                      const hours = Math.floor(
-                        (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-                      );
-                      const minutes = Math.floor(
-                        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-                      );
+                        // Convert time difference to human-readable format (e.g., hours, minutes)
+                        const days = Math.floor(
+                          timeDifference / (1000 * 60 * 60 * 24)
+                        );
+                        const hours = Math.floor(
+                          (timeDifference % (1000 * 60 * 60 * 24)) /
+                            (1000 * 60 * 60)
+                        );
+                        const minutes = Math.floor(
+                          (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+                        );
 
-                      // Build solvingTime string dynamically
-                      const solvingTimeParts = [];
-                      if (days > 0) solvingTimeParts.push(`${days}d`);
-                      if (hours > 0) solvingTimeParts.push(`${hours}h`);
-                      if (minutes > 0) solvingTimeParts.push(`${minutes}m`);
+                        // Build solvingTime string dynamically
+                        const solvingTimeParts = [];
+                        if (days > 0) solvingTimeParts.push(`${days}d`);
+                        if (hours > 0) solvingTimeParts.push(`${hours}h`);
+                        if (minutes > 0) solvingTimeParts.push(`${minutes}m`);
 
-                      const solvingTime = solvingTimeParts.join(" ") || "0m"; // Default to "0m" if all parts are 0
+                        const solvingTime = solvingTimeParts.join(" ") || "0m"; // Default to "0m" if all parts are 0
 
-                      return {
-                        "Ticket ID": ticket_id,
-                        "Ticket Subject": subject,
-                        "Ticket Status": ticket_status,
-                        "Category": ticket_category_title,
-                        "Priority": priority,
-                        "Asset Serial Number": asset_serial_number,
-                        "Raised By": ticket_created_employee_name,
-                        "Raiser ID": ticket_created_employee_id,
-                        "Solved By": ticket_solved_employee_name,
-                        "Admin ID": ticket_solved_employee_id,
-                        "Unit Name": asset_unit_title,
-                        "Solving Time": solvingTime,
-                      };
-                    }
-                  )
+                        return {
+                          "Ticket ID": ticket_id,
+                          "Ticket Subject": subject,
+                          "Ticket Status": ticket_status,
+                          Category: ticket_category_title,
+                          Priority: priority,
+                          "Asset Serial Number": asset_serial_number,
+                          "Raised By": ticket_created_employee_name,
+                          "Raiser ID": ticket_created_employee_id,
+                          "Solved By": ticket_solved_employee_name,
+                          "Admin ID": ticket_solved_employee_id,
+                          "Unit Name": asset_unit_title,
+                          "Solving Time": solvingTime,
+                        };
+                      }
+                    )
                   : []
               }
             />

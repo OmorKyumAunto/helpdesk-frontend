@@ -9,7 +9,8 @@ import { useEffect } from "react";
 import notification from "../../common/utils/Notification";
 import logo from "../../assets/logo.png";
 type IForget = {
-  password: string;
+  newPassword: string;
+  confirmPassword: string;
 };
 const ResetPassword = () => {
   const [resetPassword, { isSuccess, isLoading }] = useResetPasswordMutation();
@@ -19,23 +20,23 @@ const ResetPassword = () => {
   const navigate = useNavigate();
 
   const onFinish = (values: IForget) => {
-    if (values.password.length < 8) {
-      notification("error", "Password must be at least 8 characters");
-      return;
-    }
     const body = {
-      token: token,
-      email,
-      password: values.password,
+      values,
     };
-    resetPassword(body);
+
+    const headers = {
+      authorization: token,
+    };
+
+    resetPassword({ body, headers });
   };
+
   useEffect(() => {
     if (isSuccess) {
       navigate("/login");
       localStorage.removeItem("otpToken");
     }
-  }, [isSuccess]);
+  }, [isSuccess, navigate]);
 
   return (
     <motion.div
@@ -71,17 +72,31 @@ const ResetPassword = () => {
             >
               Reset Password
             </Typography.Title>
-            <Form name="login-form" layout="vertical" onFinish={onFinish}>
+            <Form
+              name="reset-password-form"
+              layout="vertical"
+              onFinish={onFinish}
+            >
               <Row gutter={8}>
                 <Col xs={24}>
                   <Form.Item
-                    name="password"
+                    name="newPassword"
                     label="Password"
                     rules={[
                       {
                         required: true,
                         message: "Please enter your password!",
                       },
+                      {
+                        min: 8,
+                        message: "Password must be at least 8 characters long!",
+                      },
+                      // {
+                      //   pattern:
+                      //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                      //   message:
+                      //     "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!",
+                      // },
                     ]}
                   >
                     <Input.Password
@@ -92,18 +107,29 @@ const ResetPassword = () => {
                 </Col>
                 <Col xs={24}>
                   <Form.Item
-                    name="confirm_password"
+                    name="confirmPassword"
                     label="Confirm Password"
+                    dependencies={["password"]}
                     rules={[
                       {
                         required: true,
-                        message: "Please enter confirm password!",
+                        message: "Please confirm your password!",
                       },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue("password") === value) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(
+                            new Error("The two passwords do not match!")
+                          );
+                        },
+                      }),
                     ]}
                   >
                     <Input.Password
                       prefix={<LockOutlined />}
-                      placeholder="Enter confirm password"
+                      placeholder="Confirm your password"
                     />
                   </Form.Item>
                 </Col>

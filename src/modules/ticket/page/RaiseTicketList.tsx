@@ -296,7 +296,7 @@ const RaiseTicketList: React.FC = () => {
                       <Descriptions
                         bordered
                         size="small"
-                        column={2}
+                        column={{ sm: 1, md: 2 }}
                         labelStyle={{
                           fontWeight: "bold",
                           backgroundColor: "#e6f2ff",
