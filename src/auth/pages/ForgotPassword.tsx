@@ -5,14 +5,14 @@ Change Password
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Form, Input, Typography, Row, Col } from "antd";
+import { Form, Input, Typography, Row, Col, Image } from "antd";
 import { MailOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion"; // Import motion from framer-motion
 import "./Login.css";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useGetOTPMutation } from "../../forget_api/forgetApi";
-
+import logo from "../../assets/logo.png";
 import SubmitButton from "../../components/submitButton/SubmitButton";
 
 type IForget = {
@@ -57,6 +57,9 @@ const ForgotPassword = () => {
           }}
         >
           <div className="login-form">
+            <div className="flex justify-center">
+              <Image preview={false} height={140} src={logo} />
+            </div>
             <Typography.Title
               level={4}
               style={{
@@ -67,11 +70,12 @@ const ForgotPassword = () => {
             >
               Forget Password
             </Typography.Title>
-            <Form name="login-form" onFinish={onFinish}>
+            <Form name="login-form" layout="vertical" onFinish={onFinish}>
               <Row gutter={[16, 8]}>
                 <Col xs={24}>
                   <Form.Item
                     name="email"
+                    label="Email"
                     rules={[
                       {
                         type: "email",
@@ -98,6 +102,7 @@ const ForgotPassword = () => {
                         loading={isLoading}
                         label="Send OTP"
                         block
+                        style={{ width: "100%" }}
                       />
                     </div>
                   </Form.Item>

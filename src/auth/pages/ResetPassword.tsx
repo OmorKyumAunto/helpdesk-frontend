@@ -1,17 +1,13 @@
-/*
-Change Password
-@Author Abdulla al mammun<mamun.m360ict@gmail.com>
-*/
-import { Form, Input, Typography, Row, Col } from "antd";
+import { Form, Input, Typography, Row, Col, Image } from "antd";
 import { LockOutlined } from "@ant-design/icons";
-import { motion } from "framer-motion"; // Import motion from framer-motion
+import { motion } from "framer-motion";
 import "./Login.css";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useResetPasswordMutation } from "../../forget_api/forgetApi";
 import SubmitButton from "../../components/submitButton/SubmitButton";
 import { useEffect } from "react";
 import notification from "../../common/utils/Notification";
-
+import logo from "../../assets/logo.png";
 type IForget = {
   password: string;
 };
@@ -49,7 +45,7 @@ const ResetPassword = () => {
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="registration-form login-form-container"
+        className="login-form-container"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -62,6 +58,9 @@ const ResetPassword = () => {
           }}
         >
           <div className="login-form">
+            <div className="flex justify-center">
+              <Image preview={false} height={140} src={logo} />
+            </div>
             <Typography.Title
               level={4}
               style={{
@@ -72,11 +71,12 @@ const ResetPassword = () => {
             >
               Reset Password
             </Typography.Title>
-            <Form name="login-form" onFinish={onFinish}>
-              <Row gutter={[16, 8]}>
+            <Form name="login-form" layout="vertical" onFinish={onFinish}>
+              <Row gutter={8}>
                 <Col xs={24}>
                   <Form.Item
                     name="password"
+                    label="Password"
                     rules={[
                       {
                         required: true,
@@ -90,11 +90,33 @@ const ResetPassword = () => {
                     />
                   </Form.Item>
                 </Col>
+                <Col xs={24}>
+                  <Form.Item
+                    name="confirm_password"
+                    label="Confirm Password"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter confirm password!",
+                      },
+                    ]}
+                  >
+                    <Input.Password
+                      prefix={<LockOutlined />}
+                      placeholder="Enter confirm password"
+                    />
+                  </Form.Item>
+                </Col>
 
                 <Col xs={24}>
                   <Form.Item>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                      <SubmitButton loading={isLoading} label="Submit" block />
+                      <SubmitButton
+                        style={{ width: "100%" }}
+                        loading={isLoading}
+                        label="Submit"
+                        block
+                      />
                     </div>
                   </Form.Item>
                 </Col>

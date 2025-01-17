@@ -1,7 +1,7 @@
 import { LockOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
-import { Col, Form, Image, Input, Row } from "antd";
+import { Col, Divider, Form, Image, Input, Row } from "antd";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../app/api/api";
 import logo from "../../assets/logo.png";
 import SubmitButton from "../../components/submitButton/SubmitButton";
@@ -19,16 +19,6 @@ export const Login = () => {
       id: values.id,
       password: values.password,
     };
-    // if (
-    //   "aunto10@gmail.com" === values?.email &&
-    //   "12345678" === values.password
-    // ) {
-    //   navigate("/");
-    //   message.success("Successfully logged in!");
-    // } else {
-    //   message.error("Email or Password is wrong!");
-    // }
-    // console.log(body);
     login(body);
   };
 
@@ -110,7 +100,7 @@ export const Login = () => {
                       </div>
                     </Form.Item>
                   </Col>
-                  {/* <Divider style={{ marginTop: "0px", marginBottom: "10px" }} />
+                  {/* <Divider style={{ marginTop: "0px", marginBottom: "10px" }} /> */}
                   <Col xs={24}>
                     <div
                       style={{
@@ -120,24 +110,10 @@ export const Login = () => {
                       }}
                     >
                       <span style={{ color: "black" }}>
-                        <Link to="/register">
-                          {" "}
-                          Don't have an account? Please Register{" "}
-                        </Link>
+                        <Link to="/forget-password"> Forget Password? </Link>
                       </span>
                     </div>
-                    <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span style={{ color: "black" }}>
-                      <Link to="/forget-password"> Forget Password? </Link>
-                    </span>
-                  </div>
-                  </Col> */}
+                  </Col>
                 </Row>
               </Form>
             </div>
