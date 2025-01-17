@@ -156,7 +156,7 @@ export const assetsEndPoint = api.injectEndpoints({
           notification("success", "Successfully update asset status");
         });
       },
-      invalidatesTags: () => ["employee"],
+      invalidatesTags: () => ["asset"],
     }),
     assignEmployee: build.mutation<unknown, { data: any; id: number }>({
       query: ({ data, id }) => {
