@@ -23,29 +23,23 @@ const AssetDetails = ({ id }: { id: any }) => {
     device_remarks,
     location_name,
   } = singleAsset?.data || {};
-  const assetHistory = history?.map((item: any) => {
-    return {
-      children: (
-        <p>
-          <span
-          // style={{
-          //   color: item?.status === 1 ? "green" : "red",
-          // }}
-          >
-            {item?.history}
+
+  const assetHistory = history?.map((item: any) => ({
+    children: (
+      <p>
+        <span>{item?.history}</span>
+        <span className="ml-2">
+          ( Assign date :
+          <span className="px-2 rounded font-bold">
+            {dayjs(item?.asset_assign_date).format("DD-MM-YYYY")}
           </span>
-          <span className="ml-2">
-            ( Assign date :
-            <span className="px-2 rounded font-bold">
-              {dayjs(item?.asset_assign_date).format("DD-MM-YYYY")}
-            </span>
-            )
-          </span>
-        </p>
-      ),
-      color: item?.status === 1 ? "green" : "red",
-    };
-  });
+          )
+        </span>
+      </p>
+    ),
+    color: item?.status === 1 ? "green" : "red",
+  }));
+
   return (
     <div>
       <Descriptions
@@ -89,7 +83,6 @@ const AssetDetails = ({ id }: { id: any }) => {
             children: po_number,
             span: 2,
           },
-
           {
             key: "6",
             label: "Remarks",
@@ -99,7 +92,7 @@ const AssetDetails = ({ id }: { id: any }) => {
               ) : (
                 <Tag color="processing">In Stock</Tag>
               ),
-              span: 2,
+            span: 2,
           },
           {
             key: "7",
@@ -145,25 +138,18 @@ const AssetDetails = ({ id }: { id: any }) => {
           },
         ]}
       />
-      {purchase_date && employee_id_no && (
+      {history?.length ? (
         <>
           <Divider
             orientation="center"
             style={{ fontWeight: "bold", fontSize: "16px" }}
           >
-            {" "}
             Asset History
           </Divider>
-          {/* <Typography.Text style={{ fontWeight: 500, fontSize: "15px" }}>
-            1. In Stock since {dayjs(purchase_date).format("DD-MM-YYYY")}
-          </Typography.Text>{" "}
-          <br />
-          <Typography.Text style={{ fontWeight: 500, fontSize: "15px" }}>
-            2. Reserved for Employee ID : {employee_id_no} ({employee_name})
-          </Typography.Text> */}
-          <Timeline items={assetHistory?.length ? assetHistory : []} />
+          <Timeline items={assetHistory} />
         </>
-      )}
+      ) : null}
+
     </div>
   );
 };
