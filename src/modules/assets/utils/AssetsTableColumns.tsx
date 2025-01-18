@@ -105,7 +105,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
           >
             <EditOutlined />
           </Button>
-          {roleId === 1 && (
+          
             <>
               <Switch
                 defaultChecked={record.status === 1 ? true : false}
@@ -113,7 +113,6 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
                 onChange={() => updateStatus(record.id)}
               />
             </>
-          )}
 
           {roleId === 1 && (
             <Popconfirm
