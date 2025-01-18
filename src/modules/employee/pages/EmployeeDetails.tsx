@@ -53,36 +53,43 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
             key: "1",
             label: "Employee id",
             children: employee_id,
+            span: 2,
           },
           {
             key: "3",
             label: "Designation",
             children: designation,
+            span: 2,
           },
           {
             key: "4",
             label: "Department",
             children: department,
+            span: 2,
           },
           {
             key: "5",
             label: "Email",
             children: email,
+            span: 2,
           },
           {
             key: "6",
             label: "Contact No",
             children: contact_no,
+            span: 2,
           },
           {
             key: "11",
             label: "Blood Group",
             children: blood_group,
+            span: 2,
           },
           {
             key: "7",
             label: "Unit Name",
             children: unit_name,
+            span: 2,
           },
           // {
           //   key: "8",
@@ -95,21 +102,25 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
             key: "12",
             label: "Business Type",
             children: business_type,
+            span: 2,
           },
           {
             key: "13",
             label: "Line of Business",
             children: line_of_business,
+            span: 2,
           },
           {
             key: "14",
             label: "Grade",
             children: grade,
+            span: 2,
           },
           {
             key: "15",
             label: "PABX",
             children: pabx,
+            span: 2,
           },
           {
             key: "9",
@@ -120,6 +131,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
               ) : (
                 <Tag color="error">Inactive</Tag>
               ),
+              span: 2,
           },
           ...(roleId !== 3
             ? [
@@ -151,7 +163,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
                       </Popconfirm>
                     </>
                   ),
-                  span: 2,
+                  span: 4,
                 },
               ]
             : []),
