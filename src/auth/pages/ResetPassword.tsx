@@ -117,12 +117,11 @@ const ResetPassword = () => {
                       },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          if (!value || getFieldValue("password") === value) {
+                          const password = getFieldValue("password");
+                          if (!value || password === value) {
                             return Promise.resolve();
                           }
-                          return Promise.reject(
-                            new Error("The two passwords do not match!")
-                          );
+                          return Promise.reject(new Error("The two passwords do not match!"));
                         },
                       }),
                     ]}
@@ -132,6 +131,7 @@ const ResetPassword = () => {
                       placeholder="Confirm your password"
                     />
                   </Form.Item>
+
                 </Col>
 
                 <Col xs={24}>
