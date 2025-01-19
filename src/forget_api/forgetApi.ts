@@ -36,7 +36,7 @@ export const forgetPassEndpoint = api.injectEndpoints({
 
     resetPassword: build.mutation<any, any>({
       query: ({ body, headers }) => ({
-        url: `/reset-password`,
+        url: `/forget-password/reset-password`,
         method: "POST",
         body: body,
         headers,

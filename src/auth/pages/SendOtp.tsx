@@ -48,8 +48,9 @@ const SendOtp = () => {
     };
     matchOtp(body);
   };
+  console.log(data?.data?.token);
   if (isSuccess) {
-    const resToken = data?.token;
+    const resToken = data?.data?.token;
     localStorage.setItem("otpToken", resToken);
     navigate(`/reset-password?email=${email}`);
   }

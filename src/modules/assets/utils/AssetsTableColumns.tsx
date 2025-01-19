@@ -1,7 +1,10 @@
 import { Button, Popconfirm, Space, Tag, Tooltip, Switch } from "antd";
 import { TableProps } from "antd/lib";
 import { IAsset } from "../types/assetsTypes";
-import { useDeleteAssetsMutation, useUpdateAssetStatusMutation } from "../api/assetsEndPoint";
+import {
+  useDeleteAssetsMutation,
+  useUpdateAssetStatusMutation,
+} from "../api/assetsEndPoint";
 import UpdateAsset from "../components/UpdateAssets";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { setCommonModal } from "../../../app/slice/modalSlice";
@@ -14,7 +17,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
   const dispatch = useDispatch();
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const [deleteAsset] = useDeleteAssetsMutation();
-  const [updateStatus] = useUpdateAssetStatusMutation();
+  const [updateStatus, { isSuccess }] = useUpdateAssetStatusMutation();
   const confirm = (id: number) => {
     if (id) {
       deleteAsset(id);
@@ -105,14 +108,16 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
           >
             <EditOutlined />
           </Button>
-          
-            <>
-              <Switch
-                defaultChecked={record.status === 1 ? true : false}
-                style={{ background: record.status === 1 ? "green" : "red" }}
-                onChange={() => updateStatus(record.id)}
-              />
-            </>
+
+          <>
+            <Switch
+              checked={record.status === 1 ? true : false}
+              style={{
+                background: record.status === 1 ? "green" : "red",
+              }}
+              onChange={() => updateStatus(record.id)}
+            />
+          </>
 
           {roleId === 1 && (
             <Popconfirm

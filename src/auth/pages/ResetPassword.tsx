@@ -21,11 +21,11 @@ const ResetPassword = () => {
 
   const onFinish = (values: IForget) => {
     const body = {
-      values,
+      ...values,
     };
 
     const headers = {
-      authorization: token,
+      authorization: `Bearer ${token}`,
     };
 
     resetPassword({ body, headers });
@@ -88,8 +88,8 @@ const ResetPassword = () => {
                         message: "Please enter your password!",
                       },
                       {
-                        min: 8,
-                        message: "Password must be at least 8 characters long!",
+                        min: 6,
+                        message: "Password must be at least 6 characters long!",
                       },
                       // {
                       //   pattern:
@@ -117,7 +117,10 @@ const ResetPassword = () => {
                       },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          if (!value || getFieldValue("newPassword") === value) {
+                          if (
+                            !value ||
+                            getFieldValue("newPassword") === value
+                          ) {
                             return Promise.resolve();
                           }
                           return Promise.reject(
