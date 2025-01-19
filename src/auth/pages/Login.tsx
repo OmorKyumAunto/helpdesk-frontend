@@ -110,7 +110,7 @@ export const Login = () => {
                       }}
                     >
                       <span style={{ color: "black" }}>
-                        {/* <Link to="/forget-password"> Forget Password? </Link> */}
+                        <Link to="/forget-password"> Forget Password? </Link>
                       </span>
                     </div>
                   </Col>
