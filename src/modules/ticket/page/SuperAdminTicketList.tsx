@@ -192,6 +192,14 @@ const SuperAdminTicketList = ({
                               {ticket.ticket_created_employee_id}
                             </p>
                             <p>
+                              <strong>Designation:</strong>{" "}
+                              {ticket.created_employee_designation}
+                            </p>
+                            <p>
+                              <strong>Department:</strong>{" "}
+                              {ticket.created_employee_department}
+                            </p>
+                            <p>
                               <strong>Email:</strong>{" "}
                               {ticket.ticket_created_employee_email}
                             </p>
@@ -223,6 +231,14 @@ const SuperAdminTicketList = ({
                                 <p>
                                   <strong>ID:</strong>{" "}
                                   {ticket.ticket_solved_employee_id}
+                                </p>
+                                <p>
+                                  <strong>Designation:</strong>{" "}
+                                  {ticket.solved_employee_designation}
+                                </p>
+                                <p>
+                                  <strong>Department:</strong>{" "}
+                                  {ticket.solved_employee_department}
                                 </p>
                                 <p>
                                   <strong>Email:</strong>{" "}

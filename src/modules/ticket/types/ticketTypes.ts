@@ -21,9 +21,13 @@ export interface IRaiseTicketList {
   asset_category: string;
   ticket_solved_employee_id: number;
   ticket_solved_employee_name: string;
+  solved_employee_department: string;
+  solved_employee_desiganation: string;
   solved_employee_email:string;
   solved_employee_contact_no:string;
   solved_employee_unit_name:string;
+  created_employee_designation: string;
+  created_employee_department: string;
 }
 export interface IAdminTicketList {
   user_id: number;
@@ -53,9 +57,13 @@ export interface IAdminTicketList {
   asset_purchase_date: string;
   ticket_created_employee_id: string;
   ticket_created_employee_name: string;
+  created_employee_designation: string;
+  created_employee_department: string;
   ticket_created_employee_email: string;
   ticket_solved_employee_id: number;
   ticket_solved_employee_name: string;
+  solved_employee_department: string;
+  solved_employee_designation: string;
   solved_employee_email:string;
   solved_employee_contact_no:string;
   solved_employee_unit_name:string;
@@ -115,8 +123,12 @@ export interface ITicketDashboardReport {
   asset_serial_number: string;
   ticket_created_employee_name: string;
   ticket_created_employee_id: string;
+  created_employee_designation: string;
+  created_employee_department: string;
   ticket_solved_employee_name: string;
-  ticket_solved_employee_id: string;
+  ticket_solved_employee_employee_id: string;
+  solved_employee_department: string;
+  solved_employee_desiganation: string;
   solved_employee_email:string;
   solved_employee_contact_no:string;
   solved_employee_unit_name:string;
