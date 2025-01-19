@@ -109,7 +109,7 @@ const ResetPassword = () => {
                   <Form.Item
                     name="confirmPassword"
                     label="Confirm Password"
-                    dependencies={["password"]}
+                    dependencies={["newPassword"]}
                     rules={[
                       {
                         required: true,
@@ -117,11 +117,12 @@ const ResetPassword = () => {
                       },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          const password = getFieldValue("password");
-                          if (!value || password === value) {
+                          if (!value || getFieldValue("newPassword") === value) {
                             return Promise.resolve();
                           }
-                          return Promise.reject(new Error("The two passwords do not match!"));
+                          return Promise.reject(
+                            new Error("The two passwords do not match!")
+                          );
                         },
                       }),
                     ]}
@@ -131,7 +132,6 @@ const ResetPassword = () => {
                       placeholder="Confirm your password"
                     />
                   </Form.Item>
-
                 </Col>
 
                 <Col xs={24}>
