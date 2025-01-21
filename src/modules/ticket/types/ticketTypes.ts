@@ -23,11 +23,21 @@ export interface IRaiseTicketList {
   ticket_solved_employee_name: string;
   solved_employee_department: string;
   solved_employee_desiganation: string;
-  solved_employee_email:string;
-  solved_employee_contact_no:string;
-  solved_employee_unit_name:string;
+  solved_employee_email: string;
+  solved_employee_contact_no: string;
+  solved_employee_unit_name: string;
   created_employee_designation: string;
   created_employee_department: string;
+  action_by_unit_name: string,
+  action_by_contact_no: string,
+  action_by_email: string,
+  action_by_department: string,
+  action_by_designation: string,
+  action_by_name: string,
+  action_by_employee_id: number,
+  forward_details: string,
+  forward_remarks: string,
+  forward_date: string;
 }
 export interface IAdminTicketList {
   user_id: number;
@@ -64,11 +74,24 @@ export interface IAdminTicketList {
   ticket_solved_employee_name: string;
   solved_employee_department: string;
   solved_employee_designation: string;
-  solved_employee_email:string;
-  solved_employee_contact_no:string;
-  solved_employee_unit_name:string;
-  created_employee_contact_no:string;
-  created_employee_unit_name:string;
+  solved_employee_email: string;
+  solved_employee_contact_no: string;
+  solved_employee_unit_name: string;
+  created_employee_contact_no: string;
+  created_employee_unit_name: string;
+  action_by_unit_name: string,
+  action_by_contact_no: string,
+  action_by_email: string,
+  action_by_department: string,
+  action_by_designation: string,
+  action_by_name: string,
+  action_by_employee_id: number,
+  forward_details: string,
+  forward_remarks: string,
+  forward_date: string;
+
+
+
 }
 export interface ICommentList {
   id: number;
@@ -129,9 +152,9 @@ export interface ITicketDashboardReport {
   ticket_solved_employee_employee_id: string;
   solved_employee_department: string;
   solved_employee_desiganation: string;
-  solved_employee_email:string;
-  solved_employee_contact_no:string;
-  solved_employee_unit_name:string;
+  solved_employee_email: string;
+  solved_employee_contact_no: string;
+  solved_employee_unit_name: string;
   asset_unit_title: string;
   ticket_updated_at: Date;
   asset_unit_id: number;

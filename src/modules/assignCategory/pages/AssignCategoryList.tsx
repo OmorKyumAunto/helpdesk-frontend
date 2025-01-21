@@ -66,7 +66,7 @@ const AssignCategoryList = () => {
                 placeholder="Search..."
               />
             </div>
-            <Select
+            {/* <Select
               style={{ width: "180px" }}
               onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
               placeholder="Select Unit Name"
@@ -82,7 +82,7 @@ const AssignCategoryList = () => {
               <Option value="EUDB">EUDB</Option>
               <Option value="Thanbee Complex">Thanbee Complex</Option>
               <Option value="Flamingo2">Flamingo2</Option>
-            </Select>
+            </Select> */}
           </div>
           <div>
             <Table
