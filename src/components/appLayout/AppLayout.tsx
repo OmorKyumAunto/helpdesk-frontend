@@ -347,7 +347,10 @@ export const AppLayout = () => {
         <Header
           style={{
             padding: 0,
-            background: roleId === 3 ? "#8DC73F" : "#1775BB",
+            background: roleId === 3
+              ? "linear-gradient(135deg, #8DC73F, #6EBF34)"
+              : "linear-gradient(135deg, #4e6ad0, #0d3c6e)",
+
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",

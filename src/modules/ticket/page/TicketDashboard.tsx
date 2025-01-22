@@ -1,6 +1,8 @@
 import { Card, Col, Grid, Progress, Row, Space, Table, Typography } from "antd";
 import { Tooltip as AntdTooltip } from "antd";
-import { FaSquarePollVertical } from "react-icons/fa6";
+import { FaTicketAlt, FaCheckCircle, FaSpinner, FaExclamationCircle, FaArrowRight } from 'react-icons/fa';
+import { ImSpinner9 } from "react-icons/im";
+import { IoCaretForwardCircle } from "react-icons/io5";
 import {
   BarChart,
   Bar,
@@ -44,32 +46,45 @@ const TicketDashboard = ({
       title: "All Ticket",
       value: "",
       data: data?.data?.total_ticket,
+      color: "rgba(38, 0, 255, 0.8)", // Orange for All Ticket
+      icon: <FaTicketAlt size={28} />, // Ticket icon for "All Ticket"
     },
     {
       id: 2,
       title: "Solved",
       value: "solved",
       data: data?.data?.total_solve,
+      color: "rgba(0, 128, 0, 0.8)", // Green for Solved
+      icon: <FaCheckCircle size={28} />, // Check circle icon for "Solved"
     },
     {
       id: 3,
       title: "In Progress",
       value: "inprogress",
       data: data?.data?.total_inprogress,
+      color: "rgba(80, 20, 140, 0.8)", // Purple for In Progress
+      icon: <ImSpinner9 size={28} />, // Spinner icon for "In Progress"
     },
     {
       id: 4,
       title: "Unsolved",
       value: "unsolved",
       data: data?.data?.total_unsolved,
+      color: "rgb(219, 68, 55)", // Red for Unsolved
+      icon: <FaExclamationCircle size={28} />, // Exclamation circle for "Unsolved"
     },
     {
       id: 5,
       title: "Forward",
       value: "forward",
       data: data?.data?.total_forward,
+      color: "rgba(0, 150, 117, 0.8)", // Blue for Forward
+      icon: <IoCaretForwardCircle size={28} />, // Arrow icon for "Forward"
     },
   ];
+
+
+
   const ticketData = barData?.data || [];
 
   return (
@@ -81,71 +96,74 @@ const TicketDashboard = ({
             style={{ width: lg ? "20%" : md ? "50%" : "100%" }}
           >
             <Card
-              className="bg-[#ba45ba] text-white card-hover-stat"
+              className="card-hover-stat"
               onClick={() => {
                 setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
                 setTicketValue && setTicketValue(item.value);
               }}
               style={{
                 textAlign: "center",
-                backgroundColor: "#0d3c6e",
+                backgroundColor: item.color,
                 color: "white",
                 borderRadius: "15px",
                 cursor: "pointer",
+                position: "relative",
+                overflow: "hidden",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
               }}
             >
               <div>
-                <FaSquarePollVertical size={28} />
+                {item.icon} {/* Dynamic icon rendering */}
               </div>
               <h3>{item.title}</h3>
               <h1>{item.data}</h1>
+
+              <style>
+                {`
+          .card-hover-stat {
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
+
+          .card-hover-stat:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+          }
+
+          .card-hover-stat::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+              circle,
+              rgba(255, 255, 255, 0.2) 0%,
+              rgba(255, 255, 255, 0.05) 100%
+            );
+            mix-blend-mode: overlay;
+            opacity: 0.9;
+            animation: pulse 3s infinite ease-in-out;
+          }
+
+          @keyframes pulse {
+            0%, 100% {
+              transform: scale(1);
+              opacity: 0.9;
+            }
+            50% {
+              transform: scale(1.05);
+              opacity: 0.7;
+            }
+          }
+        `}
+              </style>
             </Card>
-
-            <style>
-              {`
-    .card-hover-stat {
-      position: relative;
-      overflow: hidden;
-      border-radius: 15px; /* Rounded corners */
-      transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth zoom-in/out and background transition */
-    }
-
-    .card-hover-stat:hover {
-      transform: scale(1.05);  /* Zoom-in effect on hover */
-      background-color: #9f33a0;  /* Subtle background color change */
-    }
-
-    .card-hover-stat::before {
-      content: "";
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
-      border-radius: 15px; /* Matching rounded corners */
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;  /* Prevent interaction with inner border */
-    }
-
-    .card-hover-stat:hover::before {
-      opacity: 0;  /* Fade in the inner border on hover */
-    }
-
-    .card-hover-stat h3 {
-      font-size: 18px;  /* Smaller title font */
-    }
-
-    .card-hover-stat h1 {
-      font-size: 24px;  /* Adjusted font size */
-      font-weight: bold;
-      margin-top: 4px;
-    }
-  `}
-            </style>
           </Col>
         ))}
+
+
 
         {/* Bar Chart */}
         <Col xs={24} sm={24} md={24} lg={18}>

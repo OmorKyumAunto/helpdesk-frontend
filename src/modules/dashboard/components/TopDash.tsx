@@ -7,6 +7,7 @@ import AfternoonSunIcon from "../../../assets/afternoon.png";
 import EveningMoonIcon from "../../../assets/evening.png";
 import NightMoonIcon from "../../../assets/night.png";
 import { imageURL } from "../../../app/slice/baseQuery";
+import WeatherWidgetTop from "../components/WeatherWidgetTop";
 import { useGetMeQuery } from "../../../app/api/userApi";
 
 // Styled Components CSS-in-JS solution
@@ -53,18 +54,22 @@ const TopDash = () => {
       <div className="top-dash-content">
         <div className="top-dash-text">
           <h1 className="greeting">
-            {greeting}, {profile?.data?.name}
+            {greeting}, {profile?.data?.name || "User"}
           </h1>
           <p className="sub-text">
-            It's a lovely {timeOfDay}! Welcome to DBL Group Asset System
+            Welcome Back! Your IT Support Journey Starts Here.
           </p>
         </div>
+
         <div className="top-dash-icon">
-          <img
-            src={icon}
-            alt={`${timeOfDay} Icon`}
-            className="time-icon"
-          />
+          <div className="icon-wrapper">
+            <img src={icon} alt={`${timeOfDay} Icon`} className="time-icon" />
+          </div>
+          {(profile?.data?.role_id === 1 || profile?.data?.role_id === 2) && (
+            <div className="weather-wrapper">
+              <WeatherWidgetTop />
+            </div>
+          )}
         </div>
       </div>
     </StyledCard>
@@ -73,22 +78,22 @@ const TopDash = () => {
 
 export default TopDash;
 
-// Styled components with CSS animations
-
+// Styled components with animated multi-color background
 const StyledCard = styled(Card)`
-  background: linear-gradient(135deg, #4e6ad0, #0d3c6e); /* Blue Shaded Gradient */
+  background: linear-gradient(135deg, #4e6ad0, #0d3c6e,rgb(30, 161, 212), #ff6b6b); /* Initial Gradient */
+  background-size: 400% 400%; /* Ensures smooth animation transition */
   color: white;
   border-radius: 20px;
-  padding: 20px;
+  padding: 12px;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, opacity 0.4s ease-out;
-  animation: cardBounce 2s ease-in-out infinite alternate;
-  font-family: 'Poppins', sans-serif; /* Updated font family to Poppins */
+  animation: cardBounce 3s ease-in-out infinite alternate, colorShift 10s ease-in-out infinite;
+  font-family: 'Poppins', sans-serif;
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.3);
-    opacity: 0.9; /* Fade in and out effect for the entire card */
+    opacity: 0.9;
   }
 
   @keyframes cardBounce {
@@ -97,6 +102,18 @@ const StyledCard = styled(Card)`
     }
     100% {
       transform: translateY(-10px);
+    }
+  }
+
+  @keyframes colorShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
     }
   }
 
@@ -131,7 +148,7 @@ const StyledCard = styled(Card)`
   }
 
   .sub-text {
-    font-size: 1.0rem;
+    font-size: 1rem;
     margin-top: 10px;
     animation: fadeInText 1.2s ease-out;
   }
@@ -157,24 +174,25 @@ const StyledCard = styled(Card)`
   }
 
   .top-dash-icon {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .weather-wrapper {
+    font-size: 0.8rem;
+    text-align: left;
+  }
+
+  .icon-wrapper {
     width: 90px;
     height: 90px;
     display: flex;
     justify-content: center;
     align-items: center;
     animation: bounceIcon 1.5s ease-out infinite alternate;
-  }
-
-  @keyframes bounceIcon {
-    0% {
-      transform: scale(0.9);
-    }
-    50% {
-      transform: scale(1.05);
-    }
-    100% {
-      transform: scale(1);
-    }
   }
 
   .time-icon {
@@ -187,5 +205,17 @@ const StyledCard = styled(Card)`
   .time-icon:hover {
     transform: scale(1.2);
     filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.4));
+  }
+
+  @keyframes bounceIcon {
+    0% {
+      transform: scale(0.9);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 `;

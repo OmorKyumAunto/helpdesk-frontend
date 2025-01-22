@@ -17,6 +17,7 @@ import GraphChartApex from "../components/ApexChart";
 import ApexPieChart from "../components/ApexPieChart";
 import BloodTypeChart from "../components/BloodChart";
 import TopDash from "../components/TopDash";
+import WeatherWidget from "../components/WeatherWidget";
 import GraphChartV2 from "../components/GraphChartV2";
 import CategoryPieChart from "../components/CategoryPieChat";
 import TicketPieChart from "../components/TicketPieChart";
@@ -312,6 +313,12 @@ const DashboardCards = () => {
         <Row style={{ marginTop: "5px" }} gutter={[12, 6]}>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Row gutter={[6, 12]}>
+            <Col xs={24} sm={24} md={24}>
+            <div>
+                <WeatherWidget />
+              </div>
+            </Col>
+              
               <Col xs={24} sm={24} md={24}>
                 <Link to={"/employee/employee-list"}>
                   <Card className="bg-[#ffa500] text-white card-hover-employee">
@@ -324,6 +331,7 @@ const DashboardCards = () => {
                         position: "relative",
                       }}
                     >
+
                       <div>
                         <Typography.Title style={{ color: "white" }} level={4}>
                           Total Employee
@@ -392,6 +400,7 @@ const DashboardCards = () => {
                   </style>
                 </Link>
               </Col>
+
               <Col xs={24} sm={24} md={24}>
                 <Link to={"/employee/distributed"}>
                   <Card className="bg-[#8dc73f] text-white h-full card-hover-disbursements">
@@ -404,6 +413,7 @@ const DashboardCards = () => {
                         position: "relative",
                       }}
                     >
+
                       <div>
                         <Typography.Title style={{ color: "white" }} level={4}>
                           Disbursements
@@ -481,7 +491,7 @@ const DashboardCards = () => {
             </Card>
           </Col>
           <Col xs={24} sm={24} md={24} lg={24}>
-            <Row style={{ marginTop: "4px" }}justify="center">
+            <Row style={{ marginTop: "4px" }} justify="center">
               <Col xs={24} sm={22} md={20} lg={24}>
                 <Card
                   style={{
@@ -542,6 +552,7 @@ const DashboardCards = () => {
                         </div> */}
                       </div>
                     </Col>
+
 
                     {/* Right Section */}
                     <Col xs={24} sm={12}>

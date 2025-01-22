@@ -681,108 +681,116 @@ const AdminTicketList = ({
                               whiteSpace: "pre-wrap",
                             }}
                           >
-                            {ticket.description}
+                            {ticket.description.split(/(https?:\/\/[^\s]+)/g).map((part, index) => {
+                              // If the part matches a URL, render it as a link
+                              if (part.match(/https?:\/\/[^\s]+/)) {
+                                return (
+                                  <a
+                                    key={index}
+                                    href={part}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                      color: "#007bff", // Link color
+                                      textDecoration: "underline", // Underline the link
+                                    }}
+                                  >
+                                    {part}
+                                  </a>
+                                );
+                              }
+
+                              // If it's not a URL, just render the text normally
+                              return <span key={index}>{part}</span>;
+                            })}
                           </div>
                         </Descriptions.Item>
+
                       </Descriptions>
 
-                      {/* <p style={{ color: "#444" }}>
-                        <strong>Attachment:</strong>
-                        {isPDF ? (
-                          <a
-                            href={`${imageURLNew}/uploads/${
-                              ticket?.attachment?.split("ticket\\")[1]
-                            }`}
-                            target="_blank"
-                          >
-                            <Button size="small">View PDF</Button>
-                          </a>
-                        ) : (
-                          <Image
-                            src={
-                              ticket.attachment
-                                ? `${imageURLNew}/uploads/${
-                                    ticket?.attachment?.split("ticket\\")[1]
-                                  }`
-                                : noImage
-                            }
-                            alt="attachment"
-                            width={30}
-                            style={{ maxHeight: "30px" }}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        )}
-                      </p> */}
                       <Card
                         style={{
                           marginTop: "1rem",
-                          // width: "50%",
-                          // margin: "0 auto",
                         }}
                         title="Comments"
                       >
                         <div>
                           {commentData?.data?.map((comment, index) => (
-                            <>
-                              <Space
-                                key={index}
-                                style={{
-                                  display: "flex",
-                                  gap: 4,
-                                  alignItems: "start",
-                                  marginBottom: "0.7rem",
-                                }}
-                              >
-                                <Image
-                                  src={noUser}
-                                  alt="user"
-                                  preview={false}
-                                  width={30}
-                                  height={30}
-                                  style={{ borderRadius: "50%" }}
-                                />
-                                <div>
+                            <Space
+                              key={index}
+                              style={{
+                                display: "flex",
+                                gap: 4,
+                                alignItems: "start",
+                                marginBottom: "0.7rem",
+                              }}
+                            >
+                              <Image
+                                src={noUser}
+                                alt="user"
+                                preview={false}
+                                width={30}
+                                height={30}
+                                style={{ borderRadius: "50%" }}
+                              />
+                              <div>
+                                <p
+                                  style={{
+                                    color: "black", // Text color black for non-user comments
+                                    backgroundColor:
+                                      profile?.employee_id === comment.employee_id
+                                        ? "#DCF8C6"  // Light green for the logged-in user's comment
+                                        : "#ECE5DD",  // Light grayish background for other users' comments
+                                    padding: "8px 12px",
+                                    borderRadius: "16px",
+                                    maxWidth: "80%", // To ensure it doesn't stretch too much
+                                    wordWrap: "break-word", // Wrap text nicely
+                                  }}
+                                >
                                   <p
                                     style={{
-                                      color:
-                                        profile?.employee_id ===
-                                          comment.employee_id
-                                          ? "white"
-                                          : "black",
-                                      backgroundColor:
-                                        profile?.employee_id ===
-                                          comment.employee_id
-                                          ? "#1775BB"
-                                          : "#E8E8E8",
-                                      padding: "6px 12px",
-                                      borderRadius: "16px",
+                                      fontWeight: "bold",
+                                      marginBottom: "0px",
                                     }}
                                   >
-                                    <p
-                                      style={{
-                                        fontWeight: "bold",
-                                        marginBottom: "0px",
-                                      }}
-                                    >
-                                      {comment.user_name} ({comment.employee_id}
-                                      )
-                                    </p>
-                                    {comment.comment_text}
+                                    {comment.user_name} ({comment.employee_id})
                                   </p>
-                                  <span
-                                    style={{
-                                      fontSize: "11px",
-                                      fontStyle: "italic",
-                                    }}
-                                  >
-                                    {dayjs(comment.created_at).fromNow()}{" "}
-                                    {comment.is_edit === 1 && "(Edited)"}
-                                  </span>
-                                </div>
-                              </Space>
-                            </>
+                                  {/* Apply link styling to URLs in the comment text */}
+                                  {comment.comment_text.split(/(https?:\/\/[^\s]+)/g).map((part, idx) => {
+                                    if (part.match(/https?:\/\/[^\s]+/)) {
+                                      return (
+                                        <a
+                                          key={idx}
+                                          href={part}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          style={{
+                                            color: "#007bff", // Link color (blue)
+                                            textDecoration: "underline", // Underline the link
+                                          }}
+                                        >
+                                          {part}
+                                        </a>
+                                      );
+                                    }
+
+                                    return <span key={idx}>{part}</span>; // Normal text (black)
+                                  })}
+                                </p>
+                                <span
+                                  style={{
+                                    fontSize: "11px",
+                                    fontStyle: "italic",
+                                  }}
+                                >
+                                  {dayjs(comment.created_at).fromNow()}{" "}
+                                  {comment.is_edit === 1 && "(Edited)"}
+                                </span>
+                              </div>
+                            </Space>
                           ))}
                         </div>
+
                         <Input.TextArea
                           rows={2}
                           value={newComment}
@@ -804,6 +812,8 @@ const AdminTicketList = ({
                           Add Comment
                         </Button>
                       </Card>
+
+
                     </div>
                   )}
                 </div>
