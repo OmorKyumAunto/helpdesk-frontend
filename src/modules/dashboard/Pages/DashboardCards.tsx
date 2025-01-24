@@ -319,6 +319,87 @@ const DashboardCards = () => {
               </div>
             </Col>
               
+            <Col xs={24} sm={24} md={24}>
+                <Link to={"/employee/distributed"}>
+                  <Card className="bg-[#8dc73f] text-white h-full card-hover-disbursements">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "16px", // Ensures consistent padding
+                        position: "relative",
+                      }}
+                    >
+
+                      <div>
+                        <Typography.Title style={{ color: "white" }} level={4}>
+                          Disbursements
+                        </Typography.Title>
+                        <p
+                          style={{
+                            textAlign: "center",
+                            fontSize: "20px",
+                            fontWeight: "bold",
+                            marginTop: "4px",
+                          }}
+                        >
+                          {empData?.data?.total_assign_count || 0}
+                        </p>
+                      </div>
+                      <div>
+                        <div
+                          className="bg-[#acd775]"
+                          style={{
+                            height: "70px",
+                            width: "70px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: "50%",
+                          }}
+                        >
+                          <MdOutlineAssignmentTurnedIn size={50} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <style>
+                      {`
+      .card-hover-disbursements {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px; /* Rounded corners */
+        transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth hover transitions */
+      }
+
+      .card-hover-disbursements:hover {
+        transform: scale(1.05); /* Zoom-in effect */
+        background-color: #72b92b; /* Subtle background color change */
+      }
+
+      .card-hover-disbursements::before {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
+        border-radius: 15px; /* Matching rounded corners */
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Prevent interaction */
+      }
+
+      .card-hover-disbursements:hover::before {
+        opacity: 0; /* Fade-in inner border on hover */
+      }
+    `}
+                    </style>
+                  </Card>
+                </Link>
+              </Col>
               <Col xs={24} sm={24} md={24}>
                 <Link to={"/employee/employee-list"}>
                   <Card className="bg-[#ffa500] text-white card-hover-employee">
@@ -401,87 +482,6 @@ const DashboardCards = () => {
                 </Link>
               </Col>
 
-              <Col xs={24} sm={24} md={24}>
-                <Link to={"/employee/distributed"}>
-                  <Card className="bg-[#8dc73f] text-white h-full card-hover-disbursements">
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "16px", // Ensures consistent padding
-                        position: "relative",
-                      }}
-                    >
-
-                      <div>
-                        <Typography.Title style={{ color: "white" }} level={4}>
-                          Disbursements
-                        </Typography.Title>
-                        <p
-                          style={{
-                            textAlign: "center",
-                            fontSize: "20px",
-                            fontWeight: "bold",
-                            marginTop: "4px",
-                          }}
-                        >
-                          {empData?.data?.total_assign_count || 0}
-                        </p>
-                      </div>
-                      <div>
-                        <div
-                          className="bg-[#acd775]"
-                          style={{
-                            height: "70px",
-                            width: "70px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderRadius: "50%",
-                          }}
-                        >
-                          <MdOutlineAssignmentTurnedIn size={50} />
-                        </div>
-                      </div>
-                    </div>
-
-                    <style>
-                      {`
-      .card-hover-disbursements {
-        position: relative;
-        overflow: hidden;
-        border-radius: 15px; /* Rounded corners */
-        transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth hover transitions */
-      }
-
-      .card-hover-disbursements:hover {
-        transform: scale(1.05); /* Zoom-in effect */
-        background-color: #72b92b; /* Subtle background color change */
-      }
-
-      .card-hover-disbursements::before {
-        content: "";
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-        border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
-        border-radius: 15px; /* Matching rounded corners */
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none; /* Prevent interaction */
-      }
-
-      .card-hover-disbursements:hover::before {
-        opacity: 0; /* Fade-in inner border on hover */
-      }
-    `}
-                    </style>
-                  </Card>
-                </Link>
-              </Col>
             </Row>
           </Col>
           <Col xs={24} sm={24} md={16}>
