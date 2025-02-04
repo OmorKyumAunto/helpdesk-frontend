@@ -14,7 +14,8 @@ import { TicketReportColumn } from "../utils/TicketReportColumns";
 import { useGetAssignCategoryListQuery } from "../../assignCategory/api/assignCategoryEndPoint";
 import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
 const { Option } = Select;
-const TicketReport = () => {
+
+const TicketReport = ({ ticketSolver }: { ticketSolver: string }) => {
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 50,
@@ -45,12 +46,13 @@ const TicketReport = () => {
   });
 
   useEffect(() => {
-    setFilter({
-      ...filter,
+    setFilter((prevFilter: any) => ({
+      ...prevFilter,
       limit: Number(pageSize),
       offset: skipValue,
-    });
-  }, [page, pageSize, skipValue]);
+      key: ticketSolver || prevFilter?.key,
+    }));
+  }, [page, pageSize, skipValue, ticketSolver]);
   const { data, isLoading, isFetching } = useGetTicketReportQuery({
     ...filter,
   });
@@ -86,10 +88,12 @@ const TicketReport = () => {
           <div style={{ width: "160px" }}>
             <Input
               prefix={<SearchOutlined />}
+              // defaultValue={ticketSolver}
               onChange={(e) =>
                 setFilter({ ...filter, key: e.target.value, offset: 0 })
               }
               placeholder="Search..."
+              allowClear
             />
           </div>
           <Select

@@ -1,6 +1,12 @@
 import { Card, Col, Grid, Progress, Row, Space, Table, Typography } from "antd";
 import { Tooltip as AntdTooltip } from "antd";
-import { FaTicketAlt, FaCheckCircle, FaSpinner, FaExclamationCircle, FaArrowRight } from 'react-icons/fa';
+import {
+  FaTicketAlt,
+  FaCheckCircle,
+  FaSpinner,
+  FaExclamationCircle,
+  FaArrowRight,
+} from "react-icons/fa";
 import { ImSpinner9 } from "react-icons/im";
 import { IoCaretForwardCircle } from "react-icons/io5";
 import {
@@ -24,6 +30,7 @@ interface TicketDashboardProps {
   setActiveKey: (key: string) => void;
   setTicketValue: (key: string) => void;
   setTicketPriorityValue: (key: string) => void;
+  setTicketSolver?: (key: string) => void;
   roleID: number;
 }
 
@@ -32,6 +39,7 @@ const TicketDashboard = ({
   roleID,
   setTicketValue,
   setTicketPriorityValue,
+  setTicketSolver,
 }: TicketDashboardProps) => {
   const { md, lg } = Grid.useBreakpoint();
   const { data } = useGetTicketDashboardCountQuery();
@@ -82,8 +90,6 @@ const TicketDashboard = ({
       icon: <IoCaretForwardCircle size={28} />, // Arrow icon for "Forward"
     },
   ];
-
-
 
   const ticketData = barData?.data || [];
 
@@ -163,8 +169,6 @@ const TicketDashboard = ({
           </Col>
         ))}
 
-
-
         {/* Bar Chart */}
         <Col xs={24} sm={24} md={24} lg={18}>
           <Card title="Last 12 Months Ticket Count">
@@ -189,7 +193,6 @@ const TicketDashboard = ({
                     fill="#ff4d4f"
                     name="Unsolved Tickets"
                   />
-
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -429,7 +432,6 @@ const TicketDashboard = ({
           </Card>
         </Col>
 
-
         {/* Pie Chart Component */}
         <Col xs={24} sm={24} md={24} lg={13}>
           <Card
@@ -466,12 +468,25 @@ const TicketDashboard = ({
                     <AntdTooltip
                       title={
                         <div style={{ lineHeight: "1.6" }}>
-                          <p><strong>Name:</strong> {record?.solved_by_name}</p>
-                          <p><strong>ID:</strong> {record?.employee_id}</p>
-                          <p><strong>Email:</strong> {record?.email}</p>
-                          <p><strong>Phone No:</strong> {record?.contact_no}</p>
-                          <p><strong>Unit:</strong> {record?.unit_name}</p>
-                          <p><strong>Total Solved Tickets:</strong> {record?.solved_ticket_count}</p>
+                          <p>
+                            <strong>Name:</strong> {record?.solved_by_name}
+                          </p>
+                          <p>
+                            <strong>ID:</strong> {record?.employee_id}
+                          </p>
+                          <p>
+                            <strong>Email:</strong> {record?.email}
+                          </p>
+                          <p>
+                            <strong>Phone No:</strong> {record?.contact_no}
+                          </p>
+                          <p>
+                            <strong>Unit:</strong> {record?.unit_name}
+                          </p>
+                          <p>
+                            <strong>Total Solved Tickets:</strong>{" "}
+                            {record?.solved_ticket_count}
+                          </p>
                         </div>
                       }
                     >
@@ -482,8 +497,19 @@ const TicketDashboard = ({
                           color: "#1775bb",
                           transition: "color 0.3s ease",
                         }}
-                        onMouseEnter={(e) => (e.target as HTMLSpanElement).style.color = "#0056b3"}
-                        onMouseLeave={(e) => (e.target as HTMLSpanElement).style.color = "#1775bb"}
+                        onClick={() => {
+                          setActiveKey && setActiveKey("3");
+                          setTicketSolver &&
+                            setTicketSolver(record?.solved_by_name);
+                        }}
+                        onMouseEnter={(e) =>
+                          ((e.target as HTMLSpanElement).style.color =
+                            "#0056b3")
+                        }
+                        onMouseLeave={(e) =>
+                          ((e.target as HTMLSpanElement).style.color =
+                            "#1775bb")
+                        }
                       >
                         {record?.solved_by_name}
                       </span>
@@ -518,8 +544,6 @@ const TicketDashboard = ({
             />
           </Card>
         </Col>
-
-
       </Row>
       {/* <ServiceDashboard /> */}
     </Card>
