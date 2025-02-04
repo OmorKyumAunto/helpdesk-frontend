@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Form,
   Input,
@@ -23,6 +23,7 @@ const { TextArea } = Input;
 
 const RaiseTicketForm = () => {
   const [form] = Form.useForm();
+  const [isCcVisible, setIsCcVisible] = useState(false); // State to manage CC Select visibility
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
@@ -52,6 +53,7 @@ const RaiseTicketForm = () => {
   useEffect(() => {
     if (isSuccess) {
       form.resetFields();
+      setIsCcVisible(false); // Reset CC visibility on form success
     }
   }, [isSuccess, form]);
 
@@ -60,6 +62,10 @@ const RaiseTicketForm = () => {
       return e;
     }
     return e?.fileList;
+  };
+
+  const handleCcButtonClick = () => {
+    setIsCcVisible(!isCcVisible); // Toggle CC Select visibility
   };
 
   return (
@@ -194,23 +200,33 @@ const RaiseTicketForm = () => {
               <Input placeholder="Enter Subject" />
             </Form.Item>
 
-            <Form.Item label="CC" name="cc" style={{ marginBottom: "8px" }}>
-              <Select
-                loading={empLoading}
-                placeholder="Select Employee"
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.label ?? "")
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-                options={allEmployee?.data?.map((item: IEmployee) => ({
-                  value: item.id,
-                  label: `${item.name} (${item.email})`,
-                }))}
-                allowClear
-              />
+            <Form.Item style={{ marginBottom: "8px" }}>
+              <Button
+                onClick={handleCcButtonClick}
+                size="small"
+                style={{ marginBottom: "8px" }}
+              >
+                CC
+              </Button>
+              {isCcVisible && (
+                <Select
+                  loading={empLoading}
+                  placeholder="Select Employee"
+                  showSearch
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={allEmployee?.data?.map((item: IEmployee) => ({
+                    value: item.id,
+                    label: `${item.name} (${item.email})`,
+                  }))}
+                  allowClear
+                  style={{ width: "100%" }}
+                />
+              )}
             </Form.Item>
 
             <Form.Item
@@ -255,7 +271,6 @@ const RaiseTicketForm = () => {
                 backgroundColor: "#1775bb",
                 borderColor: "#1775bb",
                 fontWeight: "bold",
-
                 transition: "background-color 0.3s ease",
               }}
               onMouseEnter={(e) =>
