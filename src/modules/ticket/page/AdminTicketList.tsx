@@ -300,18 +300,40 @@ const AdminTicketList = ({
                           <Tooltip
                             title={
                               <div>
-                                <p><strong>Name:</strong> {ticket.action_by_name || "N/A"}</p>
-                                <p><strong>ID:</strong> {ticket.action_by_employee_id || "N/A"}</p>
-                                <p><strong>Designation:</strong> {ticket.action_by_designation || "N/A"}</p>
-                                <p><strong>Department:</strong> {ticket.action_by_department || "N/A"}</p>
-                                <p><strong>Email:</strong> {ticket.action_by_email || "N/A"}</p>
-                                <p><strong>Phone No:</strong> {ticket.action_by_contact_no || "N/A"}</p>
-                                <p><strong>Unit:</strong> {ticket.action_by_unit_name || "N/A"}</p>
+                                <p>
+                                  <strong>Name:</strong>{" "}
+                                  {ticket.action_by_name || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>ID:</strong>{" "}
+                                  {ticket.action_by_employee_id || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>Designation:</strong>{" "}
+                                  {ticket.action_by_designation || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>Department:</strong>{" "}
+                                  {ticket.action_by_department || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>Email:</strong>{" "}
+                                  {ticket.action_by_email || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>Phone No:</strong>{" "}
+                                  {ticket.action_by_contact_no || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>Unit:</strong>{" "}
+                                  {ticket.action_by_unit_name || "N/A"}
+                                </p>
                               </div>
                             }
                           >
                             <span>
-                              Last Updated By: {ticket.action_by_name || "Unknown"} (
+                              Last Updated By:{" "}
+                              {ticket.action_by_name || "Unknown"} (
                               {ticket.action_by_employee_id || "Unknown"})
                             </span>
                           </Tooltip>
@@ -321,7 +343,9 @@ const AdminTicketList = ({
                           <Tooltip
                             title={
                               <div>
-                                <p><strong>No Action has Taken Yet</strong></p>
+                                <p>
+                                  <strong>No Action has Taken Yet</strong>
+                                </p>
                               </div>
                             }
                           >
@@ -333,18 +357,40 @@ const AdminTicketList = ({
                           <Tooltip
                             title={
                               <div>
-                                <p><strong>Name:</strong> {ticket.action_by_name || "N/A"}</p>
-                                <p><strong>ID:</strong> {ticket.action_by_employee_id || "N/A"}</p>
-                                <p><strong>Designation:</strong> {ticket.action_by_designation || "N/A"}</p>
-                                <p><strong>Department:</strong> {ticket.action_by_department || "N/A"}</p>
-                                <p><strong>Email:</strong> {ticket.action_by_email || "N/A"}</p>
-                                <p><strong>Phone No:</strong> {ticket.action_by_contact_no || "N/A"}</p>
-                                <p><strong>Unit:</strong> {ticket.action_by_unit_name || "N/A"}</p>
+                                <p>
+                                  <strong>Name:</strong>{" "}
+                                  {ticket.action_by_name || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>ID:</strong>{" "}
+                                  {ticket.action_by_employee_id || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>Designation:</strong>{" "}
+                                  {ticket.action_by_designation || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>Department:</strong>{" "}
+                                  {ticket.action_by_department || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>Email:</strong>{" "}
+                                  {ticket.action_by_email || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>Phone No:</strong>{" "}
+                                  {ticket.action_by_contact_no || "N/A"}
+                                </p>
+                                <p>
+                                  <strong>Unit:</strong>{" "}
+                                  {ticket.action_by_unit_name || "N/A"}
+                                </p>
                               </div>
                             }
                           >
                             <span>
-                              Last Updated By: {ticket.action_by_name || "Unknown"} (
+                              Last Updated By:{" "}
+                              {ticket.action_by_name || "Unknown"} (
                               {ticket.action_by_employee_id || "Unknown"})
                             </span>
                           </Tooltip>
@@ -496,27 +542,29 @@ const AdminTicketList = ({
                         items={[
                           ...(ticket.ticket_status === "forward"
                             ? [
-                              {
-                                key: "0",
-                                label: "Forward Details",
-                                children: ticket.forward_details || "N/A",
-                                span: 4,
-                              },
-                              {
-                                key: "0-1",
-                                label: "Forward Remarks",
-                                children: ticket.forward_remarks || "N/A",
-                                span: 4,
-                              },
-                              {
-                                key: "0-2",
-                                label: "Forward Date",
-                                children: ticket.forward_date
-                                  ? dayjs(ticket.forward_date).format("DD MMM YYYY h:mm A")
-                                  : "N/A",
-                                span: 4,
-                              },
-                            ]
+                                {
+                                  key: "0",
+                                  label: "Forward Details",
+                                  children: ticket.forward_details || "N/A",
+                                  span: 4,
+                                },
+                                {
+                                  key: "0-1",
+                                  label: "Forward Remarks",
+                                  children: ticket.forward_remarks || "N/A",
+                                  span: 4,
+                                },
+                                {
+                                  key: "0-2",
+                                  label: "Forward Date",
+                                  children: ticket.forward_date
+                                    ? dayjs(ticket.forward_date).format(
+                                        "DD MMM YYYY h:mm A"
+                                      )
+                                    : "N/A",
+                                  span: 4,
+                                },
+                              ]
                             : []),
                           {
                             key: "1",
@@ -527,36 +575,39 @@ const AdminTicketList = ({
                           {
                             key: "2",
                             label: "Assign Date",
-                            children: dayjs(ticket.ticket_created_at).format("DD MMM YYYY h:mm A"),
+                            children: dayjs(ticket.ticket_created_at).format(
+                              "DD MMM YYYY h:mm A"
+                            ),
                             span: 2,
                           },
                           {
                             key: "3",
                             label: "Last Updated at",
-                            children:
-                              dayjs(ticket.ticket_created_at).isSame(dayjs(ticket.ticket_updated_at))
-                                ? "Not Updated Yet"
-                                : `${dayjs(ticket.ticket_updated_at).format("DD MMM YYYY h:mm A")} (${dayjs(
+                            children: dayjs(ticket.ticket_created_at).isSame(
+                              dayjs(ticket.ticket_updated_at)
+                            )
+                              ? "Not Updated Yet"
+                              : `${dayjs(ticket.ticket_updated_at).format(
+                                  "DD MMM YYYY h:mm A"
+                                )} (${dayjs(
                                   ticket.ticket_updated_at
                                 ).fromNow()})`,
                             span: 2,
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
-                              {
-                                key: "4",
-                                label: "Time Taken",
-                                children: formatTimeDifference(
-                                  dayjs(ticket.ticket_created_at),
-                                  dayjs(ticket.ticket_updated_at)
-                                ),
-                              },
-                            ]
+                                {
+                                  key: "4",
+                                  label: "Time Taken",
+                                  children: formatTimeDifference(
+                                    dayjs(ticket.ticket_created_at),
+                                    dayjs(ticket.ticket_updated_at)
+                                  ),
+                                },
+                              ]
                             : []),
                         ]}
                       />
-
-
 
                       <Divider />
                       {/* <Descriptions
@@ -625,12 +676,13 @@ const AdminTicketList = ({
                                   href={
                                     ticket.attachment.startsWith("https")
                                       ? ticket.attachment
-                                      : `${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
-                                        ? ticket.attachment.split(
-                                          "ticket\\"
-                                        )[1]
-                                        : ticket.attachment
-                                      }`
+                                      : `${imageURLNew}/uploads/${
+                                          ticket.attachment.includes("ticket\\")
+                                            ? ticket.attachment.split(
+                                                "ticket\\"
+                                              )[1]
+                                            : ticket.attachment
+                                        }`
                                   }
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -648,10 +700,11 @@ const AdminTicketList = ({
                               ) : (
                                 <a>
                                   <Image
-                                    src={`${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
-                                      ? ticket.attachment.split("ticket\\")[1]
-                                      : ticket.attachment
-                                      }`}
+                                    src={`${imageURLNew}/uploads/${
+                                      ticket.attachment.includes("ticket\\")
+                                        ? ticket.attachment.split("ticket\\")[1]
+                                        : ticket.attachment
+                                    }`}
                                     alt="attachment"
                                     width={40}
                                     style={{ maxHeight: "40px" }}
@@ -680,32 +733,11 @@ const AdminTicketList = ({
                               wordWrap: "break-word",
                               whiteSpace: "pre-wrap",
                             }}
-                          >
-                            {ticket.description.split(/(https?:\/\/[^\s]+)/g).map((part, index) => {
-                              // If the part matches a URL, render it as a link
-                              if (part.match(/https?:\/\/[^\s]+/)) {
-                                return (
-                                  <a
-                                    key={index}
-                                    href={part}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{
-                                      color: "#007bff", // Link color
-                                      textDecoration: "underline", // Underline the link
-                                    }}
-                                  >
-                                    {part}
-                                  </a>
-                                );
-                              }
-
-                              // If it's not a URL, just render the text normally
-                              return <span key={index}>{part}</span>;
-                            })}
-                          </div>
+                            dangerouslySetInnerHTML={{
+                              __html: ticket.description,
+                            }}
+                          />
                         </Descriptions.Item>
-
                       </Descriptions>
 
                       <Card
@@ -738,9 +770,10 @@ const AdminTicketList = ({
                                   style={{
                                     color: "black", // Text color black for non-user comments
                                     backgroundColor:
-                                      profile?.employee_id === comment.employee_id
-                                        ? "#DCF8C6"  // Light green for the logged-in user's comment
-                                        : "#ECE5DD",  // Light grayish background for other users' comments
+                                      profile?.employee_id ===
+                                      comment.employee_id
+                                        ? "#DCF8C6" // Light green for the logged-in user's comment
+                                        : "#ECE5DD", // Light grayish background for other users' comments
                                     padding: "8px 12px",
                                     borderRadius: "16px",
                                     maxWidth: "80%", // To ensure it doesn't stretch too much
@@ -756,26 +789,28 @@ const AdminTicketList = ({
                                     {comment.user_name} ({comment.employee_id})
                                   </p>
                                   {/* Apply link styling to URLs in the comment text */}
-                                  {comment.comment_text.split(/(https?:\/\/[^\s]+)/g).map((part, idx) => {
-                                    if (part.match(/https?:\/\/[^\s]+/)) {
-                                      return (
-                                        <a
-                                          key={idx}
-                                          href={part}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          style={{
-                                            color: "#007bff", // Link color (blue)
-                                            textDecoration: "underline", // Underline the link
-                                          }}
-                                        >
-                                          {part}
-                                        </a>
-                                      );
-                                    }
+                                  {comment.comment_text
+                                    .split(/(https?:\/\/[^\s]+)/g)
+                                    .map((part, idx) => {
+                                      if (part.match(/https?:\/\/[^\s]+/)) {
+                                        return (
+                                          <a
+                                            key={idx}
+                                            href={part}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{
+                                              color: "#007bff", // Link color (blue)
+                                              textDecoration: "underline", // Underline the link
+                                            }}
+                                          >
+                                            {part}
+                                          </a>
+                                        );
+                                      }
 
-                                    return <span key={idx}>{part}</span>; // Normal text (black)
-                                  })}
+                                      return <span key={idx}>{part}</span>; // Normal text (black)
+                                    })}
                                 </p>
                                 <span
                                   style={{
@@ -812,8 +847,6 @@ const AdminTicketList = ({
                           Add Comment
                         </Button>
                       </Card>
-
-
                     </div>
                   )}
                 </div>

@@ -324,3 +324,14 @@ code {
   height: 50vh;
   width: 100%;
 }
+.ql-container {
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+.ql-toolbar {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+.ql-editor {
+  min-height: 100px;
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Form,
   Input,
@@ -17,7 +17,8 @@ import { useGetEmployeeAllDistributedAssetQuery } from "../../assets/api/assetsE
 import { useCreateRaiseTicketMutation } from "../api/ticketEndpoint";
 import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
 import { IEmployee } from "../../employee/types/employeeTypes";
-
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -33,7 +34,7 @@ const RaiseTicketForm = () => {
   const { data: categoryData, isLoading: categoryLoading } =
     useGetCategoryActiveListQuery({});
   const [create, { isSuccess }] = useCreateRaiseTicketMutation();
-
+  const editor = useRef(null);
   const handleSubmit = (values: any) => {
     const formData = new FormData();
     for (const key in values) {
@@ -47,6 +48,7 @@ const RaiseTicketForm = () => {
         }
       }
     }
+
     create(formData);
   };
 
@@ -200,15 +202,15 @@ const RaiseTicketForm = () => {
               <Input placeholder="Enter Subject" />
             </Form.Item>
 
-            <Form.Item style={{ marginBottom: "8px" }}>
-              <Button
-                onClick={handleCcButtonClick}
-                size="small"
-                style={{ marginBottom: "8px" }}
-              >
-                CC
-              </Button>
-              {isCcVisible && (
+            <Button
+              onClick={handleCcButtonClick}
+              size="small"
+              style={{ marginBottom: "8px" }}
+            >
+              CC
+            </Button>
+            {isCcVisible && (
+              <Form.Item name="cc" style={{ marginBottom: "8px" }}>
                 <Select
                   loading={empLoading}
                   placeholder="Select Employee"
@@ -226,10 +228,10 @@ const RaiseTicketForm = () => {
                   allowClear
                   style={{ width: "100%" }}
                 />
-              )}
-            </Form.Item>
+              </Form.Item>
+            )}
 
-            <Form.Item
+            {/* <Form.Item
               label="Message"
               name="description"
               style={{ marginBottom: "8px" }}
@@ -238,6 +240,16 @@ const RaiseTicketForm = () => {
               ]}
             >
               <TextArea rows={4} placeholder="Enter Description" />
+            </Form.Item> */}
+            <Form.Item
+              label="Message"
+              name="description"
+              style={{ marginBottom: "8px" }}
+              rules={[
+                { required: true, message: "Please enter a description!" },
+              ]}
+            >
+              <ReactQuill theme="snow" placeholder="Enter Description..." />
             </Form.Item>
 
             <Form.Item

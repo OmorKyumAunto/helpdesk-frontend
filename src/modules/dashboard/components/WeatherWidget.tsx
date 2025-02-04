@@ -57,7 +57,9 @@ const WeatherWidget: React.FC = () => {
             }, 10 * 60 * 1000); // Refresh every 10 minutes
           },
           () => {
-            setError("Unable to access your location. Please enable location services.");
+            setError(
+              "Unable to access your location. Please enable location services."
+            );
             setLoading(false);
           }
         );
@@ -78,12 +80,13 @@ const WeatherWidget: React.FC = () => {
       style={{
         fontFamily: "'Roboto', sans-serif",
         width: "100%",
-        maxWidth: "360px",
-        minWidth: "260px",
+        // maxWidth: "360px",
+        // minWidth: "260px",
         margin: "3px auto",
         padding: "25px",
         borderRadius: "16px",
-        background: "linear-gradient(60deg,rgb(18, 238, 201),rgb(44, 171, 230), #1A2980, #203A43)",
+        background:
+          "linear-gradient(60deg,rgb(18, 238, 201),rgb(44, 171, 230), #1A2980, #203A43)",
         backgroundSize: "400% 400%",
         animation: "gradientShift 10s ease infinite",
         color: "#ffffff",
@@ -98,11 +101,13 @@ const WeatherWidget: React.FC = () => {
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLDivElement).style.transform = "scale(1.03)";
-        (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 16px rgba(0,0,0,0.3)";
+        (e.currentTarget as HTMLDivElement).style.boxShadow =
+          "0 8px 16px rgba(0,0,0,0.3)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLDivElement).style.transform = "scale(1)";
-        (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+        (e.currentTarget as HTMLDivElement).style.boxShadow =
+          "0 4px 8px rgba(0,0,0,0.2)";
       }}
     >
       {loading && <p>Loading weather data...</p>}
@@ -110,7 +115,13 @@ const WeatherWidget: React.FC = () => {
       {weather && (
         <>
           <div>
-            <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", fontWeight: "bold" }}>
+            <h3
+              style={{
+                margin: "0 0 4px 0",
+                fontSize: "16px",
+                fontWeight: "bold",
+              }}
+            >
               {weather.name}
             </h3>
             <p
@@ -125,7 +136,13 @@ const WeatherWidget: React.FC = () => {
             >
               {Math.round(weather.main.temp)}°C
             </p>
-            <p style={{ margin: "4px 0", fontSize: "14px", textTransform: "capitalize" }}>
+            <p
+              style={{
+                margin: "4px 0",
+                fontSize: "14px",
+                textTransform: "capitalize",
+              }}
+            >
               {weather.weather[0].description}
             </p>
           </div>
