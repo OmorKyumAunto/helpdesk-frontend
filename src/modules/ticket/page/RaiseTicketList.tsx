@@ -305,7 +305,7 @@ const RaiseTicketList: React.FC = () => {
                           <Tag color="red-inverse">URGENT</Tag>
                         )}
                         {ticket.priority === "high" && (
-                          <Tag color="pink-inverse">HIGHT</Tag>
+                          <Tag color="pink-inverse">HIGH</Tag>
                         )}
                         {ticket.priority === "medium" && (
                           <Tag color="blue-inverse">MEDIUM</Tag>

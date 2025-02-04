@@ -143,6 +143,7 @@ const CreateEmployee = () => {
                     <Option value="Jinnat Knitting Ltd">Jinnat Knitting Ltd</Option>
                     <Option value="FFL2">FFL2</Option>
                     <Option value="DBLCL">DBLCL</Option>
+                    <Option value="DHL">DHL</Option>
                     <Option value="Mawna Fashions Ltd">Mawna Fashions Ltd</Option>
                     <Option value="Sylhet EZ">Sylhet EZ</Option>
                     <Option value="Jinnat Complex">Jinnat Complex</Option>

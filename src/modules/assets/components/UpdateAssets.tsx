@@ -203,6 +203,7 @@ const UpdateAsset = ({ asset }: { asset: IAsset }) => {
                     <Option value="Speaker">Speaker</Option>
                     <Option value="Scanner">Scanner</Option>
                     <Option value="Camera">Camera</Option>
+                    <Option value="Online/Industrial UPS">Online/Industrial UPS</Option>
                     <Option value="NVR/DVR">NVR/DVR</Option>
                     <Option value="Conference System">Conference System</Option>
                     <Option value="Firewall">Firewall</Option>
