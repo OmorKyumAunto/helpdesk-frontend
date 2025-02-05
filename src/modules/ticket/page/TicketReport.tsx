@@ -46,23 +46,13 @@ const TicketReport = ({ ticketSolver }: { ticketSolver: string }) => {
   });
 
   useEffect(() => {
-    setFilter((prevFilter: any) => {
-      const isComingWithFilter = !!ticketSolver;
-  
-      return {
-        ...prevFilter,
-        limit: Number(pageSize),
-        offset: 0,
-        key: isComingWithFilter ? ticketSolver : undefined, // Clear the key if no filter
-      };
-    });
-  
-    setSearchParams({
-      page: String(page),
-      pageSize: String(pageSize),
-    });
-  }, [ticketSolver, pageSize, setSearchParams]);
-  
+    setFilter((prevFilter: any) => ({
+      ...prevFilter,
+      limit: Number(pageSize),
+      offset: skipValue,
+      key: ticketSolver || prevFilter?.key,
+    }));
+  }, [page, pageSize, skipValue, ticketSolver]);
   const { data, isLoading, isFetching } = useGetTicketReportQuery({
     ...filter,
   });
