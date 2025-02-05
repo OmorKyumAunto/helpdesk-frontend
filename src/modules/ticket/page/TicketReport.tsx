@@ -88,7 +88,7 @@ const TicketReport = ({ ticketSolver }: { ticketSolver: string }) => {
           <div style={{ width: "160px" }}>
             <Input
               prefix={<SearchOutlined />}
-              // defaultValue={ticketSolver}
+              defaultValue={ticketSolver}
               onChange={(e) =>
                 setFilter({ ...filter, key: e.target.value, offset: 0 })
               }

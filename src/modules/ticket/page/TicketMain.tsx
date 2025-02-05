@@ -19,12 +19,14 @@ const TicketMain: React.FC = () => {
   const [ticketValue, setTicketValue] = useState("");
   const [ticketPriorityValue, setTicketPriorityValue] = useState("");
   const [ticketSolver, setTicketSolver] = useState("");
-
+  console.log({ ticketSolver });
   const onChange = (key: string) => {
     setActiveKey(key);
     if (key !== "2" && key !== "5") {
       setTicketValue("");
       setTicketPriorityValue("");
+    }
+    if (key !== "3") {
       setTicketSolver("");
     }
   };
@@ -71,7 +73,9 @@ const TicketMain: React.FC = () => {
                 Reports
               </span>
             ),
-            children: <TicketReport ticketSolver={ticketSolver} />,
+            children: (
+              <TicketReport key={activeKey} ticketSolver={ticketSolver} />
+            ),
           },
         ]
       : []),
