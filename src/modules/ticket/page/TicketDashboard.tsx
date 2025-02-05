@@ -498,9 +498,12 @@ const TicketDashboard = ({
                           transition: "color 0.3s ease",
                         }}
                         onClick={() => {
-                          setActiveKey && setActiveKey("3");
-                          setTicketSolver &&
+                          if(roleID===1){
+                            setActiveKey && setActiveKey("3");
+                            setTicketSolver &&
                             setTicketSolver(record?.solved_by_name);
+                          }
+                          
                         }}
                         onMouseEnter={(e) =>
                           ((e.target as HTMLSpanElement).style.color =
