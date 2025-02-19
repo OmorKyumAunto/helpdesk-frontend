@@ -56,18 +56,18 @@ const DashboardCards = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "16px", // Ensures padding is applied to the card content
+                    padding: "3px", // Ensures padding is applied to the card content
                     position: "relative",
                   }}
                 >
                   <div>
-                    <Typography.Title style={{ color: "white" }} level={4}>
+                    <Typography.Title style={{ color: "white" }} level={5}>
                       Total Asset
                     </Typography.Title>
                     <p
                       style={{
                         textAlign: "center",
-                        fontSize: "20px",
+                        fontSize: "16px",
                         fontWeight: "bold",
                         marginTop: "4px",
                       }}
@@ -81,15 +81,15 @@ const DashboardCards = () => {
                     <div
                       className="bg-[#cf7dcf]"
                       style={{
-                        height: "70px",
-                        width: "70px",
+                        height: "50px",
+                        width: "50px",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: "50%",
                       }}
                     >
-                      <FaComputer size={50} />
+                      <FaComputer size={30} />
                     </div>
                   </div>
                 </div>
@@ -138,18 +138,18 @@ const DashboardCards = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "16px", // Ensures padding is applied to the card content
+                    padding: "3px", // Ensures padding is applied to the card content
                     position: "relative",
                   }}
                 >
                   <div>
-                    <Typography.Title style={{ color: "white" }} level={4}>
+                    <Typography.Title style={{ color: "white" }} level={5}>
                       Total Employee
                     </Typography.Title>
                     <p
                       style={{
                         textAlign: "center",
-                        fontSize: "20px",
+                        fontSize: "16px",
                         fontWeight: "bold",
                         marginTop: "4px",
                       }}
@@ -161,15 +161,15 @@ const DashboardCards = () => {
                     <div
                       className="bg-[#ffc14d]"
                       style={{
-                        height: "70px",
-                        width: "70px",
+                        height: "50px",
+                        width: "50px",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: "50%",
                       }}
                     >
-                      <LuUsers2 size={50} />
+                      <LuUsers2 size={30} />
                     </div>
                   </div>
                 </div>
@@ -218,18 +218,18 @@ const DashboardCards = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "16px", // Ensures padding is applied to the card content
+                    padding: "3px", // Ensures padding is applied to the card content
                     position: "relative",
                   }}
                 >
                   <div>
-                    <Typography.Title style={{ color: "white" }} level={4}>
+                    <Typography.Title style={{ color: "white" }} level={5}>
                       Disbursements
                     </Typography.Title>
                     <p
                       style={{
                         textAlign: "center",
-                        fontSize: "20px",
+                        fontSize: "16px",
                         fontWeight: "bold",
                         marginTop: "4px",
                       }}
@@ -244,15 +244,15 @@ const DashboardCards = () => {
                     <div
                       className="bg-[#acd775]"
                       style={{
-                        height: "70px",
-                        width: "70px",
+                        height: "50px",
+                        width: "50px",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: "50%",
                       }}
                     >
-                      <MdOutlineAssignmentTurnedIn size={50} />
+                      <MdOutlineAssignmentTurnedIn size={30} />
                     </div>
                   </div>
                 </div>

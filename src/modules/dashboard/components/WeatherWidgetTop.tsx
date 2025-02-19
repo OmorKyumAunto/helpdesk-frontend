@@ -93,25 +93,25 @@ const WeatherWidget: React.FC = () => {
       {error && <p style={{ color: "#ff4d4f" }}>{error}</p>}
       {weather && (
         <>
-          <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", fontWeight: "bold" }}>
+          <h3 style={{ margin: "0 0 2px 0", fontSize: "12px", fontWeight: "bold" }}>
             {weather.name}
           </h3>
           <p
             style={{
               margin: 0,
-              fontSize: "28px",
+              fontSize: "22px",
               fontWeight: "bold",
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "4px",
             }}
           >
             {Math.round(weather.main.temp)}°C
           </p>
-          <p style={{ margin: "4px 0", fontSize: "14px", textTransform: "capitalize" }}>
+          <p style={{ margin: "1px 0", fontSize: "12px", textTransform: "capitalize" }}>
             {weather.weather[0].description}
           </p>
-          <p style={{ fontSize: "14px", marginTop: "4px" }}>
+          <p style={{ fontSize: "12px", marginTop: "2px" }}>
             <strong>Humidity:</strong> {weather.main.humidity}%
           </p>
         </>

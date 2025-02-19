@@ -84,7 +84,7 @@ const StyledCard = styled(Card)`
   background-size: 400% 400%; /* Ensures smooth animation transition */
   color: white;
   border-radius: 20px;
-  padding: 12px;
+  padding: 2px;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, opacity 0.4s ease-out;
   animation: cardBounce 3s ease-in-out infinite alternate, colorShift 10s ease-in-out infinite;
@@ -141,15 +141,15 @@ const StyledCard = styled(Card)`
   }
 
   .greeting {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     font-weight: bold;
     margin: 0;
     animation: slideIn 1s ease-out;
   }
 
   .sub-text {
-    font-size: 1rem;
-    margin-top: 10px;
+    font-size: 0.8rem;
+    margin-top: 2px;
     animation: fadeInText 1.2s ease-out;
   }
 
@@ -182,13 +182,13 @@ const StyledCard = styled(Card)`
   }
 
   .weather-wrapper {
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     text-align: left;
   }
 
   .icon-wrapper {
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;

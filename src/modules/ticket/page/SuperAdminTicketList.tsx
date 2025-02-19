@@ -32,7 +32,7 @@ import {
 import { IAdminTicketList } from "../types/ticketTypes";
 import { formatTimeDifference } from "../utils/timeFormat";
 dayjs.extend(relativeTime);
-
+import CountdownTimer from "../components/Countdown"
 const { Option } = Select;
 const SuperAdminTicketList = ({
   ticketValue,
@@ -361,13 +361,10 @@ const SuperAdminTicketList = ({
                               {ticket.action_by_employee_id || "Unknown"})
                             </span>
                           </Tooltip>
+                          
                         )}
                       </div>
-                    </strong>
-                  </div>
-
-                  <div>
-                    <Space>
+                      <Space>
                       {ticket.ticket_status === "unsolved" && (
                         <Tag color="red-inverse">UNSOLVED</Tag>
                       )}
@@ -392,6 +389,14 @@ const SuperAdminTicketList = ({
                         </Button>
                       </Popconfirm>
                     </Space>
+                    
+                    </strong>
+                  </div>
+
+                  <div>
+                    <CountdownTimer deadline="2025-02-17T15:30:00"></CountdownTimer>
+                  
+                   
                   </div>
                 </div>
                 <Divider style={{ margin: "6px 0px 12px" }} />

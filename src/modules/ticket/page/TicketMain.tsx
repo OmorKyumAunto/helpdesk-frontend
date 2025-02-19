@@ -8,6 +8,7 @@ import SuperAdminTicketList from "./SuperAdminTicketList";
 import AdminTicketList from "./AdminTicketList";
 import TicketDashboard from "./TicketDashboard";
 import TicketReport from "./TicketReport";
+import OnBehalfTicket from "./OnBehalfTicket";
 
 const TicketMain: React.FC = () => {
   const { data: profile } = useGetMeQuery();
@@ -109,6 +110,18 @@ const TicketMain: React.FC = () => {
                 key={activeKey}
                 ticketPriorityValue={ticketPriorityValue}
                 ticketValue={ticketValue}
+              />
+            ),
+          },
+          {
+            key: "8",
+            label: (
+              <span style={{ fontSize: "16px", fontWeight: "600" }}>
+                On Behalf Ticket
+              </span>
+            ),
+            children: (
+              <OnBehalfTicket
               />
             ),
           },

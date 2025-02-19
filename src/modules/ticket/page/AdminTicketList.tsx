@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import CountdownTimer from "../components/Countdown"
 import { Grid, Tooltip } from "antd";
 import {
   Card,
@@ -396,11 +397,7 @@ const AdminTicketList = ({
                           </Tooltip>
                         )}
                       </div>
-                    </strong>
-                  </div>
-
-                  <div>
-                    <Space>
+                      <Space>
                       {ticket.ticket_status === "unsolved" && (
                         <Tag color="red-inverse">UNSOLVED</Tag>
                       )}
@@ -429,6 +426,12 @@ const AdminTicketList = ({
                         <EditOutlined />
                       </Button>
                     </Space>
+                    </strong>
+                  </div>
+
+                  <div>
+                  <CountdownTimer deadline="2025-02-17T15:30:00"></CountdownTimer>
+                    
                   </div>
                 </div>
                 <Divider style={{ margin: "6px 0px 12px" }} />

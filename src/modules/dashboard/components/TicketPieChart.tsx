@@ -53,7 +53,7 @@ const TicketDonutChart = () => {
   }, [data]);
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+    <div style={{ maxWidth: "260px", margin: "0 auto" }}>
       <div id="chart">
         <ReactApexChart
           options={state.options} // This will now have the correct type
