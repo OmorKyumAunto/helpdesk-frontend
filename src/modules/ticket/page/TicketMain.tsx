@@ -113,15 +113,15 @@ const TicketMain: React.FC = () => {
               />
             ),
           },
-          {
-            key: "8",
-            label: (
-              <span style={{ fontSize: "16px", fontWeight: "600" }}>
-                On Behalf Ticket
-              </span>
-            ),
-            children: <OnBehalfTicket />,
-          },
+          // {
+          //   key: "8",
+          //   label: (
+          //     <span style={{ fontSize: "16px", fontWeight: "600" }}>
+          //       On Behalf Ticket
+          //     </span>
+          //   ),
+          //   children: <OnBehalfTicket />,
+          // },
         ]
       : []),
     ...(roleID === 3
