@@ -101,27 +101,22 @@ const RaiseTicketForm = () => {
               style={{ marginBottom: "8px" }}
             >
               <Select
-                  loading={empLoading}
-                  placeholder="Search Employee"
-                  showSearch
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  options={allEmployee?.data?.map((item: IEmployee) => ({
-                    value: item.id,
-                    label: `${item.name} (${item.email})`,
-                  }))}
-                  allowClear
-                  style={{ width: "100%" }}
-                />
-
-
-
-
-
+                loading={empLoading}
+                placeholder="Search Employee"
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                options={allEmployee?.data?.map((item: IEmployee) => ({
+                  value: item.id,
+                  label: `[${item.employee_id}] ${item.name} (${item.email})`,
+                }))}
+                allowClear
+                style={{ width: "100%" }}
+              />
             </Form.Item>
             <Form.Item
               label="Select Unit"
