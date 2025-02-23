@@ -310,7 +310,7 @@ const DashboardCards = () => {
           </Col>
         </Row>
       ) : (
-        <Row style={{ marginTop: "5px" }} gutter={[12, 6]}>
+        <Row style={{ marginTop: "5px" }} gutter={[12,6]}>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Row gutter={[6, 12]}>
             <Col xs={24} sm={24} md={24}>
@@ -327,13 +327,13 @@ const DashboardCards = () => {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        padding: "16px", // Ensures consistent padding
+                        padding: "3px", // Ensures consistent padding
                         position: "relative",
                       }}
                     >
 
                       <div>
-                        <Typography.Title style={{ color: "white" }} level={4}>
+                        <Typography.Title style={{ color: "white" }} level={5}>
                           Disbursements
                         </Typography.Title>
                         <p
@@ -408,13 +408,13 @@ const DashboardCards = () => {
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        padding: "16px", // Ensures padding is applied to the card content
+                        padding: "3px", // Ensures padding is applied to the card content
                         position: "relative",
                       }}
                     >
 
                       <div>
-                        <Typography.Title style={{ color: "white" }} level={4}>
+                        <Typography.Title style={{ color: "white" }} level={5}>
                           Total Employee
                         </Typography.Title>
                         <p

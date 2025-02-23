@@ -1,134 +1,124 @@
-import React, { useState, useEffect } from "react";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
+import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
 
-dayjs.extend(duration);
-
-interface CountdownProps {
-  deadline: string; // Deadline as an ISO string (e.g., "2025-02-14T15:30:00")
+interface TicketCountdownProps {
+  ticketCreatedAt: string;
+  ticketUpdatedAt: string;
+  responseTimeValue: number;
+  responseTimeUnit: string;
+  resolveTimeValue: number;
+  resolveTimeUnit: string;
+  ticketStatus: string;
 }
 
-const CountdownTimer: React.FC<CountdownProps> = ({ deadline }) => {
-  const calculateTimeLeft = () => {
-    const now = dayjs();
-    const end = dayjs(deadline);
-    const diff = end.diff(now, "second");
-
-    return {
-      days: Math.max(0, Math.floor(diff / 86400)),
-      hours: Math.max(0, Math.floor((diff % 86400) / 3600)),
-      minutes: Math.max(0, Math.floor((diff % 3600) / 60)),
-      seconds: Math.max(0, diff % 60),
-    };
+const TicketCountdown: React.FC<TicketCountdownProps> = ({
+  ticketCreatedAt,
+  ticketUpdatedAt,
+  responseTimeValue,
+  responseTimeUnit,
+  resolveTimeValue,
+  resolveTimeUnit,
+  ticketStatus,
+}) => {
+  const getTimeInMinutes = (value: number, unit: string): number => {
+    return unit === "hours" ? value * 60 : value; // Convert hours to minutes
   };
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [responseTimeLeft, setResponseTimeLeft] = useState<number>(0);
+  const [solveTimeLeft, setSolveTimeLeft] = useState<number>(0);
+
+  const [responseTimeWarning, setResponseTimeWarning] = useState<boolean>(false);
+  const [solveTimeWarning, setSolveTimeWarning] = useState<boolean>(false);
+
+  const [responseTimeOverdue, setResponseTimeOverdue] = useState<boolean>(false);
+  const [solveTimeOverdue, setSolveTimeOverdue] = useState<boolean>(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [deadline]);
+    const calculateRemainingTime = () => {
+      const now = dayjs();
+      const createdAt = dayjs(ticketCreatedAt);
+      const updatedAt = dayjs(ticketUpdatedAt);
+
+      const responseMinutes = getTimeInMinutes(responseTimeValue, responseTimeUnit);
+      const resolveMinutes = getTimeInMinutes(resolveTimeValue, resolveTimeUnit);
+
+      const elapsedResponse = now.diff(createdAt, "second"); // In seconds
+      const elapsedSolve = now.diff(updatedAt, "second"); // In seconds
+
+      const remainingResponse = responseMinutes * 60 - elapsedResponse;
+      const remainingSolve = resolveMinutes * 60 - elapsedSolve;
+
+      setResponseTimeLeft(Math.max(remainingResponse, 0));
+      setSolveTimeLeft(Math.max(remainingSolve, 0));
+
+      // Check for overdue
+      setResponseTimeOverdue(remainingResponse <= 0);
+      setSolveTimeOverdue(remainingSolve <= 0);
+
+      // Check for warnings (e.g., if time left is less than 10 minutes)
+      setResponseTimeWarning(remainingResponse <= 300); // 5 minutes
+      setSolveTimeWarning(remainingSolve <= 60); // 1 minute
+    };
+
+    calculateRemainingTime();
+
+    const interval = setInterval(calculateRemainingTime, 1000); // Update every second
+
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, [ticketCreatedAt, ticketUpdatedAt, responseTimeValue, responseTimeUnit, resolveTimeValue, resolveTimeUnit]);
+
+  const formatTime = (seconds: number) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hrs}h ${mins}m ${secs}s`;
+  };
+
+  const status = ticketStatus?.toLowerCase();
 
   return (
-    <div className="flex flex-col items-center">
-      <p className="text-lg font-semibold mb-4 text-gray-800 uppercase tracking-wide">Response Time Remaining</p>
-      <div className="flex gap-6">
-        {timeLeft.days > 0 && (
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 bg-white border-2 border-gray-400 rounded-full shadow-sm flex items-center justify-center">
-              <CircularProgressbar
-                value={timeLeft.days}
-                maxValue={30}
-                text={`${timeLeft.days}`}
-                styles={buildStyles({
-                  textColor: "#333", // Dark gray for text
-                  pathColor: "#4CAF50", // Green for Days
-                  trailColor: "#E5E5E5", // Light gray for the background trail
-                  textSize: "36px", // Larger text size for better visibility
-                  pathTransitionDuration: 0.5, // Smooth transition
-                })}
-              />
-            </div>
-            <p className="text-sm text-center mt-2 text-gray-600 font-medium">Days</p>
+    <div className="flex gap-12 justify-center p-4">
+      {/* Response Time */}
+      {status === "unsolved" && (
+        <div className="text-center">
+          <div
+            className={`w-24 h-14 rounded-full border-8 flex items-center justify-center ${responseTimeWarning ? "border-red-500 bg-red-100" : "border-blue-200 bg-blue-50"}`}
+          >
+            <span className={`text-s font-bold ${responseTimeWarning ? "text-red-500" : "text-blue-500"}`}>
+              {responseTimeOverdue ? "Overdue" : formatTime(responseTimeLeft)}
+            </span>
           </div>
-        )}
+          <p className="text-xs text-gray-900 mt-2">Response Within</p>
+        </div>
+      )}
 
-        {timeLeft.hours > 0 && (
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 bg-white border-2 border-gray-400 rounded-full shadow-sm flex items-center justify-center">
-              <CircularProgressbar
-                value={timeLeft.hours}
-                maxValue={60}
-                text={`${timeLeft.hours}`}
-                styles={buildStyles({
-                  textColor: "#333", // Dark gray for text
-                  pathColor: "#2196F3", // Blue for Hours
-                  trailColor: "#E5E5E5", // Light gray for the background trail
-                  textSize: "36px", // Larger text size for better visibility
-                  pathTransitionDuration: 0.5, // Smooth transition
-                })}
-              />
-            </div>
-            <p className="text-sm text-center mt-2 text-gray-600 font-medium">Hours</p>
+      {/* Solve Time */}
+      {(status === "inprogress" || status === "forward") && (
+        <div className="text-center">
+          <div
+            className={`w-24 h-14 rounded-full border-8 flex items-center justify-center ${solveTimeWarning ? "border-orange-500 bg-orange-100" : "border-green-200 bg-green-100"}`}
+          >
+            <span className={`text-s font-bold ${solveTimeWarning ? "text-orange-600" : "text-green-500"}`}>
+              {solveTimeOverdue ? "Overdue" : formatTime(solveTimeLeft)}
+            </span>
           </div>
-        )}
+          <p className="text-xs text-gray-900 mt-2">Solve Within</p>
+        </div>
+      )}
 
-        {timeLeft.minutes > 0 && (
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 bg-white border-2 border-gray-400 rounded-full shadow-sm flex items-center justify-center">
-              <CircularProgressbar
-                value={timeLeft.minutes}
-                maxValue={60}
-                text={`${timeLeft.minutes}`}
-                styles={buildStyles({
-                  textColor: "#333", // Dark gray for text
-                  pathColor: "#FFEB3B", // Yellow for Minutes
-                  trailColor: "#E5E5E5", // Light gray for the background trail
-                  textSize: "36px", // Larger text size for better visibility
-                  pathTransitionDuration: 0.5, // Smooth transition
-                })}
-              />
-            </div>
-            <p className="text-sm text-center mt-2 text-gray-600 font-medium">Minutes</p>
+      {/* Solved Time */}
+      {status === "solved" && (
+        <div className="text-center">
+          <div className={`w-24 h-14 rounded-full border-8 flex items-center justify-center border-gray-200 bg-blue-100`}>
+            <span className="text-s font-bold text-gray-500">
+              {formatTime(dayjs(ticketUpdatedAt).diff(dayjs(ticketCreatedAt), "second"))}
+            </span>
           </div>
-        )}
-
-        {timeLeft.seconds > 0 && (
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 bg-white border-2 border-gray-400 rounded-full shadow-sm flex items-center justify-center">
-              <CircularProgressbar
-                value={timeLeft.seconds}
-                maxValue={60}
-                text={`${timeLeft.seconds}`}
-                styles={buildStyles({
-                  textColor: "#333", // Dark gray for text
-                  pathColor: "#F44336", // Red for Seconds
-                  trailColor: "#E5E5E5", // Light gray for the background trail
-                  textSize: "36px", // Larger text size for better visibility
-                  pathTransitionDuration: 0.5, // Smooth transition
-                })}
-              />
-            </div>
-            <p className="text-sm text-center mt-2 text-gray-600 font-medium">Seconds</p>
-          </div>
-        )}
-      </div>
-
-      {/* CSS for bold and more visible inner circle text */}
-      <style>
-        {`
-          .react-circular-progressbar-text {
-            font-weight: 600; /* Make text bold */
-            font-size: 28px !important; /* Increase the font size to make the text more visible */
-          }
-        `}
-      </style>
+          <p className="text-xs text-gray-900 mt-2">Solved Within</p>
+        </div>
+      )}
     </div>
   );
 };
 
-export default CountdownTimer;
+export default TicketCountdown;

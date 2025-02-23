@@ -64,12 +64,12 @@ const ApexChart = () => {
     <div
       className="chart-container"
       style={{
-        padding: "10px",
+        padding: "5px",
       }}
     >
       <div
         className="chart-wrap"
-        style={{ maxWidth: "500px", margin: "0 auto" }}
+        style={{ maxWidth: "450px", margin: "0 auto" }}
       >
         <ReactApexChart
           options={state.options}

@@ -120,7 +120,7 @@ const ExampleWithAPI = () => {
   if (error) return <div>Error loading data</div>;
 
   return (
-    <ResponsiveContainer width="100%" height={360}>
+    <ResponsiveContainer width="100%" height={270}>
       <PieChart>
         <Pie
           activeIndex={activeIndex}

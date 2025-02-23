@@ -7,6 +7,7 @@ import {
   FaExclamationCircle,
   FaArrowRight,
 } from "react-icons/fa";
+import { IoTimerOutline } from "react-icons/io5";
 import { ImSpinner9 } from "react-icons/im";
 import { IoCaretForwardCircle } from "react-icons/io5";
 import {
@@ -89,6 +90,14 @@ const TicketDashboard = ({
       color: "rgba(0, 150, 117, 0.8)", // Blue for Forward
       icon: <IoCaretForwardCircle size={28} />, // Arrow icon for "Forward"
     },
+    {
+      id: 6,
+      title: "Avg. Time",
+      value: "total_avg_time",
+      data: data?.data?.total_avg_time,
+      color: "#00bfff",
+      icon: <IoTimerOutline size={28} />,
+    },
   ];
 
   const ticketData = barData?.data || [];
@@ -99,7 +108,7 @@ const TicketDashboard = ({
         {ticketPriorityCards?.map((item) => (
           <Col
             key={item.id}
-            style={{ width: lg ? "20%" : md ? "50%" : "100%" }}
+            style={{ width: lg ? "16.6%" : md ? "50%" : "100%" }}
           >
             <Card
               className="card-hover-stat"
@@ -122,7 +131,7 @@ const TicketDashboard = ({
                 {item.icon} {/* Dynamic icon rendering */}
               </div>
               <h3>{item.title}</h3>
-              <h1>{item.data}</h1>
+              <h2>{item.data}</h2>
 
               <style>
                 {`
@@ -169,148 +178,7 @@ const TicketDashboard = ({
           </Col>
         ))}
 
-        {/* Bar Chart */}
-        <Col xs={24} sm={24} md={24} lg={18}>
-          <Card title="Last 12 Months Ticket Count">
-            <div style={{ height: 250 }}>
-              <ResponsiveContainer>
-                <BarChart data={ticketData} barGap={0}>
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar
-                    dataKey="raiseTickets"
-                    fill="#1775bb"
-                    name="Raise Tickets"
-                  />
-                  <Bar
-                    dataKey="solvedTickets"
-                    fill="#8dc73f"
-                    name="Solved Tickets"
-                  />
-                  <Bar
-                    dataKey="unsolvedTickets"
-                    fill="#ff4d4f"
-                    name="Unsolved Tickets"
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-        </Col>
-
-        {/* Last 30 Days */}
-        <Col xs={24} sm={24} md={24} lg={6}>
-          <Card title="Last 30 Days" style={{ height: "100%" }}>
-            <Space direction="vertical" style={{ width: "100%" }}>
-              <div>
-                <Typography.Title level={5} style={{ margin: "0px" }}>
-                  Raise Tickets
-                </Typography.Title>
-                <Space
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Typography.Text
-                    style={{
-                      margin: "0px",
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#000",
-                    }}
-                  >
-                    {raiseSolved?.data?.total_ticket || 0}
-                  </Typography.Text>
-                  <Typography.Text
-                    style={{
-                      margin: "0px",
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#000",
-                    }}
-                  >
-                    {raiseSolved?.data?.total_ticket_percent || 0}%
-                  </Typography.Text>
-                </Space>
-                <Progress
-                  percent={raiseSolved?.data?.total_ticket_percent || 0}
-                  style={{ color: "#1775bb" }}
-                  showInfo={false}
-                  status="normal"
-                />
-              </div>
-              <div>
-                <Typography.Title level={5} style={{ margin: "0px" }}>
-                  Solved Tickets
-                </Typography.Title>
-                <Space
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Typography.Text
-                    style={{
-                      margin: "0px",
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#000",
-                    }}
-                  >
-                    {raiseSolved?.data?.total_solved || 0}
-                  </Typography.Text>
-                  <Typography.Text
-                    style={{
-                      margin: "0px",
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#000",
-                    }}
-                  >
-                    {raiseSolved?.data?.total_solved_percent || 0}%
-                  </Typography.Text>
-                </Space>
-                <Progress
-                  percent={raiseSolved?.data?.total_solved_percent || 0}
-                  style={{ color: "#8dc73f" }}
-                  showInfo={false}
-                  status="success"
-                />
-              </div>
-              <div>
-                <Typography.Title level={5} style={{ margin: "0px" }}>
-                  Unsolved Tickets
-                </Typography.Title>
-                <Space
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Typography.Text
-                    style={{
-                      margin: "0px",
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#000",
-                    }}
-                  >
-                    {raiseSolved?.data?.total_unsolved || 0}
-                  </Typography.Text>
-                  <Typography.Text
-                    style={{
-                      margin: "0px",
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#000",
-                    }}
-                  >
-                    {raiseSolved?.data?.total_unsolved_percent || 0}%
-                  </Typography.Text>
-                </Space>
-                <Progress
-                  percent={raiseSolved?.data?.total_unsolved_percent || 0}
-                  style={{ color: "#ff4d4f" }}
-                  showInfo={false}
-                  status="exception"
-                />
-              </div>
-            </Space>
-          </Card>
-        </Col>
+        
 
         {/* Priority based */}
         <Col xs={24} sm={24} md={24} lg={5}>
@@ -333,8 +201,10 @@ const TicketDashboard = ({
             <Space
               direction="vertical"
               style={{
+                height: "260px",
+                
                 width: "100%",
-                gap: "8px", // Reduced gap between cards
+                gap: "4px", // Reduced gap between cards
                 marginTop: "0px", // Ensures no extra space above the first card
               }}
             >
@@ -381,7 +251,7 @@ const TicketDashboard = ({
                   bodyStyle={{
                     display: "flex",
                     alignItems: "center",
-                    padding: "12px",
+                    padding: "7px",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow =
@@ -396,8 +266,8 @@ const TicketDashboard = ({
                 >
                   <div
                     style={{
-                      width: 40,
-                      height: 40,
+                      width: 45,
+                      height: 45,
                       borderRadius: "50%",
                       background: color,
                       display: "flex",
@@ -405,8 +275,8 @@ const TicketDashboard = ({
                       justifyContent: "center",
                       color: "white",
                       fontWeight: "bold",
-                      fontSize: "16px",
-                      marginRight: "12px",
+                      fontSize: "12px",
+                      marginRight: "14px",
                     }}
                   >
                     {count}
@@ -438,7 +308,7 @@ const TicketDashboard = ({
             title="Category Wise Tickets"
             style={{
               width: "100%",
-              height: "100%",
+              height: "335px",
             }}
           >
             <PieChartWithLabels />
@@ -451,7 +321,7 @@ const TicketDashboard = ({
           <Card
             title="Top Ticket Solvers"
             style={{
-              height: "100%",
+              height: "335px",
               borderRadius: "12px",
               boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
               border: "1px solid #f0f0f0",
@@ -492,26 +362,27 @@ const TicketDashboard = ({
                     >
                       <span
                         style={{
-                          fontWeight: 500,
+                          fontWeight: 400,
+                          fontSize: ".8em",
                           cursor: "pointer",
                           color: "#1775bb",
                           transition: "color 0.3s ease",
                         }}
                         onClick={() => {
-                          if(roleID===1){
+                          if (roleID === 1) {
                             setActiveKey && setActiveKey("3");
                             setTicketSolver &&
-                            setTicketSolver(record?.solved_by_name);
+                              setTicketSolver(record?.solved_by_name);
                           }
-                          
+
                         }}
                         onMouseEnter={(e) =>
-                          ((e.target as HTMLSpanElement).style.color =
-                            "#0056b3")
+                        ((e.target as HTMLSpanElement).style.color =
+                          "#0056b3")
                         }
                         onMouseLeave={(e) =>
-                          ((e.target as HTMLSpanElement).style.color =
-                            "#1775bb")
+                        ((e.target as HTMLSpanElement).style.color =
+                          "#1775bb")
                         }
                       >
                         {record?.solved_by_name}
@@ -527,7 +398,7 @@ const TicketDashboard = ({
                       style={{
                         fontWeight: "bold",
                         color: "#8dc73f",
-                        fontSize: "1.1em",
+                        fontSize: ".9em",
                       }}
                     >
                       {text}
@@ -542,9 +413,152 @@ const TicketDashboard = ({
               style={{
                 borderRadius: "10px",
                 overflow: "hidden",
-                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
               }}
             />
+          </Card>
+        </Col>
+        {/* Bar Chart */}
+        <Col xs={24} sm={24} md={24} lg={18}>
+          <Card title="Last 12 Months Ticket Count">
+            <div style={{ height: 200 }}>
+              <ResponsiveContainer>
+                <BarChart data={ticketData} barGap={0}>
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar
+                    dataKey="raiseTickets"
+                    fill="#1775bb"
+                    name="Raise Tickets"
+                  />
+                  <Bar
+                    dataKey="solvedTickets"
+                    fill="#8dc73f"
+                    name="Solved Tickets"
+                  />
+                  <Bar
+                    dataKey="unsolvedTickets"
+                    fill="#ff4d4f"
+                    name="Unsolved Tickets"
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </Col>
+
+        {/* Last 30 Days */}
+        <Col xs={24} sm={24} md={24} lg={6}>
+          <Card title="Last 30 Days" style={{ height: "100%" }}>
+            <Space direction="vertical" style={{ height: 200, width: "100%" , fontSize: "1px" }}>
+              <div>
+                <Typography.Title level={5} style={{ margin: "0px", fontSize: "14px" }}>
+                  Raise Tickets
+                </Typography.Title>
+                <Space
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography.Text
+                    style={{
+                      margin: "0px",
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      color: "#000",
+                    }}
+                  >
+                    {raiseSolved?.data?.total_ticket || 0}
+                  </Typography.Text>
+                  <Typography.Text
+                    style={{
+                      margin: "0px",
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      color: "#000",
+                    }}
+                  >
+                    {raiseSolved?.data?.total_ticket_percent || 0}%
+                  </Typography.Text>
+                </Space>
+                <Progress
+                  percent={raiseSolved?.data?.total_ticket_percent || 0}
+                  style={{ color: "#1775bb" }}
+                  showInfo={false}
+                  status="normal"
+                />
+              </div>
+              <div>
+                <Typography.Title level={5} style={{ margin: "0px", fontSize: "14px" }}>
+                  Solved Tickets
+                </Typography.Title>
+
+                <Space
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography.Text
+                    style={{
+                      margin: "0px",
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      color: "#000",
+                    }}
+                  >
+                    {raiseSolved?.data?.total_solved || 0}
+                  </Typography.Text>
+                  <Typography.Text
+                    style={{
+                      margin: "0px",
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      color: "#000",
+                    }}
+                  >
+                    {raiseSolved?.data?.total_solved_percent || 0}%
+                  </Typography.Text>
+                </Space>
+                <Progress
+                  percent={raiseSolved?.data?.total_solved_percent || 0}
+                  style={{ color: "#8dc73f" }}
+                  showInfo={false}
+                  status="success"
+                />
+              </div>
+              <div>
+                <Typography.Title level={5} style={{ margin: "0px", fontSize: "14px" }}>
+                  Unsolved Tickets
+                </Typography.Title>
+                <Space
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography.Text
+                    style={{
+                      margin: "0px",
+                      fontSize: "13px",
+                      fontWeight: 600,
+                      color: "#000",
+                    }}
+                  >
+                    {raiseSolved?.data?.total_unsolved || 0}
+                  </Typography.Text>
+                  <Typography.Text
+                    style={{
+                      margin: "0px",
+                      fontSize: "14px",
+                      fontWeight: 500,
+                      color: "#000",
+                    }}
+                  >
+                    {raiseSolved?.data?.total_unsolved_percent || 0}%
+                  </Typography.Text>
+                </Space>
+                <Progress
+                  percent={raiseSolved?.data?.total_unsolved_percent || 0}
+                  style={{ color: "#ff4d4f" }}
+                  showInfo={false}
+                  status="exception"
+                />
+              </div>
+            </Space>
           </Card>
         </Col>
       </Row>

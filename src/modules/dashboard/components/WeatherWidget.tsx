@@ -83,7 +83,7 @@ const WeatherWidget: React.FC = () => {
         // maxWidth: "360px",
         // minWidth: "260px",
         margin: "3px auto",
-        padding: "25px",
+        padding: "30px",
         borderRadius: "16px",
         background:
           "linear-gradient(60deg,rgb(18, 238, 201),rgb(44, 171, 230), #1A2980, #203A43)",
@@ -94,7 +94,7 @@ const WeatherWidget: React.FC = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        height: "140px",
+        height: "110px",
         textAlign: "left",
         transition: "transform 0.3s ease, box-shadow 0.3s ease",
         cursor: "pointer",
@@ -118,7 +118,7 @@ const WeatherWidget: React.FC = () => {
             <h3
               style={{
                 margin: "0 0 4px 0",
-                fontSize: "16px",
+                fontSize: "14px",
                 fontWeight: "bold",
               }}
             >
@@ -127,11 +127,11 @@ const WeatherWidget: React.FC = () => {
             <p
               style={{
                 margin: 0,
-                fontSize: "28px",
+                fontSize: "24px",
                 fontWeight: "bold",
                 display: "flex",
                 alignItems: "center",
-                gap: "8px",
+                gap: "6px",
               }}
             >
               {Math.round(weather.main.temp)}°C
@@ -139,7 +139,7 @@ const WeatherWidget: React.FC = () => {
             <p
               style={{
                 margin: "4px 0",
-                fontSize: "14px",
+                fontSize: "12px",
                 textTransform: "capitalize",
               }}
             >
@@ -148,15 +148,15 @@ const WeatherWidget: React.FC = () => {
           </div>
           <div
             style={{
-              height: "80px",
-              width: "80px",
+              height: "70px",
+              width: "70px",
               borderRadius: "50%",
               background: "#ffffff33",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               color: "#ffffff",
-              fontSize: "14px",
+              fontSize: "12px",
               textAlign: "center",
               lineHeight: "1.2",
             }}

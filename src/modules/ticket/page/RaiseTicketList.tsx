@@ -29,6 +29,7 @@ import noImage from "../../../assets/No_Image.jpg";
 import noUser from "../../../assets/avatar2.png";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import dayjs from "dayjs";
+import CountdownTimer from "../components/Countdown"
 import relativeTime from "dayjs/plugin/relativeTime";
 import { formatTimeDifference } from "../utils/timeFormat";
 dayjs.extend(relativeTime);
@@ -281,9 +282,7 @@ const RaiseTicketList: React.FC = () => {
                           </Tooltip>
                         )}
                       </div>
-                    </strong>
-                  </div>
-                  <div>
+                      <div>
                     {ticket.ticket_status === "unsolved" && (
                       <Tag color="red-inverse">UNSOLVED</Tag>
                     )}
@@ -296,6 +295,22 @@ const RaiseTicketList: React.FC = () => {
                     {ticket.ticket_status === "inprogress" && (
                       <Tag color="blue-inverse">IN PROGRESS</Tag>
                     )}
+                  </div>
+                    </strong>
+                  </div>
+                  
+                  <div>
+                  <CountdownTimer
+                      ticketCreatedAt={ticket.created_at}
+                      ticketUpdatedAt={ticket.updated_at}
+                      responseTimeValue={ticket.response_time_value}
+                      responseTimeUnit={ticket.response_time_unit}
+                      resolveTimeValue={ticket.resolve_time_value}
+                      resolveTimeUnit={ticket.resolve_time_unit}
+                      ticketStatus={ticket.ticket_status}
+                    />
+
+
                   </div>
                 </div>
                 <Divider style={{ margin: "6px 0px 12px" }} />

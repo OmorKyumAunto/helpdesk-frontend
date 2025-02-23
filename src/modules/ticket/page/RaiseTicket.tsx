@@ -21,8 +21,10 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 const { Option } = Select;
 const { TextArea } = Input;
-
-const RaiseTicketForm = () => {
+interface RaiseTicketFormProps {
+  setActiveKey: React.Dispatch<React.SetStateAction<string>>;  // Define setActiveKey prop
+}
+const RaiseTicketForm : React.FC<RaiseTicketFormProps>= ({ setActiveKey }) => {
   const [form] = Form.useForm();
   const [isCcVisible, setIsCcVisible] = useState(false); // State to manage CC Select visibility
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
@@ -56,9 +58,9 @@ const RaiseTicketForm = () => {
     if (isSuccess) {
       form.resetFields();
       setIsCcVisible(false); // Reset CC visibility on form success
+      setActiveKey("7"); // Navigate to "My Tickets" tab after form submission
     }
-  }, [isSuccess, form]);
-
+  }, [isSuccess, form, setActiveKey]);
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
       return e;

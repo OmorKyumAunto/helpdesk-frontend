@@ -36,6 +36,7 @@ export const api = createApi({
     }),
   }),
   tagTypes: [
+    "slaConfig",
     "User",
     "company-document",
     "restaurant-facilities",

@@ -430,8 +430,17 @@ const AdminTicketList = ({
                   </div>
 
                   <div>
-                  <CountdownTimer deadline="2025-02-17T15:30:00"></CountdownTimer>
-                    
+                  <CountdownTimer
+                      ticketCreatedAt={ticket.ticket_created_at}
+                      ticketUpdatedAt={ticket.ticket_updated_at}
+                      responseTimeValue={ticket.response_time_value}
+                      responseTimeUnit={ticket.response_time_unit}
+                      resolveTimeValue={ticket.resolve_time_value}
+                      resolveTimeUnit={ticket.resolve_time_unit}
+                      ticketStatus={ticket.ticket_status}
+                    />
+
+
                   </div>
                 </div>
                 <Divider style={{ margin: "6px 0px 12px" }} />

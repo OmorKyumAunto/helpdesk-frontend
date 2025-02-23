@@ -361,42 +361,48 @@ const SuperAdminTicketList = ({
                               {ticket.action_by_employee_id || "Unknown"})
                             </span>
                           </Tooltip>
-                          
+
                         )}
                       </div>
                       <Space>
-                      {ticket.ticket_status === "unsolved" && (
-                        <Tag color="red-inverse">UNSOLVED</Tag>
-                      )}
-                      {ticket.ticket_status === "solved" && (
-                        <Tag color="green-inverse">SOLVED</Tag>
-                      )}
-                      {ticket.ticket_status === "forward" && (
-                        <Tag color="pink-inverse">FORWARD</Tag>
-                      )}
-                      {ticket.ticket_status === "inprogress" && (
-                        <Tag color="blue-inverse">IN PROGRESS</Tag>
-                      )}
-                      <Popconfirm
-                        title="Delete the ticket"
-                        description="Are you sure to delete this ticket?"
-                        onConfirm={() => remove(ticket.ticket_table_id)}
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <Button size="small" danger style={{ color: "red" }}>
-                          <DeleteOutlined />
-                        </Button>
-                      </Popconfirm>
-                    </Space>
-                    
+                        {ticket.ticket_status === "unsolved" && (
+                          <Tag color="red-inverse">UNSOLVED</Tag>
+                        )}
+                        {ticket.ticket_status === "solved" && (
+                          <Tag color="green-inverse">SOLVED</Tag>
+                        )}
+                        {ticket.ticket_status === "forward" && (
+                          <Tag color="pink-inverse">FORWARD</Tag>
+                        )}
+                        {ticket.ticket_status === "inprogress" && (
+                          <Tag color="blue-inverse">IN PROGRESS</Tag>
+                        )}
+                        <Popconfirm
+                          title="Delete the ticket"
+                          description="Are you sure to delete this ticket?"
+                          onConfirm={() => remove(ticket.ticket_table_id)}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <Button size="small" danger style={{ color: "red" }}>
+                            <DeleteOutlined />
+                          </Button>
+                        </Popconfirm>
+                      </Space>
+
                     </strong>
                   </div>
 
                   <div>
-                    <CountdownTimer deadline="2025-02-17T15:30:00"></CountdownTimer>
-                  
-                   
+                    <CountdownTimer
+                      ticketCreatedAt={ticket.ticket_created_at}
+                      ticketUpdatedAt={ticket.ticket_updated_at}
+                      responseTimeValue={ticket.response_time_value}
+                      responseTimeUnit={ticket.response_time_unit}
+                      resolveTimeValue={ticket.resolve_time_value}
+                      resolveTimeUnit={ticket.resolve_time_unit}
+                      ticketStatus={ticket.ticket_status}
+                    />
                   </div>
                 </div>
                 <Divider style={{ margin: "6px 0px 12px" }} />
@@ -511,29 +517,29 @@ const SuperAdminTicketList = ({
                         items={[
                           ...(ticket.ticket_status === "forward"
                             ? [
-                                {
-                                  key: "0",
-                                  label: "Forward Details",
-                                  children: ticket.forward_details || "N/A",
-                                  span: 4,
-                                },
-                                {
-                                  key: "0-1",
-                                  label: "Forward Remarks",
-                                  children: ticket.forward_remarks || "N/A",
-                                  span: 4,
-                                },
-                                {
-                                  key: "0-2",
-                                  label: "Forward Date",
-                                  children: ticket.forward_date
-                                    ? dayjs(ticket.forward_date).format(
-                                        "DD MMM YYYY h:mm A"
-                                      )
-                                    : "N/A",
-                                  span: 4,
-                                },
-                              ]
+                              {
+                                key: "0",
+                                label: "Forward Details",
+                                children: ticket.forward_details || "N/A",
+                                span: 4,
+                              },
+                              {
+                                key: "0-1",
+                                label: "Forward Remarks",
+                                children: ticket.forward_remarks || "N/A",
+                                span: 4,
+                              },
+                              {
+                                key: "0-2",
+                                label: "Forward Date",
+                                children: ticket.forward_date
+                                  ? dayjs(ticket.forward_date).format(
+                                    "DD MMM YYYY h:mm A"
+                                  )
+                                  : "N/A",
+                                span: 4,
+                              },
+                            ]
                             : []),
                           {
                             key: "1",
@@ -557,23 +563,23 @@ const SuperAdminTicketList = ({
                             )
                               ? "Not Updated Yet"
                               : `${dayjs(ticket.ticket_updated_at).format(
-                                  "DD MMM YYYY h:mm A"
-                                )} (${dayjs(
-                                  ticket.ticket_updated_at
-                                ).fromNow()})`,
+                                "DD MMM YYYY h:mm A"
+                              )} (${dayjs(
+                                ticket.ticket_updated_at
+                              ).fromNow()})`,
                             span: 2,
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
-                                {
-                                  key: "4",
-                                  label: "Time Taken",
-                                  children: formatTimeDifference(
-                                    dayjs(ticket.ticket_created_at),
-                                    dayjs(ticket.ticket_updated_at)
-                                  ),
-                                },
-                              ]
+                              {
+                                key: "4",
+                                label: "Time Taken",
+                                children: formatTimeDifference(
+                                  dayjs(ticket.ticket_created_at),
+                                  dayjs(ticket.ticket_updated_at)
+                                ),
+                              },
+                            ]
                             : []),
                         ]}
                       />
@@ -598,13 +604,12 @@ const SuperAdminTicketList = ({
                                   href={
                                     ticket.attachment.startsWith("https")
                                       ? ticket.attachment
-                                      : `${imageURLNew}/uploads/${
-                                          ticket.attachment.includes("ticket\\")
-                                            ? ticket.attachment.split(
-                                                "ticket\\"
-                                              )[1]
-                                            : ticket.attachment
-                                        }`
+                                      : `${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                        ? ticket.attachment.split(
+                                          "ticket\\"
+                                        )[1]
+                                        : ticket.attachment
+                                      }`
                                   }
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -622,11 +627,10 @@ const SuperAdminTicketList = ({
                               ) : (
                                 <a>
                                   <Image
-                                    src={`${imageURLNew}/uploads/${
-                                      ticket.attachment.includes("ticket\\")
-                                        ? ticket.attachment.split("ticket\\")[1]
-                                        : ticket.attachment
-                                    }`}
+                                    src={`${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                      ? ticket.attachment.split("ticket\\")[1]
+                                      : ticket.attachment
+                                      }`}
                                     alt="attachment"
                                     width={40}
                                     style={{ maxHeight: "40px" }}
@@ -691,7 +695,7 @@ const SuperAdminTicketList = ({
                                     color: "black", // Text color always black
                                     backgroundColor:
                                       profile?.employee_id ===
-                                      comment.employee_id
+                                        comment.employee_id
                                         ? "#DCF8C6" // Light green for the logged-in user's comment
                                         : "#ECE5DD", // Light grayish background for other users' comments
                                     padding: "8px 12px",

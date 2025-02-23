@@ -136,7 +136,7 @@ const TicketMain: React.FC = () => {
                 Raise a Ticket
               </span>
             ),
-            children: <RaiseTicketForm />,
+            children: <RaiseTicketForm setActiveKey={setActiveKey} />,
           },
           {
             key: "7",

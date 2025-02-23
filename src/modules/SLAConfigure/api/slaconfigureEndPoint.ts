@@ -2,98 +2,40 @@ import { api } from "../../../app/api/api";
 import { HTTPResponse } from "../../../app/types/commonTypes";
 import notification from "../../../common/utils/Notification";
 import asyncWrapper from "../../../utils/asyncWrapper";
-import { ICategoryList } from "../types/slaconfigureTypes";
+import { ISLAConfig } from "../types/slaconfigureTypes";
 
-export const categoryEndPoint = api.injectEndpoints({
+export const slaConfigureEndPoint = api.injectEndpoints({
   endpoints: (build) => ({
-    getCategoryList: build.query<HTTPResponse<ICategoryList[]>, any>({
-      query: (params) => {
-        return {
-          url: `/ticket-category/list`,
-          params,
-        };
-      },
-      providesTags: () => ["category"],
+    getSLAConfigList: build.query<HTTPResponse<ISLAConfig[]>, void>({
+      query: () => ({
+        url: `/sla-configuration/list`,
+      }),
+      providesTags: () => ["slaConfig"],
     }),
-    getCategoryActiveList: build.query<HTTPResponse<ICategoryList[]>, any>({
-      query: (params) => {
-        return {
-          url: `/ticket-category/active-list`,
-          params,
-        };
-      },
-      providesTags: () => ["category"],
-    }),
-    createCategory: build.mutation<unknown, { title: string }>({
-      query: (data) => {
-        return {
-          url: `/ticket-category/add`,
-          method: "POST",
-          body: data,
-        };
-      },
+
+    updateSLAConfig: build.mutation<unknown, ISLAConfig>({
+      query: ({ id, response, resolve }) => ({
+        url: `/sla-configuration/${id}`,
+        method: "PUT",
+        body: {
+          response_time_value: response.time,
+          response_time_unit: response.unit.toLowerCase(), // Convert to lowercase
+          resolve_time_value: resolve.time,
+          resolve_time_unit: resolve.unit.toLowerCase(), // Convert to lowercase
+        },
+      }),
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully category create ");
+          notification("success", "SLA Configuration updated successfully");
         });
       },
-      invalidatesTags: () => ["category"],
-    }),
-    UpdateCategory: build.mutation<unknown, { title: string; id: number }>({
-      query: ({ title, id }) => {
-        return {
-          url: `/ticket-category/update/${id}`,
-          method: "PUT",
-          body: title,
-        };
-      },
-      onQueryStarted: async (_arg, { queryFulfilled }) => {
-        asyncWrapper(async () => {
-          await queryFulfilled;
-          notification("success", "Successfully category update ");
-        });
-      },
-      invalidatesTags: () => ["category"],
-    }),
-    UpdateCategoryStatus: build.mutation<unknown, { id: number }>({
-      query: (id) => {
-        return {
-          url: `/ticket-category/changeStatus/${id}`,
-          method: "PUT",
-        };
-      },
-      onQueryStarted: async (_arg, { queryFulfilled }) => {
-        asyncWrapper(async () => {
-          await queryFulfilled;
-          notification("success", "Successfully update category status");
-        });
-      },
-      invalidatesTags: () => ["category"],
-    }),
-    deleteCategory: build.mutation<unknown, number>({
-      query: (id) => {
-        return {
-          url: `/ticket-category/delete/${id}`,
-          method: "DELETE",
-        };
-      },
-      onQueryStarted: async (_arg, { queryFulfilled }) => {
-        asyncWrapper(async () => {
-          await queryFulfilled;
-          notification("success", "Successfully delete category");
-        });
-      },
-      invalidatesTags: () => ["category"],
+      invalidatesTags: () => ["slaConfig"],
     }),
   }),
 });
 
 export const {
-  useGetCategoryListQuery,
-  useGetCategoryActiveListQuery,
-  useCreateCategoryMutation,
-  useDeleteCategoryMutation,
-  useUpdateCategoryMutation,
-  useUpdateCategoryStatusMutation,
-} = categoryEndPoint;
+  useGetSLAConfigListQuery,
+  useUpdateSLAConfigMutation,
+} = slaConfigureEndPoint;

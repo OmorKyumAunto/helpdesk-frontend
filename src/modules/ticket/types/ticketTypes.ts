@@ -38,6 +38,11 @@ export interface IRaiseTicketList {
   forward_details: string,
   forward_remarks: string,
   forward_date: string;
+  response_time_value:number;
+  response_time_unit:string;
+  resolve_time_value:number;
+  resolve_time_unit:string;
+
 }
 export interface IAdminTicketList {
   user_id: number;
@@ -89,6 +94,11 @@ export interface IAdminTicketList {
   forward_details: string,
   forward_remarks: string,
   forward_date: string;
+  response_time_value:number;
+  response_time_unit:string;
+  resolve_time_value:number;
+  resolve_time_unit:string;
+
 
 
 
@@ -110,6 +120,7 @@ export interface ITicketDashboardCount {
   total_unsolved: number;
   total_forward: number;
   total_inprogress: number;
+  total_avg_time:number;
 }
 export interface ICategoryWiseDashboard {
   category_id: number;
@@ -159,4 +170,5 @@ export interface ITicketDashboardReport {
   ticket_updated_at: Date;
   asset_unit_id: number;
   ticket_created_at: Date;
+  
 }
