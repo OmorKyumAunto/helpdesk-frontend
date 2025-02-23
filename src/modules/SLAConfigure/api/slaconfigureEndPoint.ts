@@ -2,7 +2,7 @@ import { api } from "../../../app/api/api";
 import { HTTPResponse } from "../../../app/types/commonTypes";
 import notification from "../../../common/utils/Notification";
 import asyncWrapper from "../../../utils/asyncWrapper";
-import { ISLAConfig } from "../types/slaconfigureTypes";
+import { ISLAConfig, ISLAValue } from "../types/slaconfigureTypes";
 
 export const slaConfigureEndPoint = api.injectEndpoints({
   endpoints: (build) => ({
@@ -13,7 +13,10 @@ export const slaConfigureEndPoint = api.injectEndpoints({
       providesTags: () => ["slaConfig"],
     }),
 
-    updateSLAConfig: build.mutation<unknown, ISLAConfig>({
+    updateSLAConfig: build.mutation<
+      unknown,
+      { id: number; response: ISLAValue; resolve: ISLAValue }
+    >({
       query: ({ id, response, resolve }) => ({
         url: `/sla-configuration/${id}`,
         method: "PUT",
@@ -35,7 +38,5 @@ export const slaConfigureEndPoint = api.injectEndpoints({
   }),
 });
 
-export const {
-  useGetSLAConfigListQuery,
-  useUpdateSLAConfigMutation,
-} = slaConfigureEndPoint;
+export const { useGetSLAConfigListQuery, useUpdateSLAConfigMutation } =
+  slaConfigureEndPoint;

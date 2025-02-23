@@ -113,8 +113,12 @@ const TicketDashboard = ({
             <Card
               className="card-hover-stat"
               onClick={() => {
-                setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
-                setTicketValue && setTicketValue(item.value);
+                setActiveKey &&
+                  item.value !== "total_avg_time" &&
+                  setActiveKey(roleID === 1 ? "2" : "5");
+                setTicketValue &&
+                  item.value !== "total_avg_time" &&
+                  setTicketValue(item.value);
               }}
               style={{
                 textAlign: "center",
@@ -178,8 +182,6 @@ const TicketDashboard = ({
           </Col>
         ))}
 
-        
-
         {/* Priority based */}
         <Col xs={24} sm={24} md={24} lg={5}>
           <Card
@@ -202,7 +204,7 @@ const TicketDashboard = ({
               direction="vertical"
               style={{
                 height: "260px",
-                
+
                 width: "100%",
                 gap: "4px", // Reduced gap between cards
                 marginTop: "0px", // Ensures no extra space above the first card
@@ -374,15 +376,14 @@ const TicketDashboard = ({
                             setTicketSolver &&
                               setTicketSolver(record?.solved_by_name);
                           }
-
                         }}
                         onMouseEnter={(e) =>
-                        ((e.target as HTMLSpanElement).style.color =
-                          "#0056b3")
+                          ((e.target as HTMLSpanElement).style.color =
+                            "#0056b3")
                         }
                         onMouseLeave={(e) =>
-                        ((e.target as HTMLSpanElement).style.color =
-                          "#1775bb")
+                          ((e.target as HTMLSpanElement).style.color =
+                            "#1775bb")
                         }
                       >
                         {record?.solved_by_name}
@@ -451,9 +452,15 @@ const TicketDashboard = ({
         {/* Last 30 Days */}
         <Col xs={24} sm={24} md={24} lg={6}>
           <Card title="Last 30 Days" style={{ height: "100%" }}>
-            <Space direction="vertical" style={{ height: 200, width: "100%" , fontSize: "1px" }}>
+            <Space
+              direction="vertical"
+              style={{ height: 200, width: "100%", fontSize: "1px" }}
+            >
               <div>
-                <Typography.Title level={5} style={{ margin: "0px", fontSize: "14px" }}>
+                <Typography.Title
+                  level={5}
+                  style={{ margin: "0px", fontSize: "14px" }}
+                >
                   Raise Tickets
                 </Typography.Title>
                 <Space
@@ -488,7 +495,10 @@ const TicketDashboard = ({
                 />
               </div>
               <div>
-                <Typography.Title level={5} style={{ margin: "0px", fontSize: "14px" }}>
+                <Typography.Title
+                  level={5}
+                  style={{ margin: "0px", fontSize: "14px" }}
+                >
                   Solved Tickets
                 </Typography.Title>
 
@@ -524,7 +534,10 @@ const TicketDashboard = ({
                 />
               </div>
               <div>
-                <Typography.Title level={5} style={{ margin: "0px", fontSize: "14px" }}>
+                <Typography.Title
+                  level={5}
+                  style={{ margin: "0px", fontSize: "14px" }}
+                >
                   Unsolved Tickets
                 </Typography.Title>
                 <Space

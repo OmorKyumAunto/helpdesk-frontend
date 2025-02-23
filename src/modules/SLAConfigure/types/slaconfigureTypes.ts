@@ -5,12 +5,12 @@ export interface ISLAConfig {
   resolve_time_unit: string;
   response_time_value: number; // ✅ This must exist at the top level
   resolve_time_value: number; // ✅ This must exist at the top level
-  response: {
-    time: number;
-    unit: string;
-  };
-  resolve: {
-    time: number;
-    unit: string;
-  };
+  response: ISLAValue;
+  resolve: ISLAValue;
+}
+export interface ISLAValue {
+  time: number;
+  unit: string;
+  response_time_value?: number | undefined;
+  resolve_time_value?: number | undefined;
 }

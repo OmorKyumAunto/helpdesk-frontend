@@ -20,7 +20,7 @@ const TicketMain: React.FC = () => {
   const [ticketValue, setTicketValue] = useState("");
   const [ticketPriorityValue, setTicketPriorityValue] = useState("");
   const [ticketSolver, setTicketSolver] = useState("");
-  console.log({ ticketSolver });
+  console.log({ ticketValue });
   const onChange = (key: string) => {
     setActiveKey(key);
     if (key !== "2" && key !== "5") {
@@ -120,10 +120,7 @@ const TicketMain: React.FC = () => {
                 On Behalf Ticket
               </span>
             ),
-            children: (
-              <OnBehalfTicket
-              />
-            ),
+            children: <OnBehalfTicket />,
           },
         ]
       : []),
