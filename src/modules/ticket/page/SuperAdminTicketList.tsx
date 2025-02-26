@@ -23,7 +23,14 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import React, { useEffect, useState } from "react";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { imageURLNew } from "../../../app/slice/baseQuery";
+import { setCommonModal } from "../../../app/slice/modalSlice";
 import noUser from "../../../assets/avatar2.png";
+import {
+  EditOutlined,
+  FilterOutlined,
+  
+} from "@ant-design/icons";
+import { useDispatch } from "react-redux";
 import {
   useDeleteTicketMutation,
   useGetRaiseTicketSuperAdminWiseQuery,
@@ -31,6 +38,7 @@ import {
 } from "../api/ticketEndpoint";
 import { IAdminTicketList } from "../types/ticketTypes";
 import { formatTimeDifference } from "../utils/timeFormat";
+import UpdateTicketPriority from "../components/UpdateTicketPriority";
 dayjs.extend(relativeTime);
 import CountdownTimer from "../components/Countdown"
 const { Option } = Select;
@@ -56,6 +64,7 @@ const SuperAdminTicketList = ({
     limit: Number(pageSize),
     offset: skipValue,
   });
+  const dispatch = useDispatch();
   const [remove] = useDeleteTicketMutation();
   const { data, isLoading } = useGetRaiseTicketSuperAdminWiseQuery({
     ...filter,
@@ -466,6 +475,24 @@ const SuperAdminTicketList = ({
                           <Tag color="green-inverse">LOW</Tag>
                         )}
                       </>
+                      {ticket?.ticket_status === "unsolved" && (
+                          <Button
+                            size="small"
+                            type="primary"
+                            onClick={() => {
+                              dispatch(
+                                setCommonModal({
+                                  title: "Update Ticket Priority",
+                                  content: <UpdateTicketPriority single={ticket} />,
+                                  show: true,
+                                })
+                              );
+                            }}
+                          >
+                            <EditOutlined />
+                          </Button>
+                        )}
+
                     </div>
                   </Col>
 

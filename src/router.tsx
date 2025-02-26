@@ -28,6 +28,7 @@ import CategoryList from "./modules/Category/pages/CategoryList";
 import AssignCategoryList from "./modules/assignCategory/pages/AssignCategoryList";
 import TicketMain from "./modules/ticket/page/TicketMain";
 import TicketConfig from "./modules/ticket/page/TicketConfig";
+import TaskMain from "./modules/task/page/TaskMain";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -101,6 +102,10 @@ export const routers = createBrowserRouter([
       {
         path: "/tickets/list",
         element: <TicketMain />,
+      },
+      {
+        path: "/task/list",
+        element: <TaskMain />,
       },
       {
         path: "/ctc/list",

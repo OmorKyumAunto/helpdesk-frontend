@@ -217,6 +217,23 @@ export const ticketEndpoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["ticket"],
     }),
+    updateTicketPriority: build.mutation<
+    unknown,
+    { id: number; body: { priority: string } }
+  >({
+    query: ({ id, body }) => ({
+      url: `/raise-ticket/changePriority/${id}`,
+      method: "PUT",
+      body,
+    }),
+    onQueryStarted: async (_arg, { queryFulfilled }) => {
+      asyncWrapper(async () => {
+        await queryFulfilled;
+        notification("success", "Successfully updated ticket priority");
+      });
+    },
+    invalidatesTags: () => ["ticket"],
+  }),
     deleteTicket: build.mutation<unknown, number>({
       query: (id) => {
         return {
@@ -251,5 +268,6 @@ export const {
   useGetRaiseTicketSuperAdminWiseQuery,
   useLazyGetCommentDataQuery,
   useUpdateTicketAdminStatusMutation,
+  useUpdateTicketPriorityMutation,
   useDeleteTicketMutation,
 } = ticketEndpoint;

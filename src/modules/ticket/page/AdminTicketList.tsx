@@ -32,6 +32,8 @@ import {
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import UpdateTicketStatus from "../components/UpdateTicketStatus";
+import UpdateTicketPriority from "../components/UpdateTicketPriority";
+import { useUpdateTicketPriorityMutation } from "../api/ticketEndpoint";
 import { imageURLNew } from "../../../app/slice/baseQuery";
 import noImage from "../../../assets/No_Image.jpg";
 import { useGetMeQuery } from "../../../app/api/userApi";
@@ -72,6 +74,7 @@ const AdminTicketList = ({
   const { data: { data: profile } = {} } = useGetMeQuery();
 
   const [createComment, { isSuccess }] = useCreateCommentMutation();
+
   const handleExpand = (id: number): void => {
     setExpandedCard(expandedCard === id ? null : id);
   };
@@ -81,6 +84,9 @@ const AdminTicketList = ({
     setPageSize(size);
     setFilter({ ...filter, offset: (current - 1) * size, limit: size });
   };
+  // const handlePriorityChange = (ticket_id: number, priority: string) => {
+  //   updatePriority({ id: ticket_id, body: { priority } });
+  // }
   const handleAddComment = (id: number): void => {
     const body = {
       ticket_id: id,
@@ -398,39 +404,39 @@ const AdminTicketList = ({
                         )}
                       </div>
                       <Space>
-                      {ticket.ticket_status === "unsolved" && (
-                        <Tag color="red-inverse">UNSOLVED</Tag>
-                      )}
-                      {ticket.ticket_status === "solved" && (
-                        <Tag color="green-inverse">SOLVED</Tag>
-                      )}
-                      {ticket.ticket_status === "forward" && (
-                        <Tag color="pink-inverse">FORWARD</Tag>
-                      )}
-                      {ticket.ticket_status === "inprogress" && (
-                        <Tag color="blue-inverse">IN PROGRESS</Tag>
-                      )}
-                      <Button
-                        size="small"
-                        type="primary"
-                        onClick={() => {
-                          dispatch(
-                            setCommonModal({
-                              title: "Update Ticket Status",
-                              content: <UpdateTicketStatus single={ticket} />,
-                              show: true,
-                            })
-                          );
-                        }}
-                      >
-                        <EditOutlined />
-                      </Button>
-                    </Space>
+                        {ticket.ticket_status === "unsolved" && (
+                          <Tag color="red-inverse">UNSOLVED</Tag>
+                        )}
+                        {ticket.ticket_status === "solved" && (
+                          <Tag color="green-inverse">SOLVED</Tag>
+                        )}
+                        {ticket.ticket_status === "forward" && (
+                          <Tag color="pink-inverse">FORWARD</Tag>
+                        )}
+                        {ticket.ticket_status === "inprogress" && (
+                          <Tag color="blue-inverse">IN PROGRESS</Tag>
+                        )}
+                        <Button
+                          size="small"
+                          type="primary"
+                          onClick={() => {
+                            dispatch(
+                              setCommonModal({
+                                title: "Update Ticket Status",
+                                content: <UpdateTicketStatus single={ticket} />,
+                                show: true,
+                              })
+                            );
+                          }}
+                        >
+                          <EditOutlined />
+                        </Button>
+                      </Space>
                     </strong>
                   </div>
 
                   <div>
-                  <CountdownTimer
+                    <CountdownTimer
                       ticketCreatedAt={ticket.ticket_created_at}
                       ticketUpdatedAt={ticket.ticket_updated_at}
                       responseTimeValue={ticket.response_time_value}
@@ -503,6 +509,25 @@ const AdminTicketList = ({
                         {ticket.priority === "low" && (
                           <Tag color="green-inverse">LOW</Tag>
                         )}
+                        {ticket?.ticket_status === "unsolved" && (
+                          <Button
+                            size="small"
+                            type="primary"
+                            onClick={() => {
+                              dispatch(
+                                setCommonModal({
+                                  title: "Update Ticket Priority",
+                                  content: <UpdateTicketPriority single={ticket} />,
+                                  show: true,
+                                })
+                              );
+                            }}
+                          >
+                            <EditOutlined />
+                          </Button>
+                        )}
+
+
                       </>
                     </div>
                   </Col>
@@ -554,29 +579,29 @@ const AdminTicketList = ({
                         items={[
                           ...(ticket.ticket_status === "forward"
                             ? [
-                                {
-                                  key: "0",
-                                  label: "Forward Details",
-                                  children: ticket.forward_details || "N/A",
-                                  span: 4,
-                                },
-                                {
-                                  key: "0-1",
-                                  label: "Forward Remarks",
-                                  children: ticket.forward_remarks || "N/A",
-                                  span: 4,
-                                },
-                                {
-                                  key: "0-2",
-                                  label: "Forward Date",
-                                  children: ticket.forward_date
-                                    ? dayjs(ticket.forward_date).format(
-                                        "DD MMM YYYY h:mm A"
-                                      )
-                                    : "N/A",
-                                  span: 4,
-                                },
-                              ]
+                              {
+                                key: "0",
+                                label: "Forward Details",
+                                children: ticket.forward_details || "N/A",
+                                span: 4,
+                              },
+                              {
+                                key: "0-1",
+                                label: "Forward Remarks",
+                                children: ticket.forward_remarks || "N/A",
+                                span: 4,
+                              },
+                              {
+                                key: "0-2",
+                                label: "Forward Date",
+                                children: ticket.forward_date
+                                  ? dayjs(ticket.forward_date).format(
+                                    "DD MMM YYYY h:mm A"
+                                  )
+                                  : "N/A",
+                                span: 4,
+                              },
+                            ]
                             : []),
                           {
                             key: "1",
@@ -600,23 +625,23 @@ const AdminTicketList = ({
                             )
                               ? "Not Updated Yet"
                               : `${dayjs(ticket.ticket_updated_at).format(
-                                  "DD MMM YYYY h:mm A"
-                                )} (${dayjs(
-                                  ticket.ticket_updated_at
-                                ).fromNow()})`,
+                                "DD MMM YYYY h:mm A"
+                              )} (${dayjs(
+                                ticket.ticket_updated_at
+                              ).fromNow()})`,
                             span: 2,
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
-                                {
-                                  key: "4",
-                                  label: "Time Taken",
-                                  children: formatTimeDifference(
-                                    dayjs(ticket.ticket_created_at),
-                                    dayjs(ticket.ticket_updated_at)
-                                  ),
-                                },
-                              ]
+                              {
+                                key: "4",
+                                label: "Time Taken",
+                                children: formatTimeDifference(
+                                  dayjs(ticket.ticket_created_at),
+                                  dayjs(ticket.ticket_updated_at)
+                                ),
+                              },
+                            ]
                             : []),
                         ]}
                       />
@@ -688,13 +713,12 @@ const AdminTicketList = ({
                                   href={
                                     ticket.attachment.startsWith("https")
                                       ? ticket.attachment
-                                      : `${imageURLNew}/uploads/${
-                                          ticket.attachment.includes("ticket\\")
-                                            ? ticket.attachment.split(
-                                                "ticket\\"
-                                              )[1]
-                                            : ticket.attachment
-                                        }`
+                                      : `${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                        ? ticket.attachment.split(
+                                          "ticket\\"
+                                        )[1]
+                                        : ticket.attachment
+                                      }`
                                   }
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -712,11 +736,10 @@ const AdminTicketList = ({
                               ) : (
                                 <a>
                                   <Image
-                                    src={`${imageURLNew}/uploads/${
-                                      ticket.attachment.includes("ticket\\")
-                                        ? ticket.attachment.split("ticket\\")[1]
-                                        : ticket.attachment
-                                    }`}
+                                    src={`${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                      ? ticket.attachment.split("ticket\\")[1]
+                                      : ticket.attachment
+                                      }`}
                                     alt="attachment"
                                     width={40}
                                     style={{ maxHeight: "40px" }}
@@ -783,7 +806,7 @@ const AdminTicketList = ({
                                     color: "black", // Text color black for non-user comments
                                     backgroundColor:
                                       profile?.employee_id ===
-                                      comment.employee_id
+                                        comment.employee_id
                                         ? "#DCF8C6" // Light green for the logged-in user's comment
                                         : "#ECE5DD", // Light grayish background for other users' comments
                                     padding: "8px 12px",
