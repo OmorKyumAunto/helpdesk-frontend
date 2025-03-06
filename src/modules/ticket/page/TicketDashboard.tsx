@@ -55,7 +55,7 @@ const TicketDashboard = ({
       title: "All Ticket",
       value: "",
       data: data?.data?.total_ticket,
-      color: "rgba(38, 0, 255, 0.8)", // Orange for All Ticket
+      color: "rgba(61,91,241,255)", // Orange for All Ticket
       icon: <FaTicketAlt size={28} />, // Ticket icon for "All Ticket"
     },
     {
@@ -63,7 +63,7 @@ const TicketDashboard = ({
       title: "Solved",
       value: "solved",
       data: data?.data?.total_solve,
-      color: "rgba(0, 128, 0, 0.8)", // Green for Solved
+      color: "rgba(32,149,135,255)", // Green for Solved
       icon: <FaCheckCircle size={28} />, // Check circle icon for "Solved"
     },
     {
@@ -71,7 +71,7 @@ const TicketDashboard = ({
       title: "In Progress",
       value: "inprogress",
       data: data?.data?.total_inprogress,
-      color: "rgba(80, 20, 140, 0.8)", // Purple for In Progress
+      color: "rgba(134,1,176,255)", // Purple for In Progress
       icon: <ImSpinner9 size={28} />, // Spinner icon for "In Progress"
     },
     {
@@ -79,7 +79,7 @@ const TicketDashboard = ({
       title: "Unsolved",
       value: "unsolved",
       data: data?.data?.total_unsolved,
-      color: "rgb(219, 68, 55)", // Red for Unsolved
+      color: "rgba(254,39,18,255)", // Red for Unsolved
       icon: <FaExclamationCircle size={28} />, // Exclamation circle for "Unsolved"
     },
     {
@@ -87,7 +87,7 @@ const TicketDashboard = ({
       title: "Forward",
       value: "forward",
       data: data?.data?.total_forward,
-      color: "rgba(0, 150, 117, 0.8)", // Blue for Forward
+      color: "rgba(0,73,153,255)", // Blue for Forward
       icon: <IoCaretForwardCircle size={28} />, // Arrow icon for "Forward"
     },
     {
@@ -95,7 +95,7 @@ const TicketDashboard = ({
       title: "Avg. Time",
       value: "total_avg_time",
       data: data?.data?.total_avg_time,
-      color: "#00bfff",
+      color: "rgba(158,46,40,255)",
       icon: <IoTimerOutline size={28} />,
     },
   ];

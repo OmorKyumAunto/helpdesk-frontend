@@ -69,20 +69,29 @@ const CTCList = () => {
               />
             </div>
             <Select
+              allowClear
               style={{ width: "160px" }}
               onChange={(e) =>
                 setFilter({ ...filter, unit_name: e, offset: 0 })
               }
               placeholder="Select Unit Name"
             >
-              <Option value="JTML">JTML</Option>
-                    <Option value="DIPL">DIPL</Option>
-                    <Option value="Corporate Office">Corporate Office</Option>
-                    <Option value="DBTrims Plant">DBTrims Plant</Option>
-                    <Option value="PPPL Plant">PPPL Plant</Option>
-                    <Option value="EUDB">EUDB</Option>
-                    <Option value="Thanbee Complex">Thanbee Complex</Option>
-                    <Option value="Flamingo2">Flamingo2</Option>
+              <Option value="Sylhet EZ">Sylhet EZ</Option>
+              <Option value="Corporate Office">Corporate Office</Option>
+              <Option value="DBTrims">DBTrims</Option>
+              <Option value="Jinnat Complex">Jinnat Complex</Option>
+              <Option value="DBLCL">DBLCL</Option>
+              <Option value="FFL2">FFL2</Option>
+              <Option value="MSML Complex">MSML Complex</Option>
+              <Option value="DBL Pharma">DBL Pharma</Option>
+              <Option value="Mymun Complex">Mymun Complex</Option>
+              <Option value="PPPL Plant">PPPL Plant</Option>
+              <Option value="Matin Complex">Matin Complex</Option>
+              <Option value="Jinnat Knitting Ltd">Jinnat Knitting Ltd</Option>
+              <Option value="EUDB">EUDB</Option>
+              <Option value="Mawna Fashions Ltd">Mawna Fashions Ltd</Option>
+              <Option value="Thanbee Complex">Thanbee Complex</Option>
+              <Option value="Flamingo2">Flamingo2</Option>
             </Select>
             <Space>
               <ExcelDownload
@@ -104,41 +113,41 @@ const CTCList = () => {
                 excelData={
                   data?.data?.length
                     ? data?.data?.map(
-                        ({
-                          employee_id,
-                          name,
-                          department,
-                          designation,
-                          assets,
-                          unit_name,
-                          total_asset_price,
-                          monthly_asset_cost,
-                          licenses,
-                          montly_licenses_price,
-                          total_ctc_per_month,
-                          total_ctc_per_year,
-                        }) => {
-                          const data = {
-                            "Employee ID": employee_id,
-                            "Employee Name": name,
-                            Department: department,
-                            Designation: designation,
-                            Assets: assets
-                              ?.map((item) => item?.name)
-                              .join(", "),
-                            "Unit Name": unit_name,
-                            "Total Asset Cost": total_asset_price,
-                            "Monthly Asset Cost": monthly_asset_cost,
-                            Licenses: licenses
-                              ?.map((item) => item?.title)
-                              .join(", "),
-                            "Monthly Licenses Cost": montly_licenses_price,
-                            "Total CTC Per Month": total_ctc_per_month,
-                            "Total CTC Per Year": total_ctc_per_year,
-                          };
-                          return data;
-                        }
-                      )
+                      ({
+                        employee_id,
+                        name,
+                        department,
+                        designation,
+                        assets,
+                        unit_name,
+                        total_asset_price,
+                        monthly_asset_cost,
+                        licenses,
+                        montly_licenses_price,
+                        total_ctc_per_month,
+                        total_ctc_per_year,
+                      }) => {
+                        const data = {
+                          "Employee ID": employee_id,
+                          "Employee Name": name,
+                          Department: department,
+                          Designation: designation,
+                          Assets: assets
+                            ?.map((item) => item?.name)
+                            .join(", "),
+                          "Unit Name": unit_name,
+                          "Total Asset Cost": total_asset_price,
+                          "Monthly Asset Cost": monthly_asset_cost,
+                          Licenses: licenses
+                            ?.map((item) => item?.title)
+                            .join(", "),
+                          "Monthly Licenses Cost": montly_licenses_price,
+                          "Total CTC Per Month": total_ctc_per_month,
+                          "Total CTC Per Year": total_ctc_per_year,
+                        };
+                        return data;
+                      }
+                    )
                     : []
                 }
               />
@@ -162,7 +171,7 @@ const CTCList = () => {
                 current: Number(page),
                 showSizeChanger: true,
                 defaultPageSize: 50,
-                pageSizeOptions: ["50", "100", "200", "300", "500","1000"],
+                pageSizeOptions: ["50", "100", "200", "300", "500", "1000", "5000", "7000"],
                 total: data ? Number(data?.total) : 0,
                 showTotal: (total) => `Total ${total} `,
               }}
