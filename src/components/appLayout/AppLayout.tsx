@@ -448,9 +448,9 @@ export const AppLayout = () => {
                 />
               )}
             </div> */}
-            {/* <Link to={"/task/list"}>
+            <Link to={"/task/list"}>
               <Button type="dashed">Task Manager</Button>
-            </Link> */}
+            </Link>
             <Link to={"/tickets/list"}>
               <Button type="dashed">Ticketing System</Button>
             </Link>

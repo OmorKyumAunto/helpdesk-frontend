@@ -16,7 +16,7 @@ import { BsTicketDetailed } from "react-icons/bs";
 import { GrConfigure } from "react-icons/gr";
 import { PiTicket } from "react-icons/pi";
 
-export const sideBarItems = (roleId: number) => {
+export const sideBarItems = (employee_id:string,roleId: number) => {
   let menuData: IMenuData[] = [
     {
       label: <Link to="/">Dashboard</Link>,
@@ -83,6 +83,16 @@ export const sideBarItems = (roleId: number) => {
             key: "/sop/list",
             icon: <FaRegFileAlt size={20} />,
           },
+        ]
+      : []),
+    ...(employee_id === "15100107"
+      ? [
+          {
+            label: <Link to="/ctc/list">IT CTC</Link>,
+            key: "/ctc/list",
+            icon: <MdOutlineFactCheck size={20} />,
+          },
+          
         ]
       : []),
     {
