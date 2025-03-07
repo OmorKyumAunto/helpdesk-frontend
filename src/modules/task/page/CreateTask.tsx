@@ -1,182 +1,648 @@
-import { useState } from "react";
-import { Plus, Trash2, CalendarDays, Clock, X, ChevronDown, ChevronUp } from "lucide-react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+// import {
+//   DeleteOutlined,
+//   OrderedListOutlined,
+//   PlusCircleFilled,
+//   PlusCircleOutlined,
+//   PlusOutlined,
+//   StarOutlined,
+// } from "@ant-design/icons";
+// import { Button, Card, Divider, Flex, Space, Tag, Typography } from "antd";
+// import { useDispatch } from "react-redux";
+// import { setCommonModal } from "../../../app/slice/modalSlice";
+// import TaskForm from "../components/TaskForm";
+// import ListForm from "../components/ListForm";
+// import dayjs from "dayjs";
+// import { IoWatchOutline } from "react-icons/io5";
+// import { MdOutlineWatchLater } from "react-icons/md";
 
-interface Task {
-  id: number;
-  title: string;
-  startDate: Date | null;
-  startTime: string;
-  endDate: Date | null;
-  endTime: string;
-  description: string;
-  completed: boolean;
-  expanded: boolean;
-}
+// const TaskManager = () => {
+//   const dispatch = useDispatch();
+//   return (
+//     <Card
+//       extra={
+//         <Space>
+//           <Button
+//             type="primary"
+//             icon={<PlusOutlined />}
+//             onClick={() => {
+//               dispatch(
+//                 setCommonModal({
+//                   title: "Create Task",
+//                   content: <TaskForm />,
+//                   show: true,
+//                   width: "550px",
+//                 })
+//               );
+//             }}
+//           >
+//             Create
+//           </Button>
+//         </Space>
+//       }
+//       title="Task Manager"
+//     >
+//       <Flex>
+//         <div className="w-5/6">
+//           <Card>
+//             <Typography.Title level={4}>Yearly Goal</Typography.Title>
+//             <Typography.Text strong style={{ fontSize: "15px" }}>
+//               The Final Destination
+//             </Typography.Text>{" "}
+//             <br />
+//             <Typography.Text>This is Description</Typography.Text> <br />
+//             <Tag color="warning">
+//               <Flex align="center" justify="center">
+//                 <MdOutlineWatchLater size={14} style={{ marginRight: "3px" }} />
+//                 {dayjs().format("DD MMM YYYY")}
+//               </Flex>
+//             </Tag>
+//           </Card>
+//         </div>
+//         <div className="w-1/6 ">
+//           <Space direction="vertical" style={{ width: "100%" }}>
+//             <Button icon={<OrderedListOutlined />} className="w-full">
+//               All Tasks
+//             </Button>
+//             <Button icon={<StarOutlined />} className="w-full">
+//               Starrted
+//             </Button>
+//           </Space>
+//           <Divider orientation="center" style={{ margin: "12px 0 8px" }}>
+//             Lists
+//           </Divider>
+//           <Flex align="center" justify="space-between">
+//             <Typography.Text style={{ marginLeft: "8px" }}>
+//               1. My Tasks
+//             </Typography.Text>
+//             <DeleteOutlined />
+//           </Flex>
+//           <Flex align="center" justify="space-between">
+//             <Typography.Text style={{ marginLeft: "8px" }}>
+//               2. Today Tasks
+//             </Typography.Text>
+//             <DeleteOutlined />
+//           </Flex>
+//           <Flex align="center" justify="space-between">
+//             <Typography.Text style={{ marginLeft: "8px" }}>
+//               3. Yearly Plan
+//             </Typography.Text>
+//             <DeleteOutlined />
+//           </Flex>
+//           <Flex align="center" justify="space-between">
+//             <Typography.Text style={{ marginLeft: "8px" }}>
+//               4. Movie Goals
+//             </Typography.Text>
+//             <DeleteOutlined />
+//           </Flex>
+//           <Button
+//             icon={<PlusOutlined />}
+//             type="text"
+//             style={{ padding: "6px ", marginTop: "4px" }}
+//             onClick={() => {
+//               dispatch(
+//                 setCommonModal({
+//                   title: "Create New List",
+//                   content: <ListForm />,
+//                   show: true,
+//                   width: "450px",
+//                 })
+//               );
+//             }}
+//           >
+//             Create new list
+//           </Button>
+//         </div>
+//       </Flex>
+//     </Card>
+//   );
+// };
+// export default TaskManager;
+import {
+  OrderedListOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  StarOutlined,
+} from "@ant-design/icons";
+import { Button, Col, Input, Row, Space } from "antd";
+import React, { useState } from "react";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import TaskForm from "../components/TaskForm";
+import { useDispatch } from "react-redux";
+import ListForm from "../components/ListForm";
 
-export default function TaskManager() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTask, setNewTask] = useState<Task>({
-    id: Date.now(),
-    title: "",
-    startDate: null,
-    startTime: "",
-    endDate: null,
-    endTime: "",
-    description: "",
-    completed: false,
-    expanded: false,
-  });
-  const [showModal, setShowModal] = useState(false);
-
-  const addTask = () => {
-    if (newTask.title.trim() && newTask.startDate && newTask.startTime) {
-      setTasks([...tasks, { ...newTask, id: Date.now() }]);
-      setNewTask({
-        id: Date.now(),
-        title: "",
-        startDate: null,
-        startTime: "",
-        endDate: null,
-        endTime: "",
-        description: "",
-        completed: false,
-        expanded: false,
-      });
-      setShowModal(false);
-    }
-  };
-
-  const toggleTaskExpand = (taskId: number) => {
-    setTasks(tasks.map(task => task.id === taskId ? { ...task, expanded: !task.expanded } : task));
-  };
+const TaskManager = () => {
+  const [activeList, setActiveList] = useState("My Tasks");
+  const dispatch = useDispatch();
+  const lists = [
+    { id: 1, name: "My Tasks", count: 12 },
+    { id: 2, name: "Today Tasks", count: 5 },
+    { id: 3, name: "Yearly Plan", count: 8 },
+    { id: 4, name: "Movie Goals", count: 15 },
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-50 text-gray-900 p-6">
-      <h1 className="text-4xl font-bold mb-6 text-center text-blue-600">Task Manager</h1>
-
-      {/* Task List */}
-      <div className="w-full max-w-3xl space-y-4">
-        {tasks.length === 0 ? (
-          <p className="text-gray-500 text-center">No tasks yet. Click the + button to create one!</p>
-        ) : (
-          tasks.map(task => (
-            <div key={task.id} className="p-4 rounded-xl transition-all bg-white shadow-lg hover:shadow-xl border border-gray-200 hover:bg-gray-50">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className={`text-lg font-semibold ${task.completed ? "line-through text-gray-500" : "text-gray-900"}`}>
-                    {task.title}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    {task.startDate?.toLocaleDateString()} {task.startTime} → {task.endDate ? task.endDate.toLocaleDateString() : "No end date"} {task.endTime}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <button onClick={() => toggleTaskExpand(task.id)} className="p-2 text-gray-600 hover:text-gray-900 transition-all">
-                    {task.expanded ? <ChevronUp className="w-6 h-6" /> : <ChevronDown className="w-6 h-6" />}
-                  </button>
-                  <button onClick={() => setTasks(tasks.filter(t => t.id !== task.id))} className="p-2 text-gray-500 hover:text-red-500 transition-all">
-                    <Trash2 className="w-6 h-6" />
-                  </button>
-                </div>
-              </div>
-              {task.expanded && <p className="mt-2 text-gray-700">{task.description || "No description"}</p>}
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* Floating Add Task Button */}
-      <button
-        onClick={() => setShowModal(true)}
-        className="fixed bottom-6 right-6 bg-blue-600 p-5 rounded-full shadow-xl hover:scale-110 transition-transform flex items-center justify-center"
-      >
-        <Plus className="w-6 h-6 text-white" />
-      </button>
-
-      {/* Task Modal */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-md">
-          <div className="bg-white text-gray-900 rounded-2xl shadow-xl p-6 w-full max-w-lg">
-            <div className="flex justify-between items-center border-b pb-3">
-              <input
-                type="text"
-                placeholder="Task Title"
-                value={newTask.title}
-                onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                className="w-full text-lg font-semibold outline-none border-none bg-transparent p-2"
-              />
-              <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-gray-700">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            <div className="mt-4 space-y-4">
-              {/* Start Date & Time */}
-              <div className="space-y-2">
-                <label className="text-gray-600 text-sm font-medium">Start Time (Required)</label>
-                <div className="flex items-center space-x-3 p-3 rounded-xl bg-gray-100 shadow-sm">
-                  <CalendarDays className="w-5 h-5 text-gray-500" />
-                  <DatePicker
-                    selected={newTask.startDate}
-                    onChange={(date) => setNewTask({ ...newTask, startDate: date })}
-                    dateFormat="MM/dd/yyyy"
-                    placeholderText="Start Date"
-                    className="w-full bg-transparent outline-none text-gray-900"
-                  />
-                  <Clock className="w-5 h-5 text-gray-500" />
-                  <input
-                    type="time"
-                    value={newTask.startTime}
-                    onChange={(e) => setNewTask({ ...newTask, startTime: e.target.value })}
-                    className="w-full bg-transparent outline-none text-gray-900"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* End Date & Time */}
-              <div className="space-y-2">
-                <label className="text-gray-600 text-sm font-medium">End Time (Optional)</label>
-                <div className="flex items-center space-x-3 p-3 rounded-xl bg-gray-100 shadow-sm">
-                  <CalendarDays className="w-5 h-5 text-gray-500" />
-                  <DatePicker
-                    selected={newTask.endDate}
-                    onChange={(date) => setNewTask({ ...newTask, endDate: date })}
-                    dateFormat="MM/dd/yyyy"
-                    placeholderText="End Date"
-                    className="w-full bg-transparent outline-none text-gray-900"
-                  />
-                  <Clock className="w-5 h-5 text-gray-500" />
-                  <input
-                    type="time"
-                    value={newTask.endTime}
-                    onChange={(e) => setNewTask({ ...newTask, endTime: e.target.value })}
-                    className="w-full bg-transparent outline-none text-gray-900"
-                  />
-                </div>
-              </div>
-
-              {/* Task Description */}
-              <textarea
-                placeholder="Task Description"
-                value={newTask.description}
-                onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-                className="w-full p-3 rounded-xl outline-none bg-gray-100 text-gray-900 shadow-sm"
-              />
-
-              {/* Add Task Button */}
-              <button
-                onClick={addTask}
-                className="w-full py-3 rounded-xl bg-blue-600 text-white text-lg font-semibold hover:bg-blue-700 transition-all"
+    <div className="h-screen flex flex-col bg-gray-100">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="mx-auto ">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 text-blue-600"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                Add Task
-              </button>
+                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z" />
+              </svg>
+              <h1 className="ml-3 text-xl font-bold text-gray-900">
+                Task Manager
+              </h1>
+            </div>
+            <div className="flex items-center">
+              <div className="mr-4 relative">
+                <Input
+                  type="text"
+                  placeholder="Search tasks..."
+                  // className="w-64 pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  prefix={<SearchOutlined />}
+                />
+              </div>
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => {
+                  dispatch(
+                    setCommonModal({
+                      title: "Create Task",
+                      content: <TaskForm />,
+                      show: true,
+                      width: "550px",
+                    })
+                  );
+                }}
+              >
+                Create Task
+              </Button>
             </div>
           </div>
         </div>
-      )}
+      </header>
+
+      {/* Main Content */}
+
+      <Row gutter={[16, 16]} style={{ padding: 12 }}>
+        {/* Main Task View */}
+        <Col xs={24} sm={24} md={24} lg={18}>
+          <Row gutter={[8, 8]}>
+            <Col xs={24} sm={24} md={12}>
+              <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                <div className="border-b border-gray-200 px-6 py-4">
+                  <div className="flex justify-between">
+                    <div>
+                      <h2 className="text-lg font-bold text-gray-900">
+                        Yearly Goal
+                      </h2>
+                      <div className="mt-1">
+                        <span className="text-sm font-medium text-gray-700">
+                          The Final
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm text-gray-500">
+                        This is Description
+                      </p>
+                    </div>
+                    <div>
+                      <Button
+                        type="text"
+                        className=" text-gray-400 hover:text-gray-600"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                          />
+                        </svg>
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1 text-gray-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    Due: 07 Mar 2025
+                  </div>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                    In Progress
+                  </span>
+                </div>
+
+                {/* <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-500">
+                        Created by: Alex Johnson
+                      </span>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                          />
+                        </svg>
+                        Edit
+                      </button>
+                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                          />
+                        </svg>
+                        Comment
+                      </button>
+                    </div>
+                  </div>
+                </div> */}
+              </div>
+            </Col>
+            <Col xs={24} sm={24} md={12}>
+              <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                <div className="border-b border-gray-200 px-6 py-4">
+                  <div className="flex justify-between">
+                    <div>
+                      <h2 className="text-lg font-bold text-gray-900">
+                        Yearly Goal
+                      </h2>
+                      <div className="mt-1">
+                        <span className="text-sm font-medium text-gray-700">
+                          The Final
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm text-gray-500">
+                        This is Description
+                      </p>
+                    </div>
+                    <div>
+                      <Button
+                        type="text"
+                        className=" text-gray-400 hover:text-gray-600"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                          />
+                        </svg>
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1 text-gray-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    Due: 07 Mar 2025
+                  </div>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                    In Progress
+                  </span>
+                </div>
+
+                {/* <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-500">
+                        Created by: Alex Johnson
+                      </span>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                          />
+                        </svg>
+                        Edit
+                      </button>
+                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                          />
+                        </svg>
+                        Comment
+                      </button>
+                    </div>
+                  </div>
+                </div> */}
+              </div>
+            </Col>
+            <Col xs={24} sm={24} md={12}>
+              <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                <div className="border-b border-gray-200 px-6 py-4">
+                  <div className="flex justify-between">
+                    <div>
+                      <h2 className="text-lg font-bold text-gray-900">
+                        Yearly Goal
+                      </h2>
+                      <div className="mt-1">
+                        <span className="text-sm font-medium text-gray-700">
+                          The Final
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm text-gray-500">
+                        This is Description
+                      </p>
+                    </div>
+                    <div>
+                      <Button
+                        type="text"
+                        className=" text-gray-400 hover:text-gray-600"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                          />
+                        </svg>
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1 text-gray-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    Due: 07 Mar 2025
+                  </div>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                    In Progress
+                  </span>
+                </div>
+
+                {/* <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-500">
+                        Created by: Alex Johnson
+                      </span>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                          />
+                        </svg>
+                        Edit
+                      </button>
+                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                          />
+                        </svg>
+                        Comment
+                      </button>
+                    </div>
+                  </div>
+                </div> */}
+              </div>
+            </Col>
+          </Row>
+        </Col>
+
+        {/* Right Sidebar */}
+        <Col xs={24} sm={24} md={24} lg={6}>
+          <div className="w-full h-[84vh] bg-white border-r border-gray-200 rounded-lg flex flex-col">
+            <div className="p-4">
+              <Space direction="vertical" style={{ width: "100%" }}>
+                <Button icon={<OrderedListOutlined />} className="w-full">
+                  All Tasks
+                </Button>
+
+                <Button icon={<StarOutlined />} className="w-full">
+                  Starrted
+                </Button>
+              </Space>
+
+              <div className="mt-5">
+                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
+                  Lists
+                </h2>
+                {lists.map((list) => (
+                  <Button
+                    key={list.id}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left mb-1 ${
+                      activeList === list.name
+                        ? "bg-blue-50 text-blue-700"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                    onClick={() => setActiveList(list.name)}
+                  >
+                    <div className="flex items-center">
+                      <span className="w-6 text-xs text-gray-500">
+                        {list.id}.
+                      </span>
+                      <span className="font-medium">{list.name}</span>
+                    </div>
+                    <span className="bg-gray-200 text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full">
+                      {list.count}
+                    </span>
+                  </Button>
+                ))}
+
+                <Button
+                  onClick={() => {
+                    dispatch(
+                      setCommonModal({
+                        title: "Create New List",
+                        content: <ListForm />,
+                        show: true,
+                        width: "450px",
+                      })
+                    );
+                  }}
+                  className="w-full flex items-center justify-center px-3 py-2 mt-4 text-gray-700 border border-gray-300 border-dashed rounded-lg hover:bg-gray-50"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                  Create new list
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Col>
+      </Row>
     </div>
   );
-}
+};
+
+export default TaskManager;
