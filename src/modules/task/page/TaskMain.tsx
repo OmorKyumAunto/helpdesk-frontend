@@ -1,35 +1,16 @@
-import React, { useState } from "react";
-import { Card, Tabs } from "antd";
 import type { TabsProps } from "antd";
-import CreateTask from "./CreateTask";
+import { Card, Tabs } from "antd";
+import React from "react";
 import { useGetMeQuery } from "../../../app/api/userApi";
+import CreateTask from "./CreateTask";
 import TaskList from "./TaskList";
 import TaskListOther from "./TaskListOther";
-import AssignTask from "./AssignTask";
-import TaskDashboard from "./TaskDashboard";
 import TaskReport from "./TaskReport";
+import TaskDashboard from "./TaskDashboard";
 
 const TaskMain: React.FC = () => {
   const { data: profile } = useGetMeQuery();
   const roleID = profile?.data?.role_id;
-
-  const [activeKey, setActiveKey] = useState(
-    roleID === 1 ? "1" : roleID === 2 ? "4" : "6"
-  );
-  const [ticketValue, setTicketValue] = useState("");
-  const [ticketPriorityValue, setTicketPriorityValue] = useState("");
-  const [ticketSolver, setTicketSolver] = useState("");
-  console.log({ ticketValue });
-  const onChange = (key: string) => {
-    setActiveKey(key);
-    if (key !== "2" && key !== "5") {
-      setTicketValue("");
-      setTicketPriorityValue("");
-    }
-    if (key !== "3") {
-      setTicketSolver("");
-    }
-  };
 
   const items: TabsProps["items"] = [
     ...(roleID === 1
@@ -41,11 +22,7 @@ const TaskMain: React.FC = () => {
                 Dashboard
               </span>
             ),
-            children: (
-              <TaskDashboard
-                
-              />
-            ),
+            children: <TaskDashboard />,
           },
           {
             key: "2",
@@ -54,11 +31,7 @@ const TaskMain: React.FC = () => {
                 All Tasks
               </span>
             ),
-            children: (
-              <TaskList
-                
-              />
-            ),
+            children: <TaskList />,
           },
           {
             key: "3",
@@ -67,9 +40,7 @@ const TaskMain: React.FC = () => {
                 Reports
               </span>
             ),
-            children: (
-              <TaskReport />
-            ),
+            children: <TaskReport />,
           },
         ]
       : []),
@@ -79,27 +50,19 @@ const TaskMain: React.FC = () => {
             key: "4",
             label: (
               <span style={{ fontSize: "16px", fontWeight: "600" }}>
-                
+                Dashboard
               </span>
             ),
-            children: (
-              <TaskDashboard
-                
-              />
-            ),
+            children: <TaskDashboard />,
           },
           {
             key: "5",
             label: (
               <span style={{ fontSize: "16px", fontWeight: "600" }}>
-                My Tasks
+                Create Task
               </span>
             ),
-            children: (
-              <TaskList
-               
-              />
-            ),
+            children: <CreateTask roleID={roleID} />,
           },
           {
             key: "8",
@@ -121,16 +84,7 @@ const TaskMain: React.FC = () => {
                 Create Task
               </span>
             ),
-            children: <CreateTask/>,
-          },
-          {
-            key: "7",
-            label: (
-              <span style={{ fontSize: "16px", fontWeight: "600" }}>
-                My Tasks
-              </span>
-            ),
-            children: <TaskList />,
+            children: <CreateTask />,
           },
         ]
       : []),
@@ -138,7 +92,7 @@ const TaskMain: React.FC = () => {
 
   return (
     <Card>
-      <Tabs activeKey={activeKey} items={items} onChange={onChange} />
+      <Tabs items={items} />
     </Card>
   );
 };

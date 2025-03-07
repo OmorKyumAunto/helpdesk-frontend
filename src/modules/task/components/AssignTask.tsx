@@ -5,12 +5,19 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import TextArea from "antd/es/input/TextArea";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
+import { IEmployee } from "../../employee/types/employeeTypes";
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-const TaskForm = () => {
+const AssignTask = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-
+  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
+    status: "active",
+  });
+  const { data: allEmployee, isLoading: empLoading } =
+    useGetOverallEmployeesQuery();
   const onFinish = (value: any) => {
     // create(value);
   };
@@ -34,6 +41,57 @@ const TaskForm = () => {
             }}
           >
             <Row align={"middle"} gutter={[5, 16]}>
+              <Col xs={24} sm={24} md={24} lg={12}>
+                <Form.Item
+                  label="Select Unit"
+                  name="unit_id"
+                  rules={[{ required: true, message: "Please select a unit!" }]}
+                >
+                  <Select
+                    loading={unitIsLoading}
+                    placeholder="Select Unit Name"
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    options={unitData?.data?.map((unit: any) => ({
+                      value: unit.id,
+                      label: unit.title,
+                    }))}
+                    allowClear
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={12}>
+                <Form.Item
+                  label="Select Employee"
+                  name="employee_id"
+                  rules={[
+                    { required: true, message: "Please select Employee" },
+                  ]}
+                >
+                  <Select
+                    loading={empLoading}
+                    placeholder="Search Employee"
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    options={allEmployee?.data?.map((item: IEmployee) => ({
+                      value: item.id,
+                      label: `[${item.employee_id}] ${item.name} (${item.email})`,
+                    }))}
+                    allowClear
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
               <Col xs={24} sm={24} md={24} lg={12}>
                 <Form.Item
                   name="title"
@@ -115,4 +173,4 @@ const TaskForm = () => {
   );
 };
 
-export default TaskForm;
+export default AssignTask;

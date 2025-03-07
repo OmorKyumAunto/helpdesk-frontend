@@ -118,19 +118,23 @@
 // };
 // export default TaskManager;
 import {
+  DeleteOutlined,
+  EditOutlined,
+  EllipsisOutlined,
   OrderedListOutlined,
   PlusOutlined,
   SearchOutlined,
   StarOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Input, Row, Space } from "antd";
+import { Button, Col, Flex, Input, Popover, Row, Space } from "antd";
 import React, { useState } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import TaskForm from "../components/TaskForm";
 import { useDispatch } from "react-redux";
 import ListForm from "../components/ListForm";
+import AssignTask from "../components/AssignTask";
 
-const TaskManager = () => {
+const TaskManager = ({ roleID }: { roleID?: number }) => {
   const [activeList, setActiveList] = useState("My Tasks");
   const dispatch = useDispatch();
   const lists = [
@@ -159,8 +163,8 @@ const TaskManager = () => {
                 Task Manager
               </h1>
             </div>
-            <div className="flex items-center">
-              <div className="mr-4 relative">
+            <Space>
+              <div>
                 <Input
                   type="text"
                   placeholder="Search tasks..."
@@ -168,6 +172,23 @@ const TaskManager = () => {
                   prefix={<SearchOutlined />}
                 />
               </div>
+              {roleID === 2 ? (
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => {
+                    dispatch(
+                      setCommonModal({
+                        title: "Assign Task",
+                        content: <AssignTask />,
+                        show: true,
+                      })
+                    );
+                  }}
+                >
+                  Assign Task
+                </Button>
+              ) : null}
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
@@ -177,14 +198,13 @@ const TaskManager = () => {
                       title: "Create Task",
                       content: <TaskForm />,
                       show: true,
-                      width: "550px",
                     })
                   );
                 }}
               >
                 Create Task
               </Button>
-            </div>
+            </Space>
           </div>
         </div>
       </header>
@@ -198,41 +218,49 @@ const TaskManager = () => {
             <Col xs={24} sm={24} md={12}>
               <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="border-b border-gray-200 px-6 py-4">
-                  <div className="flex justify-between">
-                    <div>
+                  <div>
+                    <div className="flex justify-between">
                       <h2 className="text-lg font-bold text-gray-900">
                         Yearly Goal
                       </h2>
-                      <div className="mt-1">
-                        <span className="text-sm font-medium text-gray-700">
-                          The Final
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm text-gray-500">
-                        This is Description
-                      </p>
-                    </div>
-                    <div>
-                      <Button
-                        type="text"
-                        className=" text-gray-400 hover:text-gray-600"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                      <Flex gap={4} justify="center" align="center">
+                        <div>
+                          <StarOutlined color="yellow" />
+                        </div>
+                        <Popover
+                          content={
+                            <Space direction="vertical">
+                              <Button
+                                size="small"
+                                type="primary"
+                                style={{ width: "60px" }}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                size="small"
+                                type="primary"
+                                danger
+                                style={{ width: "60px" }}
+                              >
+                                Delete
+                              </Button>
+                            </Space>
+                          }
+                          trigger="hover"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                          />
-                        </svg>
-                      </Button>
+                          <Button type="text" icon={<EllipsisOutlined />} />
+                        </Popover>
+                      </Flex>
                     </div>
+                    <div className="mt-1">
+                      <span className="text-sm font-medium text-gray-700">
+                        The Final
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm text-gray-500">
+                      This is Description
+                    </p>
                   </div>
 
                   <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
@@ -270,298 +298,6 @@ const TaskManager = () => {
                     In Progress
                   </span>
                 </div>
-
-                {/* <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center">
-                      <span className="text-sm font-medium text-gray-500">
-                        Created by: Alex Johnson
-                      </span>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                          />
-                        </svg>
-                        Edit
-                      </button>
-                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                          />
-                        </svg>
-                        Comment
-                      </button>
-                    </div>
-                  </div>
-                </div> */}
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={12}>
-              <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                <div className="border-b border-gray-200 px-6 py-4">
-                  <div className="flex justify-between">
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-900">
-                        Yearly Goal
-                      </h2>
-                      <div className="mt-1">
-                        <span className="text-sm font-medium text-gray-700">
-                          The Final
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm text-gray-500">
-                        This is Description
-                      </p>
-                    </div>
-                    <div>
-                      <Button
-                        type="text"
-                        className=" text-gray-400 hover:text-gray-600"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                          />
-                        </svg>
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1 text-gray-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    Due: 07 Mar 2025
-                  </div>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                    In Progress
-                  </span>
-                </div>
-
-                {/* <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center">
-                      <span className="text-sm font-medium text-gray-500">
-                        Created by: Alex Johnson
-                      </span>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                          />
-                        </svg>
-                        Edit
-                      </button>
-                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                          />
-                        </svg>
-                        Comment
-                      </button>
-                    </div>
-                  </div>
-                </div> */}
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={12}>
-              <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                <div className="border-b border-gray-200 px-6 py-4">
-                  <div className="flex justify-between">
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-900">
-                        Yearly Goal
-                      </h2>
-                      <div className="mt-1">
-                        <span className="text-sm font-medium text-gray-700">
-                          The Final
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm text-gray-500">
-                        This is Description
-                      </p>
-                    </div>
-                    <div>
-                      <Button
-                        type="text"
-                        className=" text-gray-400 hover:text-gray-600"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                          />
-                        </svg>
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1 text-gray-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    Due: 07 Mar 2025
-                  </div>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                    In Progress
-                  </span>
-                </div>
-
-                {/* <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center">
-                      <span className="text-sm font-medium text-gray-500">
-                        Created by: Alex Johnson
-                      </span>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                          />
-                        </svg>
-                        Edit
-                      </button>
-                      <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                          />
-                        </svg>
-                        Comment
-                      </button>
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </Col>
           </Row>
@@ -601,9 +337,38 @@ const TaskManager = () => {
                       </span>
                       <span className="font-medium">{list.name}</span>
                     </div>
-                    <span className="bg-gray-200 text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full">
+                    {/* <span className="bg-gray-200 text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full">
                       {list.count}
-                    </span>
+                    </span> */}
+                    <Popover
+                      content={
+                        <Space direction="vertical">
+                          <Button
+                            size="small"
+                            type="primary"
+                            style={{ width: "60px" }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="small"
+                            type="primary"
+                            danger
+                            style={{ width: "60px" }}
+                          >
+                            Delete
+                          </Button>
+                        </Space>
+                      }
+                      trigger="hover"
+                    >
+                      <Button
+                        type="text"
+                        size="small"
+                        className=" text-gray-400 hover:text-gray-600"
+                        icon={<EllipsisOutlined />}
+                      />
+                    </Popover>
                   </Button>
                 ))}
 

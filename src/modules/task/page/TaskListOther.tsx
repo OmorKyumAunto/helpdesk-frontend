@@ -1,106 +1,438 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Card, Col, Input, Row, Typography } from "antd";
-import { saveAs } from "file-saver";
-import { useState } from "react";
-const AssetTemplate = "https://www.dropbox.com/scl/fi/imgj89bt92k5315lwg4pg/Asset-Upload-Template.xlsx?rlkey=z5bw0jtxnvt4kljv4jsfu2xrq&st=etij609g&raw=1";
-const CsTemplate = "https://www.dropbox.com/scl/fi/evr2hkeyp8d4ynltvivki/cs-template.xlsx?rlkey=qwk6rzn1owtkkfsxkwm0bf6uk&st=zful9ih9&raw=1";
-const DemandSlip = "https://www.dropbox.com/scl/fi/j9j91q0757s6px9xm3ymr/demand-slip-bandhan.xlsx?rlkey=f8uzmsciqvwnd022jmuz75ptd&st=54578r5z&raw=1";
-const Emailrequisition = "https://www.dropbox.com/scl/fi/fpdg51xtrdbo50getei63/EMAIL-REQUISITION-FORM.pdf?rlkey=akt9zfq4ua1sfqckj4c9uyo1g&st=g7ubo668&raw=1";
-const EmployeeTemplate = "https://www.dropbox.com/scl/fi/y7d6361qlvbcrsdx64t3y/Employee-Upload-Template.xlsx?rlkey=oxkjp8q47xkr98ts49koil4m8&st=2xtm4u25&raw=1"
-const HardwareRequisition = "https://www.dropbox.com/scl/fi/zq9ai6gqavklsxxtqewth/HARDWARE-REQUISITION-FORM.pdf?rlkey=qpakrj651onwp6qhdww9yb59q&st=tfg289rc&raw=1";
-const MonthlyAchivements = "https://www.dropbox.com/scl/fi/r2j3t228ptdrwa4hmgnoz/monthly-achivement-template.pptx?rlkey=oxgdhlfyhdkhr03t23hgh3vj3&st=74wte32s&raw=1";
-const StationaryReq = "https://www.dropbox.com/scl/fi/rju8bhgl70sukkt75objf/stationary-requisition.xlsx?rlkey=3d6aa0e6f4b45bup28py13n27&st=2rnbhcj2&raw=1";
+import { EllipsisOutlined, StarOutlined } from "@ant-design/icons";
+import { Button, Col, Flex, Popover, Row, Space } from "antd";
 
-const Forms = () => {
-  
-  const [searchTerm, setSearchTerm] = useState("");
-  // Updated dummy template data
-  const templates = [
-    {
-      title: "Hardware Requisition Form",
-      description: "Template for Hardware requisition.",
-      file: HardwareRequisition,
-    },
-    {
-      title: "Email Requisition Form",
-      description: "Template for Email requisition.",
-      file: Emailrequisition,
-    },
-    {
-      title: "Stationary Requisition Form",
-      description: "Template for Stationary requisition.",
-      file: StationaryReq,
-    },
-    {
-      title: "CS Template",
-      description: "Template for CS.",
-      file: CsTemplate,
-    },
-    {
-      title: "Monthly Achievements PPTX",
-      description: "Template for monthly Achivements.",
-      file: MonthlyAchivements,
-    },
-    {
-      title: "Employee Upload Template",
-      description: "Template for Employee Upload",
-      file: EmployeeTemplate,
-    },
-    {
-      title: "Asset Upload Template",
-      description: "Template for Asset Upload",
-      file: AssetTemplate,
-    },
-    {
-      title: "Demand Slip For Bandhan",
-      description: "Demand Slip for Bandhan.",
-      file: DemandSlip,
-    },
-  ];
-  const nums = [1, 2, 3, 4, 5];
-  // Filter templates based on search term
-  const filteredTemplates = templates.filter((template) =>
-    template.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+const ListTaskOther = () => {
   return (
-    <Card
-      title="Downloadable Forms and Templates"
-      extra={
-        <>
-          <Input
-            prefix={<SearchOutlined />}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search..."
-          />
-        </>
-      }
-    >
-      <Typography.Title level={5} style={{ marginBottom: "18px" }}>
-        Select and download the necessary Templates and Forms.
-      </Typography.Title>
-      <Row gutter={[12, 12]}>
-        {filteredTemplates.map((template, index) => (
-          <Col xs={24} sm={24} md={12} lg={8} key={index}>
-            <Card className="shadow-lg">
-              <Typography.Title level={4}>{template.title}</Typography.Title>
-              <Typography.Text style={{ fontSize: "15px" }}>
-                {template.description}
-              </Typography.Text>{" "}
-              <br />
-              <a
-                href={template.file}
-                download
-                className="inline-block px-4 py-1 mt-2 bg-[#8cc63f] text-white hover:text-white rounded hover:bg-[#7ab536] transition-colors duration-300"
-              >
-                Download
-              </a>
-            </Card>
-          </Col>
-        ))}
+    <div className="h-screen flex flex-col">
+      <Row gutter={[8, 8]}>
+        <Col xs={24} sm={24} md={8}>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div className="border-b border-gray-200 px-6 py-4">
+              <div>
+                <div className="flex justify-between">
+                  <h2 className="text-lg font-bold text-gray-900">
+                    Yearly Goal
+                  </h2>
+                  <Flex gap={4} justify="center" align="center">
+                    <div>
+                      <StarOutlined color="yellow" />
+                    </div>
+                    <Popover
+                      content={
+                        <Space direction="vertical">
+                          <Button
+                            size="small"
+                            type="primary"
+                            style={{ width: "60px" }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="small"
+                            type="primary"
+                            danger
+                            style={{ width: "60px" }}
+                          >
+                            Delete
+                          </Button>
+                        </Space>
+                      }
+                      trigger="hover"
+                    >
+                      <Button type="text" icon={<EllipsisOutlined />} />
+                    </Popover>
+                  </Flex>
+                </div>
+                <div className="mt-1">
+                  <span className="text-sm font-medium text-gray-700">
+                    The Final
+                  </span>
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  This is Description
+                </p>
+              </div>
+
+              <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Due: 07 Mar 2025
+              </div>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                In Progress
+              </span>
+            </div>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={8}>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div className="border-b border-gray-200 px-6 py-4">
+              <div>
+                <div className="flex justify-between">
+                  <h2 className="text-lg font-bold text-gray-900">
+                    Yearly Goal
+                  </h2>
+                  <Flex gap={4} justify="center" align="center">
+                    <div>
+                      <StarOutlined color="yellow" />
+                    </div>
+                    <Popover
+                      content={
+                        <Space direction="vertical">
+                          <Button
+                            size="small"
+                            type="primary"
+                            style={{ width: "60px" }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="small"
+                            type="primary"
+                            danger
+                            style={{ width: "60px" }}
+                          >
+                            Delete
+                          </Button>
+                        </Space>
+                      }
+                      trigger="hover"
+                    >
+                      <Button type="text" icon={<EllipsisOutlined />} />
+                    </Popover>
+                  </Flex>
+                </div>
+                <div className="mt-1">
+                  <span className="text-sm font-medium text-gray-700">
+                    The Final
+                  </span>
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  This is Description
+                </p>
+              </div>
+
+              <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Due: 07 Mar 2025
+              </div>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                In Progress
+              </span>
+            </div>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={8}>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div className="border-b border-gray-200 px-6 py-4">
+              <div>
+                <div className="flex justify-between">
+                  <h2 className="text-lg font-bold text-gray-900">
+                    Yearly Goal
+                  </h2>
+                  <Flex gap={4} justify="center" align="center">
+                    <div>
+                      <StarOutlined color="yellow" />
+                    </div>
+                    <Popover
+                      content={
+                        <Space direction="vertical">
+                          <Button
+                            size="small"
+                            type="primary"
+                            style={{ width: "60px" }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="small"
+                            type="primary"
+                            danger
+                            style={{ width: "60px" }}
+                          >
+                            Delete
+                          </Button>
+                        </Space>
+                      }
+                      trigger="hover"
+                    >
+                      <Button type="text" icon={<EllipsisOutlined />} />
+                    </Popover>
+                  </Flex>
+                </div>
+                <div className="mt-1">
+                  <span className="text-sm font-medium text-gray-700">
+                    The Final
+                  </span>
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  This is Description
+                </p>
+              </div>
+
+              <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Due: 07 Mar 2025
+              </div>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                In Progress
+              </span>
+            </div>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={8}>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div className="border-b border-gray-200 px-6 py-4">
+              <div>
+                <div className="flex justify-between">
+                  <h2 className="text-lg font-bold text-gray-900">
+                    Yearly Goal
+                  </h2>
+                  <Flex gap={4} justify="center" align="center">
+                    <div>
+                      <StarOutlined color="yellow" />
+                    </div>
+                    <Popover
+                      content={
+                        <Space direction="vertical">
+                          <Button
+                            size="small"
+                            type="primary"
+                            style={{ width: "60px" }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="small"
+                            type="primary"
+                            danger
+                            style={{ width: "60px" }}
+                          >
+                            Delete
+                          </Button>
+                        </Space>
+                      }
+                      trigger="hover"
+                    >
+                      <Button type="text" icon={<EllipsisOutlined />} />
+                    </Popover>
+                  </Flex>
+                </div>
+                <div className="mt-1">
+                  <span className="text-sm font-medium text-gray-700">
+                    The Final
+                  </span>
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  This is Description
+                </p>
+              </div>
+
+              <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Due: 07 Mar 2025
+              </div>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                In Progress
+              </span>
+            </div>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={8}>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div className="border-b border-gray-200 px-6 py-4">
+              <div>
+                <div className="flex justify-between">
+                  <h2 className="text-lg font-bold text-gray-900">
+                    Yearly Goal
+                  </h2>
+                  <Flex gap={4} justify="center" align="center">
+                    <div>
+                      <StarOutlined color="yellow" />
+                    </div>
+                    <Popover
+                      content={
+                        <Space direction="vertical">
+                          <Button
+                            size="small"
+                            type="primary"
+                            style={{ width: "60px" }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="small"
+                            type="primary"
+                            danger
+                            style={{ width: "60px" }}
+                          >
+                            Delete
+                          </Button>
+                        </Space>
+                      }
+                      trigger="hover"
+                    >
+                      <Button type="text" icon={<EllipsisOutlined />} />
+                    </Popover>
+                  </Flex>
+                </div>
+                <div className="mt-1">
+                  <span className="text-sm font-medium text-gray-700">
+                    The Final
+                  </span>
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  This is Description
+                </p>
+              </div>
+
+              <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Due: 07 Mar 2025
+              </div>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                In Progress
+              </span>
+            </div>
+          </div>
+        </Col>
       </Row>
-    </Card>
+    </div>
   );
 };
 
-export default Forms;
+export default ListTaskOther;
