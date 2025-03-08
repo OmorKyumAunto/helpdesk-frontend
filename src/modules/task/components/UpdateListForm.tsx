@@ -4,17 +4,17 @@ import { SendOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useCreateTaskListMutation } from "../api/taskEndpoint";
-import { PostTask } from "../types/taskTypes";
+import { useUpdateTaskListMutation } from "../api/taskEndpoint";
+import { ITaskList, PostTask } from "../types/taskTypes";
 
-const ListForm = () => {
+const ListFormUpdate = ({ singleData }: { singleData: ITaskList }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const [create, { isLoading, isSuccess }] = useCreateTaskListMutation();
+  const [update, { isLoading, isSuccess }] = useUpdateTaskListMutation();
 
   const onFinish = (value: PostTask) => {
-    create(value);
+    update({ body: value, id: singleData.id });
   };
 
   useEffect(() => {
@@ -23,6 +23,12 @@ const ListForm = () => {
       form.resetFields();
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (singleData) {
+      form.setFieldValue("title", singleData.category_title);
+    }
+  }, [form, singleData]);
 
   return (
     <Row justify="center" align="middle" style={{ maxWidth: "auto" }}>
@@ -56,7 +62,7 @@ const ListForm = () => {
                 icon={<SendOutlined />}
                 loading={isLoading}
               >
-                Create
+                Update
               </Button>
             </div>
           </Form.Item>
@@ -66,4 +72,4 @@ const ListForm = () => {
   );
 };
 
-export default ListForm;
+export default ListFormUpdate;

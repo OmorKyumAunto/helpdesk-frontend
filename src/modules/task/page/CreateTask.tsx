@@ -1,122 +1,3 @@
-// import {
-//   DeleteOutlined,
-//   OrderedListOutlined,
-//   PlusCircleFilled,
-//   PlusCircleOutlined,
-//   PlusOutlined,
-//   StarOutlined,
-// } from "@ant-design/icons";
-// import { Button, Card, Divider, Flex, Space, Tag, Typography } from "antd";
-// import { useDispatch } from "react-redux";
-// import { setCommonModal } from "../../../app/slice/modalSlice";
-// import TaskForm from "../components/TaskForm";
-// import ListForm from "../components/ListForm";
-// import dayjs from "dayjs";
-// import { IoWatchOutline } from "react-icons/io5";
-// import { MdOutlineWatchLater } from "react-icons/md";
-
-// const TaskManager = () => {
-//   const dispatch = useDispatch();
-//   return (
-//     <Card
-//       extra={
-//         <Space>
-//           <Button
-//             type="primary"
-//             icon={<PlusOutlined />}
-//             onClick={() => {
-//               dispatch(
-//                 setCommonModal({
-//                   title: "Create Task",
-//                   content: <TaskForm />,
-//                   show: true,
-//                   width: "550px",
-//                 })
-//               );
-//             }}
-//           >
-//             Create
-//           </Button>
-//         </Space>
-//       }
-//       title="Task Manager"
-//     >
-//       <Flex>
-//         <div className="w-5/6">
-//           <Card>
-//             <Typography.Title level={4}>Yearly Goal</Typography.Title>
-//             <Typography.Text strong style={{ fontSize: "15px" }}>
-//               The Final Destination
-//             </Typography.Text>{" "}
-//             <br />
-//             <Typography.Text>This is Description</Typography.Text> <br />
-//             <Tag color="warning">
-//               <Flex align="center" justify="center">
-//                 <MdOutlineWatchLater size={14} style={{ marginRight: "3px" }} />
-//                 {dayjs().format("DD MMM YYYY")}
-//               </Flex>
-//             </Tag>
-//           </Card>
-//         </div>
-//         <div className="w-1/6 ">
-//           <Space direction="vertical" style={{ width: "100%" }}>
-//             <Button icon={<OrderedListOutlined />} className="w-full">
-//               All Tasks
-//             </Button>
-//             <Button icon={<StarOutlined />} className="w-full">
-//               Starrted
-//             </Button>
-//           </Space>
-//           <Divider orientation="center" style={{ margin: "12px 0 8px" }}>
-//             Lists
-//           </Divider>
-//           <Flex align="center" justify="space-between">
-//             <Typography.Text style={{ marginLeft: "8px" }}>
-//               1. My Tasks
-//             </Typography.Text>
-//             <DeleteOutlined />
-//           </Flex>
-//           <Flex align="center" justify="space-between">
-//             <Typography.Text style={{ marginLeft: "8px" }}>
-//               2. Today Tasks
-//             </Typography.Text>
-//             <DeleteOutlined />
-//           </Flex>
-//           <Flex align="center" justify="space-between">
-//             <Typography.Text style={{ marginLeft: "8px" }}>
-//               3. Yearly Plan
-//             </Typography.Text>
-//             <DeleteOutlined />
-//           </Flex>
-//           <Flex align="center" justify="space-between">
-//             <Typography.Text style={{ marginLeft: "8px" }}>
-//               4. Movie Goals
-//             </Typography.Text>
-//             <DeleteOutlined />
-//           </Flex>
-//           <Button
-//             icon={<PlusOutlined />}
-//             type="text"
-//             style={{ padding: "6px ", marginTop: "4px" }}
-//             onClick={() => {
-//               dispatch(
-//                 setCommonModal({
-//                   title: "Create New List",
-//                   content: <ListForm />,
-//                   show: true,
-//                   width: "450px",
-//                 })
-//               );
-//             }}
-//           >
-//             Create new list
-//           </Button>
-//         </div>
-//       </Flex>
-//     </Card>
-//   );
-// };
-// export default TaskManager;
 import {
   DeleteOutlined,
   EditOutlined,
@@ -133,16 +14,19 @@ import TaskForm from "../components/TaskForm";
 import { useDispatch } from "react-redux";
 import ListForm from "../components/ListForm";
 import AssignTask from "../components/AssignTask";
+import {
+  useDeleteTaskListMutation,
+  useGetTaskListQuery,
+} from "../api/taskEndpoint";
+import ListFormUpdate from "../components/UpdateListForm";
 
 const TaskManager = ({ roleID }: { roleID?: number }) => {
+  const { data, isLoading } = useGetTaskListQuery();
+  const [remove] = useDeleteTaskListMutation();
+
   const [activeList, setActiveList] = useState("My Tasks");
   const dispatch = useDispatch();
-  const lists = [
-    { id: 1, name: "My Tasks", count: 12 },
-    { id: 2, name: "Today Tasks", count: 5 },
-    { id: 3, name: "Yearly Plan", count: 8 },
-    { id: 4, name: "Movie Goals", count: 15 },
-  ];
+  const lists = data?.data || [];
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
@@ -321,21 +205,21 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                 <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
                   Lists
                 </h2>
-                {lists.map((list) => (
+                {lists.map((list, index) => (
                   <Button
                     key={list.id}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left mb-1 ${
-                      activeList === list.name
+                      activeList === list.category_title
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700 hover:bg-gray-100"
                     }`}
-                    onClick={() => setActiveList(list.name)}
+                    onClick={() => setActiveList(list.category_title)}
                   >
                     <div className="flex items-center">
                       <span className="w-6 text-xs text-gray-500">
-                        {list.id}.
+                        {index + 1}.
                       </span>
-                      <span className="font-medium">{list.name}</span>
+                      <span className="font-medium">{list.category_title}</span>
                     </div>
                     {/* <span className="bg-gray-200 text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full">
                       {list.count}
@@ -347,17 +231,30 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                             size="small"
                             type="primary"
                             style={{ width: "60px" }}
+                            onClick={() => {
+                              dispatch(
+                                setCommonModal({
+                                  title: "Update Task List",
+                                  content: <ListFormUpdate singleData={list} />,
+                                  show: true,
+                                  width: "450px",
+                                })
+                              );
+                            }}
                           >
                             Edit
                           </Button>
-                          <Button
-                            size="small"
-                            type="primary"
-                            danger
-                            style={{ width: "60px" }}
-                          >
-                            Delete
-                          </Button>
+                          {lists?.length > 1 && (
+                            <Button
+                              size="small"
+                              type="primary"
+                              danger
+                              style={{ width: "60px" }}
+                              onClick={() => remove(list.id)}
+                            >
+                              Delete
+                            </Button>
+                          )}
                         </Space>
                       }
                       trigger="hover"

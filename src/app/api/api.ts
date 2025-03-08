@@ -80,6 +80,7 @@ export const api = createApi({
     "category",
     "assign-category",
     "ticket",
+    "Task",
   ],
 });
 
