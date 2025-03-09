@@ -1,26 +1,54 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, Col, Row, Form, Input, Button, Select, DatePicker } from "antd";
 import { SendOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { setCommonModal } from "../../../app/slice/modalSlice";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Row,
+  Select,
+} from "antd";
+
 import TextArea from "antd/es/input/TextArea";
-const { Option } = Select;
-const { RangePicker } = DatePicker;
+import dayjs from "dayjs";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+
+import {
+  useCreateTaskMutation,
+  useGetTaskListQuery,
+} from "../api/taskEndpoint";
+import { ITaskList, ITaskPost } from "../types/taskTypes";
+
 const TaskForm = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const { data: taskList, isLoading: taskLoader } = useGetTaskListQuery();
+  const [create, { isSuccess, isLoading }] = useCreateTaskMutation();
 
-  const onFinish = (value: any) => {
-    // create(value);
+  const onFinish = (values: ITaskPost) => {
+    const { start_date, start_time, end_time, ...rest } = values || {};
+    const formattedData: ITaskPost = {
+      ...rest,
+      start_date: dayjs(start_date?.[0])?.format("YYYY-MM-DD"),
+      end_date: dayjs(start_date?.[1])?.format("YYYY-MM-DD"),
+      start_time: dayjs(start_time)?.format("HH:mm"),
+      end_time: dayjs(end_time)?.format("HH:mm"),
+    };
+
+    create(formattedData);
   };
 
-  //   useEffect(() => {
-  //     if (isSuccess) {
-  //       dispatch(setCommonModal());
-  //       form.resetFields();
-  //     }
-  //   }, [isSuccess]);
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setCommonModal());
+      form.resetFields();
+    }
+  }, [isSuccess]);
 
   return (
     <Row justify="center" align="middle" style={{ maxWidth: "auto" }}>
@@ -33,7 +61,7 @@ const TaskForm = () => {
               marginTop: "1rem",
             }}
           >
-            <Row align={"middle"} gutter={[5, 16]}>
+            <Row align={"middle"} gutter={[5, 5]}>
               <Col xs={24} sm={24} md={24} lg={12}>
                 <Form.Item
                   name="title"
@@ -76,21 +104,33 @@ const TaskForm = () => {
                   />
                 </Form.Item>
               </Col>
+
               <Col xs={24} sm={24} md={24} lg={12}>
                 <Form.Item
                   label="Select List"
-                  name="list"
+                  name="task_categories_id"
                   rules={[{ required: true, message: "Please select a list!" }]}
                 >
-                  <Select placeholder="Select list">
-                    <Option value="My Tasks">My Tasks</Option>
-                    <Option value="Today Tasks">Today Tasks</Option>
-                    <Option value="Yearly Plan">Yearly Plan</Option>
-                    <Option value="Movie Goals">Movie Goals</Option>
-                  </Select>
+                  <Select
+                    loading={taskLoader}
+                    placeholder="Select a list"
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    options={taskList?.data?.map((task: ITaskList) => ({
+                      value: task.id,
+                      label: task.category_title,
+                    }))}
+                    allowClear
+                  />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={24} lg={12}>
+
+              <Col xs={24} sm={24} md={24} lg={24}>
                 <Form.Item label="Description" name="description">
                   <TextArea placeholder="Enter Description" />
                 </Form.Item>
@@ -103,7 +143,7 @@ const TaskForm = () => {
                 htmlType="submit"
                 type="primary"
                 icon={<SendOutlined />}
-                // loading={isLoading}
+                loading={isLoading}
               >
                 Create
               </Button>

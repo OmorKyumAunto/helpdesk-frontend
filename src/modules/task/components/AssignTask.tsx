@@ -1,33 +1,65 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, Col, Row, Form, Input, Button, Select, DatePicker } from "antd";
 import { SendOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { setCommonModal } from "../../../app/slice/modalSlice";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Row,
+  Select,
+} from "antd";
+import { useWatch } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
+import dayjs from "dayjs";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
-import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
-import { IEmployee } from "../../employee/types/employeeTypes";
-const { Option } = Select;
-const { RangePicker } = DatePicker;
+import { useGetAdminsQuery } from "../../admin/api/adminEndPoint";
+import { IAdmin } from "../../admin/types/adminTypes";
+import {
+  useCreateTaskMutation,
+  useGetTaskListQuery,
+} from "../api/taskEndpoint";
+import { ITaskList, ITaskPost } from "../types/taskTypes";
+
 const AssignTask = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
-  const { data: allEmployee, isLoading: empLoading } =
-    useGetOverallEmployeesQuery();
-  const onFinish = (value: any) => {
-    // create(value);
+  const { data: allAdmin, isLoading: adminLoading } = useGetAdminsQuery({});
+  const { data: taskList, isLoading: taskLoader } = useGetTaskListQuery();
+  const [create, { isSuccess, isLoading }] = useCreateTaskMutation();
+
+  const isAssign = useWatch("is_assign", form);
+
+  const onFinish = (values: ITaskPost) => {
+    const { start_date, start_time, end_time, unit_id, is_assign, ...rest } =
+      values || {};
+    const formattedData: ITaskPost = {
+      ...rest,
+      start_date: dayjs(start_date?.[0])?.format("YYYY-MM-DD"),
+      end_date: dayjs(start_date?.[1])?.format("YYYY-MM-DD"),
+      start_time: dayjs(start_time)?.format("HH:mm"),
+      end_time: dayjs(end_time)?.format("HH:mm"),
+    };
+    if (is_assign) {
+      formattedData.is_assign = 1;
+    }
+    create(formattedData);
   };
 
-  //   useEffect(() => {
-  //     if (isSuccess) {
-  //       dispatch(setCommonModal());
-  //       form.resetFields();
-  //     }
-  //   }, [isSuccess]);
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setCommonModal());
+      form.resetFields();
+    }
+  }, [isSuccess]);
 
   return (
     <Row justify="center" align="middle" style={{ maxWidth: "auto" }}>
@@ -40,58 +72,7 @@ const AssignTask = () => {
               marginTop: "1rem",
             }}
           >
-            <Row align={"middle"} gutter={[5, 16]}>
-              <Col xs={24} sm={24} md={24} lg={12}>
-                <Form.Item
-                  label="Select Unit"
-                  name="unit_id"
-                  rules={[{ required: true, message: "Please select a unit!" }]}
-                >
-                  <Select
-                    loading={unitIsLoading}
-                    placeholder="Select Unit Name"
-                    showSearch
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      (option?.label ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                    options={unitData?.data?.map((unit: any) => ({
-                      value: unit.id,
-                      label: unit.title,
-                    }))}
-                    allowClear
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={12}>
-                <Form.Item
-                  label="Select Employee"
-                  name="employee_id"
-                  rules={[
-                    { required: true, message: "Please select Employee" },
-                  ]}
-                >
-                  <Select
-                    loading={empLoading}
-                    placeholder="Search Employee"
-                    showSearch
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      (option?.label ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                    options={allEmployee?.data?.map((item: IEmployee) => ({
-                      value: item.id,
-                      label: `[${item.employee_id}] ${item.name} (${item.email})`,
-                    }))}
-                    allowClear
-                    style={{ width: "100%" }}
-                  />
-                </Form.Item>
-              </Col>
+            <Row align={"middle"} gutter={[5, 5]}>
               <Col xs={24} sm={24} md={24} lg={12}>
                 <Form.Item
                   name="title"
@@ -134,21 +115,97 @@ const AssignTask = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={24} lg={12}>
-                <Form.Item
-                  label="Select List"
-                  name="list"
-                  rules={[{ required: true, message: "Please select a list!" }]}
-                >
-                  <Select placeholder="Select list">
-                    <Option value="My Tasks">My Tasks</Option>
-                    <Option value="Today Tasks">Today Tasks</Option>
-                    <Option value="Yearly Plan">Yearly Plan</Option>
-                    <Option value="Movie Goals">Movie Goals</Option>
-                  </Select>
+
+              <Col xs={24} sm={24} md={24} lg={24}>
+                <Form.Item valuePropName="checked" name="is_assign">
+                  <Checkbox>Assign Admin</Checkbox>
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={24} lg={12}>
+              {isAssign ? (
+                <>
+                  <Col xs={24} sm={24} md={24} lg={12}>
+                    <Form.Item
+                      label="Select Unit"
+                      name="unit_id"
+                      rules={[
+                        { required: true, message: "Please select a unit!" },
+                      ]}
+                    >
+                      <Select
+                        loading={unitIsLoading}
+                        placeholder="Select Unit Name"
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          (option?.label ?? "")
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                        options={unitData?.data?.map((unit: any) => ({
+                          value: unit.id,
+                          label: unit.title,
+                        }))}
+                        allowClear
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={24} lg={12}>
+                    <Form.Item
+                      label="Select Admin"
+                      name="user_id"
+                      rules={[
+                        { required: true, message: "Please select Admin" },
+                      ]}
+                    >
+                      <Select
+                        loading={adminLoading}
+                        placeholder="Search Admin"
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          (option?.label ?? "")
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                        options={allAdmin?.data?.map((item: IAdmin) => ({
+                          value: item.id,
+                          label: `[${item.employee_id}] ${item.name} (${item.email})`,
+                        }))}
+                        allowClear
+                        style={{ width: "100%" }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </>
+              ) : (
+                <Col xs={24} sm={24} md={24} lg={12}>
+                  <Form.Item
+                    label="Select List"
+                    name="task_categories_id"
+                    rules={[
+                      { required: true, message: "Please select a list!" },
+                    ]}
+                  >
+                    <Select
+                      loading={taskLoader}
+                      placeholder="Select a list"
+                      showSearch
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={taskList?.data?.map((task: ITaskList) => ({
+                        value: task.id,
+                        label: task.category_title,
+                      }))}
+                      allowClear
+                    />
+                  </Form.Item>
+                </Col>
+              )}
+              <Col xs={24} sm={24} md={24} lg={24}>
                 <Form.Item label="Description" name="description">
                   <TextArea placeholder="Enter Description" />
                 </Form.Item>
@@ -161,7 +218,7 @@ const AssignTask = () => {
                 htmlType="submit"
                 type="primary"
                 icon={<SendOutlined />}
-                // loading={isLoading}
+                loading={isLoading}
               >
                 Create
               </Button>

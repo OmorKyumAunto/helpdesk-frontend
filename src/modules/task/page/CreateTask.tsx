@@ -7,7 +7,17 @@ import {
   SearchOutlined,
   StarOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Flex, Input, Popover, Row, Space } from "antd";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Flex,
+  Input,
+  Popover,
+  Row,
+  Space,
+} from "antd";
 import React, { useState } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import TaskForm from "../components/TaskForm";
@@ -16,20 +26,34 @@ import ListForm from "../components/ListForm";
 import AssignTask from "../components/AssignTask";
 import {
   useDeleteTaskListMutation,
+  useDeleteTaskMutation,
+  useEndTaskMutation,
+  useGetTaskItemsQuery,
   useGetTaskListQuery,
+  useStartedTaskMutation,
+  useStartTaskMutation,
 } from "../api/taskEndpoint";
 import ListFormUpdate from "../components/UpdateListForm";
+import { useWatch } from "antd/es/form/Form";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import dayjs from "dayjs";
 
 const TaskManager = ({ roleID }: { roleID?: number }) => {
+  const [starValue, setStarValue] = useState(false);
   const { data, isLoading } = useGetTaskListQuery();
+  const { data: taskItems, isLoading: taskLoader } = useGetTaskItemsQuery();
+  console.log(taskItems);
   const [remove] = useDeleteTaskListMutation();
-
+  const [removeTask] = useDeleteTaskMutation();
+  const [starTask] = useStartedTaskMutation();
+  const [startedTask] = useStartTaskMutation();
+  const [endedTask] = useEndTaskMutation();
   const [activeList, setActiveList] = useState("My Tasks");
   const dispatch = useDispatch();
   const lists = data?.data || [];
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
+    <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
         <div className="mx-auto ">
@@ -63,31 +87,32 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                   onClick={() => {
                     dispatch(
                       setCommonModal({
-                        title: "Assign Task",
+                        title: "Create Task",
                         content: <AssignTask />,
                         show: true,
                       })
                     );
                   }}
                 >
-                  Assign Task
+                  Create Task
                 </Button>
-              ) : null}
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => {
-                  dispatch(
-                    setCommonModal({
-                      title: "Create Task",
-                      content: <TaskForm />,
-                      show: true,
-                    })
-                  );
-                }}
-              >
-                Create Task
-              </Button>
+              ) : (
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => {
+                    dispatch(
+                      setCommonModal({
+                        title: "Create Task",
+                        content: <TaskForm />,
+                        show: true,
+                      })
+                    );
+                  }}
+                >
+                  Create Task
+                </Button>
+              )}
             </Space>
           </div>
         </div>
@@ -98,18 +123,57 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
       <Row gutter={[16, 16]} style={{ padding: 12 }}>
         {/* Main Task View */}
         <Col xs={24} sm={24} md={24} lg={18}>
-          <Row gutter={[8, 8]}>
-            <Col xs={24} sm={24} md={12}>
-              <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                <div className="border-b border-gray-200 px-6 py-4">
+          <Row gutter={[14, 14]}>
+            {taskItems?.data?.map((item) => (
+              <Col key={item.id} xs={24} sm={24} md={12}>
+                <Card
+                  bordered={false}
+                  loading={taskLoader}
+                  style={{
+                    backgroundColor: "#e6f0ff",
+                    borderLeft: `5px solid #1890ff`,
+                    borderRadius: "12px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
+                    transition: "transform 0.3s ease-in-out",
+                    cursor: "pointer",
+                    transform: "scale(1)",
+                    height: "100%",
+                  }}
+                  className="sla-card"
+                >
                   <div>
-                    <div className="flex justify-between">
-                      <h2 className="text-lg font-bold text-gray-900">
-                        Yearly Goal
-                      </h2>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h1 className="text-base font-bold">
+                          Task ID: {item.task_code}
+                        </h1>
+                      </div>
                       <Flex gap={4} justify="center" align="center">
                         <div>
-                          <StarOutlined color="yellow" />
+                          {starValue ? (
+                            <FaStar
+                              onClick={() => {
+                                starTask({
+                                  body: { starred: starValue ? 1 : 0 },
+                                  id: item.id,
+                                }),
+                                  setStarValue(!starValue);
+                              }}
+                              size={20}
+                              color="gold"
+                            />
+                          ) : (
+                            <FaRegStar
+                              onClick={() => {
+                                starTask({
+                                  body: { starred: starValue ? 1 : 0 },
+                                  id: item.id,
+                                }),
+                                  setStarValue(!starValue);
+                              }}
+                              size={20}
+                            />
+                          )}
                         </div>
                         <Popover
                           content={
@@ -126,6 +190,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                                 type="primary"
                                 danger
                                 style={{ width: "60px" }}
+                                onClick={() => removeTask(item.id)}
                               >
                                 Delete
                               </Button>
@@ -137,53 +202,72 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         </Popover>
                       </Flex>
                     </div>
-                    <div className="mt-1">
-                      <span className="text-sm font-medium text-gray-700">
-                        The Final
-                      </span>
+                    <div>
+                      <div>
+                        <span className="text-xl  font-bold">{item.title}</span>
+                      </div>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {item.description}
+                      </p>
                     </div>
-                    <p className="mt-1 text-sm text-gray-500">
-                      This is Description
-                    </p>
+                    <div className="mb-3 mt-1 flex items-center text-base text-gray-700 font-medium">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1 text-gray-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      End: {dayjs(item.end_date).format("DD MMM YYYY")}{" "}
+                      {item.end_time}
+                    </div>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
+                      </svg>
+                      {item.task_status}
+                    </span>
+                    {item.task_status === "incomplete" && (
+                      <Button
+                        size="small"
+                        type="primary"
+                        onClick={() => startedTask(item.id)}
+                      >
+                        Start
+                      </Button>
+                    )}
+                    {item.task_status === "inprogress" && (
+                      <Button
+                        size="small"
+                        danger
+                        type="primary"
+                        onClick={() => endedTask(item.id)}
+                      >
+                        End
+                      </Button>
+                    )}
                   </div>
-
-                  <div className="mb-3 mt-1 flex items-center text-sm text-gray-600">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1 text-gray-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    Due: 07 Mar 2025
-                  </div>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                    In Progress
-                  </span>
-                </div>
-              </div>
-            </Col>
+                </Card>
+              </Col>
+            ))}
           </Row>
         </Col>
 
@@ -197,7 +281,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                 </Button>
 
                 <Button icon={<StarOutlined />} className="w-full">
-                  Starrted
+                  Starred
                 </Button>
               </Space>
 
@@ -217,7 +301,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                   >
                     <div className="flex items-center">
                       <span className="w-6 text-xs text-gray-500">
-                        {index + 1}.
+                        <Checkbox />
                       </span>
                       <span className="font-medium">{list.category_title}</span>
                     </div>
@@ -268,7 +352,6 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                     </Popover>
                   </Button>
                 ))}
-
                 <Button
                   onClick={() => {
                     dispatch(
