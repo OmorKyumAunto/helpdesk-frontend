@@ -239,7 +239,10 @@ export const AppLayout = () => {
   );
   const selfService = (
     <div>
-      <Link to="https://www.youtube.com/playlist?list=PL1I5_y65vLeHbVZMV3EmR_hLkKms_AWTD" target="_blank">
+      <Link
+        to="https://www.youtube.com/playlist?list=PL1I5_y65vLeHbVZMV3EmR_hLkKms_AWTD"
+        target="_blank"
+      >
         <Button style={{ marginTop: "10px", width: "100%" }} type="primary">
           Video Tutorial
         </Button>
@@ -294,8 +297,9 @@ export const AppLayout = () => {
           position: "sticky",
           top: 0,
           left: 0,
-          display: `${grid.xs && !collapsed ? "block" : grid.md ? "block" : "none"
-            }`,
+          display: `${
+            grid.xs && !collapsed ? "block" : grid.md ? "block" : "none"
+          }`,
         }}
       >
         <div>
@@ -347,13 +351,15 @@ export const AppLayout = () => {
         <Header
           style={{
             padding: 0,
-            background: roleId === 3
-              ? "linear-gradient(135deg, #8DC73F, #6EBF34)"
-              : "linear-gradient(135deg, #4e6ad0, #0d3c6e)",
+            background:
+              roleId === 3
+                ? "linear-gradient(135deg, #8DC73F, #6EBF34)"
+                : "linear-gradient(135deg, #4e6ad0, #0d3c6e)",
 
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            height: "50px",
           }}
         >
           <div
@@ -373,30 +379,6 @@ export const AppLayout = () => {
                 height: 64,
               }}
             />
-
-            {/* <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "10px",
-              }}
-            >
-              <Button
-                type="primary"
-                style={{ border: "none" }}
-                onClick={() => navigate(-1)}
-                size="small"
-                icon={<LeftOutlined />}
-              />
-              <Button
-                onClick={() => navigate(1)}
-                size="small"
-                style={{ border: "none" }}
-                icon={<RightOutlined />}
-                type="primary"
-              />
-            </div> */}
           </div>
           <div
             style={{
@@ -407,62 +389,28 @@ export const AppLayout = () => {
               padding: "10px",
             }}
           >
-            {/* {!grid.xs && (
-              <div>
-                <p
-                  style={{
-                    color: "white",
-                    fontWeight: 600,
-                    lineHeight: 1,
-                  }}
-                >
-                  Hello {profile?.data?.name}
-                </p>
-              </div>
-            )} */}
-
-            {/* notifications  */}
-            {/* {!grid.xs && (
-              <Button
-                icon={<FullscreenOutlined />}
-                type="dashed"
-                onClick={handleFullscreenToggle}
-              />
-            )} */}
-            {/* <div>
-              {themeGlobal.theme === theme.defaultAlgorithm ? (
-                <Button
-                  onClick={() => {
-                    handleDarkTheme();
-                  }}
-                  icon={<BsFillMoonStarsFill />}
-                  type="dashed"
-                />
-              ) : (
-                <Button
-                  onClick={() => {
-                    handleLightTheme();
-                  }}
-                  icon={<BsFillSunFill />}
-                  type="dashed"
-                />
-              )}
-            </div> */}
             <Link to={"/task/list"}>
-              <Button type="dashed">Task Manager</Button>
+              <Button size="small" style={{ fontSize: "12px" }} type="dashed">
+                Task Manager
+              </Button>
             </Link>
             <Link to={"/tickets/list"}>
-              <Button type="dashed">Ticketing System</Button>
+              <Button size="small" style={{ fontSize: "12px" }} type="dashed">
+                Ticketing System
+              </Button>
             </Link>
 
             <Popover content={selfService}>
-              <Button type="dashed">Self Service</Button>
+              <Button size="small" style={{ fontSize: "12px" }} type="dashed">
+                Self Service
+              </Button>
             </Popover>
 
             <Popover content={content}>
               <Button
                 icon={<UserOutlined />}
                 type="dashed"
+                size="small"
                 style={{
                   marginRight: "20px",
                 }}

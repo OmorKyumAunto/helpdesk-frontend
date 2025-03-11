@@ -1,4 +1,5 @@
 import {
+  ClockCircleOutlined,
   DeleteOutlined,
   EditOutlined,
   EllipsisOutlined,
@@ -18,7 +19,7 @@ import {
   Row,
   Space,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import TaskForm from "../components/TaskForm";
 import { useDispatch } from "react-redux";
@@ -41,8 +42,8 @@ import dayjs from "dayjs";
 const TaskManager = ({ roleID }: { roleID?: number }) => {
   const [starValue, setStarValue] = useState(false);
   const { data, isLoading } = useGetTaskListQuery();
-  const { data: taskItems, isLoading: taskLoader } = useGetTaskItemsQuery();
-  console.log(taskItems);
+  // const { data: taskItems, isLoading: taskLoader } = useGetTaskItemsQuery();
+  // console.log(taskItems);
   const [remove] = useDeleteTaskListMutation();
   const [removeTask] = useDeleteTaskMutation();
   const [starTask] = useStartedTaskMutation();
@@ -52,6 +53,44 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
   const dispatch = useDispatch();
   const lists = data?.data || [];
 
+  const [activeFilter, setActiveFilter] = useState<"" | "from" | "to">("from"); // Filter state
+  const [timeLeft, setTimeLeft] = useState(40 * 60); // 40 mins in seconds
+
+  // Dummy data
+  const taskItems = [
+    {
+      id: 1,
+      task_code: "TASK001",
+      title: "Sample Task Title 1",
+      description: "This is a short task description example.",
+      end_date: dayjs().add(2, "day").format("YYYY-MM-DD"),
+      end_time: "05:00 PM",
+      task_status: "incomplete",
+    },
+    {
+      id: 2,
+      task_code: "TASK002",
+      title: "Sample Task Title 2",
+      description: "Another task description for testing.",
+      end_date: dayjs().add(1, "day").format("YYYY-MM-DD"),
+      end_time: "03:00 PM",
+      task_status: "inprogress",
+    },
+  ];
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const secs = (seconds % 60).toString().padStart(2, "0");
+    return `${mins}:${secs}`;
+  };
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
@@ -124,11 +163,11 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
         {/* Main Task View */}
         <Col xs={24} sm={24} md={24} lg={18}>
           <Row gutter={[14, 14]}>
-            {taskItems?.data?.map((item) => (
+            {taskItems?.map((item) => (
               <Col key={item.id} xs={24} sm={24} md={12}>
                 <Card
                   bordered={false}
-                  loading={taskLoader}
+                  // loading={taskLoader}
                   style={{
                     backgroundColor: "#e6f0ff",
                     borderLeft: `5px solid #1890ff`,
@@ -228,28 +267,50 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                       End: {dayjs(item.end_date).format("DD MMM YYYY")}{" "}
                       {item.end_time}
                     </div>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 10V3L4 14h7v7l9-11h-7z"
+                          />
+                        </svg>
+                        {item.task_status}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <ClockCircleOutlined
+                          style={{ fontSize: "16px", color: "#3f3f46" }}
                         />
-                      </svg>
-                      {item.task_status}
-                    </span>
+                        <span
+                          className="px-3 py-1 rounded-full text-sm font-semibold"
+                          style={{
+                            background:
+                              "linear-gradient(135deg, #f0f0f0, #e4e4e7)",
+                            color: "#333",
+                            minWidth: "90px",
+                            textAlign: "center",
+                            boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+                          }}
+                        >
+                          ⏳ {formatTime(timeLeft)}
+                        </span>
+                                  
+                      </div>
+                    </div>
                     {item.task_status === "incomplete" && (
                       <Button
                         size="small"
                         type="primary"
                         onClick={() => startedTask(item.id)}
+                        className="mt-3"
                       >
                         Start
                       </Button>
@@ -260,6 +321,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         danger
                         type="primary"
                         onClick={() => endedTask(item.id)}
+                        className="mt-3"
                       >
                         End
                       </Button>

@@ -47,7 +47,7 @@ const DashboardCards = () => {
     <>
       <TopDash />
       {roleId !== 3 ? (
-        <Row style={{ marginTop: "7px" }} gutter={[12, 12]}>
+        <Row style={{ marginTop: "7px" }} gutter={[6, 6]}>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Link to={"/assets/list"}>
               <Card className="bg-[#ba45ba] text-white card-hover">
@@ -56,7 +56,6 @@ const DashboardCards = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "3px", // Ensures padding is applied to the card content
                     position: "relative",
                   }}
                 >
@@ -138,7 +137,6 @@ const DashboardCards = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "3px", // Ensures padding is applied to the card content
                     position: "relative",
                   }}
                 >
@@ -218,7 +216,6 @@ const DashboardCards = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "3px", // Ensures padding is applied to the card content
                     position: "relative",
                   }}
                 >
@@ -236,7 +233,7 @@ const DashboardCards = () => {
                     >
                       {role_id === 2
                         ? distributedAsset?.data?.employee_assign_asset_count ||
-                        0
+                          0
                         : data?.data?.total_assign_asset || 0}
                     </p>
                   </div>
@@ -310,16 +307,16 @@ const DashboardCards = () => {
           </Col>
         </Row>
       ) : (
-        <Row style={{ marginTop: "5px" }} gutter={[12,6]}>
+        <Row style={{ marginTop: "5px" }} gutter={[12, 6]}>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Row gutter={[6, 12]}>
-            <Col xs={24} sm={24} md={24}>
-            <div>
-                <WeatherWidget />
-              </div>
-            </Col>
-              
-            <Col xs={24} sm={24} md={24}>
+              <Col xs={24} sm={24} md={24}>
+                <div>
+                  <WeatherWidget />
+                </div>
+              </Col>
+
+              <Col xs={24} sm={24} md={24}>
                 <Link to={"/employee/distributed"}>
                   <Card className="bg-[#8dc73f] text-white h-full card-hover-disbursements">
                     <div
@@ -331,7 +328,6 @@ const DashboardCards = () => {
                         position: "relative",
                       }}
                     >
-
                       <div>
                         <Typography.Title style={{ color: "white" }} level={5}>
                           Disbursements
@@ -412,7 +408,6 @@ const DashboardCards = () => {
                         position: "relative",
                       }}
                     >
-
                       <div>
                         <Typography.Title style={{ color: "white" }} level={5}>
                           Total Employee
@@ -481,7 +476,6 @@ const DashboardCards = () => {
                   </style>
                 </Link>
               </Col>
-
             </Row>
           </Col>
           <Col xs={24} sm={24} md={16}>
@@ -506,11 +500,13 @@ const DashboardCards = () => {
                   className="employee-detail-card"
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateY(-5px)";
-                    e.currentTarget.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.15)";
+                    e.currentTarget.style.boxShadow =
+                      "0 8px 20px rgba(0, 0, 0, 0.15)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 6px 15px rgba(0, 0, 0, 0.1)";
+                    e.currentTarget.style.boxShadow =
+                      "0 6px 15px rgba(0, 0, 0, 0.1)";
                   }}
                 >
                   <Row gutter={[24, 24]}>
@@ -530,17 +526,35 @@ const DashboardCards = () => {
                           Your Information
                         </h3>
                         <div style={{ marginBottom: "12px" }}>
-                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                          <p
+                            style={{
+                              margin: "0",
+                              color: "#000000",
+                              fontWeight: "500",
+                            }}
+                          >
                             <strong>Employee ID:</strong> {employee_id}
                           </p>
                         </div>
                         <div style={{ marginBottom: "12px" }}>
-                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                          <p
+                            style={{
+                              margin: "0",
+                              color: "#000000",
+                              fontWeight: "500",
+                            }}
+                          >
                             <strong>Designation:</strong> {designation}
                           </p>
                         </div>
                         <div style={{ marginBottom: "12px" }}>
-                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                          <p
+                            style={{
+                              margin: "0",
+                              color: "#000000",
+                              fontWeight: "500",
+                            }}
+                          >
                             <strong>Department:</strong> {department}
                           </p>
                         </div>
@@ -552,7 +566,6 @@ const DashboardCards = () => {
                         </div> */}
                       </div>
                     </Col>
-
 
                     {/* Right Section */}
                     <Col xs={24} sm={12}>
@@ -570,22 +583,46 @@ const DashboardCards = () => {
                           Contact Details
                         </h3>
                         <div style={{ marginBottom: "12px" }}>
-                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                          <p
+                            style={{
+                              margin: "0",
+                              color: "#000000",
+                              fontWeight: "500",
+                            }}
+                          >
                             <strong>Phone:</strong> {contact_no}
                           </p>
                         </div>
                         <div style={{ marginBottom: "12px" }}>
-                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                          <p
+                            style={{
+                              margin: "0",
+                              color: "#000000",
+                              fontWeight: "500",
+                            }}
+                          >
                             <strong>Email:</strong> {email}
                           </p>
                         </div>
                         <div style={{ marginBottom: "12px" }}>
-                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                          <p
+                            style={{
+                              margin: "0",
+                              color: "#000000",
+                              fontWeight: "500",
+                            }}
+                          >
                             <strong>Unit Name:</strong> {unit_name}
                           </p>
                         </div>
                         <div style={{ marginBottom: "12px" }}>
-                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
+                          <p
+                            style={{
+                              margin: "0",
+                              color: "#000000",
+                              fontWeight: "500",
+                            }}
+                          >
                             <strong>Status:</strong>{" "}
                             <span
                               style={{
@@ -604,7 +641,6 @@ const DashboardCards = () => {
               </Col>
             </Row>
           </Col>
-
         </Row>
       )}
     </>

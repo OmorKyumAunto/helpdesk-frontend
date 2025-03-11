@@ -37,6 +37,7 @@ const AssignTask = () => {
   const [create, { isSuccess, isLoading }] = useCreateTaskMutation();
 
   const isAssign = useWatch("is_assign", form);
+  const taskCategoriesId = useWatch("task_categories_id", form);
 
   const onFinish = (values: ITaskPost) => {
     const { start_date, start_time, end_time, unit_id, is_assign, ...rest } =
@@ -73,22 +74,47 @@ const AssignTask = () => {
             }}
           >
             <Row align={"middle"} gutter={[5, 5]}>
-              <Col xs={24} sm={24} md={24} lg={12}>
+              <Col xs={24} sm={24} md={24} lg={24}>
                 <Form.Item
-                  name="title"
-                  rules={[{ required: true }]}
-                  label="Title"
+                  label="Select List"
+                  name="task_categories_id"
+                  rules={[{ required: true, message: "Please select a list!" }]}
                 >
-                  <Input placeholder="Enter Task Title" type="text" />
+                  <Select
+                    loading={taskLoader}
+                    placeholder="Select a list"
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    options={taskList?.data?.map((task: ITaskList) => ({
+                      value: task.id,
+                      label: task.category_title,
+                    }))}
+                    allowClear
+                  />
                 </Form.Item>
               </Col>
+              {taskCategoriesId && (
+                <Col xs={24} sm={24} md={24} lg={24}>
+                  <Form.Item valuePropName="checked" name="topics">
+                    <Checkbox>Topic A</Checkbox>
+                    <Checkbox>Topic B</Checkbox>
+                    <Checkbox>Topic C</Checkbox>
+                    <Checkbox>Topic D</Checkbox>
+                  </Form.Item>
+                </Col>
+              )}
               <Col xs={24} sm={24} md={24} lg={12}>
                 <Form.Item
                   name="start_date"
                   rules={[{ required: true }]}
-                  label="Start and End Date"
+                  label="Start Date"
                 >
-                  <DatePicker.RangePicker style={{ width: "100%" }} />
+                  <DatePicker style={{ width: "100%" }} />
                 </Form.Item>
               </Col>
               <Col xs={24} sm={24} md={24} lg={12}>
@@ -103,19 +129,11 @@ const AssignTask = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={24} lg={12}>
-                <Form.Item
-                  name="end_time"
-                  rules={[{ required: true }]}
-                  label="End Time"
-                >
-                  <DatePicker.TimePicker
-                    style={{ width: "100%" }}
-                    format="hh:mm A"
-                  />
+              <Col xs={24} sm={24} md={24} lg={24}>
+                <Form.Item label="Description" name="description">
+                  <TextArea placeholder="Enter Description" />
                 </Form.Item>
               </Col>
-
               <Col xs={24} sm={24} md={24} lg={24}>
                 <Form.Item valuePropName="checked" name="is_assign">
                   <Checkbox>Assign Admin</Checkbox>
@@ -177,39 +195,7 @@ const AssignTask = () => {
                     </Form.Item>
                   </Col>
                 </>
-              ) : (
-                <Col xs={24} sm={24} md={24} lg={12}>
-                  <Form.Item
-                    label="Select List"
-                    name="task_categories_id"
-                    rules={[
-                      { required: true, message: "Please select a list!" },
-                    ]}
-                  >
-                    <Select
-                      loading={taskLoader}
-                      placeholder="Select a list"
-                      showSearch
-                      optionFilterProp="children"
-                      filterOption={(input, option) =>
-                        (option?.label ?? "")
-                          .toLowerCase()
-                          .includes(input.toLowerCase())
-                      }
-                      options={taskList?.data?.map((task: ITaskList) => ({
-                        value: task.id,
-                        label: task.category_title,
-                      }))}
-                      allowClear
-                    />
-                  </Form.Item>
-                </Col>
-              )}
-              <Col xs={24} sm={24} md={24} lg={24}>
-                <Form.Item label="Description" name="description">
-                  <TextArea placeholder="Enter Description" />
-                </Form.Item>
-              </Col>
+              ) : null}
             </Row>
           </Card>
           <Form.Item>
