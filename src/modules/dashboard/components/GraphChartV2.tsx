@@ -12,7 +12,7 @@ import { useGetDashboardGraphDataQuery } from "../api/dashboardEndPoints";
 const GraphChartV2 = () => {
   const { data } = useGetDashboardGraphDataQuery({});
   return (
-    <Card title="Stock and Disbursement Statistics">
+    <Card size="small" title="Stock and Disbursement Statistics">
       <div style={{ height: 300 }}>
         <ResponsiveContainer>
           <BarChart data={data?.data} barGap={0}>

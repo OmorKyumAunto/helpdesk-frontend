@@ -47,7 +47,7 @@ const DashboardCards = () => {
     <>
       <TopDash />
       {roleId !== 3 ? (
-        <Row style={{ marginTop: "7px" }} gutter={[6, 6]}>
+        <Row style={{ marginTop: "7px" }} gutter={[10, 10]}>
           <Col xs={24} sm={24} md={24} lg={8}>
             <Link to={"/assets/list"}>
               <Card className="bg-[#ba45ba] text-white card-hover">
@@ -291,18 +291,20 @@ const DashboardCards = () => {
             </Link>
           </Col>
           <Col xs={24} sm={24} md={24} lg={8}>
-            <Card title="Ticketing Statistics">
+            <Card size="small" title="Ticketing Statistics">
               <TicketPieChart />
             </Card>
           </Col>
           <Col xs={24} sm={24} md={24} lg={16}>
-            {/* category statistics /> */}
-            <Card title="Asset Category Statistics" style={{ height: "100%" }}>
+            <Card
+              size="small"
+              title="Asset Category Statistics"
+              style={{ height: "100%" }}
+            >
               <CategoryPieChart />
             </Card>
           </Col>
           <Col xs={24} sm={24} md={24}>
-            {/* <GraphChartApex /> */}
             <GraphChartV2 />
           </Col>
         </Row>

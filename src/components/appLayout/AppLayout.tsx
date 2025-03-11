@@ -359,7 +359,6 @@ export const AppLayout = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            height: "50px",
           }}
         >
           <div
@@ -390,27 +389,20 @@ export const AppLayout = () => {
             }}
           >
             <Link to={"/task/list"}>
-              <Button size="small" style={{ fontSize: "12px" }} type="dashed">
-                Task Manager
-              </Button>
+              <Button type="dashed">Task Manager</Button>
             </Link>
             <Link to={"/tickets/list"}>
-              <Button size="small" style={{ fontSize: "12px" }} type="dashed">
-                Ticketing System
-              </Button>
+              <Button type="dashed">Ticketing System</Button>
             </Link>
 
             <Popover content={selfService}>
-              <Button size="small" style={{ fontSize: "12px" }} type="dashed">
-                Self Service
-              </Button>
+              <Button type="dashed">Self Service</Button>
             </Popover>
 
             <Popover content={content}>
               <Button
                 icon={<UserOutlined />}
                 type="dashed"
-                size="small"
                 style={{
                   marginRight: "20px",
                 }}

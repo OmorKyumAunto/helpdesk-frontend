@@ -4,7 +4,6 @@ import {
   useGetDashboardPieDataQuery,
 } from "../api/dashboardEndPoints";
 import { useGetMeQuery } from "../../../app/api/userApi";
-import { Card } from "antd";
 
 const renderLabels = (props: any) => {
   const RADIAN = Math.PI / 180;
@@ -108,10 +107,10 @@ const CategoryPieChart = () => {
       value: role_id === 1 ? total_monitors : monitor_count,
       color: "#ba45ba",
     },
-  ].filter(item => item.value > 0);
+  ].filter((item) => item.value > 0);
 
   return (
-    <div className="w-full h-[300px]">
+    <div className="w-full h-[250px]">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie

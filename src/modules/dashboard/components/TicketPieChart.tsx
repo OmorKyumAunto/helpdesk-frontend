@@ -5,7 +5,12 @@ import { ApexOptions } from "apexcharts";
 
 const TicketDonutChart = () => {
   const { data } = useGetTicketDashboardCountQuery();
-  const { total_solve = 0, total_forward = 0, total_inprogress = 0, total_unsolved = 0 } = data?.data || {};
+  const {
+    total_solve = 0,
+    total_forward = 0,
+    total_inprogress = 0,
+    total_unsolved = 0,
+  } = data?.data || {};
 
   const [state, setState] = useState<{
     series: number[];
@@ -59,7 +64,7 @@ const TicketDonutChart = () => {
           options={state.options} // This will now have the correct type
           series={state.series}
           type="donut"
-          height={400}
+          height={300}
         />
       </div>
     </div>
