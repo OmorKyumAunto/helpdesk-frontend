@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
-import { useGetTicketDashboardCountQuery } from "../../ticket/api/ticketEndpoint";
 import { ApexOptions } from "apexcharts";
 
-const TicketDonutChart = () => {
-  const { data } = useGetTicketDashboardCountQuery();
-  const {
-    total_solve = 0,
-    total_forward = 0,
-    total_inprogress = 0,
-    total_unsolved = 0,
-  } = data?.data || {};
+const TaskPercentagePie = () => {
+  //   const { data } = useGetTicketDashboardCountQuery();
+  //   const {
+  //     total_solve = 0,
+  //     total_forward = 0,
+  //     total_inprogress = 0,
+  //     total_unsolved = 0,
+  //   } = data?.data || {};
 
   const [state, setState] = useState<{
     series: number[];
@@ -26,6 +25,7 @@ const TicketDonutChart = () => {
       legend: {
         position: "bottom",
       },
+
       responsive: [
         {
           breakpoint: 480,
@@ -39,23 +39,28 @@ const TicketDonutChart = () => {
     },
   });
 
-  useEffect(() => {
-    const ticketData = [
-      { name: "Solved", value: total_solve },
-      { name: "In Progress", value: total_inprogress },
-      { name: "Unsolved", value: total_unsolved },
-      { name: "Forward", value: total_forward },
-    ];
+  useEffect(
+    () => {
+      const taskPieData = [
+        { name: "Pending", value: 45 },
+        { name: "In Progress", value: 85 },
+        { name: "Forwarded", value: 20 },
+        { name: "Completed", value: 120 },
+      ];
 
-    setState((prevState) => ({
-      ...prevState,
-      series: ticketData.map((item) => item.value),
-      options: {
-        ...prevState.options,
-        labels: ticketData.map((item) => item.name),
-      },
-    }));
-  }, [data]);
+      setState((prevState) => ({
+        ...prevState,
+        series: taskPieData.map((item) => item.value),
+        options: {
+          ...prevState.options,
+          labels: taskPieData.map((item) => item.name),
+        },
+      }));
+    },
+    [
+      // data
+    ]
+  );
 
   return (
     <div style={{ maxWidth: "260px", margin: "0 auto" }}>
@@ -71,4 +76,4 @@ const TicketDonutChart = () => {
   );
 };
 
-export default TicketDonutChart;
+export default TaskPercentagePie;
