@@ -13,6 +13,7 @@ import { useGetTicketReportQuery } from "../api/ticketEndpoint";
 import { TicketReportColumn } from "../utils/TicketReportColumns";
 import { useGetAssignCategoryListQuery } from "../../assignCategory/api/assignCategoryEndPoint";
 import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
+import { rangePreset } from "../../../common/rangePreset";
 const { Option } = Select;
 
 const TicketReport = ({ ticketSolver }: { ticketSolver: string }) => {
@@ -76,6 +77,7 @@ const TicketReport = ({ ticketSolver }: { ticketSolver: string }) => {
           }}
         >
           <DatePicker.RangePicker
+            presets={rangePreset}
             onChange={(_, e) =>
               setFilter({
                 ...filter,

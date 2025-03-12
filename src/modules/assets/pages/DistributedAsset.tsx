@@ -1,5 +1,5 @@
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Dropdown, Input, Select } from "antd";
+import { Button, Card, DatePicker, Dropdown, Input, Select } from "antd";
 import { Table } from "antd/lib";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { DistributedAssetsTableColumns } from "../utils/DistributedTableColumns"
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
+import { rangePreset } from "../../../common/rangePreset";
 const { Option } = Select;
 const DistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -104,7 +105,7 @@ const DistributedAsset = () => {
                   padding: 16,
                   background: "#fff",
                   borderRadius: 8,
-                  width: "160px",
+                  width: "220px",
                   border: "1px solid #f2f2f2",
                 }}
               >
@@ -150,6 +151,17 @@ const DistributedAsset = () => {
                   <Option value="Keyboard">Keyboard</Option>
                   <Option value="Accessories">Accessories</Option>
                 </Select>
+                <DatePicker.RangePicker
+                  presets={rangePreset}
+                  onChange={(_, e) =>
+                    setFilter({
+                      ...filter,
+                      from_date: e[0],
+                      to_date: e[1],
+                      offset: 0,
+                    })
+                  }
+                />
               </div>
             )}
           >

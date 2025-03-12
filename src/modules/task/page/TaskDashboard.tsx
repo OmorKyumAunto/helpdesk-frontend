@@ -48,6 +48,9 @@ import {
 } from "recharts";
 import TaskPercentagePie from "../components/TaskPercentagePie";
 import { BadgeProps } from "antd/lib";
+import TaskLineChart from "../components/LineChart";
+import WorkingProgressPieChart from "../components/WorkingProgressPieChart";
+import CompareBarChart from "../components/CompareBarChart";
 
 // Mock data for line chart
 const chartData = [
@@ -218,96 +221,21 @@ const TaskDashboard = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <Card
-              title="Total work"
-              extra={
-                <div className="text-xs px-2 py-1 bg-gray-100 rounded">
-                  All time
-                </div>
-              }
-            >
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={chartData}
-                    // margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="totalTasks"
-                      name="Total Tasks"
-                      stroke="#8884d8"
-                      activeDot={{ r: 8 }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="completedTasks"
-                      name="Completed Tasks"
-                      stroke="#4ade80"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+            <Card title="Upcoming Task">
+              <TaskLineChart />
             </Card>
-            <Card title="Task Percentage">
-              <TaskPercentagePie />
+            <Card title="Total work">
+              <CompareBarChart />
             </Card>
           </div>
-
-          {/* <h2 className="text-lg font-semibold mb-4">Work Progress</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {mockTasks.map((task) => (
-              <Card key={task.id} className="border rounded-md">
-                <div className="mb-4">
-                  <h3 className="text-base font-medium">{task.name}</h3>
-                  <div className="flex justify-between text-xs text-gray-500 mt-1">
-                    <div>
-                      <span>Start Date: </span>
-                      <span>{task.startDate}</span>
-                    </div>
-                    <div>
-                      <span>Due Date: </span>
-                      <span>{task.dueDate}</span>
-                    </div>
-                  </div>
-                </div>
-                <Progress percent={task.progress} status="active" />
-              </Card>
-            ))}
-          </div> */}
         </div>
-
         {/* Right Column - Calendar and Status */}
         <div className="lg:col-span-1">
-          <Card className="mb-6">
-            <h2 className="text-lg font-medium mb-2">March 2025</h2>
-            <Calendar
-              fullscreen={false}
-              mode="month"
-              // cellRender={cellRender}
-            />
+          <Card className="mb-6" title="Task Percentage">
+            <TaskPercentagePie />
           </Card>
-
-          <Card title="Upcoming" className="mb-6">
-            <div className="flex justify-between text-xs text-gray-500 mb-2">
-              <span>10 AM</span>
-              <span>11 AM</span>
-              <span>12 PM</span>
-              <span>1 PM</span>
-            </div>
-            <div className="border-l-2 border-blue-500 pl-2 mb-3">
-              <h4 className="text-sm font-medium">Research</h4>
-              <p className="text-xs text-gray-500">10:00 AM - 11:00 AM</p>
-            </div>
-            <div className="border-l-2 border-yellow-500 pl-2">
-              <h4 className="text-sm font-medium">Meeting</h4>
-              <p className="text-xs text-gray-500">12:00 PM - 1:30 PM</p>
-            </div>
+          <Card className="mb-6" title="Working Progress">
+            <WorkingProgressPieChart />
           </Card>
         </div>
       </div>

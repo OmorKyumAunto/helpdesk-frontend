@@ -6,7 +6,7 @@ export interface IAsset {
   purchase_date: Date;
   serial_number: string;
   po_number: string;
-  asset_no:string;
+  asset_no: string;
   specification: string;
   asset_history: string;
   is_assign: number;
@@ -17,12 +17,12 @@ export interface IAsset {
   unit_id: string;
   location: number;
   location_name: string;
-  designation:string;
-  department:string;
-  email:string;
-  device_remarks:string;
-  contact_no:string;
-  employee_unit_name:string;
+  designation: string;
+  department: string;
+  email: string;
+  device_remarks: string;
+  contact_no: string;
+  employee_unit_name: string;
 }
 export interface IAssetDetails {
   id: number;
@@ -31,7 +31,7 @@ export interface IAssetDetails {
   purchase_date: Date;
   serial_number: string;
   po_number: string;
-  asset_no:string;
+  asset_no: string;
   asset_history: string;
   licenses: string;
   is_assign: number;
@@ -53,9 +53,8 @@ export interface IAssetDetails {
   specification: string;
   location: number;
   location_name: string;
-  device_remarks:string;
+  device_remarks: string;
   history: History[];
-  
 }
 
 export interface IAssetParams {
@@ -66,6 +65,8 @@ export interface IAssetParams {
   location?: number;
   type?: string;
   status?: number;
+  from_date?: string;
+  to_date?: string;
 }
 
 export interface IDistributedSingle {
@@ -75,7 +76,7 @@ export interface IDistributedSingle {
   purchase_date: string;
   serial_number: string;
   po_number: string;
-  asset_no:string;
+  asset_no: string;
   asset_create_date: string;
   remarks: string;
   asset_unit_id: string;
@@ -95,9 +96,8 @@ export interface IDistributedSingle {
   status: number;
   location: number;
   location_name: string;
-  device_remarks:string;
+  device_remarks: string;
   history: History[];
-  
 }
 
 export interface History {

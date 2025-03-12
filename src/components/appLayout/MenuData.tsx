@@ -16,7 +16,7 @@ import { BsTicketDetailed } from "react-icons/bs";
 import { GrConfigure } from "react-icons/gr";
 import { PiTicket } from "react-icons/pi";
 
-export const sideBarItems = (employee_id:string,roleId: number) => {
+export const sideBarItems = (employee_id: string, roleId: number) => {
   let menuData: IMenuData[] = [
     {
       label: <Link to="/">Dashboard</Link>,
@@ -92,7 +92,6 @@ export const sideBarItems = (employee_id:string,roleId: number) => {
             key: "/ctc/list",
             icon: <MdOutlineFactCheck size={20} />,
           },
-          
         ]
       : []),
     {
@@ -129,6 +128,13 @@ export const sideBarItems = (employee_id:string,roleId: number) => {
                   </Link>
                 ),
                 key: "/settings/tickets-config",
+                icon: <GrConfigure size={16} />,
+              },
+              {
+                label: (
+                  <Link to="/settings/task-config">Task Configuration</Link>
+                ),
+                key: "/settings/task-config",
                 icon: <GrConfigure size={16} />,
               },
             ],

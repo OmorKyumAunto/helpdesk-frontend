@@ -1,5 +1,5 @@
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
-import { Card, Button, Dropdown, Input, Select, Table } from "antd";
+import { Card, Button, Dropdown, Input, Select, Table, DatePicker } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -19,6 +19,7 @@ import UploadAssetFile from "../components/UploadAssetFile";
 import { IAssetParams } from "../types/assetsTypes";
 import { AssetsTableColumns } from "../utils/AssetsTableColumns";
 import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
+import { rangePreset } from "../../../common/rangePreset";
 
 const AssetsList = () => {
   const { Option } = Select;
@@ -114,11 +115,9 @@ const AssetsList = () => {
               onChange={(e) => setFilter({ ...filter, status: e, offset: 0 })}
               placeholder="Select Status"
               allowClear
-              
             >
               <Option value={1}>Active</Option>
               <Option value={2}>Inactive</Option>
-              
             </Select>
             <Select
               style={{ width: "160px", marginBottom: 8 }}
@@ -151,12 +150,12 @@ const AssetsList = () => {
                     padding: 16,
                     background: "#fff",
                     borderRadius: 8,
-                    width: "190px",
+                    width: "220px",
                     border: "1px solid #f2f2f2",
                   }}
                 >
                   <Select
-                    style={{ width: "180px", marginBottom: 8 }}
+                    style={{ width: "100%", marginBottom: 8 }}
                     loading={locationIsLoading}
                     placeholder="Select Location"
                     showSearch
@@ -181,7 +180,7 @@ const AssetsList = () => {
 
                   <Select
                     allowClear
-                    style={{ width: "180px", marginBottom: 8 }}
+                    style={{ width: "100%", marginBottom: 8 }}
                     onChange={(e) =>
                       setFilter({ ...filter, type: e, offset: 0 })
                     }
@@ -191,6 +190,17 @@ const AssetsList = () => {
                     <Option value="assigned">Assigned</Option>
                     <Option value="in_stock">In Stock</Option>
                   </Select>
+                  <DatePicker.RangePicker
+                    presets={rangePreset}
+                    onChange={(_, e) =>
+                      setFilter({
+                        ...filter,
+                        from_date: e[0],
+                        to_date: e[1],
+                        offset: 0,
+                      })
+                    }
+                  />
                 </div>
               )}
             >
@@ -212,48 +222,47 @@ const AssetsList = () => {
                 "Purchase Date",
                 "Price",
                 "Warranty",
-                "Device Remarks"
+                "Device Remarks",
               ]}
               excelData={
                 data?.data?.length
                   ? data?.data?.map(
-                    ({
-                      serial_number,
-                      remarks,
-                      model,
-                      category,
-                      po_number,
-                      asset_no,
-                      specification,
-                      unit_name,
-                      location_name,
-                      name,
-                      purchase_date,
-                      price,
-                      warranty,
-                      device_remarks,
-                    }: any) => {
-                      const data = {
-                        "Asset Name": name,
-                        Category: category,
-                        Model: model,
-                        "Serial No": serial_number,
-                        "PO No": po_number,
-                        "Asset No": asset_no,
-                        Specification: specification,
-                        Remarks: remarks,
-                        Unit: unit_name,
-                        Location: location_name,
-                        "Purchase Date":
-                          dayjs(purchase_date).format("DD-MM-YYYY"),
-                        Price: price,
-                        Warranty: warranty,
-                        "Device Remarks": device_remarks,
-
-                      };
-                      return data;
-                    }
-                  )
+                      ({
+                        serial_number,
+                        remarks,
+                        model,
+                        category,
+                        po_number,
+                        asset_no,
+                        specification,
+                        unit_name,
+                        location_name,
+                        name,
+                        purchase_date,
+                        price,
+                        warranty,
+                        device_remarks,
+                      }: any) => {
+                        const data = {
+                          "Asset Name": name,
+                          Category: category,
+                          Model: model,
+                          "Serial No": serial_number,
+                          "PO No": po_number,
+                          "Asset No": asset_no,
+                          Specification: specification,
+                          Remarks: remarks,
+                          Unit: unit_name,
+                          Location: location_name,
+                          "Purchase Date":
+                            dayjs(purchase_date).format("DD-MM-YYYY"),
+                          Price: price,
+                          Warranty: warranty,
+                          "Device Remarks": device_remarks,
+                        };
+                        return data;
+                      }
+                    )
                   : []
               }
             />
@@ -292,7 +301,15 @@ const AssetsList = () => {
                 current: Number(page),
                 showSizeChanger: true,
                 defaultPageSize: 50,
-                pageSizeOptions: ["50", "100", "200", "300", "500", "1000","3000"],
+                pageSizeOptions: [
+                  "50",
+                  "100",
+                  "200",
+                  "300",
+                  "500",
+                  "1000",
+                  "3000",
+                ],
                 total: data ? Number(assetsTableData?.total) : 0,
                 showTotal: (total) => `Total ${total} `,
               }}
