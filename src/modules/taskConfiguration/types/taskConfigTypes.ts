@@ -1,10 +1,25 @@
-export interface ILicense {
+export interface ITaskCategoryList {
   id: number;
   title: string;
-  price: number;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  created_by: number;
-  updated_by: number;
+  set_time: number;
+  format: string;
+  status: number;
+  tsc: Tsc[];
+}
+
+export interface Tsc {
+  id: number;
+  title: string;
+}
+export interface ICreateTaskCategory {
+  title: string;
+  set_time: number;
+  format: string;
+}
+export interface ICreateSubTaskCategory {
+  title: string[];
+  categories_id: number;
+}
+export interface IUpdateSubTaskCategory {
+  title: string[];
 }

@@ -1,25 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SendOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, InputNumber, Row } from "antd";
+import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from "antd";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useUpdateLicenseMutation } from "../api/licenseEndPoint";
-import { ILicense } from "../types/taskConfigTypes";
+import { useCreateTaskCategoryMutation } from "../api/taskCategoryEndPoint";
+import { ICreateTaskCategory } from "../types/taskConfigTypes";
 
-const UpdateLicense = ({ single }: { single: ILicense }) => {
-  const { id, title, price } = single || {};
+const CreateTaskCategory = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const [update, { isLoading, isSuccess }] = useUpdateLicenseMutation();
 
-  const onFinish = (value: any) => {
-    update({ title: value, id });
+  const [create, { isLoading, isSuccess }] = useCreateTaskCategoryMutation();
+
+  const onFinish = (value: ICreateTaskCategory) => {
+    create(value);
   };
-
-  useEffect(() => {
-    form.setFieldsValue({ title, price });
-  }, [form, title, price]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -44,22 +40,41 @@ const UpdateLicense = ({ single }: { single: ILicense }) => {
                 <Form.Item
                   name="title"
                   rules={[{ required: true }]}
-                  label="License Name"
+                  label="Task Name"
                   required
                 >
-                  <Input placeholder="Enter License Name" type="text" />
+                  <Input placeholder="Enter Task Name" type="text" />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24}>
+              <Col xs={24} sm={24} md={12}>
                 <Form.Item
-                  name="price"
+                  name="set_time"
                   rules={[{ required: true }]}
-                  label="Cost Per Month"
+                  label="Time"
                   required
                 >
                   <InputNumber
                     style={{ width: "100%" }}
-                    placeholder="Enter License Price"
+                    placeholder="Enter Time"
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={12}>
+                <Form.Item
+                  name="format"
+                  rules={[{ required: true }]}
+                  label="Format"
+                  required
+                >
+                  <Select
+                    style={{ width: "100%" }}
+                    placeholder="Select Format"
+                    allowClear
+                    options={[
+                      { label: "Minutes", value: "minutes" },
+                      { label: "Hours", value: "hours" },
+                      { label: "Day", value: "day" },
+                    ]}
                   />
                 </Form.Item>
               </Col>
@@ -73,7 +88,7 @@ const UpdateLicense = ({ single }: { single: ILicense }) => {
                 icon={<SendOutlined />}
                 loading={isLoading}
               >
-                Update
+                Create
               </Button>
             </div>
           </Form.Item>
@@ -83,4 +98,4 @@ const UpdateLicense = ({ single }: { single: ILicense }) => {
   );
 };
 
-export default UpdateLicense;
+export default CreateTaskCategory;

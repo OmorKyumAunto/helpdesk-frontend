@@ -4,18 +4,25 @@ import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from "antd";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useCreateLicenseMutation } from "../api/licenseEndPoint";
+import {
+  ICreateTaskCategory,
+  ITaskCategoryList,
+} from "../types/taskConfigTypes";
+import { useUpdateTaskCategoryMutation } from "../api/taskCategoryEndPoint";
 
-const CreateLicense = () => {
+const UpdateTaskCategory = ({ single }: { single: ITaskCategoryList }) => {
+  const { id, title, format, set_time } = single || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const [update, { isLoading, isSuccess }] = useUpdateTaskCategoryMutation();
 
-  const [create, { isLoading, isSuccess }] = useCreateLicenseMutation();
-
-  const onFinish = (value: any) => {
-    console.log(value);
-    // create(value);
+  const onFinish = (value: ICreateTaskCategory) => {
+    update({ data: value, id });
   };
+
+  useEffect(() => {
+    form.setFieldsValue({ title, format, set_time });
+  }, [form, title, format, set_time]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -48,7 +55,7 @@ const CreateLicense = () => {
               </Col>
               <Col xs={24} sm={24} md={12}>
                 <Form.Item
-                  name="time"
+                  name="set_time"
                   rules={[{ required: true }]}
                   label="Time"
                   required
@@ -61,19 +68,19 @@ const CreateLicense = () => {
               </Col>
               <Col xs={24} sm={24} md={12}>
                 <Form.Item
-                  name="type"
+                  name="format"
                   rules={[{ required: true }]}
-                  label="Type"
+                  label="Format"
                   required
                 >
                   <Select
                     style={{ width: "100%" }}
-                    placeholder="Select Type"
+                    placeholder="Select Format"
                     allowClear
                     options={[
-                      { label: "Minutes", value: "Minutes" },
-                      { label: "Hours", value: "Hours" },
-                      { label: "Day", value: "Day" },
+                      { label: "Minutes", value: "minutes" },
+                      { label: "Hours", value: "hours" },
+                      { label: "Day", value: "day" },
                     ]}
                   />
                 </Form.Item>
@@ -88,7 +95,7 @@ const CreateLicense = () => {
                 icon={<SendOutlined />}
                 loading={isLoading}
               >
-                Create
+                Update
               </Button>
             </div>
           </Form.Item>
@@ -98,4 +105,4 @@ const CreateLicense = () => {
   );
 };
 
-export default CreateLicense;
+export default UpdateTaskCategory;

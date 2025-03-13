@@ -388,9 +388,11 @@ export const AppLayout = () => {
               padding: "10px",
             }}
           >
-            <Link to={"/task/list"}>
-              <Button type="dashed">Task Manager</Button>
-            </Link>
+            {roleId !== 3 && (
+              <Link to={"/task/list"}>
+                <Button type="dashed">Task Manager</Button>
+              </Link>
+            )}
             <Link to={"/tickets/list"}>
               <Button type="dashed">Ticketing System</Button>
             </Link>

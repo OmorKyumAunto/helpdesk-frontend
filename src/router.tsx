@@ -29,7 +29,8 @@ import AssignCategoryList from "./modules/assignCategory/pages/AssignCategoryLis
 import TicketMain from "./modules/ticket/page/TicketMain";
 import TicketConfig from "./modules/ticket/page/TicketConfig";
 import TaskMain from "./modules/task/page/TaskMain";
-import TaskConfigurationList from "./modules/taskConfiguration/pages/TaskConfigurationList";
+import TaskConfigurationList from "./modules/taskConfiguration/pages/TaskCategoryList";
+import TaskConfiguration from "./modules/taskConfiguration/pages/TaskConfiguration";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -145,7 +146,7 @@ export const routers = createBrowserRouter([
           },
           {
             path: "task-config",
-            element: <TaskConfigurationList />,
+            element: <TaskConfiguration />,
           },
         ],
       },

@@ -2,19 +2,19 @@ import { Card, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { CreateButton } from "../../../common/CommonButton";
-import { useGetLicensesQuery } from "../api/licenseEndPoint";
-import CreateLicense from "../components/CreateLicense";
-import { LicenseTableColumns } from "../utils/LicenseTableColumns";
+import { useGetTaskCategoryQuery } from "../api/taskCategoryEndPoint";
+import CreateTaskCategory from "../components/CreateTaskCategory";
+import { TaskCategoryTableColumns } from "../utils/TaskCategoryTableColumns";
 
-const TaskConfigurationList = () => {
+const TaskCategoryList = () => {
   const dispatch = useDispatch();
-  const { data, isLoading, isFetching } = useGetLicensesQuery({});
+  const { data, isLoading, isFetching } = useGetTaskCategoryQuery();
 
   return (
     <>
       <div>
         <Card
-          title={`Task List`}
+          title={`Task Category List`}
           style={{
             boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
             marginBottom: "1rem",
@@ -30,12 +30,12 @@ const TaskConfigurationList = () => {
             }}
           >
             <CreateButton
-              name="Create New List"
+              name="Create New Category"
               onClick={() => {
                 dispatch(
                   setCommonModal({
-                    title: "Create New List",
-                    content: <CreateLicense />,
+                    title: "Create New Category",
+                    content: <CreateTaskCategory />,
                     show: true,
                     width: 500,
                   })
@@ -49,9 +49,8 @@ const TaskConfigurationList = () => {
               size="small"
               bordered
               loading={isLoading || isFetching}
-              dataSource={[]}
-              // dataSource={data?.data?.length ? data.data : []}
-              // columns={LicenseTableColumns()}
+              dataSource={data?.data?.length ? data.data : []}
+              columns={TaskCategoryTableColumns()}
               scroll={{ x: true }}
               pagination={false}
             />
@@ -62,4 +61,4 @@ const TaskConfigurationList = () => {
   );
 };
 
-export default TaskConfigurationList;
+export default TaskCategoryList;
