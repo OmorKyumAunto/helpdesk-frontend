@@ -18,7 +18,8 @@ import {
   ITaskCategoryList,
 } from "../types/taskConfigTypes";
 
-const CreateSubTaskCategory = () => {
+const CreateSubTaskCategory = ({ record }: { record: ITaskCategoryList }) => {
+  const { id, tsc } = record || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
@@ -30,6 +31,15 @@ const CreateSubTaskCategory = () => {
 
     create(values);
   };
+
+  useEffect(() => {
+    if (record) {
+      form.setFieldsValue({
+        categories_id: id,
+        title: tsc?.map((item) => item.title),
+      });
+    }
+  }, [record, form]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -56,6 +66,7 @@ const CreateSubTaskCategory = () => {
               rules={[{ required: true, message: "Please select a category!" }]}
             >
               <Select
+                disabled
                 loading={categoryLoader}
                 placeholder="Select a category"
                 showSearch

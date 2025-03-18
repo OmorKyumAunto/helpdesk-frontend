@@ -1,4 +1,9 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { Button, Popconfirm, Space, Tag } from "antd";
 import { TableProps } from "antd/lib";
 import { useDispatch } from "react-redux";
@@ -10,6 +15,8 @@ import {
 import UpdateTaskCategory from "../components/UpdateTaskCategory";
 import { ITaskCategoryList } from "../types/taskConfigTypes";
 import UpdateTaskSubCategory from "../components/UpdateSubCategory";
+import CreateSubTaskCategory from "../components/CreateSubCategory";
+import CategoryView from "../pages/CategoryView";
 
 export const TaskCategoryTableColumns =
   (): TableProps<ITaskCategoryList>["columns"] => {
@@ -58,6 +65,22 @@ export const TaskCategoryTableColumns =
               onClick={() => {
                 dispatch(
                   setCommonModal({
+                    title: "Category Details",
+                    content: <CategoryView record={record} />,
+                    show: true,
+                    width: 740,
+                  })
+                );
+              }}
+            >
+              <EyeOutlined />
+            </Button>
+            <Button
+              size="small"
+              style={{ color: "#1775BB" }}
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
                     title: "Update Task Category",
                     content: <UpdateTaskCategory single={record} />,
                     show: true,
@@ -79,6 +102,23 @@ export const TaskCategoryTableColumns =
                 <DeleteOutlined />
               </Button>
             </Popconfirm>
+            <Button
+              size="small"
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
+                    title: "Add Sub Category",
+                    content: <CreateSubTaskCategory record={record} />,
+                    show: true,
+                    width: 500,
+                  })
+                );
+              }}
+            >
+              Sub Category
+            </Button>
           </Space>
         ),
       },

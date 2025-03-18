@@ -7,7 +7,6 @@ import {
   Col,
   DatePicker,
   Form,
-  Input,
   Row,
   Select,
 } from "antd";
@@ -17,29 +16,20 @@ import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
-import { useGetAdminsQuery } from "../../admin/api/adminEndPoint";
-import { IAdmin } from "../../admin/types/adminTypes";
-import {
-  useCreateTaskMutation,
-  useGetTaskListQuery,
-} from "../api/taskEndpoint";
-import { ITaskList, ITaskPost } from "../types/taskTypes";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import { ITaskCategoryList } from "../../taskConfiguration/types/taskConfigTypes";
+import { useCreateTaskMutation } from "../api/taskEndpoint";
+import { ITaskItems, ITaskPost } from "../types/taskTypes";
 
-const AssignTask = () => {
+const UpdateTask = ({ single }: { single: ITaskItems }) => {
+  const { description, start_date, start_time } = single || {};
+  console.log(single);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
-    status: "active",
-  });
-  const { data: allAdmin, isLoading: adminLoading } = useGetAdminsQuery({});
   const { data: taskCategory, isLoading: taskLoader } =
     useGetTaskCategoryQuery();
   const [create, { isSuccess, isLoading }] = useCreateTaskMutation();
 
-  const isAssign = useWatch("is_assign", form);
   const taskCategoriesId = useWatch("task_categories_id", form);
 
   const selectedCategory = taskCategory?.data?.find(
@@ -58,6 +48,14 @@ const AssignTask = () => {
     }
     create(formattedData);
   };
+  const formattedDate = start_date.split("T")[0] + "T" + start_time;
+  useEffect(() => {
+    form.setFieldsValue({
+      start_date: dayjs(start_date),
+      description,
+      start_time: dayjs(formattedDate),
+    });
+  }, [start_date, start_time, description]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -143,68 +141,6 @@ const AssignTask = () => {
                   <TextArea placeholder="Enter Description" />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={24} md={24} lg={24}>
-                <Form.Item valuePropName="checked" name="is_assign">
-                  <Checkbox>Assign Admin</Checkbox>
-                </Form.Item>
-              </Col>
-              {isAssign ? (
-                <>
-                  <Col xs={24} sm={24} md={24} lg={12}>
-                    <Form.Item
-                      label="Select Unit"
-                      name="unit_id"
-                      rules={[
-                        { required: true, message: "Please select a unit!" },
-                      ]}
-                    >
-                      <Select
-                        loading={unitIsLoading}
-                        placeholder="Select Unit Name"
-                        showSearch
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          (option?.label ?? "")
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                        }
-                        options={unitData?.data?.map((unit: any) => ({
-                          value: unit.id,
-                          label: unit.title,
-                        }))}
-                        allowClear
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={24} lg={12}>
-                    <Form.Item
-                      label="Select Admin"
-                      name="user_id"
-                      rules={[
-                        { required: true, message: "Please select Admin" },
-                      ]}
-                    >
-                      <Select
-                        loading={adminLoading}
-                        placeholder="Search Admin"
-                        showSearch
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          (option?.label ?? "")
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                        }
-                        options={allAdmin?.data?.map((item: IAdmin) => ({
-                          value: item.id,
-                          label: `[${item.employee_id}] ${item.name} (${item.email})`,
-                        }))}
-                        allowClear
-                        style={{ width: "100%" }}
-                      />
-                    </Form.Item>
-                  </Col>
-                </>
-              ) : null}
             </Row>
           </Card>
           <Form.Item>
@@ -215,7 +151,7 @@ const AssignTask = () => {
                 icon={<SendOutlined />}
                 loading={isLoading}
               >
-                Create
+                Update
               </Button>
             </div>
           </Form.Item>
@@ -225,4 +161,4 @@ const AssignTask = () => {
   );
 };
 
-export default AssignTask;
+export default UpdateTask;

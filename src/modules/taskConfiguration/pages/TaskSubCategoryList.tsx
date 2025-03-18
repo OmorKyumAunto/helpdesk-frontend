@@ -35,7 +35,7 @@ const TaskSubCategoryList = () => {
                 dispatch(
                   setCommonModal({
                     title: "Create Sub Category",
-                    content: <CreateSubTaskCategory />,
+                    // content: <CreateSubTaskCategory />,
                     show: true,
                     width: 500,
                   })

@@ -24,7 +24,7 @@ export interface PostTask {
 }
 export interface ITaskItems {
   id: number;
-  title: string;
+  category_title: string;
   description: string;
   start_date: string;
   end_date: string;
@@ -32,16 +32,14 @@ export interface ITaskItems {
   end_time: string;
   task_code: string;
   task_status: string;
+  starred: number;
 }
 export interface ITaskPost {
-  title: string;
   description: string;
   start_date: string;
-  end_date: string;
   start_time: string;
-  end_time: string;
+  sub_list_selected: number[];
   is_assign?: number;
   user_id: number;
   task_categories_id: number;
-  unit_id?: number;
 }

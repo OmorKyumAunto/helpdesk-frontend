@@ -31,6 +31,7 @@ import TicketConfig from "./modules/ticket/page/TicketConfig";
 import TaskMain from "./modules/task/page/TaskMain";
 import TaskConfigurationList from "./modules/taskConfiguration/pages/TaskCategoryList";
 import TaskConfiguration from "./modules/taskConfiguration/pages/TaskConfiguration";
+import TaskCategoryList from "./modules/taskConfiguration/pages/TaskCategoryList";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -146,7 +147,7 @@ export const routers = createBrowserRouter([
           },
           {
             path: "task-config",
-            element: <TaskConfiguration />,
+            element: <TaskCategoryList />,
           },
         ],
       },

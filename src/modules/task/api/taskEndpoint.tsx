@@ -151,11 +151,24 @@ export const TaskEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["Task"],
     }),
+    getOtherTaskList: build.query<
+      HTTPResponse<ITaskItems[]>,
+      { assign_to?: number; assign_from_others?: number }
+    >({
+      query: (params) => {
+        return {
+          url: `/task/assign-task`,
+          params,
+        };
+      },
+      providesTags: () => ["Task"],
+    }),
   }),
 });
 
 export const {
   useGetTaskListQuery,
+  useGetOtherTaskListQuery,
   useCreateTaskListMutation,
   useUpdateTaskListMutation,
   useDeleteTaskListMutation,

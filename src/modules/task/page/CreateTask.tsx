@@ -1,7 +1,5 @@
 import {
   ClockCircleOutlined,
-  DeleteOutlined,
-  EditOutlined,
   EllipsisOutlined,
   OrderedListOutlined,
   PlusOutlined,
@@ -18,65 +16,39 @@ import {
   Popover,
   Row,
   Space,
+  Statistic,
 } from "antd";
-import React, { useEffect, useState } from "react";
-import { setCommonModal } from "../../../app/slice/modalSlice";
-import TaskForm from "../components/TaskForm";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { FaRegStar, FaStar } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import ListForm from "../components/ListForm";
-import AssignTask from "../components/AssignTask";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import {
-  useDeleteTaskListMutation,
   useDeleteTaskMutation,
   useEndTaskMutation,
   useGetTaskItemsQuery,
-  useGetTaskListQuery,
   useStartedTaskMutation,
   useStartTaskMutation,
 } from "../api/taskEndpoint";
-import ListFormUpdate from "../components/UpdateListForm";
-import { useWatch } from "antd/es/form/Form";
-import { FaRegStar, FaStar } from "react-icons/fa";
-import dayjs from "dayjs";
+import AssignTask from "../components/AssignTask";
+import TaskForm from "../components/TaskForm";
+import UpdateTask from "../components/UpdateTask";
 
 const TaskManager = ({ roleID }: { roleID?: number }) => {
-  const [starValue, setStarValue] = useState(false);
-  const { data, isLoading } = useGetTaskListQuery();
-  // const { data: taskItems, isLoading: taskLoader } = useGetTaskItemsQuery();
-  // console.log(taskItems);
-  const [remove] = useDeleteTaskListMutation();
+  const { data, isLoading } = useGetTaskCategoryQuery();
+  const listCategory = data?.data || [];
+  const { data: taskItems, isLoading: taskLoader } = useGetTaskItemsQuery();
   const [removeTask] = useDeleteTaskMutation();
   const [starTask] = useStartedTaskMutation();
   const [startedTask] = useStartTaskMutation();
   const [endedTask] = useEndTaskMutation();
   const [activeList, setActiveList] = useState("My Tasks");
   const dispatch = useDispatch();
-  const lists = data?.data || [];
+  const { Countdown } = Statistic;
 
-  const [activeFilter, setActiveFilter] = useState<"" | "from" | "to">("from"); // Filter state
   const [timeLeft, setTimeLeft] = useState(40 * 60); // 40 mins in seconds
 
-  // Dummy data
-  const taskItems = [
-    {
-      id: 1,
-      task_code: "TASK001",
-      title: "Sample Task Title 1",
-      description: "This is a short task description example.",
-      end_date: dayjs().add(2, "day").format("YYYY-MM-DD"),
-      end_time: "05:00 PM",
-      task_status: "incomplete",
-    },
-    {
-      id: 2,
-      task_code: "TASK002",
-      title: "Sample Task Title 2",
-      description: "Another task description for testing.",
-      end_date: dayjs().add(1, "day").format("YYYY-MM-DD"),
-      end_time: "03:00 PM",
-      task_status: "inprogress",
-    },
-  ];
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
@@ -91,6 +63,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
     const secs = (seconds % 60).toString().padStart(2, "0");
     return `${mins}:${secs}`;
   };
+
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
@@ -115,7 +88,6 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                 <Input
                   type="text"
                   placeholder="Search tasks..."
-                  // className="w-64 pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   prefix={<SearchOutlined />}
                 />
               </div>
@@ -163,7 +135,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
         {/* Main Task View */}
         <Col xs={24} sm={24} md={24} lg={18}>
           <Row gutter={[14, 14]}>
-            {taskItems?.map((item) => (
+            {taskItems?.data?.map((item) => (
               <Col key={item.id} xs={24} sm={24} md={12}>
                 <Card
                   bordered={false}
@@ -189,14 +161,13 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                       </div>
                       <Flex gap={4} justify="center" align="center">
                         <div>
-                          {starValue ? (
+                          {item.starred ? (
                             <FaStar
                               onClick={() => {
                                 starTask({
-                                  body: { starred: starValue ? 1 : 0 },
+                                  body: { starred: 0 },
                                   id: item.id,
-                                }),
-                                  setStarValue(!starValue);
+                                });
                               }}
                               size={20}
                               color="gold"
@@ -205,10 +176,9 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                             <FaRegStar
                               onClick={() => {
                                 starTask({
-                                  body: { starred: starValue ? 1 : 0 },
+                                  body: { starred: 1 },
                                   id: item.id,
-                                }),
-                                  setStarValue(!starValue);
+                                });
                               }}
                               size={20}
                             />
@@ -221,6 +191,15 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                                 size="small"
                                 type="primary"
                                 style={{ width: "60px" }}
+                                onClick={() => {
+                                  dispatch(
+                                    setCommonModal({
+                                      title: "Update Task",
+                                      content: <UpdateTask single={item} />,
+                                      show: true,
+                                    })
+                                  );
+                                }}
                               >
                                 Edit
                               </Button>
@@ -243,7 +222,9 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                     </div>
                     <div>
                       <div>
-                        <span className="text-xl  font-bold">{item.title}</span>
+                        <span className="text-xl  font-bold">
+                          {item.category_title}
+                        </span>
                       </div>
                       <p className="mt-1 text-sm text-gray-500">
                         {item.description}
@@ -302,8 +283,14 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         >
                           ⏳ {formatTime(timeLeft)}
                         </span>
+                        {/* {item.start_time} */}
                                   
                       </div>
+                      {/* <Countdown
+                        valueStyle={{ fontSize: "14px" }}
+                        value={dayjs("2029-01-25").valueOf()}
+                        format="YY [Years], MM [Months], DD [Days], HH:mm:ss"
+                      /> */}
                     </div>
                     {item.task_status === "incomplete" && (
                       <Button
@@ -341,7 +328,6 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                 <Button icon={<OrderedListOutlined />} className="w-full">
                   All Tasks
                 </Button>
-
                 <Button icon={<StarOutlined />} className="w-full">
                   Starred
                 </Button>
@@ -351,67 +337,22 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                 <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
                   Lists
                 </h2>
-                {lists.map((list, index) => (
+                {listCategory.map((list) => (
                   <Button
                     key={list.id}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left mb-1 ${
-                      activeList === list.category_title
+                      activeList === list.title
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700 hover:bg-gray-100"
                     }`}
-                    onClick={() => setActiveList(list.category_title)}
+                    onClick={() => setActiveList(list.title)}
                   >
                     <div className="flex items-center">
                       <span className="w-6 text-xs text-gray-500">
                         <Checkbox />
                       </span>
-                      <span className="font-medium">{list.category_title}</span>
+                      <span className="font-medium">{list.title}</span>
                     </div>
-                    {/* <span className="bg-gray-200 text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full">
-                      {list.count}
-                    </span> */}
-                    <Popover
-                      content={
-                        <Space direction="vertical">
-                          <Button
-                            size="small"
-                            type="primary"
-                            style={{ width: "60px" }}
-                            onClick={() => {
-                              dispatch(
-                                setCommonModal({
-                                  title: "Update Task List",
-                                  content: <ListFormUpdate singleData={list} />,
-                                  show: true,
-                                  width: "450px",
-                                })
-                              );
-                            }}
-                          >
-                            Edit
-                          </Button>
-                          {lists?.length > 1 && (
-                            <Button
-                              size="small"
-                              type="primary"
-                              danger
-                              style={{ width: "60px" }}
-                              onClick={() => remove(list.id)}
-                            >
-                              Delete
-                            </Button>
-                          )}
-                        </Space>
-                      }
-                      trigger="hover"
-                    >
-                      <Button
-                        type="text"
-                        size="small"
-                        className=" text-gray-400 hover:text-gray-600"
-                        icon={<EllipsisOutlined />}
-                      />
-                    </Popover>
                   </Button>
                 ))}
               </div>
