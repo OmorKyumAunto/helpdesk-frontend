@@ -1,57 +1,23 @@
-import React, { useState } from "react";
+import { ClockCircleOutlined } from "@ant-design/icons";
 import {
-  Card,
-  Calendar,
-  Progress,
-  Badge,
-  Table,
-  Avatar,
-  Button,
-  Flex,
-  CalendarProps,
   Tooltip as AntTooltip,
+  Badge,
+  Button,
+  CalendarProps,
+  Card,
+  Col,
+  Flex,
+  Row,
+  Table,
 } from "antd";
-import {
-  CalendarOutlined,
-  ClockCircleOutlined,
-  ClockCircleTwoTone,
-} from "@ant-design/icons";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 
-const mockTasks = [
-  {
-    id: 1,
-    name: "Dashboard Design",
-    progress: 80,
-    status: "In Progress",
-    startDate: "12 Mar",
-    dueDate: "20 Mar",
-  },
-  {
-    id: 2,
-    name: "App UI UX Design",
-    progress: 40,
-    status: "In Progress",
-    startDate: "10 Mar",
-    dueDate: "18 Mar",
-  },
-];
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import TaskPercentagePie from "../components/TaskPercentagePie";
 import { BadgeProps } from "antd/lib";
-import TaskLineChart from "../components/LineChart";
-import WorkingProgressPieChart from "../components/WorkingProgressPieChart";
+import Lottie from "lottie-react";
+import Animation from "../../../../public/Animation - 1742751729342.json";
 import CompareBarChart from "../components/CompareBarChart";
-
+import TaskPercentagePie from "../components/TaskPercentagePie";
+import WorkingProgressPieChart from "../components/WorkingProgressPieChart";
 // Mock data for line chart
 const chartData = [
   { name: "Jan", totalTasks: 400, completedTasks: 240 },
@@ -118,27 +84,8 @@ const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
 const TaskDashboard = () => {
   return (
     <div className="bg-gray-100 p-6 min-h-screen rounded-lg">
-      {/* <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-xl font-semibold">Dashboard</h1>
-          <p className="text-gray-500 text-sm">11 March 2025</p>
-        </div>
-        <div className="flex items-center">
-          <input
-            type="search"
-            placeholder="Search"
-            className="mr-4 px-3 py-1 border rounded-md text-sm"
-          />
-          <div className="flex items-center bg-white px-2 py-1 rounded-md border">
-            <CalendarOutlined className="mr-2 text-gray-500" />
-            <span className="text-sm">11 March 2025</span>
-          </div>
-        </div>
-      </div> */}
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Welcome and Stats */}
-        <div className="lg:col-span-2">
+      <Row gutter={[12, 12]}>
+        <Col xs={24} sm={24} md={24} lg={18}>
           <Card className="mb-3">
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div className="mb-4 md:mb-0">
@@ -151,14 +98,12 @@ const TaskDashboard = () => {
                   Debitis maxime natus unde labore
                 </p>
                 <Button className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm">
-                  Learn More
+                  Go To Task
                 </Button>
               </div>
-              <img
-                src="/api/placeholder/200/150"
-                alt="Task management illustration"
-                className="w-48"
-              />
+              <div style={{ width: 140 }}>
+                <Lottie animationData={Animation} loop={true} />
+              </div>
             </div>
           </Card>
 
@@ -220,25 +165,81 @@ const TaskDashboard = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <Card title="Upcoming Task">
-              <TaskLineChart />
-            </Card>
-            <Card title="Total work">
-              <CompareBarChart />
-            </Card>
-          </div>
-        </div>
+          <Row gutter={[12, 12]} className="mb-6">
+            <Col xs={24} sm={24} md={24} lg={8}>
+              <Card title="Upcoming Task" style={{ height: "100%" }}>
+                <Table
+                  size="small"
+                  pagination={false}
+                  columns={[
+                    {
+                      key: "1",
+                      dataIndex: "name",
+                      title: "Task Title",
+                    },
+                    {
+                      key: "2",
+                      dataIndex: "date",
+                      title: "Start Date & Time",
+                    },
+                  ]}
+                  dataSource={[
+                    {
+                      id: 1,
+                      name: "Test Task One",
+                      date: "23 Mar 2025 11:30PM",
+                    },
+                    {
+                      id: 2,
+                      name: "Test Task Two",
+                      date: "22 Mar 2025 9:30PM",
+                    },
+                    {
+                      id: 2,
+                      name: "Test Task Two",
+                      date: "22 Mar 2025 9:30PM",
+                    },
+                    {
+                      id: 2,
+                      name: "Test Task Two",
+                      date: "22 Mar 2025 9:30PM",
+                    },
+                    {
+                      id: 2,
+                      name: "Test Task Two",
+                      date: "22 Mar 2025 9:30PM",
+                    },
+                    {
+                      id: 2,
+                      name: "Test Task Two",
+                      date: "22 Mar 2025 9:30PM",
+                    },
+                    {
+                      id: 2,
+                      name: "Test Task Two",
+                      date: "22 Mar 2025 9:30PM",
+                    },
+                  ]}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={16}>
+              <Card title="Total work">
+                <CompareBarChart />
+              </Card>
+            </Col>
+          </Row>
+        </Col>
         {/* Right Column - Calendar and Status */}
-        <div className="lg:col-span-1">
-          <Card className="mb-6" title="Task Percentage">
-            <TaskPercentagePie />
-          </Card>
+        <Col xs={24} sm={24} md={24} lg={6}>
           <Card className="mb-6" title="Working Progress">
             <WorkingProgressPieChart />
           </Card>
-        </div>
-      </div>
+          <Card className="mb-6" title="Task Percentage">
+            <TaskPercentagePie />
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 };

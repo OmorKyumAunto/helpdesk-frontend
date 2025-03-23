@@ -17,7 +17,10 @@ import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import {
+  useGetAdminWiseUnitsQuery,
+  useGetUnitsQuery,
+} from "../../Unit/api/unitEndPoint";
 import { useGetAdminsQuery } from "../../admin/api/adminEndPoint";
 import { IAdmin } from "../../admin/types/adminTypes";
 import {
@@ -27,6 +30,7 @@ import {
 import { ITaskList, ITaskPost } from "../types/taskTypes";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import { ITaskCategoryList } from "../../taskConfiguration/types/taskConfigTypes";
+import { UserList } from "../../Unit/types/unitTypes";
 
 const AssignTask = () => {
   const dispatch = useDispatch();
@@ -34,13 +38,18 @@ const AssignTask = () => {
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
-  const { data: allAdmin, isLoading: adminLoading } = useGetAdminsQuery({});
   const { data: taskCategory, isLoading: taskLoader } =
     useGetTaskCategoryQuery();
   const [create, { isSuccess, isLoading }] = useCreateTaskMutation();
 
   const isAssign = useWatch("is_assign", form);
   const taskCategoriesId = useWatch("task_categories_id", form);
+  const unitId = useWatch("unit_id", form);
+
+  const { data: allAdmin, isLoading: adminLoading } = useGetAdminWiseUnitsQuery(
+    unitId,
+    { skip: !unitId }
+  );
 
   const selectedCategory = taskCategory?.data?.find(
     (item) => item.id === taskCategoriesId
@@ -194,10 +203,12 @@ const AssignTask = () => {
                             .toLowerCase()
                             .includes(input.toLowerCase())
                         }
-                        options={allAdmin?.data?.map((item: IAdmin) => ({
-                          value: item.id,
-                          label: `[${item.employee_id}] ${item.name} (${item.email})`,
-                        }))}
+                        options={allAdmin?.data?.user_list?.map(
+                          (item: UserList) => ({
+                            value: item.user_id,
+                            label: `[${item.employee_id}] ${item.name}`,
+                          })
+                        )}
                         allowClear
                         style={{ width: "100%" }}
                       />

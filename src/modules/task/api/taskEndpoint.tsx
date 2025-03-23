@@ -2,7 +2,13 @@ import { api } from "../../../app/api/api";
 import { HTTPResponse } from "../../../app/types/commonTypes";
 import notification from "../../../common/utils/Notification";
 import asyncWrapper from "../../../utils/asyncWrapper";
-import { ITaskItems, ITaskList, ITaskPost, PostTask } from "../types/taskTypes";
+import {
+  ITaskItems,
+  ITaskList,
+  ITaskParams,
+  ITaskPost,
+  PostTask,
+} from "../types/taskTypes";
 
 export const TaskEndPoint = api.injectEndpoints({
   endpoints: (build) => ({
@@ -63,10 +69,11 @@ export const TaskEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["Task"],
     }),
-    getTaskItems: build.query<HTTPResponse<ITaskItems[]>, void>({
-      query: () => {
+    getTaskItems: build.query<HTTPResponse<ITaskItems[]>, ITaskParams>({
+      query: (params) => {
         return {
           url: `/task/list`,
+          params,
         };
       },
       providesTags: () => ["Task"],

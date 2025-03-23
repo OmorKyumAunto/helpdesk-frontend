@@ -2,7 +2,7 @@ import { api } from "../../../app/api/api";
 import { HTTPResponse } from "../../../app/types/commonTypes";
 import notification from "../../../common/utils/Notification";
 import asyncWrapper from "../../../utils/asyncWrapper";
-import { IUnit } from "../types/unitTypes";
+import { IUnit, IUnitWiseAdminList } from "../types/unitTypes";
 
 export const unitEndPoint = api.injectEndpoints({
   endpoints: (build) => ({
@@ -11,6 +11,14 @@ export const unitEndPoint = api.injectEndpoints({
         return {
           url: `/asset-unit/list`,
           params,
+        };
+      },
+      providesTags: () => ["unit"],
+    }),
+    getAdminWiseUnits: build.query<HTTPResponse<IUnitWiseAdminList>, number>({
+      query: (id) => {
+        return {
+          url: `/asset-unit/unit-wise-admin/${id}`,
         };
       },
       providesTags: () => ["unit"],
@@ -82,6 +90,7 @@ export const unitEndPoint = api.injectEndpoints({
 
 export const {
   useGetUnitsQuery,
+  useGetAdminWiseUnitsQuery,
   useCreateUnitMutation,
   useUpdateUnitMutation,
   useUpdateUnitStatusMutation,

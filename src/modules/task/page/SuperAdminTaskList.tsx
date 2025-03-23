@@ -42,7 +42,7 @@ import { ITaskParams } from "../types/taskTypes";
 import { sanitizeFormValue } from "react-form-sanitization";
 import TaskCountdown from "../components/TaskCountdown";
 
-const TaskManager = ({ roleID }: { roleID?: number }) => {
+const SuperAdminTaskList = () => {
   const { data, isLoading } = useGetTaskCategoryQuery();
   const listCategory = data?.data || [];
   const [removeTask] = useDeleteTaskMutation();
@@ -146,39 +146,6 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                   }
                 />
               </div>
-              {roleID === 2 ? (
-                <Button
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => {
-                    dispatch(
-                      setCommonModal({
-                        title: "Create Task",
-                        content: <AssignTask />,
-                        show: true,
-                      })
-                    );
-                  }}
-                >
-                  Create Task
-                </Button>
-              ) : (
-                <Button
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => {
-                    dispatch(
-                      setCommonModal({
-                        title: "Create Task",
-                        content: <TaskForm />,
-                        show: true,
-                      })
-                    );
-                  }}
-                >
-                  Create Task
-                </Button>
-              )}
             </Space>
           </div>
         </div>
@@ -441,4 +408,4 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
   );
 };
 
-export default TaskManager;
+export default SuperAdminTaskList;

@@ -43,3 +43,12 @@ export interface ITaskPost {
   user_id: number;
   task_categories_id: number;
 }
+export interface ITaskParams {
+  limit?: number;
+  offset?: number;
+  key?: string;
+  start_date?: string;
+  end_date?: string;
+  starred?: number;
+  user_id?: number;
+}

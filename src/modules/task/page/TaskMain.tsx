@@ -7,6 +7,7 @@ import TaskList from "./TaskList";
 import TaskListOther from "./TaskListOther";
 import TaskReport from "./TaskReport";
 import TaskDashboard from "./TaskDashboard";
+import SuperAdminTaskList from "./SuperAdminTaskList";
 
 const TaskMain: React.FC = () => {
   const { data: profile } = useGetMeQuery();
@@ -31,7 +32,7 @@ const TaskMain: React.FC = () => {
                 All Tasks
               </span>
             ),
-            children: <TaskList />,
+            children: <SuperAdminTaskList />,
           },
           {
             key: "3",
