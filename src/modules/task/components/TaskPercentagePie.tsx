@@ -1,31 +1,24 @@
 import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
+import { useGetDashboardCategoryWiseDataQuery } from "../api/taskDashboardEndpoint";
+import { IDashboardCategoryWiseData } from "../types/taskTypes";
 
 const TaskPercentagePie = () => {
-  //   const { data } = useGetTicketDashboardCountQuery();
-  //   const {
-  //     total_solve = 0,
-  //     total_forward = 0,
-  //     total_inprogress = 0,
-  //     total_unsolved = 0,
-  //   } = data?.data || {};
+  const { data } = useGetDashboardCategoryWiseDataQuery();
 
   const [state, setState] = useState<{
     series: number[];
     options: ApexOptions;
   }>({
-    series: [44, 55, 41, 17, 15], // Default static data, replaced dynamically
+    series: [44, 55, 41, 17, 15],
     options: {
       chart: {
         type: "donut",
       },
-      labels: ["Solved", "In Progress", "Unsolved", "Forward"], // Default labels
-      colors: ["#72b92b", "#0088FE", "#FF0000", "#FFA500"],
       legend: {
         position: "bottom",
       },
-
       responsive: [
         {
           breakpoint: 480,
@@ -39,14 +32,14 @@ const TaskPercentagePie = () => {
     },
   });
 
-  useEffect(
-    () => {
-      const taskPieData = [
-        { name: "Pending", value: 45 },
-        { name: "In Progress", value: 85 },
-        { name: "Forwarded", value: 20 },
-        { name: "Completed", value: 120 },
-      ];
+  useEffect(() => {
+    if (data?.data) {
+      const taskPieData = data.data.map((item: IDashboardCategoryWiseData) => {
+        return {
+          name: item.category_title,
+          value: item.task_count,
+        };
+      });
 
       setState((prevState) => ({
         ...prevState,
@@ -56,11 +49,8 @@ const TaskPercentagePie = () => {
           labels: taskPieData.map((item) => item.name),
         },
       }));
-    },
-    [
-      // data
-    ]
-  );
+    }
+  }, [data]); // Depend on data, not categoryData
 
   return (
     <div style={{ maxWidth: "260px", margin: "0 auto" }}>

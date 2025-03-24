@@ -164,12 +164,16 @@ export const TaskEndPoint = api.injectEndpoints({
     }),
     getOtherTaskList: build.query<
       HTTPResponse<ITaskItems[]>,
-      { assign_to?: number; assign_from_others?: number }
+      { assign_to?: number; assign_from_others?: number; category: number[] }
     >({
       query: (params) => {
+        const { category, ...rest } = params;
+        const queryString = category
+          ?.map((item: number) => `category=${item}`)
+          .join("&");
         return {
-          url: `/task/assign-task`,
-          params,
+          url: `/task/assign-task?${queryString}`,
+          params: { ...rest },
         };
       },
       providesTags: () => ["Task"],

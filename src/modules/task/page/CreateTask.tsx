@@ -52,7 +52,6 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
   const [starTask] = useStartedTaskMutation();
   const [startedTask] = useStartTaskMutation();
   const [endedTask] = useEndTaskMutation();
-  const [activeList, setActiveList] = useState("My Tasks");
   const [listIds, setListIds] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
@@ -91,7 +90,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div>
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
         <div className="mx-auto ">

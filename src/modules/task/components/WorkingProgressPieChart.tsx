@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts"; // Import ApexOptions type
+import { useGetDashboardTaskPercentageQuery } from "../api/taskDashboardEndpoint";
 
 const WorkingProgressPieChart: React.FC = () => {
+  const { data, isSuccess } = useGetDashboardTaskPercentageQuery();
+  const { total_complete } = data?.data || {};
   // State for progress value
-  const [progress, setProgress] = useState<number>(75);
-
+  const [progress, setProgress] = useState<number>(0);
+  useEffect(() => {
+    if (isSuccess) {
+      setProgress(total_complete as number);
+    }
+  }, [isSuccess]);
   // Chart Configuration
   const chartOptions: ApexOptions = {
     chart: {

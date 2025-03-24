@@ -57,3 +57,37 @@ export interface ITaskParams {
   user_id?: number;
   category?: number[];
 }
+export interface IDashboardDataCount {
+  total_task: number;
+  total_task_incomplete: number;
+  total_task_complete: number;
+  total_task_inprogress: number;
+  avg_task_completion_time_seconds: number;
+}
+export interface IDashboardTaskPercentage {
+  total_task: number;
+  total_task_percent: number;
+  total_complete: number;
+  total_complete_percent: number;
+  total_incomplete: number;
+  total_incomplete_percent: number;
+}
+export interface IDashboardTodayTask {
+  id: number;
+  category_title: string;
+  description: string;
+  start_time: string;
+}
+export interface IDashboardBarChartData {
+  month: string;
+  name: string;
+  totalTask: number;
+  completeTask: number;
+  incompleteTask: number;
+}
+export interface IDashboardCategoryWiseData {
+  id: number;
+  category_title: string;
+  task_count: number;
+  percentage: number;
+}

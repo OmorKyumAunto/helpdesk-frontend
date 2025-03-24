@@ -28,20 +28,22 @@ import { useState } from "react";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 
 const ListTaskOther = () => {
-  const { data: otherTaskListTo } = useGetOtherTaskListQuery({ assign_to: 1 });
-  const { data: otherTaskListOthers } = useGetOtherTaskListQuery({
-    assign_from_others: 1,
-  });
-  const [othersValue, setOthersValue] = useState("to");
+  const [othersValue, setOthersValue] = useState("others");
   const { data, isLoading } = useGetTaskCategoryQuery();
   const listCategory = data?.data || [];
   const [removeTask] = useDeleteTaskMutation();
   const [starTask] = useStartedTaskMutation();
   const [startedTask] = useStartTaskMutation();
   const [endedTask] = useEndTaskMutation();
-
-  const [activeList, setActiveList] = useState("My Tasks");
-
+  const [listIds, setListIds] = useState([]);
+  const { data: otherTaskListTo } = useGetOtherTaskListQuery({
+    assign_to: 1,
+    category: listIds,
+  });
+  const { data: otherTaskListOthers } = useGetOtherTaskListQuery({
+    assign_from_others: 1,
+    category: listIds,
+  });
   const otherTaskList =
     othersValue === "to" ? otherTaskListTo : otherTaskListOthers;
 
@@ -71,8 +73,8 @@ const ListTaskOther = () => {
               <Segmented<string>
                 style={{ background: "#cccccc", fontWeight: "bold" }}
                 options={[
-                  { label: "Assign To", value: "to" },
                   { label: "Assign From Others", value: "others" },
+                  { label: "Assign To", value: "to" },
                 ]}
                 onChange={handleSegment}
               />
@@ -278,7 +280,37 @@ const ListTaskOther = () => {
                 <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
                   Lists
                 </h2>
-                {listCategory.map((list) => (
+                <Checkbox.Group
+                  style={{ width: "100%" }}
+                  options={
+                    listCategory?.map((item) => {
+                      return {
+                        label: item.title,
+                        value: item.id,
+                      };
+                    }) || []
+                  }
+                  onChange={(checkedValues: any) => {
+                    // Corrected type here
+                    setListIds(checkedValues);
+                  }}
+                >
+                  {listCategory?.map((item) => (
+                    <div
+                      key={item.id}
+                      style={{
+                        border: "1px solid #d9d9d9", // Add border
+                        padding: "8px", // Add padding for spacing
+                        marginBottom: "8px", // Add margin between checkboxes
+                        width: "100%", // Ensure each checkbox takes full width
+                        boxSizing: "border-box", // Include padding and border in width calculation
+                      }}
+                    >
+                      <Checkbox value={String(item.id)}>{item.title}</Checkbox>
+                    </div>
+                  ))}
+                </Checkbox.Group>
+                {/* {listCategory.map((list) => (
                   <Button
                     key={list.id}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left mb-1 ${
@@ -295,7 +327,7 @@ const ListTaskOther = () => {
                       <span className="font-medium">{list.title}</span>
                     </div>
                   </Button>
-                ))}
+                ))} */}
               </div>
             </div>
           </div>

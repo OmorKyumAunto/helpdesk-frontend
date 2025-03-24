@@ -19,6 +19,10 @@ import Animation from "../../../../public/Animation - 1742751729342.json";
 import CompareBarChart from "../components/CompareBarChart";
 import TaskPercentagePie from "../components/TaskPercentagePie";
 import WorkingProgressPieChart from "../components/WorkingProgressPieChart";
+import {
+  useGetDashboardTaskDataCountQuery,
+  useGetDashboardTodayTaskQuery,
+} from "../api/taskDashboardEndpoint";
 // Mock data for line chart
 const chartData = [
   { name: "Jan", totalTasks: 400, completedTasks: 240 },
@@ -83,6 +87,30 @@ const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
 };
 
 const TaskDashboard = () => {
+  const { data: countData } = useGetDashboardTaskDataCountQuery();
+  const { data: todayTask } = useGetDashboardTodayTaskQuery();
+  const {
+    avg_task_completion_time_seconds,
+    total_task,
+    total_task_complete,
+    total_task_incomplete,
+    total_task_inprogress,
+  } = countData?.data || {};
+
+  function secondsToHHMM(seconds: number) {
+    if (typeof seconds !== "number" || seconds < 0) {
+      return "Invalid input";
+    }
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+
+    const formattedHours = String(hours).padStart(2, "0");
+    const formattedMinutes = String(minutes).padStart(2, "0");
+
+    return `${formattedHours}:${formattedMinutes}`;
+  }
+
   return (
     <div className="min-h-screen rounded-lg">
       <Row gutter={[12, 12]}>
@@ -119,7 +147,7 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <ListChecks size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">1220</h2>
+                  <h2 className="text-lg font-bold">{total_task || 0}</h2>
                   <p className="text-xs">Total Tasks</p>
                 </div>
               </div>
@@ -130,7 +158,9 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <Clock size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">07</h2>
+                  <h2 className="text-lg font-bold">
+                    {total_task_inprogress || 0}
+                  </h2>
                   <p className="text-xs">In Progress</p>
                 </div>
               </div>
@@ -141,7 +171,9 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <XCircle size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">43</h2>
+                  <h2 className="text-lg font-bold">
+                    {total_task_incomplete || 0}
+                  </h2>
                   <p className="text-xs">Incomplete</p>
                 </div>
               </div>
@@ -152,7 +184,9 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <CheckCircle size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">452</h2>
+                  <h2 className="text-lg font-bold">
+                    {total_task_complete || 0}
+                  </h2>
                   <p className="text-xs">Completed</p>
                 </div>
               </div>
@@ -163,7 +197,9 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <Timer size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">03:30</h2>
+                  <h2 className="text-lg font-bold">
+                    {secondsToHHMM(avg_task_completion_time_seconds || 0)}
+                  </h2>
                   <p className="text-xs">Avg. Time</p>
                 </div>
               </div>
@@ -172,49 +208,30 @@ const TaskDashboard = () => {
 
           <Row gutter={[12, 12]} className="mb-6">
             <Col xs={24} sm={24} md={24} lg={8}>
-              <Card title="Upcoming Task" style={{ height: "100%" }}>
+              <Card title="Today Task" style={{ height: "100%" }}>
                 <Table
                   size="small"
                   pagination={false}
+                  rowKey={"id"}
                   columns={[
                     {
                       key: "1",
-                      dataIndex: "name",
+                      dataIndex: "category_title",
                       title: "Task Title",
                     },
                     {
                       key: "2",
-                      dataIndex: "date",
-                      title: "Start Date & Time",
+                      dataIndex: "start_time",
+                      title: "Start Time",
+                    },
+                    {
+                      key: "3",
+                      dataIndex: "description",
+                      title: "Description",
+                      width: "30%",
                     },
                   ]}
-                  dataSource={[
-                    {
-                      id: 1,
-                      name: "Test Task One",
-                      date: "23 Mar 2025 11:30PM",
-                    },
-                    {
-                      id: 2,
-                      name: "Test Task Two",
-                      date: "22 Mar 2025 9:30PM",
-                    },
-                    {
-                      id: 2,
-                      name: "Test Task Two",
-                      date: "22 Mar 2025 9:30PM",
-                    },
-                    {
-                      id: 2,
-                      name: "Test Task Two",
-                      date: "22 Mar 2025 9:30PM",
-                    },
-                    {
-                      id: 2,
-                      name: "Test Task Two",
-                      date: "22 Mar 2025 9:30PM",
-                    },
-                  ]}
+                  dataSource={todayTask?.data || []}
                 />
               </Card>
             </Col>

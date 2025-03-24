@@ -1,20 +1,65 @@
-import React, { useState } from "react";
-import ReactApexChart from "react-apexcharts";
+import React, { useEffect, useRef } from "react";
 import { ApexOptions } from "apexcharts";
+import { useGetDashboardBarChartDataQuery } from "../api/taskDashboardEndpoint";
+import { IDashboardBarChartData } from "../types/taskTypes";
+import { Card } from "antd";
 
 const CompareBarChart: React.FC = () => {
-  const [chartData, setChartData] = useState({
-    series: [
-      {
-        name: "Total Tasks",
-        data: [50, 60, 75, 80, 90, 85],
-      },
-      {
-        name: "Completed Tasks",
-        data: [40, 55, 70, 78, 85, 80],
-      },
-    ],
-    options: {
+  const { data } = useGetDashboardBarChartDataQuery();
+
+  const totalTask =
+    data?.data?.map((item: IDashboardBarChartData) => item?.totalTask) ?? [];
+  const totalIncomplete =
+    data?.data?.map((item: IDashboardBarChartData) => item?.incompleteTask) ??
+    [];
+  const totalComplete =
+    data?.data?.map((item: IDashboardBarChartData) => item?.completeTask) ?? [];
+
+  const getCurrentMonthName = () => {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const monthNames = [];
+    for (let i = 0; i < 12; i++) {
+      const monthIndex = (currentMonth - i + 12) % 12;
+      monthNames.unshift(months[monthIndex]);
+    }
+
+    return monthNames;
+  };
+  const monthsArray = getCurrentMonthName();
+  const chartRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const options: ApexOptions = {
+      series: [
+        {
+          name: "Total Tasks",
+          data: totalTask,
+        },
+        {
+          name: "Completed Tasks",
+          data: totalComplete,
+        },
+        {
+          name: "Incomplete Tasks",
+          data: totalIncomplete,
+        },
+      ],
+
       chart: {
         type: "bar",
         height: 350,
@@ -36,7 +81,7 @@ const CompareBarChart: React.FC = () => {
         colors: ["transparent"],
       },
       xaxis: {
-        categories: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+        categories: monthsArray,
       },
       yaxis: {
         title: {
@@ -53,21 +98,19 @@ const CompareBarChart: React.FC = () => {
           },
         },
       },
-    } as ApexOptions, // Ensure TypeScript compatibility
-  });
+    };
 
-  return (
-    <div>
-      <div id="chart">
-        <ReactApexChart
-          options={chartData.options}
-          series={chartData.series}
-          type="bar"
-          height={350}
-        />
-      </div>
-    </div>
-  );
+    if (chartRef.current) {
+      const chart = new ApexCharts(chartRef.current, options);
+      chart.render();
+
+      return () => {
+        chart.destroy();
+      };
+    }
+  }, [totalIncomplete, totalComplete, totalTask]);
+
+  return <Card id="chart" ref={chartRef} />;
 };
 
 export default CompareBarChart;
