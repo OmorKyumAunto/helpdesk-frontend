@@ -98,6 +98,22 @@ export const TaskEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["Task"],
     }),
+    updateTask: build.mutation<unknown, { data: ITaskPost; id: number }>({
+      query: ({ data, id }) => {
+        return {
+          url: `/task/update/${id}`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully task updated");
+        });
+      },
+      invalidatesTags: () => ["Task"],
+    }),
     StartedTask: build.mutation<
       unknown,
       { body: { starred: number }; id: number }
@@ -189,6 +205,7 @@ export const {
   useDeleteTaskListMutation,
   useGetTaskItemsQuery,
   useCreateTaskMutation,
+  useUpdateTaskMutation,
   useDeleteTaskMutation,
   useStartedTaskMutation,
   useStartTaskMutation,

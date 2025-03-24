@@ -18,7 +18,10 @@ import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import { ITaskCategoryList } from "../../taskConfiguration/types/taskConfigTypes";
-import { useCreateTaskMutation } from "../api/taskEndpoint";
+import {
+  useCreateTaskMutation,
+  useUpdateTaskMutation,
+} from "../api/taskEndpoint";
 import { ITaskItems, ITaskPost } from "../types/taskTypes";
 
 const UpdateTask = ({ single }: { single: ITaskItems }) => {
@@ -28,7 +31,7 @@ const UpdateTask = ({ single }: { single: ITaskItems }) => {
   const [form] = Form.useForm();
   const { data: taskCategory, isLoading: taskLoader } =
     useGetTaskCategoryQuery();
-  const [create, { isSuccess, isLoading }] = useCreateTaskMutation();
+  const [update, { isSuccess, isLoading }] = useUpdateTaskMutation();
 
   const taskCategoriesId = useWatch("task_categories_id", form);
 
@@ -40,13 +43,14 @@ const UpdateTask = ({ single }: { single: ITaskItems }) => {
     const { start_date, start_time, is_assign, ...rest } = values || {};
     const formattedData: ITaskPost = {
       ...rest,
-      start_date: dayjs(start_date?.[0])?.format("YYYY-MM-DD"),
+      start_date: dayjs(start_date)?.format("YYYY-MM-DD"),
       start_time: dayjs(start_time)?.format("HH:mm"),
     };
     if (is_assign) {
       formattedData.is_assign = 1;
     }
-    create(formattedData);
+
+    update({ data: formattedData, id: single.id });
   };
   const formattedDate = start_date.split("T")[0] + "T" + start_time;
   useEffect(() => {
@@ -76,7 +80,7 @@ const UpdateTask = ({ single }: { single: ITaskItems }) => {
             }}
           >
             <Row align={"middle"} gutter={[5, 5]}>
-              <Col xs={24} sm={24} md={24} lg={24}>
+              {/* <Col xs={24} sm={24} md={24} lg={24}>
                 <Form.Item
                   label="Select List"
                   name="task_categories_id"
@@ -101,8 +105,8 @@ const UpdateTask = ({ single }: { single: ITaskItems }) => {
                     allowClear
                   />
                 </Form.Item>
-              </Col>
-              {taskCategoriesId && selectedCategory?.tsc?.length ? (
+              </Col> */}
+              {/* {taskCategoriesId && selectedCategory?.tsc?.length ? (
                 <Col xs={24} sm={24} md={24} lg={24}>
                   <Form.Item valuePropName="checked" name="sub_list_selected">
                     <Checkbox.Group>
@@ -114,7 +118,7 @@ const UpdateTask = ({ single }: { single: ITaskItems }) => {
                     </Checkbox.Group>
                   </Form.Item>
                 </Col>
-              ) : null}
+              ) : null} */}
               <Col xs={24} sm={24} md={24} lg={12}>
                 <Form.Item
                   name="start_date"

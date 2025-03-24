@@ -15,6 +15,7 @@ import {
   DatePicker,
   Flex,
   Input,
+  Pagination,
   Popover,
   Row,
   Space,
@@ -40,7 +41,7 @@ import { rangePreset } from "../../../common/rangePreset";
 import { useSearchParams } from "react-router-dom";
 import { ITaskParams } from "../types/taskTypes";
 import { sanitizeFormValue } from "react-form-sanitization";
-import TaskCountdown from "../components/TaskCountdown";
+import CountdownTask from "../components/CountdownTask";
 
 const SuperAdminTaskList = () => {
   const { data, isLoading } = useGetTaskCategoryQuery();
@@ -52,18 +53,10 @@ const SuperAdminTaskList = () => {
   const [activeList, setActiveList] = useState("My Tasks");
   const dispatch = useDispatch();
   const { Countdown } = Statistic;
+  const [listIds, setListIds] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
 
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 50,
-  });
-
-  const [searchParams, setSearchParams] = useSearchParams({
-    page: "1",
-    pageSize: "50",
-  });
-  const page = searchParams.get("page") || "1";
-  const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
 
   const [filter, setFilter] = useState<ITaskParams>({
@@ -83,16 +76,8 @@ const SuperAdminTaskList = () => {
 
   const { data: taskItems, isLoading: taskLoader } = useGetTaskItemsQuery({
     ...sanitizeData,
+    category: listIds,
   });
-
-  const [timeLeft, setTimeLeft] = useState(40 * 60); // 40 mins in seconds
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -102,8 +87,14 @@ const SuperAdminTaskList = () => {
     return `${mins}:${secs}`;
   };
 
+  const handlePaginationChange = (current: number, size: number) => {
+    setPage(current);
+    setPageSize(size);
+    setFilter({ ...filter, offset: (current - 1) * size, limit: size });
+  };
+
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div>
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
         <div className="mx-auto ">
@@ -303,10 +294,8 @@ const SuperAdminTaskList = () => {
                             boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
                           }}
                         >
-                          ⏳ {formatTime(timeLeft)}
+                          <CountdownTask item={item} />
                         </span>
-                        {/* {item.start_time} */}
-                                  
                       </div>
                       {/* <Countdown
                         valueStyle={{ fontSize: "14px" }}
@@ -320,7 +309,7 @@ const SuperAdminTaskList = () => {
                       /> */}
                       {/* <TaskCountdown item={item} /> */}
                     </div>
-                    {item.task_status === "incomplete" && (
+                    {/* {item.task_status === "incomplete" && (
                       <Button
                         size="small"
                         type="primary"
@@ -340,12 +329,26 @@ const SuperAdminTaskList = () => {
                       >
                         End
                       </Button>
-                    )}
+                    )} */}
                   </div>
                 </Card>
               </Col>
             ))}
           </Row>
+          {(taskItems?.count || 0) > 6 ? (
+            <Pagination
+              className="mt-8"
+              size="small"
+              align="end"
+              pageSizeOptions={["10", "20", "30", "50", "100"]}
+              current={page}
+              pageSize={pageSize}
+              total={taskItems?.count || 0}
+              showTotal={(total) => `Total ${total}`}
+              onChange={handlePaginationChange}
+              showSizeChanger
+            />
+          ) : null}
         </Col>
 
         {/* Right Sidebar */}
@@ -381,7 +384,37 @@ const SuperAdminTaskList = () => {
                 <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
                   Lists
                 </h2>
-                {listCategory.map((list) => (
+                <Checkbox.Group
+                  style={{ width: "100%" }}
+                  options={
+                    listCategory?.map((item) => {
+                      return {
+                        label: item.title,
+                        value: item.id,
+                      };
+                    }) || []
+                  }
+                  onChange={(checkedValues: any) => {
+                    // Corrected type here
+                    setListIds(checkedValues);
+                  }}
+                >
+                  {listCategory?.map((item) => (
+                    <div
+                      key={item.id}
+                      style={{
+                        border: "1px solid #d9d9d9", // Add border
+                        padding: "8px", // Add padding for spacing
+                        marginBottom: "8px", // Add margin between checkboxes
+                        width: "100%", // Ensure each checkbox takes full width
+                        boxSizing: "border-box", // Include padding and border in width calculation
+                      }}
+                    >
+                      <Checkbox value={String(item.id)}>{item.title}</Checkbox>
+                    </div>
+                  ))}
+                </Checkbox.Group>
+                {/* {listCategory.map((list) => (
                   <Button
                     key={list.id}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left mb-1 ${
@@ -398,7 +431,7 @@ const SuperAdminTaskList = () => {
                       <span className="font-medium">{list.title}</span>
                     </div>
                   </Button>
-                ))}
+                ))} */}
               </div>
             </div>
           </div>

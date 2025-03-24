@@ -17,7 +17,7 @@ const TaskCountdown = ({ item }: { item: any }) => {
     .subtract(6, "hours")
     .valueOf();
   let taskStartTime = null;
-  if (item.task_start_date && item.task_start_time) {z
+  if (item.task_start_date && item.task_start_time) {
     taskStartTime = dayjs(
       //   item.task_start_date.split("T")[0] + "T" + item.task_start_time
       "2025-03-23T22:41:00.000Z"

@@ -34,15 +34,15 @@ const TaskMain: React.FC = () => {
             ),
             children: <SuperAdminTaskList />,
           },
-          {
-            key: "3",
-            label: (
-              <span style={{ fontSize: "16px", fontWeight: "600" }}>
-                Reports
-              </span>
-            ),
-            children: <TaskReport />,
-          },
+          // {
+          //   key: "3",
+          //   label: (
+          //     <span style={{ fontSize: "16px", fontWeight: "600" }}>
+          //       Reports
+          //     </span>
+          //   ),
+          //   children: <TaskReport />,
+          // },
         ]
       : []),
     ...(roleID === 2
