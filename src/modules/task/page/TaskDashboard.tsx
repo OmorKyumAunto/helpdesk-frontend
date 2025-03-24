@@ -11,6 +11,7 @@ import {
   Table,
 } from "antd";
 import { Dayjs } from "dayjs";
+import { ListChecks, Clock, XCircle, CheckCircle, Timer } from "lucide-react";
 
 import { BadgeProps } from "antd/lib";
 import Lottie from "lottie-react";
@@ -86,80 +87,86 @@ const TaskDashboard = () => {
     <div className="min-h-screen rounded-lg">
       <Row gutter={[12, 12]}>
         <Col xs={24} sm={24} md={24} lg={18}>
-          <Card className="mb-3">
-            <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="mb-4 md:mb-0">
-                <h2 className="text-xl font-medium mb-1">Welcome To</h2>
-                <h1 className="text-2xl font-bold text-blue-600 mb-2">
-                  Your Task Management Area
+          <Card
+            className="mb-3 shadow-md transition-all duration-300 ease-in-out hover:scale-102 hover:shadow-lg"
+            style={{ height: "auto", padding: 0 }} // No padding and auto height for a compact design
+          >
+            <div className="flex flex-col md:flex-row items-center justify-between p-2">
+              {/* Text Section */}
+              <div className="text-center md:text-left">
+                
+                <h1 className="text-xl font-semibold text-blue-600 mb-2">
+                 Welcome To Your Task Management Area
                 </h1>
-                <p className="text-gray-500 text-sm mb-4">
-                Great things are done by a series of small tasks brought together.</p>
-                <Button className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm">
+                <p className="text-gray-600 text-sm mb-3">
+                  Great things are done by a series of small tasks brought together.
+                </p>
+                <Button className="bg-blue-500 text-white px-5 py-2 rounded-full text-sm transition-all duration-300 ease-in-out hover:bg-blue-600">
                   Go To Tasks
                 </Button>
               </div>
-              <div style={{ width: 140 }}>
+
+              {/* Lottie Animation */}
+              <div className="mt-0 md:mt-0" style={{ width: 120, height: 120 }}>
                 <Lottie animationData={Animation} loop={true} />
               </div>
             </div>
           </Card>
 
-          <div className="grid grid-cols-5 gap-4 mb-3">
-            <div className="bg-purple-500 text-white rounded-full h-20 flex justify-center items-center">
-              <Flex justify="center" gap={10} align="center">
-                <div>
-                  <ClockCircleOutlined style={{ fontSize: "28px" }} />
-                </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-4">
+            {/* Total Tasks */}
+            <div className="bg-purple-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-purple-400/50">
+              <div className="flex items-center gap-2">
+                <ListChecks size={24} />
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold">1220</h2>
-                  <p className="">Total Tasks</p>
+                  <h2 className="text-lg font-bold">1220</h2>
+                  <p className="text-xs">Total Tasks</p>
                 </div>
-              </Flex>
+              </div>
             </div>
-            <div className="bg-teal-500 text-white rounded-full h-20 flex justify-center items-center">
-              <Flex justify="center" gap={10} align="center">
-                <div>
-                  <ClockCircleOutlined style={{ fontSize: "28px" }} />
-                </div>
+
+            {/* In Progress */}
+            <div className="bg-teal-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-teal-400/50">
+              <div className="flex items-center gap-2">
+                <Clock size={24} />
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold">07</h2>
-                  <p className="text-sm">In Progress</p>
+                  <h2 className="text-lg font-bold">07</h2>
+                  <p className="text-xs">In Progress</p>
                 </div>
-              </Flex>
+              </div>
             </div>
-            <div className="bg-red-500 text-white rounded-full h-20 flex justify-center items-center">
-              <Flex justify="center" gap={10} align="center">
-                <div>
-                  <ClockCircleOutlined style={{ fontSize: "28px" }} />
-                </div>
+
+            {/* Incomplete */}
+            <div className="bg-red-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-red-400/50">
+              <div className="flex items-center gap-2">
+                <XCircle size={24} />
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold">43</h2>
-                  <p className="text-sm">In Complete</p>
+                  <h2 className="text-lg font-bold">43</h2>
+                  <p className="text-xs">Incomplete</p>
                 </div>
-              </Flex>
+              </div>
             </div>
-            <div className="bg-sky-500 text-white rounded-full h-20 flex justify-center items-center">
-              <Flex justify="center" gap={10} align="center">
-                <div>
-                  <ClockCircleOutlined style={{ fontSize: "28px" }} />
-                </div>
+
+            {/* Completed */}
+            <div className="bg-sky-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-sky-400/50">
+              <div className="flex items-center gap-2">
+                <CheckCircle size={24} />
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold">452</h2>
-                  <p className="text-sm">Completed</p>
+                  <h2 className="text-lg font-bold">452</h2>
+                  <p className="text-xs">Completed</p>
                 </div>
-              </Flex>
+              </div>
             </div>
-            <div className="bg-green-500 text-white rounded-full h-20 flex justify-center items-center">
-              <Flex justify="center" gap={10} align="center">
-                <div>
-                  <ClockCircleOutlined style={{ fontSize: "28px" }} />
-                </div>
+
+            {/* Avg. Time */}
+            <div className="bg-green-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-green-400/50">
+              <div className="flex items-center gap-2">
+                <Timer size={24} />
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold">03:30</h2>
-                  <p className="text-sm">Avg. Time</p>
+                  <h2 className="text-lg font-bold">03:30</h2>
+                  <p className="text-xs">Avg. Time</p>
                 </div>
-              </Flex>
+              </div>
             </div>
           </div>
 
@@ -207,7 +214,7 @@ const TaskDashboard = () => {
                       name: "Test Task Two",
                       date: "22 Mar 2025 9:30PM",
                     },
-                    
+
                   ]}
                 />
               </Card>
