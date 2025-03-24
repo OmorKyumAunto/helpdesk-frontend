@@ -94,7 +94,9 @@ const TaskDashboard = () => {
                   Your Task Management Area
                 </h1>
                 <p className="text-gray-500 text-sm mb-4">
-                Great things are done by a series of small tasks brought together.</p>
+                  Great things are done by a series of small tasks brought
+                  together.
+                </p>
                 <Button className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm">
                   Go To Tasks
                 </Button>
@@ -207,7 +209,6 @@ const TaskDashboard = () => {
                       name: "Test Task Two",
                       date: "22 Mar 2025 9:30PM",
                     },
-                    
                   ]}
                 />
               </Card>

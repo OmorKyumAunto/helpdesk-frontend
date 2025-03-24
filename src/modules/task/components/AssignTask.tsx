@@ -59,7 +59,7 @@ const AssignTask = () => {
     const { start_date, start_time, is_assign, ...rest } = values || {};
     const formattedData: ITaskPost = {
       ...rest,
-      start_date: dayjs(start_date?.[0])?.format("YYYY-MM-DD"),
+      start_date: dayjs(start_date)?.format("YYYY-MM-DD"),
       start_time: dayjs(start_time)?.format("HH:mm"),
     };
     if (is_assign) {

@@ -71,9 +71,13 @@ export const TaskEndPoint = api.injectEndpoints({
     }),
     getTaskItems: build.query<HTTPResponse<ITaskItems[]>, ITaskParams>({
       query: (params) => {
+        const { category, ...rest } = params;
+        const queryString = category
+          ?.map((item: number) => `category=${item}`)
+          .join("&");
         return {
-          url: `/task/list`,
-          params,
+          url: `/task/list?${queryString}`,
+          params: { ...rest },
         };
       },
       providesTags: () => ["Task"],

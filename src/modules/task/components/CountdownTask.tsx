@@ -16,11 +16,12 @@ interface TaskCountdownProps {
   };
 }
 
-const TaskCountdown: React.FC<TaskCountdownProps> = ({ item }) => {
+const TaskCountdown = ({ item }: { item: any }) => {
   const [timeLeft, setTimeLeft] = useState<number>(0); // Time remaining for "incomplete"
   const [progressTimeLeft, setProgressTimeLeft] = useState<number>(0); // Time remaining for "inprogress"
   const [timeOverdue, setTimeOverdue] = useState<boolean>(false); // Overdue status for "incomplete"
-  const [progressTimeOverdue, setProgressTimeOverdue] = useState<boolean>(false); // Overdue status for "inprogress"
+  const [progressTimeOverdue, setProgressTimeOverdue] =
+    useState<boolean>(false); // Overdue status for "inprogress"
   const [completionDuration, setCompletionDuration] = useState<string>(""); // Duration for "completed"
 
   // Convert set_time to seconds depending on the format (minutes or hours)
@@ -78,7 +79,10 @@ const TaskCountdown: React.FC<TaskCountdownProps> = ({ item }) => {
     if (item.task_status === "inprogress") {
       const calculateProgressTimeLeft = () => {
         const updatedAt = dayjs(item.updated_at); // Use updated_at as the start time
-        const remainingProgressTime = convertSetTimeToSeconds(item.set_time, item.format); // Convert set_time to seconds
+        const remainingProgressTime = convertSetTimeToSeconds(
+          item.set_time,
+          item.format
+        ); // Convert set_time to seconds
 
         const elapsedTime = dayjs().diff(updatedAt, "second"); // Elapsed time since updated_at
 
@@ -98,7 +102,9 @@ const TaskCountdown: React.FC<TaskCountdownProps> = ({ item }) => {
 
       intervalId = setInterval(() => {
         if (progressTimeOverdue) {
-          setProgressTimeLeft((prevProgressTimeLeft) => prevProgressTimeLeft + 1); // Increment the time for overdue
+          setProgressTimeLeft(
+            (prevProgressTimeLeft) => prevProgressTimeLeft + 1
+          ); // Increment the time for overdue
         } else {
           setProgressTimeLeft((prevProgressTimeLeft) => {
             if (prevProgressTimeLeft > 0) {
@@ -118,8 +124,8 @@ const TaskCountdown: React.FC<TaskCountdownProps> = ({ item }) => {
         const taskStartDate = dayjs(item.task_start_date); // Task start date
         const taskEndDate = dayjs(item.task_end_date); // Task end date
 
-        console.log("Start Date:", taskStartDate.format());  // Debugging the parsed start date
-        console.log("End Date:", taskEndDate.format());  // Debugging the parsed end date
+        console.log("Start Date:", taskStartDate.format()); // Debugging the parsed start date
+        console.log("End Date:", taskEndDate.format()); // Debugging the parsed end date
 
         if (taskEndDate.isValid() && taskStartDate.isValid()) {
           // Calculate the total duration in seconds between start and end dates
@@ -160,7 +166,8 @@ const TaskCountdown: React.FC<TaskCountdownProps> = ({ item }) => {
         <div>
           {progressTimeOverdue ? (
             <div className="px-3 py-1 rounded-full text-sm font-semibold bg-orange-200 text-orange-800">
-              ⏳ Overdue {formatTime(progressTimeLeft)} {/* Show overdue time */}
+              ⏳ Overdue {formatTime(progressTimeLeft)}{" "}
+              {/* Show overdue time */}
             </div>
           ) : (
             <div className="px-3 py-1 rounded-full text-sm font-semibold bg-yellow-200 text-yellow-800">
@@ -174,7 +181,8 @@ const TaskCountdown: React.FC<TaskCountdownProps> = ({ item }) => {
       {item.task_status === "complete" && (
         <div>
           <div className="px-3 py-1 rounded-full text-sm font-semibold bg-green-200 text-green-800">
-            Task completed in {completionDuration} {/* Show completion duration */}
+            Task completed in {completionDuration}{" "}
+            {/* Show completion duration */}
           </div>
         </div>
       )}
