@@ -55,7 +55,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
   const [activeList, setActiveList] = useState("My Tasks");
   const [listIds, setListIds] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
   const dispatch = useDispatch();
   const { Countdown } = Statistic;
   const skipValue = (Number(page) - 1) * Number(pageSize);
@@ -354,7 +354,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
               </Col>
             ))}
           </Row>
-          {(taskItems?.count || 0) > 10 ? (
+          {(taskItems?.count || 0) > 6 ? (
             <Pagination
               className="mt-8"
               size="small"
