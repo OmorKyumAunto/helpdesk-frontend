@@ -113,44 +113,55 @@ const CTCList = () => {
                 excelData={
                   data?.data?.length
                     ? data?.data?.map(
-                      ({
-                        employee_id,
-                        name,
-                        department,
-                        designation,
-                        assets,
-                        unit_name,
-                        total_asset_price,
-                        monthly_asset_cost,
-                        licenses,
-                        montly_licenses_price,
-                        total_ctc_per_month,
-                        total_ctc_per_year,
-                      }) => {
-                        const data = {
-                          "Employee ID": employee_id,
-                          "Employee Name": name,
-                          Department: department,
-                          Designation: designation,
-                          Assets: assets
-                            ?.map((item) => item?.name)
-                            .join(", "),
-                          "Unit Name": unit_name,
-                          "Total Asset Cost": total_asset_price,
-                          "Monthly Asset Cost": monthly_asset_cost,
-                          Licenses: licenses
-                            ?.map((item) => item?.title)
-                            .join(", "),
-                          "Monthly Licenses Cost": montly_licenses_price,
-                          "Total CTC Per Month": total_ctc_per_month,
-                          "Total CTC Per Year": total_ctc_per_year,
-                        };
-                        return data;
-                      }
-                    )
+                        ({
+                          employee_id,
+                          name,
+                          department,
+                          designation,
+                          assets = [],
+                          unit_name,
+                          total_asset_price,
+                          monthly_asset_cost,
+                          licenses = [],
+                          montly_licenses_price,
+                          total_ctc_per_month,
+                          total_ctc_per_year,
+                        }) => {
+                          const assetItemCount = assets.reduce<Record<string, number>>((acc, item) => {
+                            const category = item?.category;
+                            if (category) {
+                              acc[category] = (acc[category] || 0) + 1;
+                            }
+                            return acc;
+                          }, {});
+                
+                          const assetString = Object.entries(assetItemCount)
+                            .map(([category, count]) => `${count}x ${category}`)
+                            .join(", ");
+                
+                          const licenseString = licenses.map((item) => item?.title).join(", ");
+                
+                          return {
+                            "Employee ID": employee_id,
+                            "Employee Name": name,
+                            Department: department,
+                            Designation: designation,
+                            Assets: assetString,
+                            "Unit Name": unit_name,
+                            "Total Asset Cost": total_asset_price,
+                            "Monthly Asset Cost": monthly_asset_cost,
+                            Licenses: licenseString,
+                            "Monthly Licenses Cost": montly_licenses_price,
+                            "Total CTC Per Month": total_ctc_per_month,
+                            "Total CTC Per Year": total_ctc_per_year,
+                          };
+                        }
+                      )
                     : []
                 }
+                
               />
+
             </Space>
           </div>
           <div>

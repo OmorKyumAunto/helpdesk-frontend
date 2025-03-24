@@ -30,6 +30,7 @@ export interface Asset {
   name: string;
   serial_number: string;
   price: number;
+  category: string; 
 }
 
 export interface License {

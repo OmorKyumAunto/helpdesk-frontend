@@ -94,11 +94,9 @@ const TaskDashboard = () => {
                   Your Task Management Area
                 </h1>
                 <p className="text-gray-500 text-sm mb-4">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Debitis maxime natus unde labore
-                </p>
+                Great things are done by a series of small tasks brought together.</p>
                 <Button className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm">
-                  Go To Task
+                  Go To Tasks
                 </Button>
               </div>
               <div style={{ width: 140 }}>
@@ -115,7 +113,7 @@ const TaskDashboard = () => {
                 </div>
                 <div className="text-center">
                   <h2 className="text-2xl font-bold">1220</h2>
-                  <p className="">Tasks</p>
+                  <p className="">Total Tasks</p>
                 </div>
               </Flex>
             </div>
@@ -137,7 +135,7 @@ const TaskDashboard = () => {
                 </div>
                 <div className="text-center">
                   <h2 className="text-2xl font-bold">43</h2>
-                  <p className="text-sm">Critical</p>
+                  <p className="text-sm">OverDue</p>
                 </div>
               </Flex>
             </div>
@@ -148,7 +146,7 @@ const TaskDashboard = () => {
                 </div>
                 <div className="text-center">
                   <h2 className="text-2xl font-bold">452</h2>
-                  <p className="text-sm">On Going</p>
+                  <p className="text-sm">Completed</p>
                 </div>
               </Flex>
             </div>
@@ -158,8 +156,8 @@ const TaskDashboard = () => {
                   <ClockCircleOutlined style={{ fontSize: "28px" }} />
                 </div>
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold">1550</h2>
-                  <p className="text-sm">Completed</p>
+                  <h2 className="text-2xl font-bold">03:30</h2>
+                  <p className="text-sm">Avg. Time</p>
                 </div>
               </Flex>
             </div>
@@ -209,16 +207,7 @@ const TaskDashboard = () => {
                       name: "Test Task Two",
                       date: "22 Mar 2025 9:30PM",
                     },
-                    {
-                      id: 2,
-                      name: "Test Task Two",
-                      date: "22 Mar 2025 9:30PM",
-                    },
-                    {
-                      id: 2,
-                      name: "Test Task Two",
-                      date: "22 Mar 2025 9:30PM",
-                    },
+                    
                   ]}
                 />
               </Card>
