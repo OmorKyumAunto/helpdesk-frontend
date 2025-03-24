@@ -33,6 +33,10 @@ export interface ITaskItems {
   task_code: string;
   task_status: string;
   starred: number;
+  created_at:string;
+  updated_at:string;
+  set_time:number;
+  format:string;
 }
 export interface ITaskPost {
   description: string;

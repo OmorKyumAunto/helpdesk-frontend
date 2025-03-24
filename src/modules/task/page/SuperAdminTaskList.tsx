@@ -353,9 +353,9 @@ const SuperAdminTaskList = () => {
           <div className="w-full h-[84vh] bg-white border-r border-gray-200 rounded-lg flex flex-col">
             <div className="p-4">
               <Space direction="vertical" style={{ width: "100%" }}>
-                <Button icon={<OrderedListOutlined />} className="w-full">
+                {/* <Button icon={<OrderedListOutlined />} className="w-full">
                   All Tasks
-                </Button>
+                </Button> */}
                 <Button
                   icon={
                     filter.starred === 1 ? (

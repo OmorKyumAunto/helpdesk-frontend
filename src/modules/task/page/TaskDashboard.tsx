@@ -83,7 +83,7 @@ const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
 
 const TaskDashboard = () => {
   return (
-    <div className="bg-gray-100 p-6 min-h-screen rounded-lg">
+    <div className="min-h-screen rounded-lg">
       <Row gutter={[12, 12]}>
         <Col xs={24} sm={24} md={24} lg={18}>
           <Card className="mb-3">
@@ -135,7 +135,7 @@ const TaskDashboard = () => {
                 </div>
                 <div className="text-center">
                   <h2 className="text-2xl font-bold">43</h2>
-                  <p className="text-sm">OverDue</p>
+                  <p className="text-sm">In Complete</p>
                 </div>
               </Flex>
             </div>

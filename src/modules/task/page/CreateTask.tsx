@@ -21,6 +21,7 @@ import {
   Statistic,
 } from "antd";
 import dayjs from "dayjs";
+
 import { useEffect, useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -41,6 +42,8 @@ import { useSearchParams } from "react-router-dom";
 import { ITaskParams } from "../types/taskTypes";
 import { sanitizeFormValue } from "react-form-sanitization";
 import TaskCountdown from "../components/TaskCountdown";
+import CountdownTask from "../components/CountdownTask";
+
 
 const TaskManager = ({ roleID }: { roleID?: number }) => {
   const { data, isLoading } = useGetTaskCategoryQuery();
@@ -85,22 +88,9 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
     ...sanitizeData,
   });
 
-  const [timeLeft, setTimeLeft] = useState(40 * 60); // 40 mins in seconds
+  // 40 mins in seconds
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const secs = (seconds % 60).toString().padStart(2, "0");
-    return `${mins}:${secs}`;
-  };
+  
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -336,22 +326,10 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                             boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
                           }}
                         >
-                          ⏳ {formatTime(timeLeft)}
+                          <CountdownTask item={item} />
                         </span>
-                        {/* {item.start_time} */}
-                                  
                       </div>
-                      {/* <Countdown
-                        valueStyle={{ fontSize: "14px" }}
-                        value={dayjs(
-                          item.start_date.split("T")[0] + "T" + item.start_time
-                        )
-                          .subtract(6, "hours")
-                          .valueOf()}
-                        format="DD [Day], HH:mm:ss"
-                        // format="YY [Years], MM [Months], DD [Days], HH:mm:ss"
-                      /> */}
-                      {/* <TaskCountdown item={item} /> */}
+                      
                     </div>
                     {item.task_status === "incomplete" && (
                       <Button
@@ -386,9 +364,9 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
           <div className="w-full h-[84vh] bg-white border-r border-gray-200 rounded-lg flex flex-col">
             <div className="p-4">
               <Space direction="vertical" style={{ width: "100%" }}>
-                <Button icon={<OrderedListOutlined />} className="w-full">
+                {/* <Button icon={<OrderedListOutlined />} className="w-full">
                   All Tasks
-                </Button>
+                </Button> */}
                 <Button
                   icon={
                     filter.starred === 1 ? (
