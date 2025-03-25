@@ -1,4 +1,8 @@
-import { ClockCircleOutlined } from "@ant-design/icons";
+import {
+  ClockCircleOutlined,
+  FileTextOutlined,
+  PlayCircleOutlined,
+} from "@ant-design/icons";
 import {
   Tooltip as AntTooltip,
   Badge,
@@ -7,11 +11,22 @@ import {
   Card,
   Col,
   Flex,
+  List,
   Row,
   Table,
+  Tag,
+  Timeline,
+  Typography,
 } from "antd";
-import { Dayjs } from "dayjs";
-import { ListChecks, Clock, XCircle, CheckCircle, Timer,AlertTriangle } from "lucide-react";
+import dayjs, { Dayjs } from "dayjs";
+import {
+  ListChecks,
+  Clock,
+  XCircle,
+  CheckCircle,
+  Timer,
+  AlertTriangle,
+} from "lucide-react";
 
 import { BadgeProps } from "antd/lib";
 import Lottie from "lottie-react";
@@ -23,6 +38,7 @@ import {
   useGetDashboardTaskDataCountQuery,
   useGetDashboardTodayTaskQuery,
 } from "../api/taskDashboardEndpoint";
+const { Title, Text } = Typography;
 // Mock data for line chart
 const chartData = [
   { name: "Jan", totalTasks: 400, completedTasks: 240 },
@@ -158,7 +174,9 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <Clock size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">{total_task_inprogress || 0}</h2>
+                  <h2 className="text-lg font-bold">
+                    {total_task_inprogress || 0}
+                  </h2>
                   <p className="text-xs">In Progress</p>
                 </div>
               </div>
@@ -169,7 +187,9 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <XCircle size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">{total_task_incomplete || 0}</h2>
+                  <h2 className="text-lg font-bold">
+                    {total_task_incomplete || 0}
+                  </h2>
                   <p className="text-xs">Incomplete</p>
                 </div>
               </div>
@@ -180,7 +200,9 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <CheckCircle size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">{total_task_complete || 0}</h2>
+                  <h2 className="text-lg font-bold">
+                    {total_task_complete || 0}
+                  </h2>
                   <p className="text-xs">Completed</p>
                 </div>
               </div>
@@ -202,17 +224,18 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <Timer size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">{secondsToHHMM(avg_task_completion_time_seconds || 0)}</h2>
+                  <h2 className="text-lg font-bold">
+                    {secondsToHHMM(avg_task_completion_time_seconds || 0)}
+                  </h2>
                   <p className="text-xs">Avg. Time</p>
                 </div>
               </div>
             </div>
           </div>
 
-
           <Row gutter={[12, 12]} className="mb-6">
             <Col xs={24} sm={24} md={24} lg={8}>
-              <Card title="Today Task" style={{ height: "100%" }}>
+              {/* <Card title="Today Task" style={{ height: "100%" }}>
                 <Table
                   size="small"
                   pagination={false}
@@ -227,6 +250,12 @@ const TaskDashboard = () => {
                       key: "2",
                       dataIndex: "start_time",
                       title: "Start Time",
+                      render: (text) => {
+                        const date = dayjs(
+                          dayjs().format("YYYY-MM-DD") + "T" + text
+                        );
+                        return <span>{dayjs(date).format("hh:mm A")}</span>;
+                      },
                     },
                     {
                       key: "3",
@@ -237,6 +266,88 @@ const TaskDashboard = () => {
                   ]}
                   dataSource={todayTask?.data || []}
                 />
+              </Card> */}
+              <Card title="Today's Tasks">
+                {todayTask?.data?.length ? (
+                  <List
+                    itemLayout="horizontal"
+                    dataSource={todayTask.data}
+                    renderItem={(task, index) => (
+                      <Badge.Ribbon
+                        text={
+                          task.task_status === "complete"
+                            ? "Complete"
+                            : task.task_status === "incomplete"
+                            ? "Incomplete"
+                            : "Inprogress"
+                        }
+                        color={
+                          task.task_status === "complete"
+                            ? "green"
+                            : task.task_status === "incomplete"
+                            ? "red"
+                            : "blue"
+                        }
+                      >
+                        <List.Item
+                          style={{
+                            backgroundColor:
+                              task.task_status === "complete"
+                                ? "#e6ffe6"
+                                : task.task_status === "incomplete"
+                                ? "#ffe6e6"
+                                : "#e6e6ff",
+                            padding: "12px",
+                            borderRadius: "8px",
+                            marginBottom: "8px",
+                            border: "1px solid #d1d1d1", // Light border for definition
+                            // boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+                            transition: "all 0.3s ease-in-out",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "scale(1.02)";
+                            e.currentTarget.style.boxShadow =
+                              "0px 4px 12px rgba(0, 0, 0, 0.2)"; // Stronger shadow on hover
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "scale(1)";
+                            e.currentTarget.style.boxShadow =
+                              "0px 2px 6px rgba(0, 0, 0, 0.1)"; // Restore original shadow
+                          }}
+                        >
+                          <List.Item.Meta
+                            title={
+                              <Title level={5}>{task.category_title}</Title>
+                            }
+                            description={
+                              <>
+                                <Text
+                                  type="secondary"
+                                  style={{ fontSize: "14px", color: "#555" }}
+                                >
+                                  <ClockCircleOutlined />{" "}
+                                  {dayjs(
+                                    dayjs().format("YYYY-MM-DD") +
+                                      "T" +
+                                      task.start_time
+                                  ).format("hh:mm A")}
+                                </Text>
+                                <br />
+                                <Text
+                                  style={{ fontSize: "14px", color: "#333" }}
+                                >
+                                  <FileTextOutlined /> {task.description}
+                                </Text>
+                              </>
+                            }
+                          />
+                        </List.Item>
+                      </Badge.Ribbon>
+                    )}
+                  />
+                ) : (
+                  <Text type="secondary">No tasks for today.</Text>
+                )}
               </Card>
             </Col>
             <Col xs={24} sm={24} md={24} lg={16}>

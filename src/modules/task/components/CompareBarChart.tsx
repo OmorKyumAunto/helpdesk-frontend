@@ -8,12 +8,17 @@ const CompareBarChart: React.FC = () => {
   const { data } = useGetDashboardBarChartDataQuery();
 
   const totalTask =
-    data?.data?.map((item: IDashboardBarChartData) => item?.totalTask) ?? [];
+    data?.data
+      ?.map((item: IDashboardBarChartData) => item?.totalTask)
+      ?.slice(6, 12) ?? [];
   const totalIncomplete =
-    data?.data?.map((item: IDashboardBarChartData) => item?.incompleteTask) ??
-    [];
+    data?.data
+      ?.map((item: IDashboardBarChartData) => item?.incompleteTask)
+      ?.slice(6, 12) ?? [];
   const totalComplete =
-    data?.data?.map((item: IDashboardBarChartData) => item?.completeTask) ?? [];
+    data?.data
+      ?.map((item: IDashboardBarChartData) => item?.completeTask)
+      ?.slice(6, 12) ?? [];
 
   const getCurrentMonthName = () => {
     const months = [
@@ -63,6 +68,9 @@ const CompareBarChart: React.FC = () => {
       chart: {
         type: "bar",
         height: 350,
+        toolbar: {
+          show: false,
+        },
       },
       plotOptions: {
         bar: {
@@ -81,7 +89,7 @@ const CompareBarChart: React.FC = () => {
         colors: ["transparent"],
       },
       xaxis: {
-        categories: monthsArray,
+        categories: monthsArray.slice(6, 12),
       },
       yaxis: {
         title: {

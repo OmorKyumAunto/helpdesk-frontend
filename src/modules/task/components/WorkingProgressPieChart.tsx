@@ -5,12 +5,12 @@ import { useGetDashboardTaskPercentageQuery } from "../api/taskDashboardEndpoint
 
 const WorkingProgressPieChart: React.FC = () => {
   const { data, isSuccess } = useGetDashboardTaskPercentageQuery();
-  const { total_complete } = data?.data || {};
+  const { total_complete_percent } = data?.data || {};
   // State for progress value
   const [progress, setProgress] = useState<number>(0);
   useEffect(() => {
     if (isSuccess) {
-      setProgress(total_complete as number);
+      setProgress(total_complete_percent as number);
     }
   }, [isSuccess]);
   // Chart Configuration
@@ -19,7 +19,7 @@ const WorkingProgressPieChart: React.FC = () => {
       height: 350,
       type: "radialBar",
       toolbar: {
-        show: true,
+        show: false,
       },
     },
     plotOptions: {

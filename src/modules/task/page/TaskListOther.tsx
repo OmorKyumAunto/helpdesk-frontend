@@ -1,6 +1,7 @@
 import {
   EllipsisOutlined,
   SearchOutlined,
+  StarFilled,
   StarOutlined,
 } from "@ant-design/icons";
 import {
@@ -10,6 +11,7 @@ import {
   Col,
   Flex,
   Input,
+  Pagination,
   Popover,
   Row,
   Segmented,
@@ -24,8 +26,10 @@ import {
   useStartedTaskMutation,
   useStartTaskMutation,
 } from "../api/taskEndpoint";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
+import { ITaskParams } from "../types/taskTypes";
+import { sanitizeFormValue } from "react-form-sanitization";
 
 const ListTaskOther = () => {
   const [othersValue, setOthersValue] = useState("others");
@@ -36,20 +40,46 @@ const ListTaskOther = () => {
   const [startedTask] = useStartTaskMutation();
   const [endedTask] = useEndTaskMutation();
   const [listIds, setListIds] = useState([]);
-  const { data: otherTaskListTo } = useGetOtherTaskListQuery({
-    assign_to: 1,
-    category: listIds,
-  });
-  const { data: otherTaskListOthers } = useGetOtherTaskListQuery({
-    assign_from_others: 1,
-    category: listIds,
-  });
-  const otherTaskList =
-    othersValue === "to" ? otherTaskListTo : otherTaskListOthers;
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
+  const skipValue = (Number(page) - 1) * Number(pageSize);
 
   const handleSegment = (values: string) => {
     setOthersValue(values);
   };
+
+  const [filter, setFilter] = useState<ITaskParams>({
+    limit: Number(pageSize),
+    offset: skipValue,
+  });
+
+  useEffect(() => {
+    setFilter({
+      ...filter,
+      limit: Number(pageSize),
+      offset: skipValue,
+    });
+  }, [page, pageSize, skipValue]);
+  const sanitizeData = sanitizeFormValue(filter);
+  const { data: otherTaskListTo } = useGetOtherTaskListQuery({
+    assign_to: 1,
+    category: listIds,
+    ...sanitizeData,
+  });
+  const { data: otherTaskListOthers } = useGetOtherTaskListQuery({
+    assign_from_others: 1,
+    category: listIds,
+    ...sanitizeData,
+  });
+  const otherTaskList =
+    othersValue === "to" ? otherTaskListTo : otherTaskListOthers;
+
+  const handlePaginationChange = (current: number, size: number) => {
+    setPage(current);
+    setPageSize(size);
+    setFilter({ ...filter, offset: (current - 1) * size, limit: size });
+  };
+
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Header */}
@@ -83,6 +113,9 @@ const ListTaskOther = () => {
                   type="text"
                   placeholder="Search tasks..."
                   prefix={<SearchOutlined />}
+                  onChange={(e) =>
+                    setFilter({ ...filter, key: e.target.value, offset: 0 })
+                  }
                 />
               </div>
             </Space>
@@ -126,7 +159,7 @@ const ListTaskOther = () => {
                             <FaStar
                               onClick={() => {
                                 starTask({
-                                  body: { starred: item.starred ? 1 : 0 },
+                                  body: { starred: 0 },
                                   id: item.id,
                                 });
                               }}
@@ -137,7 +170,7 @@ const ListTaskOther = () => {
                             <FaRegStar
                               onClick={() => {
                                 starTask({
-                                  body: { starred: item.starred ? 1 : 0 },
+                                  body: { starred: 1 },
                                   id: item.id,
                                 });
                               }}
@@ -264,6 +297,20 @@ const ListTaskOther = () => {
               </Col>
             ))}
           </Row>
+          {(otherTaskList?.count || 0) > 6 ? (
+            <Pagination
+              className="mt-8"
+              size="small"
+              align="end"
+              pageSizeOptions={["10", "20", "30", "50", "100"]}
+              current={page}
+              pageSize={pageSize}
+              total={otherTaskList?.count || 0}
+              showTotal={(total) => `Total ${total}`}
+              onChange={handlePaginationChange}
+              showSizeChanger
+            />
+          ) : null}
         </Col>
 
         {/* Right Sidebar */}
@@ -271,7 +318,23 @@ const ListTaskOther = () => {
           <div className="w-full h-[84vh] bg-white border-r border-gray-200 rounded-lg flex flex-col">
             <div className="p-4">
               <Space direction="vertical" style={{ width: "100%" }}>
-                <Button icon={<StarOutlined />} className="w-full">
+                <Button
+                  icon={
+                    filter.starred === 1 ? (
+                      <StarFilled style={{ color: "gold" }} />
+                    ) : (
+                      <StarOutlined />
+                    )
+                  }
+                  className="w-full"
+                  onClick={(e) =>
+                    setFilter({
+                      ...filter,
+                      starred: filter.starred === 1 ? 0 : 1,
+                      offset: 0,
+                    })
+                  }
+                >
                   Starred
                 </Button>
               </Space>

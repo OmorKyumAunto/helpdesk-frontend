@@ -37,10 +37,10 @@ export interface ITaskItems {
   updated_at: string;
   set_time: number;
   format: string;
-  task_start_date:string;
-  task_end_date:string;
-  task_start_time:string;
-  task_end_time:string;
+  task_start_date: string;
+  task_end_date: string;
+  task_start_time: string;
+  task_end_time: string;
 }
 export interface ITaskPost {
   description: string;
@@ -59,6 +59,8 @@ export interface ITaskParams {
   end_date?: string;
   starred?: number;
   user_id?: number;
+  unit_id?: number;
+  task_status?: string;
   category?: number[];
 }
 export interface IDashboardDataCount {
@@ -81,6 +83,7 @@ export interface IDashboardTodayTask {
   category_title: string;
   description: string;
   start_time: string;
+  task_status: string;
 }
 export interface IDashboardBarChartData {
   month: string;

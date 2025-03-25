@@ -17,6 +17,7 @@ import {
   Pagination,
   Popover,
   Row,
+  Select,
   Space,
 } from "antd";
 import dayjs from "dayjs";
@@ -115,6 +116,20 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                   }
                 />
               </div>
+              <Select
+                allowClear
+                placeholder="Select Status"
+                style={{ width: "160px" }}
+                onChange={(e) =>
+                  setFilter({ ...filter, task_status: e, offset: 0 })
+                }
+                options={[
+                  { label: "Incomplete", value: "incomplete" },
+                  { label: "Complete", value: "complete" },
+                  { label: "Inprogress", value: "inprogress" },
+                  // {label:'Overdue',value:'overdue'},
+                ]}
+              />
               <div>
                 <DatePicker.RangePicker
                   style={{ width: "250px" }}
@@ -129,39 +144,22 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                   }
                 />
               </div>
-              {roleID === 2 ? (
-                <Button
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => {
-                    dispatch(
-                      setCommonModal({
-                        title: "Create Task",
-                        content: <AssignTask />,
-                        show: true,
-                      })
-                    );
-                  }}
-                >
-                  Create Task
-                </Button>
-              ) : (
-                <Button
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => {
-                    dispatch(
-                      setCommonModal({
-                        title: "Create Task",
-                        content: <TaskForm />,
-                        show: true,
-                      })
-                    );
-                  }}
-                >
-                  Create Task
-                </Button>
-              )}
+
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => {
+                  dispatch(
+                    setCommonModal({
+                      title: "Create Task",
+                      content: <AssignTask />,
+                      show: true,
+                    })
+                  );
+                }}
+              >
+                Create Task
+              </Button>
             </Space>
           </div>
         </div>
@@ -284,8 +282,12 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         />
                       </svg>
                       {item.task_start_time
-                        ? `Starts In: ${dayjs(item.task_start_date).format("DD MMM YYYY")} ${item.task_start_time}`
-                        : `Will Start In: ${dayjs(item.start_date).format("DD MMM YYYY")} ${item.start_time}`}
+                        ? `Starts In: ${dayjs(item.task_start_date).format(
+                            "DD MMM YYYY"
+                          )} ${item.task_start_time}`
+                        : `Will Start In: ${dayjs(item.start_date).format(
+                            "DD MMM YYYY"
+                          )} ${item.start_time}`}
                     </div>
 
                     <div className="mb-3 flex items-center text-base text-gray-700 font-xs">
@@ -304,8 +306,12 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         />
                       </svg>
                       {item.task_end_time
-                        ? `Ends In: ${dayjs(item.task_end_date).format("DD MMM YYYY")} ${item.task_end_time}`
-                        : `Will Ends In: ${dayjs(item.end_date).format("DD MMM YYYY")}`}
+                        ? `Ends In: ${dayjs(item.task_end_date).format(
+                            "DD MMM YYYY"
+                          )} ${item.task_end_time}`
+                        : `Will Ends In: ${dayjs(item.end_date).format(
+                            "DD MMM YYYY"
+                          )}`}
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -327,13 +333,9 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         {item.task_status === "incomplete" && "Not Started Yet"}
                         {item.task_status === "inprogress" && "In Progress"}
                         {item.task_status === "complete" && "Completed"}
-
                       </span>
                       <div className="flex items-center gap-2">
-
-
                         <CountdownTask item={item} />
-
                       </div>
                     </div>
                     {item.task_status === "incomplete" && (

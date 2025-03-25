@@ -18,6 +18,7 @@ import {
   Pagination,
   Popover,
   Row,
+  Select,
   Space,
   Statistic,
 } from "antd";
@@ -42,6 +43,11 @@ import { useSearchParams } from "react-router-dom";
 import { ITaskParams } from "../types/taskTypes";
 import { sanitizeFormValue } from "react-form-sanitization";
 import CountdownTask from "../components/CountdownTask";
+import {
+  useGetAdminWiseUnitsQuery,
+  useGetUnitsQuery,
+} from "../../Unit/api/unitEndPoint";
+import { UserList } from "../../Unit/types/unitTypes";
 
 const SuperAdminTaskList = () => {
   const { data, isLoading } = useGetTaskCategoryQuery();
@@ -56,13 +62,19 @@ const SuperAdminTaskList = () => {
   const [listIds, setListIds] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
-
+  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
+    status: "active",
+  });
   const skipValue = (Number(page) - 1) * Number(pageSize);
 
   const [filter, setFilter] = useState<ITaskParams>({
     limit: Number(pageSize),
     offset: skipValue,
   });
+  const { data: allAdmin, isLoading: adminLoading } = useGetAdminWiseUnitsQuery(
+    filter.unit_id || 0,
+    { skip: !filter.unit_id }
+  );
 
   useEffect(() => {
     setFilter({
@@ -123,6 +135,46 @@ const SuperAdminTaskList = () => {
                   }
                 />
               </div>
+              <Select
+                loading={unitIsLoading}
+                placeholder="Select Unit Name"
+                showSearch
+                optionFilterProp="children"
+                style={{ width: "180px" }}
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                options={unitData?.data?.map((unit: any) => ({
+                  value: unit.id,
+                  label: unit.title,
+                }))}
+                onChange={(e) =>
+                  setFilter({ ...filter, unit_id: e, offset: 0 })
+                }
+                allowClear
+              />
+              <Select
+                loading={adminLoading}
+                placeholder="Search Admin"
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                options={allAdmin?.data?.user_list?.map((item: UserList) => ({
+                  value: item.user_id,
+                  label: `[${item.employee_id}] ${item.name}`,
+                }))}
+                onChange={(e) =>
+                  setFilter({ ...filter, user_id: e, offset: 0 })
+                }
+                allowClear
+                style={{ width: "180px" }}
+              />
               <div>
                 <DatePicker.RangePicker
                   style={{ width: "250px" }}
