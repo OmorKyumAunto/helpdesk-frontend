@@ -1,7 +1,6 @@
 import {
   ClockCircleOutlined,
   EllipsisOutlined,
-  OrderedListOutlined,
   PlusOutlined,
   SearchOutlined,
   StarFilled,
@@ -19,7 +18,6 @@ import {
   Popover,
   Row,
   Space,
-  Statistic,
 } from "antd";
 import dayjs from "dayjs";
 
@@ -39,14 +37,13 @@ import AssignTask from "../components/AssignTask";
 import TaskForm from "../components/TaskForm";
 import UpdateTask from "../components/UpdateTask";
 import { rangePreset } from "../../../common/rangePreset";
-import { useSearchParams } from "react-router-dom";
 import { ITaskParams } from "../types/taskTypes";
 import { sanitizeFormValue } from "react-form-sanitization";
-import TaskCountdown from "../components/TaskCountdown";
 import CountdownTask from "../components/CountdownTask";
+import ListCheckbox from "../components/ListCheckbox";
 
 const TaskManager = ({ roleID }: { roleID?: number }) => {
-  const { data, isLoading } = useGetTaskCategoryQuery();
+  const { data } = useGetTaskCategoryQuery();
   const listCategory = data?.data || [];
   const [removeTask] = useDeleteTaskMutation();
   const [starTask] = useStartedTaskMutation();
@@ -56,7 +53,6 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const dispatch = useDispatch();
-  const { Countdown } = Statistic;
   const skipValue = (Number(page) - 1) * Number(pageSize);
 
   const [filter, setFilter] = useState<ITaskParams>({
@@ -446,6 +442,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                     </div>
                   ))}
                 </Checkbox.Group>
+                {/* <ListCheckbox /> */}
                 {/* {listCategory.map((list) => (
                   <Button
                     key={list.id}
