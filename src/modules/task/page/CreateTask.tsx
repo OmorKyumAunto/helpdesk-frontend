@@ -198,7 +198,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                     <div className="flex justify-between items-center">
                       <div>
                         <h1 className="text-base font-bold">
-                          Task ID: {item.task_code}
+                          Task ID #{item.task_code}
                         </h1>
                       </div>
                       <Flex gap={4} justify="center" align="center">
@@ -268,11 +268,11 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                           {item.category_title}
                         </span>
                       </div>
-                      <p className="mt-1 text-sm text-gray-500">
+                      <p className="mt-1 text-medium text-gray-900">
                         {item.description}
                       </p>
                     </div>
-                    <div className="mb-3 mt-1 flex items-center text-base text-gray-700 font-medium">
+                    <div className="mt-1 flex items-center text-base text-gray-700 font-xs">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4 mr-1 text-gray-500"
@@ -287,9 +287,31 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                         />
                       </svg>
-                      End: {dayjs(item.end_date).format("DD MMM YYYY")}{" "}
-                      {item.end_time}
+                      {item.task_start_time
+                        ? `Starts In: ${dayjs(item.task_start_date).format("DD MMM YYYY")} ${item.task_start_time}`
+                        : `Will Start In: ${dayjs(item.start_date).format("DD MMM YYYY")} ${item.start_time}`}
                     </div>
+
+                    <div className="mb-3 flex items-center text-base text-gray-700 font-xs">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1 text-gray-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      {item.task_end_time
+                        ? `Ends In: ${dayjs(item.task_end_date).format("DD MMM YYYY")} ${item.task_end_time}`
+                        : `Will Ends In: ${dayjs(item.end_date).format("DD MMM YYYY")}`}
+                    </div>
+
                     <div className="flex items-center gap-2">
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
                         <svg
@@ -306,25 +328,16 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                             d="M13 10V3L4 14h7v7l9-11h-7z"
                           />
                         </svg>
-                        {item.task_status}
+                        {item.task_status === "incomplete" && "Not Started Yet"}
+                        {item.task_status === "inprogress" && "In Progress"}
+                        {item.task_status === "complete" && "Completed"}
+
                       </span>
                       <div className="flex items-center gap-2">
-                        <ClockCircleOutlined
-                          style={{ fontSize: "16px", color: "#3f3f46" }}
-                        />
-                        <span
-                          className="px-3 py-1 rounded-full text-sm font-semibold"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, #f0f0f0, #e4e4e7)",
-                            color: "#333",
-                            minWidth: "90px",
-                            textAlign: "center",
-                            boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
-                          }}
-                        >
-                          <CountdownTask item={item} />
-                        </span>
+
+
+                        <CountdownTask item={item} />
+
                       </div>
                     </div>
                     {item.task_status === "incomplete" && (

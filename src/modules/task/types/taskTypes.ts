@@ -37,6 +37,10 @@ export interface ITaskItems {
   updated_at: string;
   set_time: number;
   format: string;
+  task_start_date:string;
+  task_end_date:string;
+  task_start_time:string;
+  task_end_time:string;
 }
 export interface ITaskPost {
   description: string;
