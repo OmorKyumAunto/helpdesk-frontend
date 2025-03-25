@@ -11,7 +11,7 @@ import {
   Table,
 } from "antd";
 import { Dayjs } from "dayjs";
-import { ListChecks, Clock, XCircle, CheckCircle, Timer } from "lucide-react";
+import { ListChecks, Clock, XCircle, CheckCircle, Timer,AlertTriangle } from "lucide-react";
 
 import { BadgeProps } from "antd/lib";
 import Lottie from "lottie-react";
@@ -141,7 +141,7 @@ const TaskDashboard = () => {
             </div>
           </Card>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-4">
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-4">
             {/* Total Tasks */}
             <div className="bg-purple-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-purple-400/50">
               <div className="flex items-center gap-2">
@@ -158,9 +158,7 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <Clock size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">
-                    {total_task_inprogress || 0}
-                  </h2>
+                  <h2 className="text-lg font-bold">{total_task_inprogress || 0}</h2>
                   <p className="text-xs">In Progress</p>
                 </div>
               </div>
@@ -171,9 +169,7 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <XCircle size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">
-                    {total_task_incomplete || 0}
-                  </h2>
+                  <h2 className="text-lg font-bold">{total_task_incomplete || 0}</h2>
                   <p className="text-xs">Incomplete</p>
                 </div>
               </div>
@@ -184,10 +180,19 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <CheckCircle size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">
-                    {total_task_complete || 0}
-                  </h2>
+                  <h2 className="text-lg font-bold">{total_task_complete || 0}</h2>
                   <p className="text-xs">Completed</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Overdue */}
+            <div className="bg-orange-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-orange-400/50">
+              <div className="flex items-center gap-2">
+                <AlertTriangle size={24} />
+                <div className="text-center">
+                  <h2 className="text-lg font-bold">{0}</h2>
+                  <p className="text-xs">Overdue</p>
                 </div>
               </div>
             </div>
@@ -197,14 +202,13 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <Timer size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">
-                    {secondsToHHMM(avg_task_completion_time_seconds || 0)}
-                  </h2>
+                  <h2 className="text-lg font-bold">{secondsToHHMM(avg_task_completion_time_seconds || 0)}</h2>
                   <p className="text-xs">Avg. Time</p>
                 </div>
               </div>
             </div>
           </div>
+
 
           <Row gutter={[12, 12]} className="mb-6">
             <Col xs={24} sm={24} md={24} lg={8}>
