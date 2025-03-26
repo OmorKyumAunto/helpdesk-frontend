@@ -19,6 +19,7 @@ import {
   Row,
   Select,
   Space,
+  Badge
 } from "antd";
 import dayjs from "dayjs";
 
@@ -176,21 +177,50 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                   bordered={false}
                   loading={taskLoader || isFetching}
                   style={{
-                    backgroundColor: "#e6f0ff",
-                    borderLeft: `5px solid #1890ff`,
-                    borderRadius: "12px",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
-                    transition: "transform 0.3s ease-in-out",
+                    backgroundColor: "#f7f9fc", // Light background for a modern look
+                    borderRadius: "16px", // Softer rounded corners
+                    boxShadow: "0 12px 24px rgba(0, 0, 0, 0.1)", // Subtle shadow
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease", // Smooth transitions on hover
                     cursor: "pointer",
-                    transform: "scale(1)",
                     height: "100%",
+                    position: "relative", // For absolute positioning of the badge
                   }}
                   className="sla-card"
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'} // Hover effect: scale up
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'} // Reset hover effect
                 >
+                  {/* Status Badge - Positioned outside and slightly down */}
+                  <Badge.Ribbon
+                    text={
+                      item.task_status === "complete"
+                        ? "Complete"
+                        : item.task_status === "incomplete"
+                          ? "Incomplete"
+                          : "In Progress"
+                    }
+                    color={
+                      item.task_status === "complete"
+                        ? "green"
+                        : item.task_status === "incomplete"
+                          ? "red"
+                          : "blue"
+                    }
+                    style={{
+                      position: "absolute",
+                      top: "40px", // Slightly lower than the default
+                      right: "-30px", // Move the badge slightly outside the card
+                      fontSize: "12px", // Smaller font size for the badge
+                      fontWeight: "600", // Bold text for better visibility
+                      padding: "5px 12px", // More padding to enhance the badge shape
+                      zIndex: 10, // Ensure badge floats above the content
+                    }}
+                  />
+
                   <div>
+                    {/* Task ID and Header */}
                     <div className="flex justify-between items-center">
                       <div>
-                        <h1 className="text-base font-bold">
+                        <h1 className="text-lg font-semibold text-gray-800">
                           Task ID #{item.task_code}
                         </h1>
                       </div>
@@ -219,6 +249,8 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                             />
                           )}
                         </div>
+
+                        {/* Popover for Edit and Delete */}
                         <Popover
                           content={
                             <Space direction="vertical">
@@ -255,17 +287,17 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         </Popover>
                       </Flex>
                     </div>
+
+                    {/* Task Category and Description */}
                     <div>
                       <div>
-                        <span className="text-xl  font-bold">
-                          {item.category_title}
-                        </span>
+                        <span className="text-xl font-semibold text-indigo-700">{item.category_title}</span>
                       </div>
-                      <p className="mt-1 text-medium text-gray-900">
-                        {item.description}
-                      </p>
+
                     </div>
-                    <div className="mt-1 flex items-center text-base text-gray-700 font-xs">
+
+                    {/* Task Start Time */}
+                    <div className="mt-2 flex items-center text-sm text-gray-600">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4 mr-1 text-gray-500"
@@ -281,85 +313,64 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         />
                       </svg>
                       {item.task_start_time
-                        ? `Starts In: ${dayjs(item.task_start_date).format(
-                            "DD MMM YYYY"
-                          )} ${item.task_start_time}`
-                        : `Will Start In: ${dayjs(item.start_date).format(
-                            "DD MMM YYYY"
-                          )} ${item.start_time}`}
+                        ? `Starts In: ${dayjs(item.task_start_date).format("DD MMM YYYY")} ${item.task_start_time}`
+                        : `Will Start In: ${dayjs(item.start_date).format("DD MMM YYYY")} ${item.start_time}`}
                     </div>
 
-                    <div className="mb-3 flex items-center text-base text-gray-700 font-xs">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1 text-gray-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                      {item.task_end_time
-                        ? `Ends In: ${dayjs(item.task_end_date).format(
-                            "DD MMM YYYY"
-                          )} ${item.task_end_time}`
-                        : `Will Ends In: ${dayjs(item.end_date).format(
-                            "DD MMM YYYY"
-                          )}`}
+                    {/* Countdown */}
+                    <div className="flex items-center gap-2 mt-3">
+                      <CountdownTask item={item} />
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                    {/* Task Action Buttons */}
+                    <div className="mt-3 flex gap-2">
+                      {item.task_status === "incomplete" && (
+                        <Button
+                          size="small"
+                          type="primary"
+                          onClick={() => startedTask(item.id)}
+                          style={{
+                            background: "linear-gradient(135deg, #43a047, #66bb6a)",
+                            border: "none",
+                            borderRadius: "12px",
+                            padding: "6px 14px",
+                            fontSize: "13px",
+                            fontWeight: "600",
+                            transition: "all 0.2s ease-in-out",
+                            boxShadow: "0 3px 8px rgba(76, 175, 80, 0.2)",
+                          }}
+                          className="hover:shadow-md hover:scale-105"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 10V3L4 14h7v7l9-11h-7z"
-                          />
-                        </svg>
-                        {item.task_status === "incomplete" && "Not Started Yet"}
-                        {item.task_status === "inprogress" && "In Progress"}
-                        {item.task_status === "complete" && "Completed"}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <CountdownTask item={item} />
-                      </div>
+                          Start
+                        </Button>
+                      )}
+                      {item.task_status === "inprogress" && (
+                        <Button
+                          size="small"
+                          danger
+                          type="primary"
+                          onClick={() => endedTask(item.id)}
+                          style={{
+                            background: "linear-gradient(135deg, #e53935, #ef5350)",
+                            border: "none",
+                            borderRadius: "12px",
+                            padding: "6px 14px",
+                            fontSize: "13px",
+                            fontWeight: "600",
+                            transition: "all 0.2s ease-in-out",
+                            boxShadow: "0 3px 8px rgba(244, 67, 54, 0.2)",
+                          }}
+                          className="hover:shadow-md hover:scale-105"
+                        >
+                          End
+                        </Button>
+                      )}
                     </div>
-                    {item.task_status === "incomplete" && (
-                      <Button
-                        size="small"
-                        type="primary"
-                        onClick={() => startedTask(item.id)}
-                        className="mt-3"
-                      >
-                        Start
-                      </Button>
-                    )}
-                    {item.task_status === "inprogress" && (
-                      <Button
-                        size="small"
-                        danger
-                        type="primary"
-                        onClick={() => endedTask(item.id)}
-                        className="mt-3"
-                      >
-                        End
-                      </Button>
-                    )}
+
                   </div>
                 </Card>
+
+
               </Col>
             ))}
           </Row>
@@ -381,12 +392,20 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
 
         {/* Right Sidebar */}
         <Col xs={24} sm={24} md={24} lg={6}>
-          <div className="w-full h-[84vh] bg-white border-r border-gray-200 rounded-lg flex flex-col">
-            <div className="p-4">
+          <div
+            className="w-full h-full bg-white border-r border-gray-200 rounded-lg flex flex-col shadow-xl transition-all ease-in-out transform hover:scale-103 hover:shadow-2xl"
+            style={{
+              transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
+              cursor: "pointer",
+              background: "rgba(255, 255, 255, 0.85)", // Slightly more opaque glassmorphism effect
+              backdropFilter: "blur(10px)", // Enhanced frosted glass effect
+              borderRadius: "20px", // Soft rounded corners for a high-end feel
+              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", // Soft shadow for depth with more contrast
+            }}
+          >
+            <div className="p-6">
               <Space direction="vertical" style={{ width: "100%" }}>
-                {/* <Button icon={<OrderedListOutlined />} className="w-full">
-                  All Tasks
-                </Button> */}
+                {/* Starred Button with Gradient Hover Effect */}
                 <Button
                   icon={
                     filter.starred === 1 ? (
@@ -395,7 +414,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                       <StarOutlined />
                     )
                   }
-                  className="w-full"
+                  className="w-full flex justify-start items-center gap-3 rounded-full text-gray-800 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 hover:text-white transition-all ease-in-out"
                   onClick={(e) =>
                     setFilter({
                       ...filter,
@@ -403,29 +422,25 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                       offset: 0,
                     })
                   }
+                  style={{
+                    padding: "14px 24px",
+                    fontSize: "17px",
+                    fontWeight: "600",
+                    borderRadius: "50px",
+                    transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                    boxShadow: "0 6px 15px rgba(0, 0, 0, 0.15)", // Slightly more intense shadow for button
+                  }}
                 >
                   Starred
                 </Button>
               </Space>
 
-              <div className="mt-5">
-                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
+              <div className="mt-6">
+                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 px-3">
                   Lists
                 </h2>
-                {/* <Checkbox.Group
-                  style={{ width: "100%" }}
-                  options={
-                    listCategory?.map((item) => {
-                      return {
-                        label: item.title,
-                        value: item.id,
-                      };
-                    }) || []
-                  }
-                  onChange={(checkedValues: any) => {
-                    setListIds(checkedValues);
-                  }}
-                /> */}
+
+                {/* Checkbox Group with Modern Hover Effects and Shadow */}
                 <Checkbox.Group
                   style={{ width: "100%" }}
                   options={
@@ -437,7 +452,6 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                     }) || []
                   }
                   onChange={(checkedValues: any) => {
-                    // Corrected type here
                     setListIds(checkedValues);
                   }}
                 >
@@ -445,40 +459,31 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                     <div
                       key={item.id}
                       style={{
-                        border: "1px solid #d9d9d9", // Add border
-                        padding: "8px", // Add padding for spacing
-                        marginBottom: "8px", // Add margin between checkboxes
-                        width: "100%", // Ensure each checkbox takes full width
-                        boxSizing: "border-box", // Include padding and border in width calculation
+                        border: "1px solid #e1e1e1", // Light border to maintain softness
+                        padding: "16px 24px", // Rich padding for a premium layout
+                        marginBottom: "16px", // Increased margin between checkbox items
+                        width: "100%",
+                        boxSizing: "border-box", // Ensures padding and border are included in width calculation
+                        borderRadius: "14px", // Smooth rounded corners for checkboxes
+                        background: "#f9f9f9", // Slightly lighter background for checkboxes
+                        transition: "transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease",
+                        cursor: "pointer",
                       }}
+                      className="hover:bg-gradient-to-r hover:from-indigo-100 hover:to-purple-100 hover:scale-105 hover:shadow-lg hover:transform hover:scale-102 transition-all ease-in-out"
                     >
-                      <Checkbox value={String(item.id)}>{item.title}</Checkbox>
+                      <Checkbox value={String(item.id)} className="font-semibold text-gray-700">
+                        {item.title}
+                      </Checkbox>
                     </div>
                   ))}
                 </Checkbox.Group>
-                {/* <ListCheckbox /> */}
-                {/* {listCategory.map((list) => (
-                  <Button
-                    key={list.id}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left mb-1 ${
-                      activeList === list.title
-                        ? "bg-blue-50 text-blue-700"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                    onClick={() => setActiveList(list.title)}
-                  >
-                    <div className="flex items-center">
-                      <span className="w-6 text-xs text-gray-500">
-                        <Checkbox />
-                      </span>
-                      <span className="font-medium">{list.title}</span>
-                    </div>
-                  </Button>
-                ))} */}
               </div>
             </div>
           </div>
         </Col>
+
+
+
       </Row>
     </div>
   );
