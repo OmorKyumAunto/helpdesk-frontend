@@ -3,6 +3,7 @@ import { HTTPResponse } from "../../../app/types/commonTypes";
 import notification from "../../../common/utils/Notification";
 import asyncWrapper from "../../../utils/asyncWrapper";
 import {
+  ISingleTask,
   ITaskItems,
   ITaskList,
   ITaskParams,
@@ -16,6 +17,22 @@ export const TaskEndPoint = api.injectEndpoints({
       query: () => {
         return {
           url: `/task-category/list`,
+        };
+      },
+      providesTags: () => ["Task"],
+    }),
+    getSingleTask: build.query<HTTPResponse<ISingleTask>, number>({
+      query: (id) => {
+        return {
+          url: `/task/task-details/${id}`,
+        };
+      },
+      providesTags: () => ["Task"],
+    }),
+    getSingleSuperAdminTask: build.query<HTTPResponse<ISingleTask>, number>({
+      query: (id) => {
+        return {
+          url: `/task/details/${id}`,
         };
       },
       providesTags: () => ["Task"],
@@ -199,6 +216,8 @@ export const TaskEndPoint = api.injectEndpoints({
 
 export const {
   useGetTaskListQuery,
+  useGetSingleTaskQuery,
+  useGetSingleSuperAdminTaskQuery,
   useGetOtherTaskListQuery,
   useCreateTaskListMutation,
   useUpdateTaskListMutation,

@@ -8,6 +8,7 @@ import {
   StarOutlined,
 } from "@ant-design/icons";
 import {
+  Badge,
   Button,
   Card,
   Checkbox,
@@ -47,6 +48,7 @@ import {
   useGetUnitsQuery,
 } from "../../Unit/api/unitEndPoint";
 import { UserList } from "../../Unit/types/unitTypes";
+import SingleTask from "./SingleTask";
 
 const SuperAdminTaskList = () => {
   const { data, isLoading } = useGetTaskCategoryQuery();
@@ -85,7 +87,11 @@ const SuperAdminTaskList = () => {
 
   const sanitizeData = sanitizeFormValue(filter);
 
-  const { data: taskItems, isLoading: taskLoader } = useGetTaskItemsQuery({
+  const {
+    data: taskItems,
+    isLoading: taskLoader,
+    isFetching,
+  } = useGetTaskItemsQuery({
     ...sanitizeData,
     category: listIds,
   });
@@ -203,98 +209,90 @@ const SuperAdminTaskList = () => {
               <Col key={item.id} xs={24} sm={24} md={12}>
                 <Card
                   bordered={false}
-                  // loading={taskLoader}
+                  loading={taskLoader || isFetching}
+                  onClick={() => {
+                    dispatch(
+                      setCommonModal({
+                        content: (
+                          <SingleTask
+                            id={item.id}
+                            user_name={item.user_name}
+                            user_employee_id={item.user_employee_id}
+                          />
+                        ),
+                        title: "Task Details",
+                        show: true,
+                      })
+                    );
+                  }}
                   style={{
-                    backgroundColor: "#e6f0ff",
-                    borderLeft: `5px solid #1890ff`,
-                    borderRadius: "12px",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.15)",
-                    transition: "transform 0.3s ease-in-out",
+                    backgroundColor: "#f7f9fc", // Light background for a modern look
+                    borderRadius: "16px", // Softer rounded corners
+                    boxShadow: "0 12px 24px rgba(0, 0, 0, 0.1)", // Subtle shadow
+                    transition:
+                      "transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease", // Smooth transitions on hover
                     cursor: "pointer",
-                    transform: "scale(1)",
                     height: "100%",
+                    position: "relative", // For absolute positioning of the badge
                   }}
                   className="sla-card"
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.02)")
+                  } // Hover effect: scale up
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1)")
+                  } // Reset hover effect
                 >
+                  {/* Status Badge - Positioned outside and slightly down */}
+                  <Badge.Ribbon
+                    text={
+                      item.task_status === "complete"
+                        ? "Complete"
+                        : item.task_status === "incomplete"
+                        ? "Incomplete"
+                        : "In Progress"
+                    }
+                    color={
+                      item.task_status === "complete"
+                        ? "green"
+                        : item.task_status === "incomplete"
+                        ? "red"
+                        : "blue"
+                    }
+                    style={{
+                      position: "absolute",
+                      top: "40px", // Slightly lower than the default
+                      right: "-30px", // Move the badge slightly outside the card
+                      fontSize: "12px", // Smaller font size for the badge
+                      fontWeight: "600", // Bold text for better visibility
+                      padding: "5px 12px", // More padding to enhance the badge shape
+                      zIndex: 10, // Ensure badge floats above the content
+                    }}
+                  />
+
                   <div>
+                    {/* Task ID and Header */}
                     <div className="flex justify-between items-center">
                       <div>
-                        <h1 className="text-base font-bold">
-                          Task ID: {item.task_code}
+                        <h1 className="text-lg font-semibold text-gray-800">
+                          Task ID #{item.task_code}
                         </h1>
                       </div>
-                      <Flex gap={4} justify="center" align="center">
-                        <div>
-                          {item.starred ? (
-                            <FaStar
-                              onClick={() => {
-                                starTask({
-                                  body: { starred: 0 },
-                                  id: item.id,
-                                });
-                              }}
-                              size={20}
-                              color="gold"
-                            />
-                          ) : (
-                            <FaRegStar
-                              onClick={() => {
-                                starTask({
-                                  body: { starred: 1 },
-                                  id: item.id,
-                                });
-                              }}
-                              size={20}
-                            />
-                          )}
-                        </div>
-                        <Popover
-                          content={
-                            <Space direction="vertical">
-                              <Button
-                                size="small"
-                                type="primary"
-                                style={{ width: "60px" }}
-                                onClick={() => {
-                                  dispatch(
-                                    setCommonModal({
-                                      title: "Update Task",
-                                      content: <UpdateTask single={item} />,
-                                      show: true,
-                                    })
-                                  );
-                                }}
-                              >
-                                Edit
-                              </Button>
-                              <Button
-                                size="small"
-                                type="primary"
-                                danger
-                                style={{ width: "60px" }}
-                                onClick={() => removeTask(item.id)}
-                              >
-                                Delete
-                              </Button>
-                            </Space>
-                          }
-                          trigger="hover"
-                        >
-                          <Button type="text" icon={<EllipsisOutlined />} />
-                        </Popover>
-                      </Flex>
                     </div>
+
+                    {/* Task Category and Description */}
+
                     <div>
-                      <div>
-                        <span className="text-xl  font-bold">
-                          {item.category_title}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {item.description}
+                      <span className="text-xl font-semibold text-indigo-700">
+                        {item.category_title}
+                      </span>
+                      <p className="text-base font-semibold text-blue-700">
+                        Owner: {`${item.user_name} (${item.user_employee_id})`}
                       </p>
                     </div>
-                    <div className="mb-3 mt-1 flex items-center text-base text-gray-700 font-medium">
+
+                    {/* Task Start Time */}
+                    <div className="mt-2 flex items-center text-sm text-gray-600">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4 mr-1 text-gray-500"
@@ -309,78 +307,21 @@ const SuperAdminTaskList = () => {
                           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                         />
                       </svg>
-                      End: {dayjs(item.end_date).format("DD MMM YYYY")}{" "}
-                      {item.end_time}
+                      {item.task_start_time
+                        ? `Starts In: ${dayjs(item.task_start_date).format(
+                            "DD MMM YYYY"
+                          )} ${item.task_start_time}`
+                        : `Will Start In: ${dayjs(item.start_date).format(
+                            "DD MMM YYYY"
+                          )} ${item.start_time}`}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-3">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 10V3L4 14h7v7l9-11h-7z"
-                          />
-                        </svg>
-                        {item.task_status}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <ClockCircleOutlined
-                          style={{ fontSize: "16px", color: "#3f3f46" }}
-                        />
-                        <span
-                          className="px-3 py-1 rounded-full text-sm font-semibold"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, #f0f0f0, #e4e4e7)",
-                            color: "#333",
-                            minWidth: "90px",
-                            textAlign: "center",
-                            boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
-                          }}
-                        >
-                          <CountdownTask item={item} />
-                        </span>
+
+                    <Flex justify="space-between" align="center">
+                      {/* Countdown */}
+                      <div className="flex items-center gap-2 mt-3">
+                        <CountdownTask item={item} />
                       </div>
-                      {/* <Countdown
-                        valueStyle={{ fontSize: "14px" }}
-                        value={dayjs(
-                          item.start_date.split("T")[0] + "T" + item.start_time
-                        )
-                          .subtract(6, "hours")
-                          .valueOf()}
-                        format="DD [Day], HH:mm:ss"
-                        // format="YY [Years], MM [Months], DD [Days], HH:mm:ss"
-                      /> */}
-                      {/* <TaskCountdown item={item} /> */}
-                    </div>
-                    {/* {item.task_status === "incomplete" && (
-                      <Button
-                        size="small"
-                        type="primary"
-                        onClick={() => startedTask(item.id)}
-                        className="mt-3"
-                      >
-                        Start
-                      </Button>
-                    )}
-                    {item.task_status === "inprogress" && (
-                      <Button
-                        size="small"
-                        danger
-                        type="primary"
-                        onClick={() => endedTask(item.id)}
-                        className="mt-3"
-                      >
-                        End
-                      </Button>
-                    )} */}
+                    </Flex>
                   </div>
                 </Card>
               </Col>
@@ -406,31 +347,6 @@ const SuperAdminTaskList = () => {
         <Col xs={24} sm={24} md={24} lg={6}>
           <div className="w-full h-[84vh] bg-white border-r border-gray-200 rounded-lg flex flex-col">
             <div className="p-4">
-              <Space direction="vertical" style={{ width: "100%" }}>
-                {/* <Button icon={<OrderedListOutlined />} className="w-full">
-                  All Tasks
-                </Button> */}
-                <Button
-                  icon={
-                    filter.starred === 1 ? (
-                      <StarFilled style={{ color: "gold" }} />
-                    ) : (
-                      <StarOutlined />
-                    )
-                  }
-                  className="w-full"
-                  onClick={(e) =>
-                    setFilter({
-                      ...filter,
-                      starred: filter.starred === 1 ? 0 : 1,
-                      offset: 0,
-                    })
-                  }
-                >
-                  Starred
-                </Button>
-              </Space>
-
               <div className="mt-5">
                 <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
                   Lists

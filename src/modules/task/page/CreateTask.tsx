@@ -19,7 +19,7 @@ import {
   Row,
   Select,
   Space,
-  Badge
+  Badge,
 } from "antd";
 import dayjs from "dayjs";
 
@@ -42,6 +42,7 @@ import { ITaskParams } from "../types/taskTypes";
 import { sanitizeFormValue } from "react-form-sanitization";
 import CountdownTask from "../components/CountdownTask";
 import ListCheckbox from "../components/ListCheckbox";
+import SingleTask from "./SingleTask";
 
 const TaskManager = ({ roleID }: { roleID?: number }) => {
   const { data } = useGetTaskCategoryQuery();
@@ -176,18 +177,32 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                 <Card
                   bordered={false}
                   loading={taskLoader || isFetching}
+                  onClick={() => {
+                    dispatch(
+                      setCommonModal({
+                        content: <SingleTask id={item.id} />,
+                        title: "Task Details",
+                        show: true,
+                      })
+                    );
+                  }}
                   style={{
                     backgroundColor: "#f7f9fc", // Light background for a modern look
                     borderRadius: "16px", // Softer rounded corners
                     boxShadow: "0 12px 24px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease", // Smooth transitions on hover
+                    transition:
+                      "transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease", // Smooth transitions on hover
                     cursor: "pointer",
                     height: "100%",
                     position: "relative", // For absolute positioning of the badge
                   }}
                   className="sla-card"
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'} // Hover effect: scale up
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'} // Reset hover effect
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.02)")
+                  } // Hover effect: scale up
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1)")
+                  } // Reset hover effect
                 >
                   {/* Status Badge - Positioned outside and slightly down */}
                   <Badge.Ribbon
@@ -195,15 +210,15 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                       item.task_status === "complete"
                         ? "Complete"
                         : item.task_status === "incomplete"
-                          ? "Incomplete"
-                          : "In Progress"
+                        ? "Incomplete"
+                        : "In Progress"
                     }
                     color={
                       item.task_status === "complete"
                         ? "green"
                         : item.task_status === "incomplete"
-                          ? "red"
-                          : "blue"
+                        ? "red"
+                        : "blue"
                     }
                     style={{
                       position: "absolute",
@@ -291,9 +306,10 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                     {/* Task Category and Description */}
                     <div>
                       <div>
-                        <span className="text-xl font-semibold text-indigo-700">{item.category_title}</span>
+                        <span className="text-xl font-semibold text-indigo-700">
+                          {item.category_title}
+                        </span>
                       </div>
-
                     </div>
 
                     {/* Task Start Time */}
@@ -313,64 +329,66 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         />
                       </svg>
                       {item.task_start_time
-                        ? `Starts In: ${dayjs(item.task_start_date).format("DD MMM YYYY")} ${item.task_start_time}`
-                        : `Will Start In: ${dayjs(item.start_date).format("DD MMM YYYY")} ${item.start_time}`}
+                        ? `Starts In: ${dayjs(item.task_start_date).format(
+                            "DD MMM YYYY"
+                          )} ${item.task_start_time}`
+                        : `Will Start In: ${dayjs(item.start_date).format(
+                            "DD MMM YYYY"
+                          )} ${item.start_time}`}
                     </div>
 
-                    {/* Countdown */}
-                    <div className="flex items-center gap-2 mt-3">
-                      <CountdownTask item={item} />
-                    </div>
-
-                    {/* Task Action Buttons */}
-                    <div className="mt-3 flex gap-2">
-                      {item.task_status === "incomplete" && (
-                        <Button
-                          size="small"
-                          type="primary"
-                          onClick={() => startedTask(item.id)}
-                          style={{
-                            background: "linear-gradient(135deg, #43a047, #66bb6a)",
-                            border: "none",
-                            borderRadius: "12px",
-                            padding: "6px 14px",
-                            fontSize: "13px",
-                            fontWeight: "600",
-                            transition: "all 0.2s ease-in-out",
-                            boxShadow: "0 3px 8px rgba(76, 175, 80, 0.2)",
-                          }}
-                          className="hover:shadow-md hover:scale-105"
-                        >
-                          Start
-                        </Button>
-                      )}
-                      {item.task_status === "inprogress" && (
-                        <Button
-                          size="small"
-                          danger
-                          type="primary"
-                          onClick={() => endedTask(item.id)}
-                          style={{
-                            background: "linear-gradient(135deg, #e53935, #ef5350)",
-                            border: "none",
-                            borderRadius: "12px",
-                            padding: "6px 14px",
-                            fontSize: "13px",
-                            fontWeight: "600",
-                            transition: "all 0.2s ease-in-out",
-                            boxShadow: "0 3px 8px rgba(244, 67, 54, 0.2)",
-                          }}
-                          className="hover:shadow-md hover:scale-105"
-                        >
-                          End
-                        </Button>
-                      )}
-                    </div>
-
+                    <Flex justify="space-between" align="center">
+                      {/* Task Action Buttons */}
+                      <div className="mt-3 flex gap-2">
+                        {item.task_status === "incomplete" && (
+                          <Button
+                            type="primary"
+                            onClick={() => startedTask(item.id)}
+                            style={{
+                              background:
+                                "linear-gradient(135deg, #43a047, #66bb6a)",
+                              border: "none",
+                              borderRadius: "12px",
+                              padding: "6px 26px",
+                              fontSize: "13px",
+                              fontWeight: "600",
+                              transition: "all 0.2s ease-in-out",
+                              boxShadow: "0 3px 8px rgba(76, 175, 80, 0.2)",
+                            }}
+                            className="hover:shadow-md hover:scale-105"
+                          >
+                            Start
+                          </Button>
+                        )}
+                        {item.task_status === "inprogress" && (
+                          <Button
+                            danger
+                            type="primary"
+                            onClick={() => endedTask(item.id)}
+                            style={{
+                              background:
+                                "linear-gradient(135deg, #e53935, #ef5350)",
+                              border: "none",
+                              borderRadius: "12px",
+                              padding: "6px 26px",
+                              fontSize: "13px",
+                              fontWeight: "600",
+                              transition: "all 0.2s ease-in-out",
+                              boxShadow: "0 3px 8px rgba(244, 67, 54, 0.2)",
+                            }}
+                            className="hover:shadow-md hover:scale-105"
+                          >
+                            End
+                          </Button>
+                        )}
+                      </div>
+                      {/* Countdown */}
+                      <div className="flex items-center gap-2 mt-3">
+                        <CountdownTask item={item} />
+                      </div>
+                    </Flex>
                   </div>
                 </Card>
-
-
               </Col>
             ))}
           </Row>
@@ -395,7 +413,8 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
           <div
             className="w-full h-full bg-white border-r border-gray-200 rounded-lg flex flex-col shadow-xl transition-all ease-in-out transform hover:scale-103 hover:shadow-2xl"
             style={{
-              transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
+              transition:
+                "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
               cursor: "pointer",
               background: "rgba(255, 255, 255, 0.85)", // Slightly more opaque glassmorphism effect
               backdropFilter: "blur(10px)", // Enhanced frosted glass effect
@@ -427,7 +446,8 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                     fontSize: "17px",
                     fontWeight: "600",
                     borderRadius: "50px",
-                    transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                    transition:
+                      "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
                     boxShadow: "0 6px 15px rgba(0, 0, 0, 0.15)", // Slightly more intense shadow for button
                   }}
                 >
@@ -466,12 +486,16 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         boxSizing: "border-box", // Ensures padding and border are included in width calculation
                         borderRadius: "14px", // Smooth rounded corners for checkboxes
                         background: "#f9f9f9", // Slightly lighter background for checkboxes
-                        transition: "transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease",
+                        transition:
+                          "transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease",
                         cursor: "pointer",
                       }}
                       className="hover:bg-gradient-to-r hover:from-indigo-100 hover:to-purple-100 hover:scale-105 hover:shadow-lg hover:transform hover:scale-102 transition-all ease-in-out"
                     >
-                      <Checkbox value={String(item.id)} className="font-semibold text-gray-700">
+                      <Checkbox
+                        value={String(item.id)}
+                        className="font-semibold text-gray-700"
+                      >
                         {item.title}
                       </Checkbox>
                     </div>
@@ -481,9 +505,6 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
             </div>
           </div>
         </Col>
-
-
-
       </Row>
     </div>
   );

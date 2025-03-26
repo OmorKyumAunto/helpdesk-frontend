@@ -132,7 +132,12 @@ const AssignTask = () => {
                   rules={[{ required: true }]}
                   label="Start Date"
                 >
-                  <DatePicker style={{ width: "100%" }} />
+                  <DatePicker
+                    style={{ width: "100%" }}
+                    disabledDate={(current) =>
+                      current && current < dayjs().startOf("day")
+                    }
+                  />
                 </Form.Item>
               </Col>
               <Col xs={24} sm={24} md={24} lg={12}>

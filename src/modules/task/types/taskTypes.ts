@@ -41,7 +41,64 @@ export interface ITaskItems {
   task_end_date: string;
   task_start_time: string;
   task_end_time: string;
+  user_name: string;
+  user_employee_id: string;
 }
+export interface ISingleTask {
+  id: number;
+  description: string;
+  start_date: string;
+  start_time: string;
+  sub_list_details: SubListDetail[];
+  is_assign: number;
+  user_id: number;
+  task_code: string;
+  assign_from_id: string;
+  verify_to: string;
+  is_verify: number;
+  verify_remarks: string;
+  task_status: string;
+  is_forward: number;
+  forward_from: string;
+  forward_to: string;
+  line_manager_id: string;
+  task_categories_id: number;
+  status: number;
+  starred: number;
+  task_start_date: string;
+  task_end_date: string;
+  task_start_time: string;
+  task_end_time: string;
+  created_by: number;
+  created_at: string;
+  updated_at: string;
+  updated_by: number;
+  category_title: string;
+  set_time: number;
+  format: string;
+  user_name: string;
+  user_employee_id: number;
+  assign_from_name: string;
+  assign_from_employee_id: number;
+  verify_to_name: string;
+  verify_to_employee_id: number;
+  forward_from_name: string;
+  forward_from_employee_id: number;
+  forward_to_name: string;
+  forward_to_employee_id: number;
+  line_manager_name: string;
+  line_manager_employee_id: number;
+  created_by_name: string;
+  created_by_employee_id: number;
+  asset_unit_ids: string;
+}
+
+export interface SubListDetail {
+  id: number;
+  title: string;
+  is_checked: number;
+}
+
 export interface ITaskPost {
   description: string;
   start_date: string;
@@ -69,7 +126,7 @@ export interface IDashboardDataCount {
   total_task_complete: number;
   total_task_inprogress: number;
   avg_task_completion_time_seconds: number;
-  total_overdue_tasks:number;
+  total_overdue_tasks: number;
 }
 export interface IDashboardTaskPercentage {
   total_task: number;

@@ -214,8 +214,10 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <AlertTriangle size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">{total_overdue_tasks || 0}</h2>
-                  
+                  <h2 className="text-lg font-bold">
+                    {total_overdue_tasks || 0}
+                  </h2>
+
                   <p className="text-xs">Overdue</p>
                 </div>
               </div>
@@ -237,7 +239,6 @@ const TaskDashboard = () => {
 
           <Row gutter={[12, 12]} className="mb-6">
             <Col xs={24} sm={24} md={24} lg={8}>
-
               <Card title="Today's Tasks" style={{ maxWidth: "100%" }}>
                 <div
                   style={{
@@ -248,8 +249,12 @@ const TaskDashboard = () => {
                     paddingInline: "6px",
                     transition: "overflow 0.3s ease-in-out",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.overflowY = "auto")}
-                  onMouseLeave={(e) => (e.currentTarget.style.overflowY = "hidden")}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.overflowY = "auto")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.overflowY = "hidden")
+                  }
                 >
                   {todayTask?.data?.length ? (
                     <List
@@ -261,15 +266,15 @@ const TaskDashboard = () => {
                             task.task_status === "complete"
                               ? "Complete"
                               : task.task_status === "incomplete"
-                                ? "Incomplete"
-                                : "Inprogress"
+                              ? "Incomplete"
+                              : "Inprogress"
                           }
                           color={
                             task.task_status === "complete"
                               ? "green"
                               : task.task_status === "incomplete"
-                                ? "red"
-                                : "blue"
+                              ? "red"
+                              : "blue"
                           }
                         >
                           <div
@@ -278,13 +283,14 @@ const TaskDashboard = () => {
                                 task.task_status === "complete"
                                   ? "#e6ffe6"
                                   : task.task_status === "incomplete"
-                                    ? "#ffe6e6"
-                                    : "#e6e6ff",
+                                  ? "#ffe6e6"
+                                  : "#e6e6ff",
                               padding: "10px",
                               borderRadius: "5px",
                               marginBottom: "6px",
                               border: "1px solid #d1d1d1",
-                              transition: "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
+                              transition:
+                                "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
                               willChange: "transform",
                               display: "flex",
                               flexDirection: "column",
@@ -298,25 +304,51 @@ const TaskDashboard = () => {
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.transform = "scale(1.01)";
-                              e.currentTarget.style.boxShadow = "0px 3px 6px rgba(0, 0, 0, 0.12)";
+                              e.currentTarget.style.boxShadow =
+                                "0px 3px 6px rgba(0, 0, 0, 0.12)";
                             }}
                             onMouseLeave={(e) => {
                               e.currentTarget.style.transform = "scale(1)";
-                              e.currentTarget.style.boxShadow = "0px 1px 3px rgba(0, 0, 0, 0.1)";
+                              e.currentTarget.style.boxShadow =
+                                "0px 1px 3px rgba(0, 0, 0, 0.1)";
                             }}
                           >
-                            <Title level={5} style={{ fontSize: "13px", marginBottom: "2px" }}>
+                            <Title
+                              level={5}
+                              style={{ fontSize: "13px", marginBottom: "2px" }}
+                            >
                               {task.category_title}
                             </Title>
                             <Text
                               type="secondary"
-                              style={{ fontSize: "11px", color: "#555", display: "flex", alignItems: "center" }}
+                              style={{
+                                fontSize: "11px",
+                                color: "#555",
+                                display: "flex",
+                                alignItems: "center",
+                              }}
                             >
-                              <ClockCircleOutlined style={{ marginRight: "4px", fontSize: "11px" }} />
-                              {dayjs(dayjs().format("YYYY-MM-DD") + "T" + task.start_time).format("hh:mm A")}
+                              <ClockCircleOutlined
+                                style={{ marginRight: "4px", fontSize: "11px" }}
+                              />
+                              {dayjs(
+                                dayjs().format("YYYY-MM-DD") +
+                                  "T" +
+                                  task.start_time
+                              ).format("hh:mm A")}
                             </Text>
-                            <Text style={{ fontSize: "11px", color: "#333", display: "flex", alignItems: "center" }}>
-                              <FileTextOutlined style={{ marginRight: "4px", fontSize: "11px" }} /> {task.description}
+                            <Text
+                              style={{
+                                fontSize: "11px",
+                                color: "#333",
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <FileTextOutlined
+                                style={{ marginRight: "4px", fontSize: "11px" }}
+                              />{" "}
+                              {task.description}
                             </Text>
                           </div>
                         </Badge.Ribbon>
@@ -327,7 +359,6 @@ const TaskDashboard = () => {
                   )}
                 </div>
               </Card>
-
             </Col>
             <Col xs={24} sm={24} md={24} lg={16}>
               <Card title="Total work">
@@ -336,7 +367,6 @@ const TaskDashboard = () => {
             </Col>
           </Row>
         </Col>
-
 
         {/* Right Column - Calendar and Status */}
         <Col xs={24} sm={24} md={24} lg={6}>
