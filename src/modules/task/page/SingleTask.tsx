@@ -131,7 +131,8 @@ const SingleTask = ({
             key: "5",
             label: "Sub Category List",
             children: sub_list_details
-              ?.map((item) =>
+              ?.filter((item) => item.is_checked === 1)
+              .map((item) =>
                 Array.isArray(item.title) ? item.title.join(", ") : item.title
               )
               .join(", "),

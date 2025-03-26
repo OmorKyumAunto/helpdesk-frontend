@@ -20,7 +20,8 @@ const TaskCountdown = ({ item }: { item: any }) => {
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [progressTimeLeft, setProgressTimeLeft] = useState<number>(0);
   const [timeOverdue, setTimeOverdue] = useState<boolean>(false);
-  const [progressTimeOverdue, setProgressTimeOverdue] = useState<boolean>(false);
+  const [progressTimeOverdue, setProgressTimeOverdue] =
+    useState<boolean>(false);
   const [completionDuration, setCompletionDuration] = useState<string>("");
 
   const convertSetTimeToSeconds = (setTime: number, format: string): number => {
@@ -50,7 +51,7 @@ const TaskCountdown = ({ item }: { item: any }) => {
           setTimeLeft(remainingTime);
           setTimeOverdue(false);
         } else {
-          setTimeLeft(Math.abs(remainingTime));  // Store positive remaining time
+          setTimeLeft(Math.abs(remainingTime)); // Store positive remaining time
           setTimeOverdue(true);
         }
       };
@@ -60,9 +61,9 @@ const TaskCountdown = ({ item }: { item: any }) => {
       intervalId = setInterval(() => {
         setTimeLeft((prevTimeLeft) => {
           if (!timeOverdue && prevTimeLeft > 0) {
-            return prevTimeLeft - 1;  // Countdown until overdue
+            return prevTimeLeft - 1; // Countdown until overdue
           } else if (timeOverdue) {
-            return prevTimeLeft + 1;  // Increment when overdue
+            return prevTimeLeft + 1; // Increment when overdue
           }
           return prevTimeLeft;
         });
@@ -74,7 +75,10 @@ const TaskCountdown = ({ item }: { item: any }) => {
     if (item.task_status === "inprogress") {
       const calculateProgressTimeLeft = () => {
         const updatedAt = dayjs(item.updated_at);
-        const remainingProgressTime = convertSetTimeToSeconds(item.set_time, item.format);
+        const remainingProgressTime = convertSetTimeToSeconds(
+          item.set_time,
+          item.format
+        );
         const elapsedTime = dayjs().diff(updatedAt, "second");
         const remainingProgress = remainingProgressTime - elapsedTime;
 

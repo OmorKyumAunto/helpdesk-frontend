@@ -303,7 +303,7 @@ const ListTaskOther = () => {
                       )}
                       {/* Countdown */}
                       <div className="flex items-center gap-2 mt-3">
-                        <CountdownTask item={item} />
+                        {/* <CountdownTask item={item} /> */}
                       </div>
                     </Flex>
                   </div>
@@ -331,7 +331,7 @@ const ListTaskOther = () => {
         <Col xs={24} sm={24} md={24} lg={6}>
           <div className="w-full h-[84vh] bg-white border-r border-gray-200 rounded-lg flex flex-col">
             <div className="p-4">
-              <Space direction="vertical" style={{ width: "100%" }}>
+              {/* <Space direction="vertical" style={{ width: "100%" }}>
                 <Button
                   icon={
                     filter.starred === 1 ? (
@@ -351,7 +351,7 @@ const ListTaskOther = () => {
                 >
                   Starred
                 </Button>
-              </Space>
+              </Space> */}
 
               <div className="mt-5">
                 <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
