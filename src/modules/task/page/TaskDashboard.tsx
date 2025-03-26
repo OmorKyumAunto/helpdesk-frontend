@@ -111,6 +111,7 @@ const TaskDashboard = () => {
     total_task_complete,
     total_task_incomplete,
     total_task_inprogress,
+    total_overdue_tasks,
   } = countData?.data || {};
 
   function secondsToHHMM(seconds: number) {
@@ -213,7 +214,8 @@ const TaskDashboard = () => {
               <div className="flex items-center gap-2">
                 <AlertTriangle size={24} />
                 <div className="text-center">
-                  <h2 className="text-lg font-bold">{0}</h2>
+                  <h2 className="text-lg font-bold">{total_overdue_tasks || 0}</h2>
+                  
                   <p className="text-xs">Overdue</p>
                 </div>
               </div>
@@ -235,120 +237,97 @@ const TaskDashboard = () => {
 
           <Row gutter={[12, 12]} className="mb-6">
             <Col xs={24} sm={24} md={24} lg={8}>
-              {/* <Card title="Today Task" style={{ height: "100%" }}>
-                <Table
-                  size="small"
-                  pagination={false}
-                  rowKey={"id"}
-                  columns={[
-                    {
-                      key: "1",
-                      dataIndex: "category_title",
-                      title: "Task Title",
-                    },
-                    {
-                      key: "2",
-                      dataIndex: "start_time",
-                      title: "Start Time",
-                      render: (text) => {
-                        const date = dayjs(
-                          dayjs().format("YYYY-MM-DD") + "T" + text
-                        );
-                        return <span>{dayjs(date).format("hh:mm A")}</span>;
-                      },
-                    },
-                    {
-                      key: "3",
-                      dataIndex: "description",
-                      title: "Description",
-                      width: "30%",
-                    },
-                  ]}
-                  dataSource={todayTask?.data || []}
-                />
-              </Card> */}
-              <Card title="Today's Tasks">
-                {todayTask?.data?.length ? (
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={todayTask.data}
-                    renderItem={(task, index) => (
-                      <Badge.Ribbon
-                        text={
-                          task.task_status === "complete"
-                            ? "Complete"
-                            : task.task_status === "incomplete"
-                            ? "Incomplete"
-                            : "Inprogress"
-                        }
-                        color={
-                          task.task_status === "complete"
-                            ? "green"
-                            : task.task_status === "incomplete"
-                            ? "red"
-                            : "blue"
-                        }
-                      >
-                        <List.Item
-                          style={{
-                            backgroundColor:
-                              task.task_status === "complete"
-                                ? "#e6ffe6"
-                                : task.task_status === "incomplete"
-                                ? "#ffe6e6"
-                                : "#e6e6ff",
-                            padding: "12px",
-                            borderRadius: "8px",
-                            marginBottom: "8px",
-                            border: "1px solid #d1d1d1", // Light border for definition
-                            // boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
-                            transition: "all 0.3s ease-in-out",
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = "scale(1.02)";
-                            e.currentTarget.style.boxShadow =
-                              "0px 4px 12px rgba(0, 0, 0, 0.2)"; // Stronger shadow on hover
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = "scale(1)";
-                            e.currentTarget.style.boxShadow =
-                              "0px 2px 6px rgba(0, 0, 0, 0.1)"; // Restore original shadow
-                          }}
+
+              <Card title="Today's Tasks" style={{ maxWidth: "100%" }}>
+                <div
+                  style={{
+                    maxHeight: "366px",
+                    overflowY: "hidden", // Hide scrollbar initially
+                    overflowX: "hidden", // Fix horizontal scrollbar issue
+                    paddingRight: "8px",
+                    paddingInline: "6px",
+                    transition: "overflow 0.3s ease-in-out",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.overflowY = "auto")}
+                  onMouseLeave={(e) => (e.currentTarget.style.overflowY = "hidden")}
+                >
+                  {todayTask?.data?.length ? (
+                    <List
+                      itemLayout="vertical"
+                      dataSource={todayTask.data}
+                      renderItem={(task) => (
+                        <Badge.Ribbon
+                          text={
+                            task.task_status === "complete"
+                              ? "Complete"
+                              : task.task_status === "incomplete"
+                                ? "Incomplete"
+                                : "Inprogress"
+                          }
+                          color={
+                            task.task_status === "complete"
+                              ? "green"
+                              : task.task_status === "incomplete"
+                                ? "red"
+                                : "blue"
+                          }
                         >
-                          <List.Item.Meta
-                            title={
-                              <Title level={5}>{task.category_title}</Title>
-                            }
-                            description={
-                              <>
-                                <Text
-                                  type="secondary"
-                                  style={{ fontSize: "14px", color: "#555" }}
-                                >
-                                  <ClockCircleOutlined />{" "}
-                                  {dayjs(
-                                    dayjs().format("YYYY-MM-DD") +
-                                      "T" +
-                                      task.start_time
-                                  ).format("hh:mm A")}
-                                </Text>
-                                <br />
-                                <Text
-                                  style={{ fontSize: "14px", color: "#333" }}
-                                >
-                                  <FileTextOutlined /> {task.description}
-                                </Text>
-                              </>
-                            }
-                          />
-                        </List.Item>
-                      </Badge.Ribbon>
-                    )}
-                  />
-                ) : (
-                  <Text type="secondary">No tasks for today.</Text>
-                )}
+                          <div
+                            style={{
+                              backgroundColor:
+                                task.task_status === "complete"
+                                  ? "#e6ffe6"
+                                  : task.task_status === "incomplete"
+                                    ? "#ffe6e6"
+                                    : "#e6e6ff",
+                              padding: "10px",
+                              borderRadius: "5px",
+                              marginBottom: "6px",
+                              border: "1px solid #d1d1d1",
+                              transition: "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
+                              willChange: "transform",
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "4px",
+                              boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+                              cursor: "pointer",
+                              width: "100%",
+                              transformOrigin: "center",
+                              overflow: "visible",
+                              minWidth: "0", // Fix unwanted width expansion
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.transform = "scale(1.01)";
+                              e.currentTarget.style.boxShadow = "0px 3px 6px rgba(0, 0, 0, 0.12)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.transform = "scale(1)";
+                              e.currentTarget.style.boxShadow = "0px 1px 3px rgba(0, 0, 0, 0.1)";
+                            }}
+                          >
+                            <Title level={5} style={{ fontSize: "13px", marginBottom: "2px" }}>
+                              {task.category_title}
+                            </Title>
+                            <Text
+                              type="secondary"
+                              style={{ fontSize: "11px", color: "#555", display: "flex", alignItems: "center" }}
+                            >
+                              <ClockCircleOutlined style={{ marginRight: "4px", fontSize: "11px" }} />
+                              {dayjs(dayjs().format("YYYY-MM-DD") + "T" + task.start_time).format("hh:mm A")}
+                            </Text>
+                            <Text style={{ fontSize: "11px", color: "#333", display: "flex", alignItems: "center" }}>
+                              <FileTextOutlined style={{ marginRight: "4px", fontSize: "11px" }} /> {task.description}
+                            </Text>
+                          </div>
+                        </Badge.Ribbon>
+                      )}
+                    />
+                  ) : (
+                    <Text type="secondary">No tasks for today.</Text>
+                  )}
+                </div>
               </Card>
+
             </Col>
             <Col xs={24} sm={24} md={24} lg={16}>
               <Card title="Total work">
@@ -357,6 +336,8 @@ const TaskDashboard = () => {
             </Col>
           </Row>
         </Col>
+
+
         {/* Right Column - Calendar and Status */}
         <Col xs={24} sm={24} md={24} lg={6}>
           <Card className="mb-6" title="Working Progress">

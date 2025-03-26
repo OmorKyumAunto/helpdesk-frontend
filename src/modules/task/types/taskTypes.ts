@@ -69,6 +69,7 @@ export interface IDashboardDataCount {
   total_task_complete: number;
   total_task_inprogress: number;
   avg_task_completion_time_seconds: number;
+  total_overdue_tasks:number;
 }
 export interface IDashboardTaskPercentage {
   total_task: number;
