@@ -243,7 +243,8 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         <div>
                           {item.starred ? (
                             <FaStar
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 starTask({
                                   body: { starred: 0 },
                                   id: item.id,
@@ -254,7 +255,8 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                             />
                           ) : (
                             <FaRegStar
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 starTask({
                                   body: { starred: 1 },
                                   id: item.id,
@@ -273,7 +275,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                                 size="small"
                                 type="primary"
                                 style={{ width: "60px" }}
-                                onClick={() => {
+                                onClick={(e) => {
                                   dispatch(
                                     setCommonModal({
                                       title: "Update Task",
@@ -281,6 +283,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                                       show: true,
                                     })
                                   );
+                                  e.stopPropagation();
                                 }}
                               >
                                 Edit
@@ -290,7 +293,10 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                                 type="primary"
                                 danger
                                 style={{ width: "60px" }}
-                                onClick={() => removeTask(item.id)}
+                                onClick={(e) => {
+                                  removeTask(item.id);
+                                  e.stopPropagation();
+                                }}
                               >
                                 Delete
                               </Button>
@@ -343,7 +349,10 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                         {item.task_status === "incomplete" && (
                           <Button
                             type="primary"
-                            onClick={() => startedTask(item.id)}
+                            onClick={(e) => {
+                              startedTask(item.id);
+                              e.stopPropagation();
+                            }}
                             style={{
                               background:
                                 "linear-gradient(135deg, #43a047, #66bb6a)",
@@ -364,7 +373,10 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                           <Button
                             danger
                             type="primary"
-                            onClick={() => endedTask(item.id)}
+                            onClick={(e) => {
+                              endedTask(item.id);
+                              e.stopPropagation();
+                            }}
                             style={{
                               background:
                                 "linear-gradient(135deg, #e53935, #ef5350)",

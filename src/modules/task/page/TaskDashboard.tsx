@@ -38,6 +38,7 @@ import {
   useGetDashboardTaskDataCountQuery,
   useGetDashboardTodayTaskQuery,
 } from "../api/taskDashboardEndpoint";
+import { useGetMeQuery } from "../../../app/api/userApi";
 const { Title, Text } = Typography;
 // Mock data for line chart
 const chartData = [
@@ -103,6 +104,8 @@ const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
 };
 
 const TaskDashboard = () => {
+  const { data: profile } = useGetMeQuery();
+  const roleID = profile?.data?.role_id;
   const { data: countData } = useGetDashboardTaskDataCountQuery();
   const { data: todayTask } = useGetDashboardTodayTaskQuery();
   const {
@@ -243,10 +246,8 @@ const TaskDashboard = () => {
                 <div
                   style={{
                     maxHeight: "366px",
-                    overflowY: "hidden", // Hide scrollbar initially
-                    overflowX: "hidden", // Fix horizontal scrollbar issue
-                    paddingRight: "8px",
-                    paddingInline: "6px",
+                    overflowY: "hidden",
+                    overflowX: "hidden",
                     transition: "overflow 0.3s ease-in-out",
                   }}
                   onMouseEnter={(e) =>
@@ -313,43 +314,39 @@ const TaskDashboard = () => {
                                 "0px 1px 3px rgba(0, 0, 0, 0.1)";
                             }}
                           >
-                            <Title
-                              level={5}
-                              style={{ fontSize: "13px", marginBottom: "2px" }}
-                            >
+                            <p style={{ margin: 0, fontSize: "13px" }}>
+                              ID: #{task.task_code}
+                            </p>
+                            <p style={{ fontSize: "13px", margin: 0 }}>
                               {task.category_title}
-                            </Title>
-                            <Text
-                              type="secondary"
-                              style={{
-                                fontSize: "11px",
-                                color: "#555",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <ClockCircleOutlined
-                                style={{ marginRight: "4px", fontSize: "11px" }}
-                              />
-                              {dayjs(
-                                dayjs().format("YYYY-MM-DD") +
-                                  "T" +
-                                  task.start_time
-                              ).format("hh:mm A")}
-                            </Text>
-                            <Text
-                              style={{
-                                fontSize: "11px",
-                                color: "#333",
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <FileTextOutlined
-                                style={{ marginRight: "4px", fontSize: "11px" }}
-                              />{" "}
-                              {task.description}
-                            </Text>
+                            </p>
+                            {roleID === 2 ? (
+                              <Text
+                                type="secondary"
+                                style={{
+                                  fontSize: "11px",
+                                  color: "#555",
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <ClockCircleOutlined
+                                  style={{
+                                    marginRight: "4px",
+                                    fontSize: "11px",
+                                  }}
+                                />
+                                {dayjs(
+                                  dayjs().format("YYYY-MM-DD") +
+                                    "T" +
+                                    task.start_time
+                                ).format("hh:mm A")}
+                              </Text>
+                            ) : (
+                              <p
+                                style={{ fontSize: "11px" }}
+                              >{`${task.user_name} (${task.user_employee_id})`}</p>
+                            )}
                           </div>
                         </Badge.Ribbon>
                       )}

@@ -150,13 +150,14 @@ const ListTaskOther = () => {
                   bordered={false}
                   loading={isLoading || isFetching || toLoading || toFetching}
                   onClick={() => {
-                    dispatch(
-                      setCommonModal({
-                        content: <SingleTask id={item.id} />,
-                        title: "Task Details",
-                        show: true,
-                      })
-                    );
+                    othersValue !== "to" &&
+                      dispatch(
+                        setCommonModal({
+                          content: <SingleTask id={item.id} />,
+                          title: "Task Details",
+                          show: true,
+                        })
+                      );
                   }}
                   style={{
                     backgroundColor: "#f7f9fc", // Light background for a modern look
@@ -254,7 +255,10 @@ const ListTaskOther = () => {
                           {item.task_status === "incomplete" && (
                             <Button
                               type="primary"
-                              onClick={() => startedTask(item.id)}
+                              onClick={(e) => {
+                                startedTask(item.id);
+                                e.stopPropagation();
+                              }}
                               style={{
                                 background:
                                   "linear-gradient(135deg, #43a047, #66bb6a)",
@@ -275,7 +279,10 @@ const ListTaskOther = () => {
                             <Button
                               danger
                               type="primary"
-                              onClick={() => endedTask(item.id)}
+                              onClick={(e) => {
+                                endedTask(item.id);
+                                e.stopPropagation();
+                              }}
                               style={{
                                 background:
                                   "linear-gradient(135deg, #e53935, #ef5350)",

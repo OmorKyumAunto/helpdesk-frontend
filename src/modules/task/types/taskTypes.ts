@@ -142,6 +142,16 @@ export interface IDashboardTodayTask {
   description: string;
   start_time: string;
   task_status: string;
+  user_name: string;
+  user_employee_id: string;
+  task_code: string;
+  sub_list_details: SubListDetail[];
+}
+
+export interface SubListDetail {
+  id: number;
+  title: string;
+  is_checked: number;
 }
 export interface IDashboardBarChartData {
   month: string;
