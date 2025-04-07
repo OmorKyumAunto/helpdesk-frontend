@@ -11,13 +11,30 @@ const TaskPercentagePie = () => {
     series: number[];
     options: ApexOptions;
   }>({
-    series: [44, 55, 41, 17, 15],
+    series: [],
     options: {
       chart: {
         type: "donut",
       },
+      dataLabels: {
+        enabled: false, // Disable always-visible labels
+      },
+      tooltip: {
+        y: {
+          formatter: (val: number) => `${val} Tasks`,
+        },
+      },
       legend: {
-        position: "bottom",
+        position: "bottom",  // Position the legend at the bottom
+        fontSize: "10px",    // Smaller font size to reduce space
+        itemMargin: {
+          horizontal: 1,     // Reduced horizontal space between items
+          vertical: 0,       // Reduced vertical space between items
+        },
+        labels: {
+          useSeriesColors: true, // Use series colors for the legend items
+        },
+        horizontalAlign: "center", // Center the legend horizontally
       },
       responsive: [
         {
@@ -34,12 +51,10 @@ const TaskPercentagePie = () => {
 
   useEffect(() => {
     if (data?.data) {
-      const taskPieData = data.data.map((item: IDashboardCategoryWiseData) => {
-        return {
-          name: item.category_title,
-          value: item.task_count,
-        };
-      });
+      const taskPieData = data.data.map((item: IDashboardCategoryWiseData) => ({
+        name: item.category_title,
+        value: item.task_count,
+      }));
 
       setState((prevState) => ({
         ...prevState,
@@ -50,7 +65,7 @@ const TaskPercentagePie = () => {
         },
       }));
     }
-  }, [data]); // Depend on data, not categoryData
+  }, [data]);
 
   return (
     <div style={{ maxWidth: "260px", margin: "0 auto" }}>

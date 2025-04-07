@@ -241,114 +241,117 @@ const TaskDashboard = () => {
           </div>
 
           <Row gutter={[12, 12]} className="mb-6">
-            <Col xs={24} sm={24} md={24} lg={8}>
-              <Card title="Today's Tasks" style={{ maxWidth: "100%" }}>
+            <Col xs={24} sm={24} md={24} lg={8} style={{ padding: "0 1px" }}>
+              <Card title="Today's Tasks" style={{ width: "100%" }}>
                 <div
                   style={{
                     maxHeight: "366px",
                     overflowY: "hidden",
                     overflowX: "hidden",
                     transition: "overflow 0.3s ease-in-out",
+                    padding: "0 4px", // Prevents hover clipping
                   }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.overflowY = "auto")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.overflowY = "hidden")
-                  }
+                  onMouseEnter={(e) => (e.currentTarget.style.overflowY = "auto")}
+                  onMouseLeave={(e) => (e.currentTarget.style.overflowY = "hidden")}
                 >
                   {todayTask?.data?.length ? (
                     <List
                       itemLayout="vertical"
                       dataSource={todayTask.data}
                       renderItem={(task) => (
-                        <Badge.Ribbon
-                          text={
-                            task.task_status === "complete"
-                              ? "Complete"
-                              : task.task_status === "incomplete"
-                              ? "Incomplete"
-                              : "Inprogress"
-                          }
-                          color={
-                            task.task_status === "complete"
-                              ? "green"
-                              : task.task_status === "incomplete"
-                              ? "red"
-                              : "blue"
-                          }
-                        >
-                          <div
+                        <div style={{ overflow: "visible", padding: "0 4px" }}>
+                          <Badge.Ribbon
+                            text={
+                              task.task_status === "complete"
+                                ? "Complete"
+                                : task.task_status === "incomplete"
+                                  ? "Incomplete"
+                                  : "Inprogress"
+                            }
+                            color={
+                              task.task_status === "complete"
+                                ? "green"
+                                : task.task_status === "incomplete"
+                                  ? "red"
+                                  : "blue"
+                            }
                             style={{
-                              backgroundColor:
-                                task.task_status === "complete"
-                                  ? "#e6ffe6"
-                                  : task.task_status === "incomplete"
-                                  ? "#ffe6e6"
-                                  : "#e6e6ff",
-                              padding: "10px",
-                              borderRadius: "5px",
-                              marginBottom: "6px",
-                              border: "1px solid #d1d1d1",
-                              transition:
-                                "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
-                              willChange: "transform",
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: "4px",
-                              boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
-                              cursor: "pointer",
-                              width: "100%",
-                              transformOrigin: "center",
-                              overflow: "visible",
-                              minWidth: "0", // Fix unwanted width expansion
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.transform = "scale(1.01)";
-                              e.currentTarget.style.boxShadow =
-                                "0px 3px 6px rgba(0, 0, 0, 0.12)";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.transform = "scale(1)";
-                              e.currentTarget.style.boxShadow =
-                                "0px 1px 3px rgba(0, 0, 0, 0.1)";
+                              position: "absolute",
+                              top: "10px",
+                              right: "-8px",
+                              fontSize: "12px",
+                              fontWeight: "500",
+                              padding: "5px 12px",
+                              zIndex: 10,
                             }}
                           >
-                            <p style={{ margin: 0, fontSize: "13px" }}>
-                              ID: #{task.task_code}
-                            </p>
-                            <p style={{ fontSize: "13px", margin: 0 }}>
-                              {task.category_title}
-                            </p>
-                            {roleID === 2 ? (
-                              <Text
-                                type="secondary"
-                                style={{
-                                  fontSize: "11px",
-                                  color: "#555",
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <ClockCircleOutlined
+                            <div
+                              style={{
+                                backgroundColor:
+                                  task.task_status === "complete"
+                                    ? "#e6ffe6"
+                                    : task.task_status === "incomplete"
+                                      ? "#ffe6e6"
+                                      : "#e6e6ff",
+                                padding: "10px",
+                                borderRadius: "5px",
+                                marginBottom: "6px",
+                                border: "1px solid #d1d1d1",
+                                transition:
+                                  "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
+                                willChange: "transform",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "4px",
+                                boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+                                cursor: "pointer",
+                                transformOrigin: "center",
+                                overflow: "visible",
+                                minWidth: "0",
+                                width: "100%",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = "scale(1.01)";
+                                e.currentTarget.style.boxShadow =
+                                  "0px 3px 6px rgba(0, 0, 0, 0.12)";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = "scale(1)";
+                                e.currentTarget.style.boxShadow =
+                                  "0px 1px 3px rgba(0, 0, 0, 0.1)";
+                              }}
+                            >
+                              <p style={{ margin: 0, fontSize: "13px" }}>
+                                ID: #{task.task_code}
+                              </p>
+                              <p style={{ fontSize: "13px", margin: 0 }}>
+                                {task.category_title}
+                              </p>
+                              {roleID === 2 ? (
+                                <Text
+                                  type="secondary"
                                   style={{
-                                    marginRight: "4px",
                                     fontSize: "11px",
+                                    color: "#555",
+                                    display: "flex",
+                                    alignItems: "center",
                                   }}
-                                />
-                                {dayjs(
-                                  dayjs().format("YYYY-MM-DD") +
-                                    "T" +
-                                    task.start_time
-                                ).format("hh:mm A")}
-                              </Text>
-                            ) : (
-                              <p
-                                style={{ fontSize: "11px" }}
-                              >{`${task.user_name} (${task.user_employee_id})`}</p>
-                            )}
-                          </div>
-                        </Badge.Ribbon>
+                                >
+                                  <ClockCircleOutlined
+                                    style={{ marginRight: "4px", fontSize: "11px" }}
+                                  />
+                                  {dayjs(
+                                    dayjs().format("YYYY-MM-DD") + "T" + task.start_time
+                                  ).format("hh:mm A")}
+                                </Text>
+                              ) : (
+                                <p style={{ fontSize: "11px" }}>
+                                  {`${task.user_name} (${task.user_employee_id})`}
+                                </p>
+                              )}
+                            </div>
+                          </Badge.Ribbon>
+                        </div>
                       )}
                     />
                   ) : (
@@ -357,6 +360,8 @@ const TaskDashboard = () => {
                 </div>
               </Card>
             </Col>
+
+
             <Col xs={24} sm={24} md={24} lg={16}>
               <Card title="Total work">
                 <CompareBarChart />
