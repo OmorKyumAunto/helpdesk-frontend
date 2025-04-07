@@ -8,7 +8,7 @@ interface TaskCountdownProps {
     task_end_date: string;
     task_start_time: string;
     task_end_time: string;
-    set_time: number;
+    total_set_time: number;
     format: string;
     updated_at: string;
     start_time: string;
@@ -76,7 +76,7 @@ const TaskCountdown = ({ item }: { item: any }) => {
       const calculateProgressTimeLeft = () => {
         const updatedAt = dayjs(item.updated_at);
         const remainingProgressTime = convertSetTimeToSeconds(
-          item.set_time,
+          item.total_set_time,
           item.format
         );
         const elapsedTime = dayjs().diff(updatedAt, "second");

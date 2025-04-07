@@ -281,44 +281,46 @@ const TaskManager = ({
                         </div>
 
                         {/* Popover for Edit and Delete */}
-                        <Popover
-                          content={
-                            <Space direction="vertical">
-                              <Button
-                                size="small"
-                                type="primary"
-                                style={{ width: "60px" }}
-                                onClick={(e) => {
-                                  dispatch(
-                                    setCommonModal({
-                                      title: "Update Task",
-                                      content: <UpdateTask single={item} />,
-                                      show: true,
-                                    })
-                                  );
-                                  e.stopPropagation();
-                                }}
-                              >
-                                Edit
-                              </Button>
-                              <Button
-                                size="small"
-                                type="primary"
-                                danger
-                                style={{ width: "60px" }}
-                                onClick={(e) => {
-                                  removeTask(item.id);
-                                  e.stopPropagation();
-                                }}
-                              >
-                                Delete
-                              </Button>
-                            </Space>
-                          }
-                          trigger="hover"
-                        >
-                          <Button type="text" icon={<EllipsisOutlined />} />
-                        </Popover>
+                        {item.task_status === "incomplete" && (
+                          <Popover
+                            content={
+                              <Space direction="vertical">
+                                <Button
+                                  size="small"
+                                  type="primary"
+                                  style={{ width: "60px" }}
+                                  onClick={(e) => {
+                                    dispatch(
+                                      setCommonModal({
+                                        title: "Update Task",
+                                        content: <UpdateTask single={item} />,
+                                        show: true,
+                                      })
+                                    );
+                                    e.stopPropagation();
+                                  }}
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  size="small"
+                                  type="primary"
+                                  danger
+                                  style={{ width: "60px" }}
+                                  onClick={(e) => {
+                                    removeTask(item.id);
+                                    e.stopPropagation();
+                                  }}
+                                >
+                                  Delete
+                                </Button>
+                              </Space>
+                            }
+                            trigger="hover"
+                          >
+                            <Button type="text" icon={<EllipsisOutlined />} />
+                          </Popover>
+                        )}
                       </Flex>
                     </div>
 

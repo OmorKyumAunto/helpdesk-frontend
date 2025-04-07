@@ -221,6 +221,14 @@ const ListTaskOther = () => {
                           {item.category_title}
                         </span>
                       </div>
+                      <div>
+                        {othersValue !== "to" && (
+                          <span className="text-sm font-semibold">
+                            From: {item.assign_from_name} (
+                            {item.assign_from_employee_id})
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     {/* Task Start Time */}

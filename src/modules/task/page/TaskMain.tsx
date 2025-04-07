@@ -48,7 +48,9 @@ const TaskMain: React.FC = () => {
                 All Tasks
               </span>
             ),
-            children: <SuperAdminTaskList />,
+            children: (
+              <SuperAdminTaskList key={activeKey} taskStatus={taskStatus} />
+            ),
           },
           // {
           //   key: "3",

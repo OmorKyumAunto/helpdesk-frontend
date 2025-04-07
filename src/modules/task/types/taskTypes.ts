@@ -44,6 +44,8 @@ export interface ITaskItems {
   task_end_time: string;
   user_name: string;
   user_employee_id: string;
+  assign_from_employee_id: string;
+  assign_from_name: string;
 }
 export interface ISingleTask {
   id: number;

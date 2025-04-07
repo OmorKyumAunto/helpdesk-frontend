@@ -1,6 +1,7 @@
 import {
   ClockCircleOutlined,
   EllipsisOutlined,
+  FilterOutlined,
   OrderedListOutlined,
   PlusOutlined,
   SearchOutlined,
@@ -14,6 +15,7 @@ import {
   Checkbox,
   Col,
   DatePicker,
+  Dropdown,
   Flex,
   Input,
   Pagination,
@@ -50,7 +52,7 @@ import {
 import { UserList } from "../../Unit/types/unitTypes";
 import SingleTask from "./SingleTask";
 
-const SuperAdminTaskList = () => {
+const SuperAdminTaskList = ({ taskStatus }: { taskStatus: string }) => {
   const { data, isLoading } = useGetTaskCategoryQuery();
   const listCategory = data?.data || [];
   const [removeTask] = useDeleteTaskMutation();
@@ -109,7 +111,13 @@ const SuperAdminTaskList = () => {
     setPageSize(size);
     setFilter({ ...filter, offset: (current - 1) * size, limit: size });
   };
-
+  useEffect(() => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      task_status: taskStatus || prevFilter.task_status,
+      offset: 0,
+    }));
+  }, [taskStatus]);
   return (
     <div>
       {/* Header */}
@@ -141,45 +149,21 @@ const SuperAdminTaskList = () => {
                 />
               </div>
               <Select
-                loading={unitIsLoading}
-                placeholder="Select Unit Name"
-                showSearch
-                optionFilterProp="children"
-                style={{ width: "180px" }}
-                filterOption={(input, option) =>
-                  (option?.label ?? "")
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-                options={unitData?.data?.map((unit: any) => ({
-                  value: unit.id,
-                  label: unit.title,
-                }))}
-                onChange={(e) =>
-                  setFilter({ ...filter, unit_id: e, offset: 0 })
-                }
                 allowClear
-              />
-              <Select
-                loading={adminLoading}
-                placeholder="Search Admin"
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.label ?? "")
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-                options={allAdmin?.data?.user_list?.map((item: UserList) => ({
-                  value: item.user_id,
-                  label: `[${item.employee_id}] ${item.name}`,
-                }))}
+                placeholder="Select Status"
+                style={{ width: "160px" }}
                 onChange={(e) =>
-                  setFilter({ ...filter, user_id: e, offset: 0 })
+                  setFilter({ ...filter, task_status: e, offset: 0 })
                 }
-                allowClear
-                style={{ width: "180px" }}
+                defaultValue={taskStatus || null}
+                options={[
+                  { label: "Incomplete", value: "incomplete" },
+                  { label: "Complete", value: "complete" },
+                  { label: "Inprogress", value: "inprogress" },
+                  // {label:'Overdue',value:'overdue'},
+                ]}
               />
+
               <div>
                 <DatePicker.RangePicker
                   style={{ width: "250px" }}
@@ -194,6 +178,65 @@ const SuperAdminTaskList = () => {
                   }
                 />
               </div>
+              <Dropdown
+                trigger={["hover"]}
+                dropdownRender={() => (
+                  <div
+                    style={{
+                      padding: 16,
+                      background: "#fff",
+                      borderRadius: 8,
+                      width: "160px",
+                      border: "1px solid #f2f2f2",
+                    }}
+                  >
+                    <Select
+                      loading={unitIsLoading}
+                      placeholder="Select Unit Name"
+                      showSearch
+                      optionFilterProp="children"
+                      style={{ width: "180px" }}
+                      filterOption={(input, option) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={unitData?.data?.map((unit: any) => ({
+                        value: unit.id,
+                        label: unit.title,
+                      }))}
+                      onChange={(e) =>
+                        setFilter({ ...filter, unit_id: e, offset: 0 })
+                      }
+                      allowClear
+                    />
+                    <Select
+                      loading={adminLoading}
+                      placeholder="Search Admin"
+                      showSearch
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={allAdmin?.data?.user_list?.map(
+                        (item: UserList) => ({
+                          value: item.user_id,
+                          label: `[${item.employee_id}] ${item.name}`,
+                        })
+                      )}
+                      onChange={(e) =>
+                        setFilter({ ...filter, user_id: e, offset: 0 })
+                      }
+                      allowClear
+                      style={{ width: "180px" }}
+                    />
+                  </div>
+                )}
+              >
+                <Button icon={<FilterOutlined />}>Filters</Button>
+              </Dropdown>
             </Space>
           </div>
         </div>
