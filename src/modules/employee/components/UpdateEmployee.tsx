@@ -224,6 +224,8 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                     <Option value="DBTrims Plant">DBTrims Plant</Option>
                     <Option value="PPPL Plant">PPPL Plant</Option>
                     <Option value="EUDB">EUDB</Option>
+                    <Option value="Laxfo Plant">Laxfo Plant</Option>
+                    <Option value="Laxfo Corporate">Laxfo Corporate</Option>
                     <Option value="Thanbee Complex">Thanbee Complex</Option>
                     <Option value="Matin Complex">Matin Complex</Option>
                     <Option value="Mymun Complex">Mymun Complex</Option>
