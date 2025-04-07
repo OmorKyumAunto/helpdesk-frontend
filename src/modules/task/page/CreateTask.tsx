@@ -44,7 +44,13 @@ import CountdownTask from "../components/CountdownTask";
 import ListCheckbox from "../components/ListCheckbox";
 import SingleTask from "./SingleTask";
 
-const TaskManager = ({ roleID }: { roleID?: number }) => {
+const TaskManager = ({
+  roleID,
+  taskStatus,
+}: {
+  roleID?: number;
+  taskStatus: string;
+}) => {
   const { data } = useGetTaskCategoryQuery();
   const listCategory = data?.data || [];
   const [removeTask] = useDeleteTaskMutation();
@@ -86,7 +92,13 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
     setPageSize(size);
     setFilter({ ...filter, offset: (current - 1) * size, limit: size });
   };
-
+  useEffect(() => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      task_status: taskStatus || prevFilter.task_status,
+      offset: 0,
+    }));
+  }, [taskStatus]);
   return (
     <div>
       {/* Header */}
@@ -124,6 +136,7 @@ const TaskManager = ({ roleID }: { roleID?: number }) => {
                 onChange={(e) =>
                   setFilter({ ...filter, task_status: e, offset: 0 })
                 }
+                defaultValue={taskStatus || null}
                 options={[
                   { label: "Incomplete", value: "incomplete" },
                   { label: "Complete", value: "complete" },

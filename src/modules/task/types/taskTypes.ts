@@ -36,6 +36,7 @@ export interface ITaskItems {
   created_at: string;
   updated_at: string;
   set_time: number;
+  quantity: number;
   format: string;
   task_start_date: string;
   task_end_date: string;
@@ -101,6 +102,7 @@ export interface SubListDetail {
 
 export interface ITaskPost {
   description: string;
+  category_title?: string;
   start_date: string;
   start_time: string;
   sub_list_selected: number[];

@@ -8,6 +8,7 @@ import {
   DatePicker,
   Form,
   Input,
+  InputNumber,
   Row,
   Select,
 } from "antd";
@@ -78,7 +79,12 @@ const AssignTask = () => {
   return (
     <Row justify="center" align="middle" style={{ maxWidth: "auto" }}>
       <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-        <Form layout="vertical" form={form} onFinish={onFinish}>
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={onFinish}
+          initialValues={{ quantity: 1 }}
+        >
           <Card
             className="border"
             style={{
@@ -87,7 +93,7 @@ const AssignTask = () => {
             }}
           >
             <Row align={"middle"} gutter={[5, 5]}>
-              <Col xs={24} sm={24} md={24} lg={24}>
+              <Col xs={24} sm={24} md={24} lg={18}>
                 <Form.Item
                   label="Select List"
                   name="task_categories_id"
@@ -110,6 +116,21 @@ const AssignTask = () => {
                       })
                     )}
                     allowClear
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={6}>
+                <Form.Item
+                  label="QTY"
+                  name="quantity"
+                  rules={[
+                    { required: true, message: "Please enter quantity!" },
+                  ]}
+                >
+                  <InputNumber
+                    placeholder="Enter Quantity"
+                    min={1}
+                    style={{ width: "100%" }}
                   />
                 </Form.Item>
               </Col>

@@ -7,6 +7,8 @@ import {
   Col,
   DatePicker,
   Form,
+  Input,
+  InputNumber,
   Row,
   Select,
 } from "antd";
@@ -25,7 +27,8 @@ import {
 import { ITaskItems, ITaskPost } from "../types/taskTypes";
 
 const UpdateTask = ({ single }: { single: ITaskItems }) => {
-  const { description, start_date, start_time } = single || {};
+  const { description, start_date, start_time, quantity, category_title } =
+    single || {};
   console.log(single);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -40,7 +43,8 @@ const UpdateTask = ({ single }: { single: ITaskItems }) => {
   );
 
   const onFinish = (values: ITaskPost) => {
-    const { start_date, start_time, is_assign, ...rest } = values || {};
+    const { start_date, start_time, is_assign, category_title, ...rest } =
+      values || {};
     const formattedData: ITaskPost = {
       ...rest,
       start_date: dayjs(start_date)?.format("YYYY-MM-DD"),
@@ -57,6 +61,8 @@ const UpdateTask = ({ single }: { single: ITaskItems }) => {
     form.setFieldsValue({
       start_date: dayjs(start_date),
       description,
+      quantity,
+      category_title,
       start_time: dayjs(formattedDate),
     });
   }, [start_date, start_time, description]);
@@ -119,6 +125,32 @@ const UpdateTask = ({ single }: { single: ITaskItems }) => {
                   </Form.Item>
                 </Col>
               ) : null} */}
+              <Col xs={24} sm={24} md={24} lg={12}>
+                <Form.Item
+                  label="Category Title"
+                  name="category_title"
+                  rules={[
+                    { required: true, message: "Please enter category title!" },
+                  ]}
+                >
+                  <Input readOnly />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={12}>
+                <Form.Item
+                  label="QTY"
+                  name="quantity"
+                  rules={[
+                    { required: true, message: "Please enter quantity!" },
+                  ]}
+                >
+                  <InputNumber
+                    placeholder="Enter Quantity"
+                    min={1}
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
               <Col xs={24} sm={24} md={24} lg={12}>
                 <Form.Item
                   name="start_date"

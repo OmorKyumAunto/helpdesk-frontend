@@ -39,6 +39,9 @@ import {
   useGetDashboardTodayTaskQuery,
 } from "../api/taskDashboardEndpoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
+import SingleTask from "./SingleTask";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { useDispatch } from "react-redux";
 const { Title, Text } = Typography;
 // Mock data for line chart
 const chartData = [
@@ -102,9 +105,13 @@ const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
   if (info.type === "date") return dateCellRender(current);
   return info.originNode;
 };
-
-const TaskDashboard = () => {
+interface TaskDashboardProps {
+  setTaskStatus: (key: string) => void;
+  setActiveKey: (key: string) => void;
+}
+const TaskDashboard = ({ setTaskStatus, setActiveKey }: TaskDashboardProps) => {
   const { data: profile } = useGetMeQuery();
+  const dispatch = useDispatch();
   const roleID = profile?.data?.role_id;
   const { data: countData } = useGetDashboardTaskDataCountQuery();
   const { data: todayTask } = useGetDashboardTodayTaskQuery();
@@ -149,7 +156,12 @@ const TaskDashboard = () => {
                   Great things are done by a series of small tasks brought
                   together.
                 </p>
-                <Button className="bg-blue-500 text-white px-5 py-2 rounded-full text-sm transition-all duration-300 ease-in-out hover:bg-blue-600">
+                <Button
+                  className="bg-blue-500 text-white px-5 py-2 rounded-full text-sm transition-all duration-300 ease-in-out hover:bg-blue-600"
+                  onClick={() => {
+                    setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
+                  }}
+                >
                   Go To Tasks
                 </Button>
               </div>
@@ -163,7 +175,12 @@ const TaskDashboard = () => {
 
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-4">
             {/* Total Tasks */}
-            <div className="bg-purple-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-purple-400/50">
+            <div
+              className="bg-purple-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-purple-400/50 cursor-pointer"
+              onClick={() => {
+                setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
+              }}
+            >
               <div className="flex items-center gap-2">
                 <ListChecks size={24} />
                 <div className="text-center">
@@ -174,7 +191,13 @@ const TaskDashboard = () => {
             </div>
 
             {/* In Progress */}
-            <div className="bg-teal-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-teal-400/50">
+            <div
+              className="bg-teal-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-teal-400/50 cursor-pointer"
+              onClick={() => {
+                setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
+                setTaskStatus && setTaskStatus("inprogress");
+              }}
+            >
               <div className="flex items-center gap-2">
                 <Clock size={24} />
                 <div className="text-center">
@@ -187,7 +210,13 @@ const TaskDashboard = () => {
             </div>
 
             {/* Incomplete */}
-            <div className="bg-red-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-red-400/50">
+            <div
+              className="bg-red-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-red-400/50 cursor-pointer"
+              onClick={() => {
+                setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
+                setTaskStatus && setTaskStatus("incomplete");
+              }}
+            >
               <div className="flex items-center gap-2">
                 <XCircle size={24} />
                 <div className="text-center">
@@ -200,7 +229,13 @@ const TaskDashboard = () => {
             </div>
 
             {/* Completed */}
-            <div className="bg-sky-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-sky-400/50">
+            <div
+              className="bg-sky-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-sky-400/50 cursor-pointer"
+              onClick={() => {
+                setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
+                setTaskStatus && setTaskStatus("complete");
+              }}
+            >
               <div className="flex items-center gap-2">
                 <CheckCircle size={24} />
                 <div className="text-center">
@@ -213,7 +248,13 @@ const TaskDashboard = () => {
             </div>
 
             {/* Overdue */}
-            <div className="bg-orange-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-orange-400/50">
+            <div
+              className="bg-orange-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-orange-400/50 cursor-pointer"
+              // onClick={() => {
+              //   setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
+              //   setTaskStatus && setTaskStatus("overdue");
+              // }}
+            >
               <div className="flex items-center gap-2">
                 <AlertTriangle size={24} />
                 <div className="text-center">
@@ -251,29 +292,45 @@ const TaskDashboard = () => {
                     transition: "overflow 0.3s ease-in-out",
                     padding: "0 4px", // Prevents hover clipping
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.overflowY = "auto")}
-                  onMouseLeave={(e) => (e.currentTarget.style.overflowY = "hidden")}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.overflowY = "auto")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.overflowY = "hidden")
+                  }
                 >
                   {todayTask?.data?.length ? (
                     <List
                       itemLayout="vertical"
                       dataSource={todayTask.data}
                       renderItem={(task) => (
-                        <div style={{ overflow: "visible", padding: "0 4px" }}>
+                        <div
+                          key={task.id}
+                          onClick={() => {
+                            dispatch(
+                              setCommonModal({
+                                content: <SingleTask id={task.id} />,
+                                title: "Task Details",
+                                show: true,
+                              })
+                            );
+                          }}
+                          style={{ overflow: "visible", padding: "0 4px" }}
+                        >
                           <Badge.Ribbon
                             text={
                               task.task_status === "complete"
                                 ? "Complete"
                                 : task.task_status === "incomplete"
-                                  ? "Incomplete"
-                                  : "Inprogress"
+                                ? "Incomplete"
+                                : "Inprogress"
                             }
                             color={
                               task.task_status === "complete"
                                 ? "green"
                                 : task.task_status === "incomplete"
-                                  ? "red"
-                                  : "blue"
+                                ? "red"
+                                : "blue"
                             }
                             style={{
                               position: "absolute",
@@ -291,8 +348,8 @@ const TaskDashboard = () => {
                                   task.task_status === "complete"
                                     ? "#e6ffe6"
                                     : task.task_status === "incomplete"
-                                      ? "#ffe6e6"
-                                      : "#e6e6ff",
+                                    ? "#ffe6e6"
+                                    : "#e6e6ff",
                                 padding: "10px",
                                 borderRadius: "5px",
                                 marginBottom: "6px",
@@ -338,10 +395,15 @@ const TaskDashboard = () => {
                                   }}
                                 >
                                   <ClockCircleOutlined
-                                    style={{ marginRight: "4px", fontSize: "11px" }}
+                                    style={{
+                                      marginRight: "4px",
+                                      fontSize: "11px",
+                                    }}
                                   />
                                   {dayjs(
-                                    dayjs().format("YYYY-MM-DD") + "T" + task.start_time
+                                    dayjs().format("YYYY-MM-DD") +
+                                      "T" +
+                                      task.start_time
                                   ).format("hh:mm A")}
                                 </Text>
                               ) : (
@@ -360,7 +422,6 @@ const TaskDashboard = () => {
                 </div>
               </Card>
             </Col>
-
 
             <Col xs={24} sm={24} md={24} lg={16}>
               <Card title="Total work">

@@ -1,6 +1,6 @@
 import type { TabsProps } from "antd";
 import { Card, Tabs } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import CreateTask from "./CreateTask";
 import TaskList from "./TaskList";
@@ -13,6 +13,17 @@ const TaskMain: React.FC = () => {
   const { data: profile } = useGetMeQuery();
   const roleID = profile?.data?.role_id;
 
+  const [activeKey, setActiveKey] = useState(
+    roleID === 1 ? "1" : roleID === 2 ? "4" : "6"
+  );
+  const [taskStatus, setTaskStatus] = useState("");
+  const onChange = (key: string) => {
+    setActiveKey(key);
+    if (key !== "2" && key !== "5") {
+      setTaskStatus("");
+    }
+  };
+
   const items: TabsProps["items"] = [
     ...(roleID === 1
       ? [
@@ -23,7 +34,12 @@ const TaskMain: React.FC = () => {
                 Dashboard
               </span>
             ),
-            children: <TaskDashboard />,
+            children: (
+              <TaskDashboard
+                setTaskStatus={setTaskStatus}
+                setActiveKey={setActiveKey}
+              />
+            ),
           },
           {
             key: "2",
@@ -54,7 +70,12 @@ const TaskMain: React.FC = () => {
                 Dashboard
               </span>
             ),
-            children: <TaskDashboard />,
+            children: (
+              <TaskDashboard
+                setTaskStatus={setTaskStatus}
+                setActiveKey={setActiveKey}
+              />
+            ),
           },
           {
             key: "5",
@@ -63,7 +84,13 @@ const TaskMain: React.FC = () => {
                 Create Task
               </span>
             ),
-            children: <CreateTask roleID={roleID} />,
+            children: (
+              <CreateTask
+                roleID={roleID}
+                key={activeKey}
+                taskStatus={taskStatus}
+              />
+            ),
           },
           {
             key: "8",
@@ -76,24 +103,24 @@ const TaskMain: React.FC = () => {
           },
         ]
       : []),
-    ...(roleID === 3
-      ? [
-          {
-            key: "6",
-            label: (
-              <span style={{ fontSize: "16px", fontWeight: "600" }}>
-                Create Task
-              </span>
-            ),
-            children: <CreateTask />,
-          },
-        ]
-      : []),
+    // ...(roleID === 3
+    //   ? [
+    //       {
+    //         key: "6",
+    //         label: (
+    //           <span style={{ fontSize: "16px", fontWeight: "600" }}>
+    //             Create Task
+    //           </span>
+    //         ),
+    //         children: <CreateTask />,
+    //       },
+    //     ]
+    //   : []),
   ];
 
   return (
     <Card>
-      <Tabs items={items} />
+      <Tabs activeKey={activeKey} items={items} onChange={onChange} />
     </Card>
   );
 };
