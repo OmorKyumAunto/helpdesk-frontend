@@ -30,13 +30,19 @@ const SingleTask = ({
     sub_list_details,
     start_date,
     description,
+    task_start_date,
+    task_start_time,
     task_end_date,
     task_end_time,
   } = singleData || {};
 
-  const add6hours = dayjs(start_date).add(6, "hours");
+  const add6hoursone = dayjs(start_date).add(6, "hours");
   const startTime = dayjs(
-    dayjs(add6hours).format("YYYY-MM-DD") + "T" + start_time
+    dayjs(add6hoursone).format("YYYY-MM-DD") + "T" + start_time
+  );
+  const add6hours = dayjs(task_start_date).add(6, "hours");
+  const taskstartTime = dayjs(
+    dayjs(add6hours).format("YYYY-MM-DD") + "T" + task_start_time
   );
   const add6hoursEnd = dayjs(task_end_date).add(6, "hours");
   const endTime = dayjs(
@@ -88,38 +94,50 @@ const SingleTask = ({
             children: category_title,
             span: 2,
           },
+          
+          ...(task_start_date && task_start_time
+            ? [
+              {
+                key: "3",
+                label: "Started at",
+                children: dayjs(taskstartTime).format("DD MMM YYYY hh:mm A"),
+                span: 2,
+              },
+            ]
+            : [
+              {
+                key: "3",
+                label: "Approx. Start Time",
+                children: dayjs(startTime).format("DD MMM YYYY hh:mm A"),
+                span: 2,
+              },
+            ]),
 
-          {
-            key: "3",
-            label: "Start Time",
-            children: dayjs(startTime).format("DD MMM YYYY hh:mm A"),
-            span: 2,
-          },
           ...(task_end_date && task_end_time
             ? [
-                {
-                  key: "7",
-                  label: "End Time",
-                  children: dayjs(endTime).format("DD MMM YYYY hh:mm A"),
-                  span: 2,
-                },
-              ]
+              {
+                key: "7",
+                label: "Ends at",
+                children: dayjs(endTime).format("DD MMM YYYY hh:mm A"),
+                span: 2,
+              },
+            ]
             : []),
           ...(user_name && user_employee_id
             ? [
-                {
-                  key: "8",
-                  label: "Admin Name",
-                  children: user_name,
-                  span: 2,
-                },
-                {
-                  key: "9",
-                  label: "Admin ID",
-                  children: user_employee_id,
-                  span: 2,
-                },
-              ]
+              {
+                key: "8",
+                label: "Admin Name",
+                children: user_name,
+                span: 2,
+              },
+              {
+                key: "9",
+                label: "Admin ID",
+                children: user_employee_id,
+                span: 2,
+              },
+            ]
             : []),
           {
             key: "4",

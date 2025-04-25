@@ -223,15 +223,15 @@ const TaskManager = ({
                       item.task_status === "complete"
                         ? "Complete"
                         : item.task_status === "incomplete"
-                        ? "Incomplete"
-                        : "In Progress"
+                          ? "Incomplete"
+                          : "In Progress"
                     }
                     color={
                       item.task_status === "complete"
                         ? "green"
                         : item.task_status === "incomplete"
-                        ? "red"
-                        : "blue"
+                          ? "red"
+                          : "blue"
                     }
                     style={{
                       position: "absolute",
@@ -328,10 +328,12 @@ const TaskManager = ({
                     <div>
                       <div>
                         <span className="text-xl font-semibold text-indigo-700">
-                          {item.category_title}
+                          {item.category_title}{' '}
+                          <span className="text-sm font-bold text-indigo-500">x{item.quantity}</span>
                         </span>
                       </div>
                     </div>
+
 
                     {/* Task Start Time */}
                     <div className="mt-2 flex items-center text-sm text-gray-600">
@@ -351,11 +353,11 @@ const TaskManager = ({
                       </svg>
                       {item.task_start_time
                         ? `Starts In: ${dayjs(item.task_start_date).format(
-                            "DD MMM YYYY"
-                          )} ${item.task_start_time}`
+                          "DD MMM YYYY"
+                        )} ${item.task_start_time}`
                         : `Will Start In: ${dayjs(item.start_date).format(
-                            "DD MMM YYYY"
-                          )} ${item.start_time}`}
+                          "DD MMM YYYY"
+                        )} ${item.start_time}`}
                     </div>
 
                     <Flex justify="space-between" align="center">

@@ -9,6 +9,7 @@ import ProfileSection from "./components/navBar/ProfileSection";
 import NotFound from "./components/notFound/NotFound";
 import UnauthorizePage from "./components/notFound/UnauthorizePage";
 import About from "./modules/about/page/About";
+import Reports from "./modules/reports/page/reports";
 import AdminList from "./modules/admin/pages/Adminlist";
 import AssetsList from "./modules/assets/pages/AssetsList";
 import DistributedAsset from "./modules/assets/pages/DistributedAsset";
@@ -121,6 +122,10 @@ export const routers = createBrowserRouter([
       {
         path: "/about",
         element: <About />,
+      },
+      {
+        path: "/reports",
+        element: <Reports />,
       },
       {
         path: "/sop/list",
