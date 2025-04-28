@@ -140,6 +140,11 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
                 key: "/settings/task-config",
                 icon: <GoTasklist size={16} />,
               },
+              {
+                label: <Link to="/settings/zing-hr-sync">ZingHR Sync</Link>,
+                key: "/settings/zing-hr-sync",
+                icon: <GoTasklist size={16} />,
+              },
             ],
           },
         ]

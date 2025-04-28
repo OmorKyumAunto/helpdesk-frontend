@@ -82,6 +82,7 @@ export const api = createApi({
     "ticket",
     "Task",
     "Task-Category",
+    "Emp-Database",
   ],
 });
 
