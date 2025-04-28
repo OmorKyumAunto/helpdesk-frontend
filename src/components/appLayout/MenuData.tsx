@@ -14,8 +14,10 @@ import { Link } from "react-router-dom";
 import { IMenuData } from "../../../Types/MenuData";
 import { BsTicketDetailed } from "react-icons/bs";
 import { GrConfigure } from "react-icons/gr";
+import { GoTasklist } from "react-icons/go";
 import { PiTicket } from "react-icons/pi";
 import { IoTicketOutline } from "react-icons/io5";
+import { TbReport } from "react-icons/tb";
 
 export const sideBarItems = (employee_id: string, roleId: number) => {
   let menuData: IMenuData[] = [
@@ -129,19 +131,24 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
                   </Link>
                 ),
                 key: "/settings/tickets-config",
-                icon: <IoTicketOutline size={16} />,
+                icon: <GrConfigure size={16} />,
               },
               {
                 label: (
                   <Link to="/settings/task-config">Task Configuration</Link>
                 ),
                 key: "/settings/task-config",
-                icon: <GrConfigure size={16} />,
+                icon: <GoTasklist size={16} />,
               },
             ],
           },
         ]
       : []),
+    // {
+    //   label: <Link to="/reports">Reports</Link>,
+    //   key: "/reports",
+    //   icon: <TbReport size={20} />,
+    // },
     {
       label: <Link to="/about">About</Link>,
       key: "/about",

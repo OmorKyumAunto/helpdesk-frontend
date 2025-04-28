@@ -257,15 +257,15 @@ const SuperAdminTaskList = ({ taskStatus }: { taskStatus: string }) => {
                       item.task_status === "complete"
                         ? "Complete"
                         : item.task_status === "incomplete"
-                        ? "Incomplete"
-                        : "In Progress"
+                          ? "Incomplete"
+                          : "In Progress"
                     }
                     color={
                       item.task_status === "complete"
                         ? "green"
                         : item.task_status === "incomplete"
-                        ? "red"
-                        : "blue"
+                          ? "red"
+                          : "blue"
                     }
                     style={{
                       position: "absolute",
@@ -291,12 +291,18 @@ const SuperAdminTaskList = ({ taskStatus }: { taskStatus: string }) => {
                     {/* Task Category and Description */}
 
                     <div>
-                      <span className="text-xl font-semibold text-indigo-700">
-                        {item.category_title}
-                      </span>
-                      <p className="text-base font-semibold text-blue-700">
+                      <div>
+                        <div>
+                          <span className="text-xl font-semibold text-indigo-700">
+                            {item.category_title}{' '}
+                            <span className="text-sm font-bold text-indigo-500">x{item.quantity}</span>
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-sm font-medium text-blue-600">
                         Owner: {`${item.user_name} (${item.user_employee_id})`}
                       </p>
+
                     </div>
 
                     {/* Task Start Time */}
@@ -317,11 +323,11 @@ const SuperAdminTaskList = ({ taskStatus }: { taskStatus: string }) => {
                       </svg>
                       {item.task_start_time
                         ? `Starts In: ${dayjs(item.task_start_date).format(
-                            "DD MMM YYYY"
-                          )} ${item.task_start_time}`
+                          "DD MMM YYYY"
+                        )} ${item.task_start_time}`
                         : `Will Start In: ${dayjs(item.start_date).format(
-                            "DD MMM YYYY"
-                          )} ${item.start_time}`}
+                          "DD MMM YYYY"
+                        )} ${item.start_time}`}
                     </div>
 
                     <Flex justify="space-between" align="center">
