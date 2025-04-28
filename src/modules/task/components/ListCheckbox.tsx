@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import { Checkbox } from "antd";
+import { useState } from "react";
+import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 
 const ListCheckbox = () => {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);

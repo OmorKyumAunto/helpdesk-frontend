@@ -1,13 +1,4 @@
-import {
-  ClockCircleOutlined,
-  EllipsisOutlined,
-  FilterOutlined,
-  OrderedListOutlined,
-  PlusOutlined,
-  SearchOutlined,
-  StarFilled,
-  StarOutlined,
-} from "@ant-design/icons";
+import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Badge,
   Button,
@@ -19,49 +10,31 @@ import {
   Flex,
   Input,
   Pagination,
-  Popover,
   Row,
   Select,
   Space,
-  Statistic,
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { FaRegStar, FaStar } from "react-icons/fa";
+import { sanitizeFormValue } from "react-form-sanitization";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
-import {
-  useDeleteTaskMutation,
-  useEndTaskMutation,
-  useGetTaskItemsQuery,
-  useStartedTaskMutation,
-  useStartTaskMutation,
-} from "../api/taskEndpoint";
-import AssignTask from "../components/AssignTask";
-import UpdateTask from "../components/UpdateTask";
 import { rangePreset } from "../../../common/rangePreset";
-import { useSearchParams } from "react-router-dom";
-import { ITaskParams } from "../types/taskTypes";
-import { sanitizeFormValue } from "react-form-sanitization";
-import CountdownTask from "../components/CountdownTask";
+import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import {
   useGetAdminWiseUnitsQuery,
   useGetUnitsQuery,
 } from "../../Unit/api/unitEndPoint";
 import { UserList } from "../../Unit/types/unitTypes";
+import { useGetTaskItemsQuery } from "../api/taskEndpoint";
+import CountdownTask from "../components/CountdownTask";
+import { ITaskParams } from "../types/taskTypes";
 import SingleTask from "./SingleTask";
 
 const SuperAdminTaskList = ({ taskStatus }: { taskStatus: string }) => {
-  const { data, isLoading } = useGetTaskCategoryQuery();
+  const { data } = useGetTaskCategoryQuery();
   const listCategory = data?.data || [];
-  const [removeTask] = useDeleteTaskMutation();
-  const [starTask] = useStartedTaskMutation();
-  const [startedTask] = useStartTaskMutation();
-  const [endedTask] = useEndTaskMutation();
-  const [activeList, setActiveList] = useState("My Tasks");
   const dispatch = useDispatch();
-  const { Countdown } = Statistic;
   const [listIds, setListIds] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
@@ -97,14 +70,6 @@ const SuperAdminTaskList = ({ taskStatus }: { taskStatus: string }) => {
     ...sanitizeData,
     category: listIds,
   });
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const secs = (seconds % 60).toString().padStart(2, "0");
-    return `${mins}:${secs}`;
-  };
 
   const handlePaginationChange = (current: number, size: number) => {
     setPage(current);

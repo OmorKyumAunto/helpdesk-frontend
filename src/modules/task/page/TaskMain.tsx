@@ -3,11 +3,9 @@ import { Card, Tabs } from "antd";
 import React, { useState } from "react";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import CreateTask from "./CreateTask";
-import TaskList from "./TaskList";
-import TaskListOther from "./TaskListOther";
-import TaskReport from "./TaskReport";
-import TaskDashboard from "./TaskDashboard";
 import SuperAdminTaskList from "./SuperAdminTaskList";
+import TaskDashboard from "./TaskDashboard";
+import TaskListOther from "./TaskListOther";
 
 const TaskMain: React.FC = () => {
   const { data: profile } = useGetMeQuery();

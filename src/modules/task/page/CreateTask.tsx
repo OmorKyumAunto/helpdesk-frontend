@@ -1,5 +1,4 @@
 import {
-  ClockCircleOutlined,
   EllipsisOutlined,
   PlusOutlined,
   SearchOutlined,
@@ -7,6 +6,7 @@ import {
   StarOutlined,
 } from "@ant-design/icons";
 import {
+  Badge,
   Button,
   Card,
   Checkbox,
@@ -19,14 +19,15 @@ import {
   Row,
   Select,
   Space,
-  Badge,
 } from "antd";
 import dayjs from "dayjs";
 
 import { useEffect, useState } from "react";
+import { sanitizeFormValue } from "react-form-sanitization";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
+import { rangePreset } from "../../../common/rangePreset";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import {
   useDeleteTaskMutation,
@@ -36,12 +37,9 @@ import {
   useStartTaskMutation,
 } from "../api/taskEndpoint";
 import AssignTask from "../components/AssignTask";
-import UpdateTask from "../components/UpdateTask";
-import { rangePreset } from "../../../common/rangePreset";
-import { ITaskParams } from "../types/taskTypes";
-import { sanitizeFormValue } from "react-form-sanitization";
 import CountdownTask from "../components/CountdownTask";
-import ListCheckbox from "../components/ListCheckbox";
+import UpdateTask from "../components/UpdateTask";
+import { ITaskParams } from "../types/taskTypes";
 import SingleTask from "./SingleTask";
 
 const TaskManager = ({

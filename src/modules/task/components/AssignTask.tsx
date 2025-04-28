@@ -7,7 +7,6 @@ import {
   Col,
   DatePicker,
   Form,
-  Input,
   InputNumber,
   Row,
   Select,
@@ -18,20 +17,15 @@ import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
+import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
+import { ITaskCategoryList } from "../../taskConfiguration/types/taskConfigTypes";
 import {
   useGetAdminWiseUnitsQuery,
   useGetUnitsQuery,
 } from "../../Unit/api/unitEndPoint";
-import { useGetAdminsQuery } from "../../admin/api/adminEndPoint";
-import { IAdmin } from "../../admin/types/adminTypes";
-import {
-  useCreateTaskMutation,
-  useGetTaskListQuery,
-} from "../api/taskEndpoint";
-import { ITaskList, ITaskPost } from "../types/taskTypes";
-import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
-import { ITaskCategoryList } from "../../taskConfiguration/types/taskConfigTypes";
 import { UserList } from "../../Unit/types/unitTypes";
+import { useCreateTaskMutation } from "../api/taskEndpoint";
+import { ITaskPost } from "../types/taskTypes";
 
 const AssignTask = () => {
   const dispatch = useDispatch();

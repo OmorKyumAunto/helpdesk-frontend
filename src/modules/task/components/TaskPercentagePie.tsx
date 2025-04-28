@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
+import { useEffect, useState } from "react";
+import ReactApexChart from "react-apexcharts";
 import { useGetDashboardCategoryWiseDataQuery } from "../api/taskDashboardEndpoint";
 import { IDashboardCategoryWiseData } from "../types/taskTypes";
 
@@ -25,11 +25,11 @@ const TaskPercentagePie = () => {
         },
       },
       legend: {
-        position: "bottom",  // Position the legend at the bottom
-        fontSize: "10px",    // Smaller font size to reduce space
+        position: "bottom", // Position the legend at the bottom
+        fontSize: "10px", // Smaller font size to reduce space
         itemMargin: {
-          horizontal: 1,     // Reduced horizontal space between items
-          vertical: 0,       // Reduced vertical space between items
+          horizontal: 1, // Reduced horizontal space between items
+          vertical: 0, // Reduced vertical space between items
         },
         labels: {
           useSeriesColors: true, // Use series colors for the legend items

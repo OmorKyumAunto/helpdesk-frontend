@@ -3,14 +3,12 @@ import { SendOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
-  Checkbox,
   Col,
   DatePicker,
   Form,
   Input,
   InputNumber,
   Row,
-  Select,
 } from "antd";
 import { useWatch } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
@@ -19,11 +17,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
-import { ITaskCategoryList } from "../../taskConfiguration/types/taskConfigTypes";
-import {
-  useCreateTaskMutation,
-  useUpdateTaskMutation,
-} from "../api/taskEndpoint";
+import { useUpdateTaskMutation } from "../api/taskEndpoint";
 import { ITaskItems, ITaskPost } from "../types/taskTypes";
 
 const UpdateTask = ({ single }: { single: ITaskItems }) => {

@@ -1,9 +1,4 @@
-import {
-  EllipsisOutlined,
-  SearchOutlined,
-  StarFilled,
-  StarOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import {
   Badge,
   Button,
@@ -13,37 +8,29 @@ import {
   Flex,
   Input,
   Pagination,
-  Popover,
   Row,
   Segmented,
   Space,
 } from "antd";
 import dayjs from "dayjs";
-import { FaRegStar, FaStar } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { sanitizeFormValue } from "react-form-sanitization";
+import { useDispatch } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import {
-  useDeleteTaskMutation,
   useEndTaskMutation,
   useGetOtherTaskListQuery,
-  useStartedTaskMutation,
   useStartTaskMutation,
 } from "../api/taskEndpoint";
-import { useEffect, useState } from "react";
-import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import { ITaskParams } from "../types/taskTypes";
-import { sanitizeFormValue } from "react-form-sanitization";
 import SingleTask from "./SingleTask";
-import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useDispatch } from "react-redux";
-import CountdownTask from "../components/CountdownTask";
-import UpdateTask from "../components/UpdateTask";
 
 const ListTaskOther = () => {
   const [othersValue, setOthersValue] = useState("others");
   const { data } = useGetTaskCategoryQuery();
   const dispatch = useDispatch();
   const listCategory = data?.data || [];
-  const [removeTask] = useDeleteTaskMutation();
-  const [starTask] = useStartedTaskMutation();
   const [startedTask] = useStartTaskMutation();
   const [endedTask] = useEndTaskMutation();
   const [listIds, setListIds] = useState([]);

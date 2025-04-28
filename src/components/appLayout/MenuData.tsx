@@ -15,6 +15,7 @@ import { IMenuData } from "../../../Types/MenuData";
 import { BsTicketDetailed } from "react-icons/bs";
 import { GrConfigure } from "react-icons/gr";
 import { PiTicket } from "react-icons/pi";
+import { IoTicketOutline } from "react-icons/io5";
 
 export const sideBarItems = (employee_id: string, roleId: number) => {
   let menuData: IMenuData[] = [
@@ -128,7 +129,7 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
                   </Link>
                 ),
                 key: "/settings/tickets-config",
-                icon: <GrConfigure size={16} />,
+                icon: <IoTicketOutline size={16} />,
               },
               {
                 label: (

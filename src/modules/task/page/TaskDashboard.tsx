@@ -1,110 +1,29 @@
+import { ClockCircleOutlined } from "@ant-design/icons";
+import { Badge, Button, Card, Col, List, Row, Typography } from "antd";
+import dayjs from "dayjs";
 import {
-  ClockCircleOutlined,
-  FileTextOutlined,
-  PlayCircleOutlined,
-} from "@ant-design/icons";
-import {
-  Tooltip as AntTooltip,
-  Badge,
-  Button,
-  CalendarProps,
-  Card,
-  Col,
-  Flex,
-  List,
-  Row,
-  Table,
-  Tag,
-  Timeline,
-  Typography,
-} from "antd";
-import dayjs, { Dayjs } from "dayjs";
-import {
-  ListChecks,
-  Clock,
-  XCircle,
-  CheckCircle,
-  Timer,
   AlertTriangle,
+  CheckCircle,
+  Clock,
+  ListChecks,
+  Timer,
+  XCircle,
 } from "lucide-react";
-
-import { BadgeProps } from "antd/lib";
 import Lottie from "lottie-react";
+import { useDispatch } from "react-redux";
 import Animation from "../../../../public/Animation - 1742751729342.json";
-import CompareBarChart from "../components/CompareBarChart";
-import TaskPercentagePie from "../components/TaskPercentagePie";
-import WorkingProgressPieChart from "../components/WorkingProgressPieChart";
+import { useGetMeQuery } from "../../../app/api/userApi";
+import { setCommonModal } from "../../../app/slice/modalSlice";
 import {
   useGetDashboardTaskDataCountQuery,
   useGetDashboardTodayTaskQuery,
 } from "../api/taskDashboardEndpoint";
-import { useGetMeQuery } from "../../../app/api/userApi";
+import CompareBarChart from "../components/CompareBarChart";
+import TaskPercentagePie from "../components/TaskPercentagePie";
+import WorkingProgressPieChart from "../components/WorkingProgressPieChart";
 import SingleTask from "./SingleTask";
-import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useDispatch } from "react-redux";
-const { Title, Text } = Typography;
-// Mock data for line chart
-const chartData = [
-  { name: "Jan", totalTasks: 400, completedTasks: 240 },
-  { name: "Feb", totalTasks: 580, completedTasks: 350 },
-  { name: "Mar", totalTasks: 700, completedTasks: 450 },
-  { name: "Apr", totalTasks: 890, completedTasks: 520 },
-  { name: "May", totalTasks: 1100, completedTasks: 700 },
-  { name: "Jun", totalTasks: 950, completedTasks: 760 },
-  { name: "Jul", totalTasks: 1200, completedTasks: 1000 },
-];
-const getListData = (value: Dayjs) => {
-  let listData: { type: string; content: string }[] = []; // Specify the type of listData
-  switch (value.date()) {
-    case 8:
-      listData = [
-        { type: "warning", content: "This is warning event." },
-        { type: "success", content: "This is usual event." },
-      ];
-      break;
-    case 10:
-      listData = [
-        { type: "warning", content: "This is warning event." },
-        { type: "success", content: "This is usual event." },
-        { type: "error", content: "This is error event." },
-      ];
-      break;
-    case 15:
-      listData = [
-        { type: "warning", content: "This is warning event" },
-        { type: "success", content: "This is very long usual event......" },
-        { type: "error", content: "This is error event 1." },
-        { type: "error", content: "This is error event 2." },
-        { type: "error", content: "This is error event 3." },
-        { type: "error", content: "This is error event 4." },
-      ];
-      break;
-    default:
-  }
-  return listData || [];
-};
-const dateCellRender = (value: Dayjs) => {
-  const listData = getListData(value);
-  return (
-    <ul className="events">
-      {listData.map((item) => (
-        <li key={item.content}>
-          <AntTooltip title="hello">
-            <Badge
-              status={item.type as BadgeProps["status"]}
-              text={item.content}
-            />
-          </AntTooltip>
-        </li>
-      ))}
-    </ul>
-  );
-};
+const { Text } = Typography;
 
-const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
-  if (info.type === "date") return dateCellRender(current);
-  return info.originNode;
-};
 interface TaskDashboardProps {
   setTaskStatus: (key: string) => void;
   setActiveKey: (key: string) => void;
