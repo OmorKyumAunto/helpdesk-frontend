@@ -1,4 +1,4 @@
-import { Button, Descriptions, Popconfirm, Tag } from "antd";
+import { Button, Card, Col, Popconfirm, Row, Tabs, Tag, Typography } from "antd";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,11 +7,20 @@ import { RootState } from "../../../app/store/store";
 import { useEmployeeAssignToAdminMutation } from "../api/employeeEndPoint";
 import { IEmployee } from "../types/employeeTypes";
 
+const { Title, Text } = Typography;
+
+const FieldItem = ({ label, value }: { label: string; value?: string | React.ReactNode }) => (
+  <div style={{ marginBottom: 12 }}>
+    <Text strong>{label}: </Text>
+    <Text>{value || "N/A"}</Text>
+  </div>
+);
+
 const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
-  // console.log(employee);
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const dispatch = useDispatch();
   const [assignToAdmin, { isSuccess }] = useEmployeeAssignToAdminMutation();
+
   const {
     id,
     employee_id,
@@ -22,153 +31,124 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
     contact_no,
     joining_date,
     unit_name,
+    location,
     status,
     licenses,
     role_id,
     blood_group,
     grade,
+    date_of_birth,
+    line_manager_name,
+    line_manager_id,
     line_of_business,
     business_type,
     pabx,
   } = employee || {};
+
   useEffect(() => {
     if (isSuccess) {
       dispatch(setCommonModal());
     }
   }, [isSuccess, dispatch]);
-  return (
-    <div>
-      <Descriptions
-        size="middle"
-        bordered
-        column={{ sm: 1, md: 2 }}
-        items={[
-          {
-            key: "2",
-            label: "Employee Name",
-            children: name,
-            span: 2,
-          },
-          {
-            key: "1",
-            label: "Employee id",
-            children: employee_id,
-            span: 2,
-          },
+
+  const items = [
+    {
+      key: "1",
+      label: "Basic Info",
+      children: (
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={12}>
+            <Card>
+              <FieldItem label="Employee Name" value={name} />
+              <FieldItem label="Employee ID" value={employee_id} />
+              <FieldItem label="Email" value={email} />
+              <FieldItem label="Contact No" value={contact_no} />
+              <FieldItem
+                label="Status"
+                value={status === 1 ? <Tag color="green">Active</Tag> : <Tag color="red">Inactive</Tag>}
+              />
+            </Card>
+          </Col>
+          <Col xs={24} md={12}>
+            <Card>
+              <FieldItem label="Blood Group" value={blood_group} />
+              <FieldItem label="Date of Birth" value={date_of_birth ? dayjs(date_of_birth).format("DD-MM-YYYY") : "N/A"} />
+              <FieldItem label="Grade" value={grade} />
+            </Card>
+          </Col>
+        </Row>
+      ),
+    },
+    {
+      key: "2",
+      label: "Work Info",
+      children: (
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={12}>
+            <Card>
+              <FieldItem label="Designation" value={designation} />
+              <FieldItem label="Department" value={department} />
+              <FieldItem label="Payroll Unit" value={unit_name} />
+              <FieldItem label="Location" value={location} />
+              <FieldItem label="Joining Date" value={joining_date ? dayjs(joining_date).format("DD-MM-YYYY") : "N/A"} />
+            </Card>
+          </Col>
+          <Col xs={24} md={12}>
+            <Card>
+              
+              <FieldItem label="Business Type" value={business_type} />
+              <FieldItem label="Line of Business" value={line_of_business} />
+              <FieldItem label="PABX" value={pabx} />
+              <FieldItem label="Line Manager" value={line_manager_name} />
+              <FieldItem label="Line Manager Emp. ID" value={line_manager_id} />
+            </Card>
+          </Col>
+        </Row>
+      ),
+    },
+    ...(roleId !== 3
+      ? [
           {
             key: "3",
-            label: "Designation",
-            children: designation,
-            span: 2,
+            label: "Licenses",
+            children: (
+              <Card>
+                <Text>
+                  {licenses?.length
+                    ? licenses.map((item) => item?.title).join(", ")
+                    : "No Licenses Assigned"}
+                </Text>
+              </Card>
+            ),
           },
+        ]
+      : []),
+    ...(role_id === 3 && roleId === 1
+      ? [
           {
             key: "4",
-            label: "Department",
-            children: department,
-            span: 2,
+            label: "Admin Control",
+            children: (
+              <Card>
+                <Popconfirm
+                  title="Assign to admin"
+                  description="Are you sure to assign this employee as an admin?"
+                  onConfirm={() => assignToAdmin(id)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button type="primary">Confirm Admin</Button>
+                </Popconfirm>
+              </Card>
+            ),
           },
-          {
-            key: "5",
-            label: "Email",
-            children: email,
-            span: 2,
-          },
-          {
-            key: "6",
-            label: "Contact No",
-            children: contact_no,
-            span: 2,
-          },
-          {
-            key: "11",
-            label: "Blood Group",
-            children: blood_group,
-            span: 2,
-          },
-          {
-            key: "7",
-            label: "Unit Name",
-            children: unit_name,
-            span: 2,
-          },
-          // {
-          //   key: "8",
-          //   label: "Joining Date",
-          //   children: joining_date
-          //     ? dayjs(joining_date).format("DD-MM-YYYY")
-          //     : "N/A",
-          // },
-          {
-            key: "12",
-            label: "Business Type",
-            children: business_type,
-            span: 2,
-          },
-          {
-            key: "13",
-            label: "Line of Business",
-            children: line_of_business,
-            span: 2,
-          },
-          {
-            key: "14",
-            label: "Grade",
-            children: grade,
-            span: 2,
-          },
-          {
-            key: "15",
-            label: "PABX",
-            children: pabx,
-            span: 2,
-          },
-          {
-            key: "9",
-            label: "Status",
-            children:
-              status === 1 ? (
-                <Tag color="success">Active</Tag>
-              ) : (
-                <Tag color="error">Inactive</Tag>
-              ),
-              span: 2,
-          },
-          ...(roleId !== 3
-            ? [
-                {
-                  key: "10",
-                  label: "Licenses",
-                  children: licenses?.map((item) => item?.title).join(", "),
-                  span: 2,
-                },
-              ]
-            : []),
-          ...(role_id === 3 && roleId === 1
-            ? [
-                {
-                  key: "11",
-                  label: "Make Admin",
-                  children: (
-                    <>
-                      <Popconfirm
-                        title="Assign to admin"
-                        description="Are you sure to assign this employee as an admin?"
-                        onConfirm={() => assignToAdmin(id)}
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <Button size="small" type="primary">
-                          Confirm Admin
-                        </Button>
-                      </Popconfirm>
-                    </>
-                  ),
-                  span: 4,
-                },
-              ]
-            : []),
-        ]}
-      />
+        ]
+      : []),
+  ];
+
+  return (
+    <div style={{ padding: 16 }}>
+      <Tabs defaultActiveKey="1" type="line" items={items} />
     </div>
   );
 };

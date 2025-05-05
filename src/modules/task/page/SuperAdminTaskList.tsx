@@ -229,6 +229,7 @@ const SuperAdminTaskList = ({ taskStatus }: { taskStatus: string }) => {
                           />
                         ),
                         title: "Task Details",
+                        width: "68%",
                         show: true,
                       })
                     );

@@ -18,6 +18,7 @@ import { GoTasklist } from "react-icons/go";
 import { PiTicket } from "react-icons/pi";
 import { IoTicketOutline } from "react-icons/io5";
 import { TbReport } from "react-icons/tb";
+import { MdOutlineSync } from "react-icons/md";
 
 export const sideBarItems = (employee_id: string, roleId: number) => {
   let menuData: IMenuData[] = [
@@ -143,7 +144,7 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
               {
                 label: <Link to="/settings/zing-hr-sync">ZingHR Sync</Link>,
                 key: "/settings/zing-hr-sync",
-                icon: <GoTasklist size={16} />,
+                icon: <MdOutlineSync size={16} />,
               },
             ],
           },

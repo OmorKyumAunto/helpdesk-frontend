@@ -1,10 +1,19 @@
-import { Descriptions, Divider, Tag, Timeline } from "antd";
+import { Card, Col, Row, Tabs, Tag, Typography, Timeline, Divider } from "antd";
 import dayjs from "dayjs";
 import { useGetSingleAssetsQuery } from "../api/assetsEndPoint";
 
+const { Text } = Typography;
+
+const FieldItem = ({ label, value }: { label: string; value?: string | React.ReactNode }) => (
+  <div style={{ marginBottom: 12 }}>
+    <Text strong>{label}: </Text>
+    <Text>{value || "N/A"}</Text>
+  </div>
+);
+
 const AssetDetails = ({ id }: { id: any }) => {
   const { data: singleAsset } = useGetSingleAssetsQuery(id);
-  console.log(singleAsset);
+
   const {
     category,
     purchase_date,
@@ -15,7 +24,6 @@ const AssetDetails = ({ id }: { id: any }) => {
     model,
     specification,
     remarks,
-    employee_id_no,
     name,
     history,
     price,
@@ -29,7 +37,7 @@ const AssetDetails = ({ id }: { id: any }) => {
       <p>
         <span>{item?.history}</span>
         <span className="ml-2">
-          ( Assign date :
+          (Assigned on:
           <span className="px-2 rounded font-bold">
             {dayjs(item?.asset_assign_date).format("DD-MM-YYYY")}
           </span>
@@ -40,116 +48,90 @@ const AssetDetails = ({ id }: { id: any }) => {
     color: item?.status === 1 ? "green" : "red",
   }));
 
-  return (
-    <div>
-      <Descriptions
-        size="middle"
-        bordered
-        column={{ sm: 1, md: 2 }}
-        items={[
-          {
-            key: "12",
-            label: "Name",
-            children: name,
-            span: 2,
-          },
-          {
-            key: "13",
-            label: "Asset No",
-            children: asset_no,
-            span: 2,
-          },
-          {
-            key: "2",
-            label: "Category",
-            children: category,
-            span: 2,
-          },
-          {
-            key: "1",
-            label: "Model",
-            children: model,
-            span: 2,
-          },
-          {
-            key: "3",
-            label: "Serial No",
-            children: serial_number,
-            span: 2,
-          },
-          {
-            key: "4",
-            label: "PO Number",
-            children: po_number,
-            span: 2,
-          },
-          {
-            key: "6",
-            label: "Remarks",
-            children:
-              remarks === "assigned" ? (
-                <Tag color="success">Assigned</Tag>
-              ) : (
-                <Tag color="processing">In Stock</Tag>
-              ),
-            span: 2,
-          },
-          {
-            key: "7",
-            label: "Buying Unit",
-            children: unit_name,
-            span: 2,
-          },
-          {
-            key: "12",
-            label: "Sub Unit",
-            children: location_name,
-            span: 2,
-          },
-          {
-            key: "9",
-            label: "Price",
-            children: price,
-            span: 2,
-          },
-          {
-            key: "8",
-            label: "Purchase Date",
-            children: dayjs(purchase_date).format("DD-MM-YYYY"),
-            span: 2,
-          },
-          {
-            key: "10",
-            label: "Remaining Warranty",
-            children: warranty,
-            span: 2,
-          },
-          {
-            key: "5",
-            label: "Specification",
-            children: specification,
-            span: 4,
-          },
-          {
-            key: "14",
-            label: "Device Remarks",
-            children: device_remarks,
-            span: 4,
-          },
-        ]}
-      />
-      {history?.length ? (
-        <>
-          <Divider
-            orientation="center"
-            style={{ fontWeight: "bold", fontSize: "16px" }}
-          >
-            Asset History
-          </Divider>
-          <Timeline items={assetHistory} />
-        </>
-      ) : null}
+  const items = [
+    {
+      key: "1",
+      label: "Asset Info",
+      children: (
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={10}>
+            <Card>
+              <FieldItem label="Asset No" value={asset_no} />
+              <FieldItem label="Category" value={category} />
+              <FieldItem label="Asset Name" value={name} />
+              <FieldItem label="Model" value={model} />
+              <FieldItem label="Serial No" value={serial_number} />
+              <FieldItem label="PO Number" value={po_number} />
 
+
+            </Card>
+          </Col>
+          <Col xs={24} md={14}>
+            <Card>
+
+              <FieldItem label="Buying Unit" value={unit_name} />
+              <FieldItem label="Location" value={location_name} />
+              <FieldItem label="Price" value={price} />
+              <FieldItem label="Purchase Date" value={purchase_date ? dayjs(purchase_date).format("DD-MM-YYYY") : "Not Updated"} />
+              <FieldItem label="Warranty" value={warranty} />
+              <FieldItem
+                label="Status"
+                value={remarks === "assigned" ? <Tag color="green">Assigned</Tag> : <Tag color="blue">In Stock</Tag>}
+              />
+            </Card>
+          </Col>
+        </Row>
+      ),
+    },
+    {
+      key: "2",
+      label: "Specifications",
+      children: (
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            <Card>
+              <FieldItem label="Specification" value={specification} />
+            </Card>
+          </Col>
+          <Col span={24}>
+            <Card>
+              <FieldItem label="Device Remarks" value={device_remarks} />
+            </Card>
+          </Col>
+        </Row>
+      ),
+    }
+    ,
+
+
+    ...(history?.length
+      ? [
+        {
+          key: "3",
+          label: "Asset History",
+          children: (
+            <Card>
+              <div style={{ marginBottom: 16 }}>
+                <Typography.Title level={5} style={{ margin: 0 }}>
+                  Purchase Date:{" "}
+                  <span style={{ fontWeight: "normal" }}>
+                    {purchase_date ? dayjs(purchase_date).format("DD-MM-YYYY") : "N/A"}
+                  </span>
+                </Typography.Title>
+              </div>
+              <Timeline items={assetHistory} />
+            </Card>
+          ),
+        },
+      ]
+      : []),
+
+
+  ];
+
+  return (
+    <div style={{ padding: 16 }}>
+      <Tabs defaultActiveKey="1" type="line" items={items} />
     </div>
   );
 };

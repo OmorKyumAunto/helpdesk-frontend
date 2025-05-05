@@ -87,6 +87,83 @@ const EmployeeList = () => {
                 placeholder="Search..."
               />
             </div>
+            <Select
+              style={{ width: "160px", marginBottom: 8 }}
+              onChange={(e) => setFilter({ ...filter, unit_name: e, offset: 0 })}
+              placeholder="Select Unit Name"
+            >
+              <Option value="">All</Option>
+              {[
+                'Sylhet EZ',
+                'Corporate Office',
+                'Jinnat Apparels Ltd',
+                'Jinnat Knitwears Ltd',
+                'Jinnat Fashions Ltd',
+                'Matin Spinning Mills PLC',
+                'Thanbee Print World Ltd',
+                'Hamza Textiles Ltd',
+                'Flamingo Fashions Ltd',
+                'DB Tex Ltd',
+                'Dulal Brothers Ltd',
+                'Color City Ltd',
+                'DBL Digital Ltd',
+                'Parkway Packaging and Printing Ltd',
+                'Mymun Textiles Ltd',
+                'DBL Pharmaceuticals Ltd',
+                'DBL Ceramics Ltd',
+                'DBL Telecom Ltd',
+                'DBL Distributions Ltd',
+                'DBL Lifestyles Ltd',
+                'Digital Corporate',
+                'ECO Thread Plant',
+                'DBL Dredging Ltd.',
+                'Farmgate Office',
+                'Mawna Fashions Ltd.',
+                'Ceramics Plant',
+                'DB TRIMS Ltd.',
+                'Jinnat Complex',
+                'Mymun Complex',
+                'Glory Textile and Apparels Limited',
+                'DBL Industrial Park Ltd',
+                'Knitting',
+                'Thanbee Complex',
+                'DBL Textile Recycling Ltd',
+                'Matin Complex',
+                'Jinnat Textile Mills Ltd',
+                'Textile Testing Services Ltd',
+                'Atelier Sourcing Ltd',
+                'Mawna Fashions Ltd',
+                'DBL Tours and Travels Limited',
+                'Chittagong C and F Office',
+                'Ceramics Field',
+                'Flamingo2',
+                'Dredging Office',
+                'JKL2',
+                'Pharma Field',
+                'Pharma Plant',
+                'Lifestyle Corporate',
+                'Pharma Corporate',
+                'ECO Thread Corporate',
+                'DBTrims Plant',
+                'Ceramics Corporate',
+                'PPPL Corporate',
+                'EUDB Accessories Limited',
+                'PPPL Plant',
+                'DBL Healthcare Ltd',
+                'EUDB',
+                'DBLCL',
+                'Jinnat Knitting Ltd',
+                'DBL Pharma',
+                'FFL2',
+                'eco Plant',
+                'MSML Complex',
+                'DTRL (Matin Complex)',
+              ].map((unit) => (
+                <Option key={unit} value={unit}>
+                  {unit}
+                </Option>
+              ))}
+            </Select>
             <Dropdown
               trigger={["hover"]}
               dropdownRender={() => (
@@ -102,7 +179,7 @@ const EmployeeList = () => {
 
 
                   <Select
-                    style={{ width: "160px" , marginBottom: 8}}
+                    style={{ width: "160px", marginBottom: 8 }}
                     onChange={(e) => setFilter({ ...filter, status: e, offset: 0 })}
                     placeholder="Select Status"
                   >
@@ -121,36 +198,10 @@ const EmployeeList = () => {
                     <Option value={"management"}>Management</Option>
                     <Option value={"non-management"}>Non Management</Option>
                   </Select>
+
+
                   <Select
-                    style={{ width: "160px" , marginBottom: 8}}
-                    onChange={(e) =>
-                      setFilter({ ...filter, unit_name: e, offset: 0 })
-                    }
-                    placeholder="Select Unit Name"
-                  >
-                    <Option value="">All</Option>
-                    <Option value="JKL2">JKL2</Option>
-                    <Option value="Jinnat Knitting Ltd">Jinnat Knitting Ltd</Option>
-                    <Option value="FFL2">FFL2</Option>
-                    <Option value="DBLCL">DBLCL</Option>
-                    <Option value="DHL">DHL</Option>
-                    <Option value="Mawna Fashions Ltd">Mawna Fashions Ltd</Option>
-                    <Option value="Sylhet EZ">Sylhet EZ</Option>
-                    <Option value="Jinnat Complex">Jinnat Complex</Option>
-                    <Option value="DBL Pharma">DBL Pharma</Option>
-                    <Option value="eco Plant">eco Plant</Option>
-                    <Option value="Corporate Office">Corporate Office</Option>
-                    <Option value="DBTrims Plant">DBTrims Plant</Option>
-                    <Option value="PPPL Plant">PPPL Plant</Option>
-                    <Option value="EUDB">EUDB</Option>
-                    <Option value="Laxfo Plant">Laxfo Plant</Option>
-                    <Option value="Laxfo Corporate">Laxfo Corporate</Option>
-                    <Option value="Thanbee Complex">Thanbee Complex</Option>
-                    <Option value="Matin Complex">Matin Complex</Option>
-                    <Option value="Mymun Complex">Mymun Complex</Option>
-                  </Select>
-                  <Select
-                    style={{ width: "160px" , marginBottom: 8}}
+                    style={{ width: "160px", marginBottom: 8 }}
                     onChange={(e) =>
                       setFilter({ ...filter, blood_group: e, offset: 0 })
                     }
@@ -329,7 +380,7 @@ const EmployeeList = () => {
                 current: Number(page),
                 showSizeChanger: true,
                 defaultPageSize: 50,
-                pageSizeOptions: ["50", "100", "200", "300", "500", "1000","3000"],
+                pageSizeOptions: ["50", "100", "200", "300", "500", "1000", "3000"],
                 total: data ? Number(data?.total) : 0,
                 showTotal: (total) => `Total ${total} `,
               }}

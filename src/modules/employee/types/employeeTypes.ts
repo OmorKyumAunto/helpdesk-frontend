@@ -19,6 +19,10 @@ export interface IEmployee {
   }[];
   blood_group: string;
   grade: string;
+  line_manager_name:string;
+  line_manager_id:string;
+  date_of_birth:string;
+  location:string;
   line_of_business: string;
   business_type: string;
   pabx: number;

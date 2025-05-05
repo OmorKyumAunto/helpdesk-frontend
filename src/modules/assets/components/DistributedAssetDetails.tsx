@@ -1,13 +1,21 @@
-import { Descriptions, Divider, Tag, Timeline, Typography } from "antd";
+import { Card, Col, Row, Tabs, Tag, Typography, Timeline, Divider, Spin, Alert } from "antd";
 import dayjs from "dayjs";
-import {
-  useGetSingleAssetsQuery,
-  useGetSingleDistributedAssetQuery,
-} from "../api/assetsEndPoint";
+import { useGetSingleDistributedAssetQuery } from "../api/assetsEndPoint";
+
+const { Text } = Typography;
+
+const FieldItem = ({ label, value }: { label: string; value?: string | React.ReactNode }) => (
+  <div style={{ marginBottom: 12 }}>
+    <Text strong>{label}: </Text>
+    <Text>{value || <Text type="secondary">N/A</Text>}</Text>
+  </div>
+);
 
 const DistributeAssetDetails = ({ id }: { id: any }) => {
-  const { data: singleAsset } = useGetSingleDistributedAssetQuery(id);
-  // console.log(singleAsset);
+  const { data: singleAsset, isLoading, error } = useGetSingleDistributedAssetQuery(id);
+
+  if (isLoading) return <Spin tip="Loading asset details..." />;
+  if (error) return <Alert message="Failed to load asset data." type="error" showIcon />;
 
   const {
     category,
@@ -20,141 +28,102 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
     specification,
     remarks,
     user_id_no,
-    // employee_name,
     asset_name,
     history,
     location_name,
     device_remarks,
   } = singleAsset?.data || {};
-  const assetHistory = history?.map((item: any) => {
-    return {
+
+  const assetHistory = history?.map((item: any) => ({
+    children: (
+      <p>
+        <span>{item?.history}</span>
+        <span className="ml-2">
+          (Assigned on:
+          <span className="px-2 rounded font-bold">
+            {item?.asset_assign_date ? dayjs(item?.asset_assign_date).format("DD-MM-YYYY") : "N/A"}
+          </span>
+          )
+        </span>
+      </p>
+    ),
+    color: item?.status === 1 ? "green" : "red",
+  }));
+
+  const items = [
+    {
+      key: "1",
+      label: "Distributed Asset Info",
       children: (
-        <p>
-          <span
-          // style={{
-          //   color: item?.status === 1 ? "green" : "red",
-          // }}
-          >
-            {item?.history}
-          </span>
-          <span className="ml-2">
-            ( Assign date :
-            <span className="px-2 rounded font-bold">
-              {dayjs(item?.asset_assign_date).format("DD-MM-YYYY") || "N/A"}
-            </span>
-            )
-          </span>
-        </p>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={10}>
+            <Card>
+              <FieldItem label="Asset No" value={asset_no} />
+              <FieldItem label="Category" value={category} />
+              <FieldItem label="Asset Name" value={asset_name} />
+              <FieldItem label="Model" value={model} />
+              <FieldItem label="Serial No" value={serial_number} />
+              <FieldItem label="PO Number" value={po_number} />
+            </Card>
+          </Col>
+          <Col xs={24} md={14}>
+            <Card>
+              <FieldItem label="Buying Unit" value={asset_unit_name} />
+              <FieldItem label="Location" value={location_name} />
+              <FieldItem label="Purchase Date" value={purchase_date ? dayjs(purchase_date).format("DD-MM-YYYY") : "N/A"} />
+              <FieldItem
+                label="Status"
+                value={remarks === "assigned" ? <Tag color="green">Assigned</Tag> : <Tag color="blue">In Stock</Tag>}
+              />
+            </Card>
+          </Col>
+        </Row>
       ),
-      color: item?.status === 1 ? "green" : "red",
-    };
-  });
-  return (
-    <div>
-      <Descriptions
-        size="middle"
-        bordered
-        column={{ sm: 1, md: 2 }}
-        items={[
-          {
-            key: "12",
-            label: "Name",
-            children: asset_name,
-            span:2,
-          },
-          {
-            key: "2",
-            label: "Category",
-            children: category,
-            span:2,
-          },
-          {
-            key: "1",
-            label: "Model",
-            children: model,
-            span:2,
-          },
+    },
+    {
+      key: "2",
+      label: "Specifications",
+      children: (
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            <Card>
+              <FieldItem label="Specification" value={specification} />
+            </Card>
+          </Col>
+          <Col span={24}>
+            <Card>
+              <FieldItem label="Device Remarks" value={device_remarks} />
+            </Card>
+          </Col>
+        </Row>
+      ),
+    },
+    ...(history?.length
+      ? [
           {
             key: "3",
-            label: "Serial No",
-            children: serial_number,
-            span:2,
+            label: "Asset History",
+            children: (
+              <Card>
+                <div style={{ marginBottom: 16 }}>
+                  <Typography.Title level={5} style={{ margin: 0 }}>
+                    Purchase Date:{" "}
+                    <span style={{ fontWeight: "normal" }}>
+                      {purchase_date ? dayjs(purchase_date).format("DD-MM-YYYY") : "N/A"}
+                    </span>
+                  </Typography.Title>
+                </div>
+                <Timeline items={assetHistory} />
+              </Card>
+            ),
           },
-          {
-            key: "4",
-            label: "PO Number",
-            children: po_number,
-            span:2,
-          },
-          {
-            key: "13",
-            label: "Asset No",
-            children: asset_no,
-            span:2,
-          },
-          
-          {
-            key: "6",
-            label: "Remarks",
-            children:
-              remarks === "assigned" ? (
-                <Tag color="success">Assigned</Tag>
-              ) : (
-                <Tag color="processing">In Stock</Tag>
-              ),
-              span:2,
-          },
-          {
-            key: "7",
-            label: "Buying Unit",
-            children: asset_unit_name,
-            span:2,
-          },
-          {
-            key: "8",
-            label: "Location",
-            children: location_name,
-            span:2,
-          },
-          {
-            key: "9",
-            label: "Purchase Date",
-            children: dayjs(purchase_date).format("DD-MM-YYYY"),
-            span:2,
-          },
-          {
-            key: "5",
-            label: "Specification",
-            children: specification,
-            span: 4,
-          },
-          {
-            key: "14",
-            label: "Device Remarks",
-            children: device_remarks,
-            span: 4,
-          },
-        ]}
-      />
-      {purchase_date && user_id_no && (
-        <>
-          <Divider
-            orientation="center"
-            style={{ fontWeight: "bold", fontSize: "16px" }}
-          >
-            {" "}
-            Asset History
-          </Divider>
-          {/* <Typography.Text style={{ fontWeight: 500, fontSize: "15px" }}>
-            1. In Stock since {dayjs(purchase_date).format("DD-MM-YYYY")}
-          </Typography.Text>{" "}
-          <br />
-          <Typography.Text style={{ fontWeight: 500, fontSize: "15px" }}>
-            2. Reserved for Employee ID : {employee_id_no} ({employee_name})
-          </Typography.Text> */}
-          <Timeline items={assetHistory?.length ? assetHistory : []} />
-        </>
-      )}
+        ]
+      : []),
+  ];
+
+  return (
+    <div style={{ padding: 16 }}>
+      <Tabs defaultActiveKey="1" type="line" items={items} />
     </div>
   );
 };

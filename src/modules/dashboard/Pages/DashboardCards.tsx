@@ -560,12 +560,12 @@ const DashboardCards = () => {
                             <strong>Department:</strong> {department}
                           </p>
                         </div>
-                        {/* <div style={{ marginBottom: "12px" }}>
+                        <div style={{ marginBottom: "12px" }}>
                           <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
                             <strong>Joining Date:</strong>{" "}
                             {dayjs(joining_date).format("DD-MM-YYYY")}
                           </p>
-                        </div> */}
+                        </div>
                       </div>
                     </Col>
 

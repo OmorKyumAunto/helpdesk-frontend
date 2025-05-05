@@ -71,28 +71,81 @@ const CTCList = () => {
             <Select
               allowClear
               style={{ width: "160px" }}
-              onChange={(e) =>
-                setFilter({ ...filter, unit_name: e, offset: 0 })
-              }
+              onChange={(e) => setFilter({ ...filter, unit_name: e, offset: 0 })}
               placeholder="Select Unit Name"
             >
-              <Option value="Sylhet EZ">Sylhet EZ</Option>
-              <Option value="Corporate Office">Corporate Office</Option>
-              <Option value="DBTrims">DBTrims</Option>
-              <Option value="Jinnat Complex">Jinnat Complex</Option>
-              <Option value="DBLCL">DBLCL</Option>
-              <Option value="FFL2">FFL2</Option>
-              <Option value="MSML Complex">MSML Complex</Option>
-              <Option value="DBL Pharma">DBL Pharma</Option>
-              <Option value="Mymun Complex">Mymun Complex</Option>
-              <Option value="PPPL Plant">PPPL Plant</Option>
-              <Option value="Matin Complex">Matin Complex</Option>
-              <Option value="Jinnat Knitting Ltd">Jinnat Knitting Ltd</Option>
-              <Option value="EUDB">EUDB</Option>
-              <Option value="Mawna Fashions Ltd">Mawna Fashions Ltd</Option>
-              <Option value="Thanbee Complex">Thanbee Complex</Option>
-              <Option value="Flamingo2">Flamingo2</Option>
+              {[
+                'Sylhet EZ',
+                'Corporate Office',
+                'Jinnat Apparels Ltd',
+                'Jinnat Knitwears Ltd',
+                'Jinnat Fashions Ltd',
+                'Matin Spinning Mills PLC',
+                'Thanbee Print World Ltd',
+                'Hamza Textiles Ltd',
+                'Flamingo Fashions Ltd',
+                'DB Tex Ltd',
+                'Dulal Brothers Ltd',
+                'Color City Ltd',
+                'DBL Digital Ltd',
+                'Parkway Packaging and Printing Ltd',
+                'Mymun Textiles Ltd',
+                'DBL Pharmaceuticals Ltd',
+                'DBL Ceramics Ltd',
+                'DBL Telecom Ltd',
+                'DBL Distributions Ltd',
+                'DBL Lifestyles Ltd',
+                'Digital Corporate',
+                'ECO Thread Plant',
+                'DBL Dredging Ltd.',
+                'Farmgate Office',
+                'Mawna Fashions Ltd.',
+                'Ceramics Plant',
+                'DB TRIMS Ltd.',
+                'Jinnat Complex',
+                'Mymun Complex',
+                'Glory Textile and Apparels Limited',
+                'DBL Industrial Park Ltd',
+                'Knitting',
+                'Thanbee Complex',
+                'DBL Textile Recycling Ltd',
+                'Matin Complex',
+                'Jinnat Textile Mills Ltd',
+                'Textile Testing Services Ltd',
+                'Atelier Sourcing Ltd',
+                'Mawna Fashions Ltd',
+                'DBL Tours and Travels Limited',
+                'Chittagong C and F Office',
+                'Ceramics Field',
+                'Flamingo2',
+                'Dredging Office',
+                'JKL2',
+                'Pharma Field',
+                'Pharma Plant',
+                'Lifestyle Corporate',
+                'Pharma Corporate',
+                'ECO Thread Corporate',
+                'DBTrims Plant',
+                'Ceramics Corporate',
+                'PPPL Corporate',
+                'EUDB Accessories Limited',
+                'PPPL Plant',
+                'DBL Healthcare Ltd',
+                'EUDB',
+                'DBLCL',
+                'Jinnat Knitting Ltd',
+                'DBL Pharma',
+                'FFL2',
+                'eco Plant',
+                'MSML Complex',
+                'DTRL (Matin Complex)',
+              ].map((unit) => (
+                <Option key={unit} value={unit}>
+                  {unit}
+                </Option>
+              ))}
             </Select>
+
             <Space>
               <ExcelDownload
                 excelName={"ctc_list"}
@@ -113,53 +166,53 @@ const CTCList = () => {
                 excelData={
                   data?.data?.length
                     ? data?.data?.map(
-                        ({
-                          employee_id,
-                          name,
-                          department,
-                          designation,
-                          assets = [],
-                          unit_name,
-                          total_asset_price,
-                          monthly_asset_cost,
-                          licenses = [],
-                          montly_licenses_price,
-                          total_ctc_per_month,
-                          total_ctc_per_year,
-                        }) => {
-                          const assetItemCount = assets.reduce<Record<string, number>>((acc, item) => {
-                            const category = item?.category;
-                            if (category) {
-                              acc[category] = (acc[category] || 0) + 1;
-                            }
-                            return acc;
-                          }, {});
-                
-                          const assetString = Object.entries(assetItemCount)
-                            .map(([category, count]) => `${count}x ${category}`)
-                            .join(", ");
-                
-                          const licenseString = licenses.map((item) => item?.title).join(", ");
-                
-                          return {
-                            "Employee ID": employee_id,
-                            "Employee Name": name,
-                            Department: department,
-                            Designation: designation,
-                            Assets: assetString,
-                            "Unit Name": unit_name,
-                            "Total Asset Cost": total_asset_price,
-                            "Monthly Asset Cost": monthly_asset_cost,
-                            Licenses: licenseString,
-                            "Monthly Licenses Cost": montly_licenses_price,
-                            "Total CTC Per Month": total_ctc_per_month,
-                            "Total CTC Per Year": total_ctc_per_year,
-                          };
-                        }
-                      )
+                      ({
+                        employee_id,
+                        name,
+                        department,
+                        designation,
+                        assets = [],
+                        unit_name,
+                        total_asset_price,
+                        monthly_asset_cost,
+                        licenses = [],
+                        montly_licenses_price,
+                        total_ctc_per_month,
+                        total_ctc_per_year,
+                      }) => {
+                        const assetItemCount = assets.reduce<Record<string, number>>((acc, item) => {
+                          const category = item?.category;
+                          if (category) {
+                            acc[category] = (acc[category] || 0) + 1;
+                          }
+                          return acc;
+                        }, {});
+
+                        const assetString = Object.entries(assetItemCount)
+                          .map(([category, count]) => `${count}x ${category}`)
+                          .join(", ");
+
+                        const licenseString = licenses.map((item) => item?.title).join(", ");
+
+                        return {
+                          "Employee ID": employee_id,
+                          "Employee Name": name,
+                          Department: department,
+                          Designation: designation,
+                          Assets: assetString,
+                          "Unit Name": unit_name,
+                          "Total Asset Cost": total_asset_price,
+                          "Monthly Asset Cost": monthly_asset_cost,
+                          Licenses: licenseString,
+                          "Monthly Licenses Cost": montly_licenses_price,
+                          "Total CTC Per Month": total_ctc_per_month,
+                          "Total CTC Per Year": total_ctc_per_year,
+                        };
+                      }
+                    )
                     : []
                 }
-                
+
               />
 
             </Space>

@@ -193,6 +193,7 @@ const TaskManager = ({
                       setCommonModal({
                         content: <SingleTask id={item.id} />,
                         title: "Task Details",
+                        width: "68%",
                         show: true,
                       })
                     );

@@ -205,33 +205,85 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item
-                    label="Unit Name"
+                    label="Payroll Unit"
                     name="unit_name"
                     rules={[{ required: true, message: "Please Select Unit" }]}
                   >
                     <Select placeholder="Select Unit Name">
-                    <Option value="JKL2">JKL2</Option>
-                    <Option value="Jinnat Knitting Ltd">Jinnat Knitting Ltd</Option>
-                    <Option value="FFL2">FFL2</Option>
-                    <Option value="DBLCL">DBLCL</Option>
-                    <Option value="DHL">DHL</Option>
-                    <Option value="Mawna Fashions Ltd">Mawna Fashions Ltd</Option>
-                    <Option value="Sylhet EZ">Sylhet EZ</Option>
-                    <Option value="Jinnat Complex">Jinnat Complex</Option>
-                    <Option value="DBL Pharma">DBL Pharma</Option>
-                    <Option value="eco Plant">eco Plant</Option>
-                    <Option value="Corporate Office">Corporate Office</Option>
-                    <Option value="DBTrims Plant">DBTrims Plant</Option>
-                    <Option value="PPPL Plant">PPPL Plant</Option>
-                    <Option value="EUDB">EUDB</Option>
-                    <Option value="Laxfo Plant">Laxfo Plant</Option>
-                    <Option value="Laxfo Corporate">Laxfo Corporate</Option>
-                    <Option value="Thanbee Complex">Thanbee Complex</Option>
-                    <Option value="Matin Complex">Matin Complex</Option>
-                    <Option value="Mymun Complex">Mymun Complex</Option>
+                      {[
+                        'Sylhet EZ',
+                        'Corporate Office',
+                        'Jinnat Apparels Ltd',
+                        'Jinnat Knitwears Ltd',
+                        'Jinnat Fashions Ltd',
+                        'Matin Spinning Mills PLC',
+                        'Thanbee Print World Ltd',
+                        'Hamza Textiles Ltd',
+                        'Flamingo Fashions Ltd',
+                        'DB Tex Ltd',
+                        'Dulal Brothers Ltd',
+                        'Color City Ltd',
+                        'DBL Digital Ltd',
+                        'Parkway Packaging and Printing Ltd',
+                        'Mymun Textiles Ltd',
+                        'DBL Pharmaceuticals Ltd',
+                        'DBL Ceramics Ltd',
+                        'DBL Telecom Ltd',
+                        'DBL Distributions Ltd',
+                        'DBL Lifestyles Ltd',
+                        'Digital Corporate',
+                        'ECO Thread Plant',
+                        'DBL Dredging Ltd.',
+                        'Farmgate Office',
+                        'Mawna Fashions Ltd.',
+                        'Ceramics Plant',
+                        'DB TRIMS Ltd.',
+                        'Jinnat Complex',
+                        'Mymun Complex',
+                        'Glory Textile and Apparels Limited',
+                        'DBL Industrial Park Ltd',
+                        'Knitting',
+                        'Thanbee Complex',
+                        'DBL Textile Recycling Ltd',
+                        'Matin Complex',
+                        'Jinnat Textile Mills Ltd',
+                        'Textile Testing Services Ltd',
+                        'Atelier Sourcing Ltd',
+                        'Mawna Fashions Ltd',
+                        'DBL Tours and Travels Limited',
+                        'Chittagong C and F Office',
+                        'Ceramics Field',
+                        'Flamingo2',
+                        'Dredging Office',
+                        'JKL2',
+                        'Pharma Field',
+                        'Pharma Plant',
+                        'Lifestyle Corporate',
+                        'Pharma Corporate',
+                        'ECO Thread Corporate',
+                        'DBTrims Plant',
+                        'Ceramics Corporate',
+                        'PPPL Corporate',
+                        'EUDB Accessories Limited',
+                        'PPPL Plant',
+                        'DBL Healthcare Ltd',
+                        'EUDB',
+                        'DBLCL',
+                        'Jinnat Knitting Ltd',
+                        'DBL Pharma',
+                        'FFL2',
+                        'eco Plant',
+                        'MSML Complex',
+                        'DTRL (Matin Complex)',
+                      ].map((unit) => (
+                        <Option key={unit} value={unit}>
+                          {unit}
+                        </Option>
+                      ))}
                     </Select>
                   </Form.Item>
                 </Col>
+
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item
                     label="Business Type"
@@ -263,9 +315,9 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                   <Form.Item
                     label="Blood Group"
                     name="blood_group"
-                    // rules={[
-                    //   { required: true, message: "Please select blood group" },
-                    // ]}
+                  // rules={[
+                  //   { required: true, message: "Please select blood group" },
+                  // ]}
                   >
                     <Select showSearch placeholder="Select Blood Group">
                       <Option value="A+">A+</Option>
@@ -288,9 +340,9 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                   <Form.Item
                     label="Licenses"
                     name="licenses"
-                    // rules={[
-                    //   { required: true, message: "Please Select License Type" },
-                    // ]}
+                  // rules={[
+                  //   { required: true, message: "Please Select License Type" },
+                  // ]}
                   >
                     <Select
                       mode="multiple"

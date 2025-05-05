@@ -72,7 +72,7 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
     //   render: (joining_date) => dayjs(joining_date).format("DD-MM-YYYY"),
     // },
     {
-      title: "Location",
+      title: "Payroll Unit",
       dataIndex: "unit_name",
       key: "unit_name",
     },
