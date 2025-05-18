@@ -222,8 +222,8 @@ const AssetReport = () => {
                   "Start Date": data?.query_data?.start_date
                     ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
                     : "ALL",
-                  "End Date": data?.query_data?.start_date
-                    ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
+                  "End Date": data?.query_data?.end_date
+                    ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
                     : "ALL",
                   Category: data?.query_data?.category || "ALL",
                   Remarks: data?.query_data?.remarks || "ALL",
