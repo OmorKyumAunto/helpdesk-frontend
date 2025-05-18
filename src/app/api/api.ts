@@ -83,6 +83,7 @@ export const api = createApi({
     "Task",
     "Task-Category",
     "Emp-Database",
+    "Asset-Report",
   ],
 });
 

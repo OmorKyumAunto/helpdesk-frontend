@@ -66,6 +66,11 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
           },
         ]
       : []),
+      {
+        label: <Link to="/reports">Reports</Link>,
+        key: "/reports",
+        icon: <TbReport size={20} />,
+      },
     ...(roleId === 1
       ? [
           {
@@ -150,11 +155,7 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
           },
         ]
       : []),
-    // {
-    //   label: <Link to="/reports">Reports</Link>,
-    //   key: "/reports",
-    //   icon: <TbReport size={20} />,
-    // },
+    
     {
       label: <Link to="/about">About</Link>,
       key: "/about",
