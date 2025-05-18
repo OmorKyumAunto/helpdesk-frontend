@@ -20,7 +20,6 @@ const TicketMain: React.FC = () => {
   const [ticketValue, setTicketValue] = useState("");
   const [ticketPriorityValue, setTicketPriorityValue] = useState("");
   const [ticketSolver, setTicketSolver] = useState("");
-  console.log({ ticketValue });
   const onChange = (key: string) => {
     setActiveKey(key);
     if (key !== "2" && key !== "5") {
@@ -67,17 +66,17 @@ const TicketMain: React.FC = () => {
               />
             ),
           },
-          {
-            key: "3",
-            label: (
-              <span style={{ fontSize: "16px", fontWeight: "600" }}>
-                Reports
-              </span>
-            ),
-            children: (
-              <TicketReport key={activeKey} ticketSolver={ticketSolver} />
-            ),
-          },
+          // {
+          //   key: "3",
+          //   label: (
+          //     <span style={{ fontSize: "16px", fontWeight: "600" }}>
+          //       Reports
+          //     </span>
+          //   ),
+          //   children: (
+          //     <TicketReport key={activeKey} ticketSolver={ticketSolver} />
+          //   ),
+          // },
         ]
       : []),
     ...(roleID === 2

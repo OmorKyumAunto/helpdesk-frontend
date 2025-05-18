@@ -1,47 +1,45 @@
-// types/reportTypes.ts
-export interface IAssetReport {
+export interface IReportParams {
+  unit?: number;
+  title?: string;
+  unit_name?: string;
+  start_date?: string;
+  end_date?: string;
+  category?: string;
+  remarks?: string;
+}
+
+export interface IAssetReportList {
   id: number;
   name: string;
   category: string;
   purchase_date: string;
   serial_number: string;
-  po_number: string | null;
+  po_number: string;
   price: number;
-  unit_id: number;  // Change this from string to number
+  unit_id: number;
   unit_name: string;
   model: string;
   specification: string;
-  asset_no: string | null;
+  asset_no: string;
   remarks: string;
   location_id: number;
-  title:string;
+  title: string;
   location_name: string;
-}
-
-export interface IAssetReportParams {
-  unit?: number;
-  title?:string;
-  unit_name?: string;
-  start_date?: string | null;
-  end_date?: string | null;
-  category?: string | string[];  // Allow both single and multiple values
-  remarks?: string | null;
-  [key: string]: any;
 }
 
 export interface IAssetReportQueryData {
   unit: number;
-  title:string;
-  start_date: string | null;
-  end_date: string | null;
+  title: string;
+  start_date: string;
+  end_date: string;
   category: string;
-  remarks: string | null;
+  remarks: string;
   unit_name: string;
   total_count: number;
 }
 
 export interface IAssetReportResponse {
-  data: IAssetReport[];
+  data: IAssetReportList[];
   query_data: IAssetReportQueryData;
   count: number;
   message: string;
@@ -49,12 +47,11 @@ export interface IAssetReportResponse {
   success: boolean;
 }
 
-// ✅ New type for active unit list
 export interface IUnit {
   id: number;
   unit_id: number;
   unit_name: string;
-  title:string;
+  title: string;
   location: string;
   status: number;
   created_by: number;

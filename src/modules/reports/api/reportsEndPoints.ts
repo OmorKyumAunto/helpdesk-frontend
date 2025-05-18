@@ -1,11 +1,14 @@
 // features/reports/api/reportsEndPoints.ts
 import { api } from "../../../app/api/api";
-import { IAssetReport, IAssetReportParams, IAssetReportResponse, IUnit } from "../types/reportTypes";
+import {
+  IReportParams,
+  IAssetReportResponse,
+  IUnit,
+} from "../types/reportTypes";
 
 export const reportsEndPoints = api.injectEndpoints({
   endpoints: (build) => ({
-    // Get Asset Report with Filters
-    getAssetReport: build.query<IAssetReportResponse, IAssetReportParams>({
+    getAssetReport: build.query<IAssetReportResponse, IReportParams>({
       query: (params) => ({
         url: "/report/asset-report",
         params,
@@ -13,7 +16,6 @@ export const reportsEndPoints = api.injectEndpoints({
       providesTags: () => ["Asset-Report"],
     }),
 
-    // ✅ Get Active Unit List
     getActiveUnits: build.query<IUnit[], void>({
       query: () => "/asset-unit/active-list",
       transformResponse: (response: { data: IUnit[] }) => response.data,
@@ -21,4 +23,5 @@ export const reportsEndPoints = api.injectEndpoints({
   }),
 });
 
-export const { useGetAssetReportQuery, useGetActiveUnitsQuery } = reportsEndPoints;
+export const { useGetAssetReportQuery, useGetActiveUnitsQuery } =
+  reportsEndPoints;

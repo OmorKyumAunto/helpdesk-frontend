@@ -1,22 +1,20 @@
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Card, DatePicker, Dropdown, Input, Space, Select } from "antd";
+import { Button, Card, DatePicker, Dropdown, Input, Select, Space } from "antd";
 import { Table } from "antd/lib";
-import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useGetMeQuery } from "../../../app/api/userApi";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { generatePagination } from "../../../common/TablePagination copy";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
-import { useGetMeQuery } from "../../../app/api/userApi";
-import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
-import { useGetTicketReportQuery } from "../api/ticketEndpoint";
-import { TicketReportColumn } from "../utils/TicketReportColumns";
-import { useGetAssignCategoryListQuery } from "../../assignCategory/api/assignCategoryEndPoint";
-import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
+
 import { rangePreset } from "../../../common/rangePreset";
+import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
+import { useGetAssetReportQuery } from "../api/reportsEndPoints";
+import { AssetReportTableColumn } from "../utils/AssetReportTableColumn";
 const { Option } = Select;
 
-const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
+const TaskReport = () => {
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 50,
@@ -51,16 +49,16 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
       ...prevFilter,
       limit: Number(pageSize),
       offset: skipValue,
-      key: ticketSolver || prevFilter?.key,
+      key: prevFilter?.key,
     }));
-  }, [page, pageSize, skipValue, ticketSolver]);
-  const { data, isLoading, isFetching } = useGetTicketReportQuery({
+  }, [page, pageSize, skipValue]);
+  const { data, isLoading, isFetching } = useGetAssetReportQuery({
     ...filter,
   });
   return (
     <div>
       <Card
-        title="Ticket Report"
+        title="Task Report"
         style={{
           boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
           marginBottom: "1rem",
@@ -90,7 +88,6 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
           <div style={{ width: "160px" }}>
             <Input
               prefix={<SearchOutlined />}
-              defaultValue={ticketSolver}
               onChange={(e) =>
                 setFilter({ ...filter, key: e.target.value, offset: 0 })
               }
@@ -169,7 +166,7 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
             <Button icon={<FilterOutlined />}>Filters</Button>
           </Dropdown>
           <Space>
-            <ExcelDownload
+            {/* <ExcelDownload
               excelName={"Ticket Report"}
               excelTableHead={[
                 "Ticket ID",
@@ -249,7 +246,7 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
                     )
                   : []
               }
-            />
+            /> */}
           </Space>
         </div>
         <div>
@@ -259,11 +256,11 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
             bordered
             loading={isLoading || isFetching}
             dataSource={data?.data?.length ? data.data : []}
-            columns={TicketReportColumn()}
+            columns={AssetReportTableColumn()}
             scroll={{ x: true }}
             pagination={{
               ...generatePagination(
-                Number(data?.total),
+                Number(data?.count),
                 setPagination,
                 pagination
               ),
@@ -271,7 +268,7 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
               showSizeChanger: true,
               defaultPageSize: 50,
               pageSizeOptions: ["50", "100", "200", "300", "500", "1000"],
-              total: data ? Number(data?.total) : 0,
+              total: data ? Number(data?.count) : 0,
               showTotal: (total) => `Total ${total} `,
             }}
             onChange={(pagination) => {
@@ -293,4 +290,4 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
   );
 };
 
-export default TicketReport;
+export default TaskReport;
