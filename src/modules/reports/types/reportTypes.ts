@@ -1,11 +1,15 @@
 export interface IReportParams {
   unit?: number;
   title?: string;
+  key?: string;
   unit_name?: string;
   start_date?: string;
   end_date?: string;
   category?: string;
   remarks?: string;
+  user_id?: number;
+  unit_id?: number;
+  task_status?: string;
 }
 
 export interface IAssetReportList {
@@ -57,4 +61,51 @@ export interface IUnit {
   created_by: number;
   created_at: string;
   updated_at: string;
+}
+export interface ITaskReportList {
+  id: number;
+  task_categories_id: number;
+  category_title: string;
+  set_time: number;
+  total_set_time: number;
+  format: string;
+  description: string;
+  start_date: string;
+  start_time: string;
+  task_code: string;
+  task_status: string;
+  starred: number;
+  task_start_date: string;
+  task_end_date: string;
+  task_start_time: string;
+  task_end_time: string;
+  quantity: number;
+  user_id: number;
+  user_name: string;
+  user_employee_id: string;
+  created_at: string;
+  overdue: number;
+}
+export interface ITaskReportQueryData {
+  key: string;
+  start_date: string;
+  end_date: string;
+  user_id: number;
+  task_status: string;
+  unit_id: number;
+  overdue: string;
+  report_generate_employee_name: string;
+  report_generate_employee_id: string;
+  report_generate_department: string;
+  report_generate_designation: string;
+  category_name: string[];
+  total_count: number;
+}
+export interface ITaskReportResponse {
+  data: ITaskReportList[];
+  query_data: ITaskReportQueryData;
+  count: number;
+  message: string;
+  status: number;
+  success: boolean;
 }

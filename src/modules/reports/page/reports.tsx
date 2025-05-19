@@ -1,52 +1,91 @@
-import React, { useState } from "react";
-import { Card, Tabs } from "antd";
-import type { TabsProps } from "antd";
-import TicketReport from "../../ticket/page/TicketReport";
-import AssetReport from "../components/AssetReport";
-import TaskReport from "../components/TaskReport";
-import TicketAndTaskCombineReport from "../components/TicketAndTaskCombineReport";
+import { Card, Col, Row } from "antd";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import AssetReportModal from "../components/AssetReportModal";
+import DisbursementReportModal from "../components/DisbursementReportModal";
+import TaskReportModal from "../components/TaskReportModal";
+import TicketReportModal from "../components/TicketReportModal";
 
 const ReportsPage: React.FC = () => {
-  const items: TabsProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <span style={{ fontSize: "16px", fontWeight: "600" }}>
-          Asset Report
-        </span>
-      ),
-      children: <AssetReport />,
-    },
-    {
-      key: "2",
-      label: (
-        <span style={{ fontSize: "16px", fontWeight: "600" }}>Task Report</span>
-      ),
-      children: <TaskReport />,
-    },
-    {
-      key: "3",
-      label: (
-        <span style={{ fontSize: "16px", fontWeight: "600" }}>
-          Ticket Report
-        </span>
-      ),
-      children: <TicketReport />,
-    },
-    {
-      key: "4",
-      label: (
-        <span style={{ fontSize: "16px", fontWeight: "600" }}>
-          Ticket & Task Combine Report
-        </span>
-      ),
-      children: <TicketAndTaskCombineReport />,
-    },
-  ];
+  const dispatch = useDispatch();
 
   return (
     <Card>
-      <Tabs items={items} />
+      <Row gutter={[12, 12]}>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <Card
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              dispatch(
+                setCommonModal({
+                  title: "Asset Report Query",
+                  content: <AssetReportModal />,
+                  show: true,
+                  width: 500,
+                })
+              );
+            }}
+            title="Asset Report"
+          >
+            This is asset report
+          </Card>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <Card
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              dispatch(
+                setCommonModal({
+                  title: "Disbursement Report Query",
+                  content: <DisbursementReportModal />,
+                  show: true,
+                  width: 500,
+                })
+              );
+            }}
+            title="Disbursement Report"
+          >
+            This is asset report
+          </Card>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <Card
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              dispatch(
+                setCommonModal({
+                  title: "Ticket Report Query",
+                  content: <TicketReportModal />,
+                  show: true,
+                  width: 500,
+                })
+              );
+            }}
+            title="Ticket Report"
+          >
+            This is ticket report
+          </Card>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <Card
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              dispatch(
+                setCommonModal({
+                  title: "Task Report Query",
+                  content: <TaskReportModal />,
+                  show: true,
+                  width: 500,
+                })
+              );
+            }}
+            title="Task Report"
+          >
+            This is task report
+          </Card>
+        </Col>
+      </Row>
     </Card>
   );
 };

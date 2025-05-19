@@ -7,9 +7,7 @@ import { useGetMeQuery } from "../../../app/api/userApi";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { generatePagination } from "../../../common/TablePagination copy";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
-
 import { rangePreset } from "../../../common/rangePreset";
-import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
 import { useGetAssetReportQuery } from "../api/reportsEndPoints";
 import { AssetReportTableColumn } from "../utils/AssetReportTableColumn";
 import dayjs from "dayjs";
@@ -30,8 +28,6 @@ const AssetReport = () => {
   const pageSize = searchParams.get("pageSize") || "50";
   const skipValue = (Number(page) - 1) * Number(pageSize);
   const { data: profile } = useGetMeQuery();
-  const { data: categoryData, isLoading: categoryLoading } =
-    useGetCategoryListQuery({ status: "active" });
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });

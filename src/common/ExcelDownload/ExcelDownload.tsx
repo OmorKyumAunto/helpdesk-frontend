@@ -8,12 +8,16 @@ interface Props {
   excelName: string;
   excelTableHead: string[]; // Ensure headers are strings for clarity.
   excelData: any[];
+  isLoading?: boolean;
+  width?: string;
 }
 
 const ExcelDownload: React.FC<Props> = ({
   excelName,
   excelTableHead,
   excelData,
+  isLoading,
+  width = "auto",
 }) => {
   const date_time = moment().format("DD-MM-YYYY");
 
@@ -37,7 +41,11 @@ const ExcelDownload: React.FC<Props> = ({
           pattern: "solid",
           fgColor: { argb: "1775BB" }, // Blue background
         };
-        cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+        cell.alignment = {
+          horizontal: "center",
+          vertical: "middle",
+          wrapText: true,
+        };
         cell.border = {
           top: { style: "thin" },
           left: { style: "thin" },
@@ -50,7 +58,9 @@ const ExcelDownload: React.FC<Props> = ({
       worksheet.columns = excelTableHead.map((header) => {
         const maxDataLength = Math.max(
           header.length,
-          ...excelData.map((row) => (row[header] ? row[header].toString().length : 0))
+          ...excelData.map((row) =>
+            row[header] ? row[header].toString().length : 0
+          )
         );
         return {
           header,
@@ -64,7 +74,11 @@ const ExcelDownload: React.FC<Props> = ({
         const values = excelTableHead.map((header) => rowData[header] || "");
         const row = worksheet.addRow(values);
         row.eachCell((cell) => {
-          cell.alignment = { vertical: "middle", horizontal: "left", wrapText: true };
+          cell.alignment = {
+            vertical: "middle",
+            horizontal: "left",
+            wrapText: true,
+          };
           cell.border = {
             top: { style: "thin" },
             left: { style: "thin" },
@@ -91,9 +105,11 @@ const ExcelDownload: React.FC<Props> = ({
         display: "flex",
         alignItems: "center",
         gap: "8px",
+        width: width,
       }}
       icon={<SiMicrosoftexcel />}
       onClick={saveExcel}
+      loading={isLoading}
     >
       Excel
     </Button>
