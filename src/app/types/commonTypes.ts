@@ -5,6 +5,7 @@ export interface HTTPResponse<T> {
   message?: string;
   total?: number;
   count?: number;
+  query_data?: any;
 }
 
 export type ISetState<T> = Dispatch<SetStateAction<T>>;

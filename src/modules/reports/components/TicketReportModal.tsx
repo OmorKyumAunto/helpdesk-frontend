@@ -7,6 +7,8 @@ import { rangePreset } from "../../../common/rangePreset";
 import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
 import { useGetTicketReportQuery } from "../../ticket/api/ticketEndpoint";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+import dayjs from "dayjs";
 const { Option } = Select;
 
 const TicketReportModal = () => {
@@ -89,6 +91,19 @@ const TicketReportModal = () => {
             <Option value="high">High</Option>
             <Option value="urgent">Urgent</Option>
           </Select>
+        </Col>
+        <Col span={24}>
+          <Select
+            allowClear
+            placeholder="Select Overdue"
+            style={{ width: "100%" }}
+            onChange={(e) => setFilter({ ...filter, overdue: e })}
+            options={[
+              { label: "All", value: "" },
+              { label: "Yes", value: "1" },
+              { label: "No", value: "0" },
+            ]}
+          />
         </Col>
         <Col span={24}>
           <Select
@@ -188,6 +203,46 @@ const TicketReportModal = () => {
                   )
                 : []
             }
+          />
+        </Col>
+        <Col span={24}>
+          <PDFDownload
+            PDFFileName="ticket_report_query_data"
+            fileHeader="Ticket Report Query Data"
+            PDFHeader={[
+              "Key",
+              "Start Date",
+              "End Date",
+              "Category",
+              "Priority",
+              "Status",
+              "Overdue",
+              "Unit Name",
+              "Employee Name",
+              "Employee ID",
+              "Report Generate Employee Name",
+              "Report Generate Employee ID",
+            ]}
+            PDFData={{
+              Key: data?.query_data?.key || "All",
+              "Start Date": data?.query_data?.start_date
+                ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
+                : "ALL",
+              "End Date": data?.query_data?.end_date
+                ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
+                : "ALL",
+              Category: data?.query_data?.category || "ALL",
+              Priority: data?.query_data?.priority || "ALL",
+              Status: data?.query_data?.status || "ALL",
+              Overdue: data?.query_data?.overdue || "ALL",
+              "Unit Name": data?.query_data?.unit_name || "ALL",
+              "Employee Name": data?.query_data?.employee_name || "ALL",
+              "Employee ID": data?.query_data?.employee_id || "ALL",
+              "Report Generate Employee Name":
+                data?.query_data?.report_generate_employee_name,
+              "Report Generate Employee ID":
+                data?.query_data?.report_generate_employee_id,
+            }}
           />
         </Col>
       </Row>

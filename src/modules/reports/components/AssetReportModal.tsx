@@ -7,6 +7,7 @@ import { rangePreset } from "../../../common/rangePreset";
 import { useGetAssetReportQuery } from "../api/reportsEndPoints";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import dayjs from "dayjs";
+import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 const { Option } = Select;
 
 const AssetReportModal = () => {
@@ -23,6 +24,7 @@ const AssetReportModal = () => {
   const { data, isLoading, isFetching } = useGetAssetReportQuery({
     ...filter,
   });
+  console.log(data?.query_data?.total_count);
   return (
     <div>
       <Row gutter={[16, 16]}>
@@ -140,6 +142,40 @@ const AssetReportModal = () => {
                   )
                 : []
             }
+          />
+        </Col>
+        <Col span={24}>
+          <PDFDownload
+            PDFFileName="asset_report_query_data"
+            fileHeader="Asset Report Query Data"
+            PDFHeader={[
+              "Unit Name",
+              "Start Date",
+              "End Date",
+              "Category",
+              "Remarks",
+              "Total Count",
+              "User Name",
+              "Employee ID",
+              "Department",
+              "Designation",
+            ]}
+            PDFData={{
+              "Unit Name": data?.query_data?.unit_name || "All",
+              "Start Date": data?.query_data?.start_date
+                ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
+                : "ALL",
+              "End Date": data?.query_data?.end_date
+                ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
+                : "ALL",
+              Category: data?.query_data?.category || "ALL",
+              Remarks: data?.query_data?.remarks || "ALL",
+              "Total Count": data?.query_data?.total_count || 0,
+              "User Name": data?.query_data?.report_generate_employee_name,
+              "Employee ID": data?.query_data?.report_generate_employee_id,
+              Department: data?.query_data?.report_generate_department,
+              Designation: data?.query_data?.report_generate_designation,
+            }}
           />
         </Col>
       </Row>

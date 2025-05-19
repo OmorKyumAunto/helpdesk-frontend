@@ -5,7 +5,7 @@ export interface IReportParams {
   unit_name?: string;
   start_date?: string;
   end_date?: string;
-  category?: string;
+  category?: string | any;
   remarks?: string;
   user_id?: number;
   unit_id?: number;
@@ -29,6 +29,10 @@ export interface IAssetReportList {
   location_id: number;
   title: string;
   location_name: string;
+  department: string;
+  designation: string;
+  user_id_no: string;
+  user_name: string;
 }
 
 export interface IAssetReportQueryData {
@@ -39,7 +43,13 @@ export interface IAssetReportQueryData {
   category: string;
   remarks: string;
   unit_name: string;
+  employee_type: string;
+  key: string;
   total_count: number;
+  report_generate_designation: string;
+  report_generate_department: string;
+  report_generate_employee_id: string;
+  report_generate_employee_name: string;
 }
 
 export interface IAssetReportResponse {
@@ -92,6 +102,8 @@ export interface ITaskReportQueryData {
   end_date: string;
   user_id: number;
   task_status: string;
+  unit_name: string;
+  user_name: string;
   unit_id: number;
   overdue: string;
   report_generate_employee_name: string;

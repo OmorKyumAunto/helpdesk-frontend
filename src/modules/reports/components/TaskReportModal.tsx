@@ -13,22 +13,26 @@ import {
 import { UserList } from "../../Unit/types/unitTypes";
 import { useGetTaskReportQuery } from "../api/reportsEndPoints";
 import dayjs from "dayjs";
+import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
+import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 const { Option } = Select;
 
 const TaskReportModal = () => {
   const [filter, setFilter] = useState<any>({});
   const { data: profile } = useGetMeQuery();
+  const [listIds, setListIds] = useState([]);
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
   const { data: categoryData, isLoading: categoryLoading } =
-    useGetCategoryListQuery({ status: "active" });
+    useGetTaskCategoryQuery();
   const { data: allAdmin, isLoading: adminLoading } = useGetAdminWiseUnitsQuery(
     filter.unit_id || 0,
     { skip: !filter.unit_id }
   );
   const { data, isLoading, isFetching } = useGetTaskReportQuery({
     ...filter,
+    category: listIds,
   });
   return (
     <div>
@@ -97,26 +101,39 @@ const TaskReportModal = () => {
               { label: "Incomplete", value: "incomplete" },
               { label: "Complete", value: "complete" },
               { label: "Inprogress", value: "inprogress" },
-              // {label:'Overdue',value:'overdue'},
+            ]}
+          />
+        </Col>
+        <Col span={24}>
+          <Select
+            allowClear
+            placeholder="Select Overdue"
+            style={{ width: "100%" }}
+            onChange={(e) => setFilter({ ...filter, overdue: e })}
+            options={[
+              { label: "All", value: "" },
+              { label: "Yes", value: "1" },
+              { label: "No", value: "0" },
             ]}
           />
         </Col>
 
-        {/* <Col span={24}>
+        <Col span={24}>
           <Select
-            style={{ width: "100%", marginBottom: 8 }}
+            style={{ width: "100%" }}
+            mode="multiple"
             loading={categoryLoading}
             placeholder="Select Category"
             showSearch
             optionFilterProp="children"
-            onChange={(e) => setFilter({ ...filter, category: e, offset: 0 })}
+            onChange={(e) => setListIds(e)}
             options={categoryData?.data?.map((item: any) => ({
               value: item.id,
               label: item.title,
             }))}
             allowClear
           />
-        </Col> */}
+        </Col>
         <Col span={24}>
           <ExcelDownload
             isLoading={isLoading || isFetching}
@@ -194,6 +211,51 @@ const TaskReportModal = () => {
                   )
                 : []
             }
+          />
+        </Col>
+        <Col span={24}>
+          <PDFDownload
+            PDFFileName="task_report_query_data"
+            fileHeader="Task Report Query Data"
+            PDFHeader={[
+              "Key",
+              "Start Date",
+              "End Date",
+              "User Name",
+              "Task Status",
+              "Unit Name",
+              "Overdue",
+              "Report Generate Employee Name",
+              "Report Generate Employee ID",
+              "Report Generate Department",
+              "Report Generate Designation",
+              // "Category Name",
+              "Total Count",
+            ]}
+            PDFData={{
+              Key: data?.query_data?.key || "ALL",
+              "Start Date": data?.query_data?.start_date
+                ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
+                : "ALL",
+              "End Date": data?.query_data?.end_date
+                ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
+                : "ALL",
+              "User Name": data?.query_data?.user_name || "All",
+              "Task Status": data?.query_data?.task_status || "All",
+              "Unit Name": data?.query_data?.unit_name || "All",
+              Overdue: data?.query_data?.overdue || "All",
+
+              "Report Generate Employee Name":
+                data?.query_data?.report_generate_employee_name,
+              "Report Generate Employee ID":
+                data?.query_data?.report_generate_employee_id,
+              "Report Generate Department":
+                data?.query_data?.report_generate_department,
+              "Report Generate Designation":
+                data?.query_data?.report_generate_designation,
+              // "Category Name": data?.query_data?.category_name?.map((item)=>item.join(',')) || "",
+              "Total Count": data?.query_data?.total_count || 0,
+            }}
           />
         </Col>
       </Row>

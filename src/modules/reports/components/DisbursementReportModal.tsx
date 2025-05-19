@@ -7,6 +7,7 @@ import { rangePreset } from "../../../common/rangePreset";
 import { useGetDisbursementsReportQuery } from "../api/reportsEndPoints";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import dayjs from "dayjs";
+import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 const { Option } = Select;
 
 const DisbursementReportModal = () => {
@@ -92,6 +93,10 @@ const DisbursementReportModal = () => {
             width="100%"
             excelName={"Asset Report"}
             excelTableHead={[
+              "User Name",
+              "Employee ID",
+              "Designation",
+              "Department",
               "Asset No",
               "Name",
               "Category",
@@ -121,8 +126,16 @@ const DisbursementReportModal = () => {
                       asset_no,
                       remarks,
                       location_name,
+                      department,
+                      designation,
+                      user_id_no,
+                      user_name,
                     }) => {
                       return {
+                        "User Name": user_name,
+                        "Employee ID": user_id_no,
+                        Designation: designation,
+                        Department: department,
                         "Asset No": asset_no || 0,
                         Name: name,
                         Category: category,
@@ -141,6 +154,46 @@ const DisbursementReportModal = () => {
                   )
                 : []
             }
+          />
+        </Col>
+        <Col span={24}>
+          <PDFDownload
+            PDFFileName="disbursement_report_query_data"
+            fileHeader="Disbursement Report Query Data"
+            PDFHeader={[
+              "Unit",
+              "Start Date",
+              "End Date",
+              "Category",
+              "Employee Type",
+              "Key",
+              "Report Generate Employee Name",
+              "Report Generate Employee ID",
+              "Report Generate Department",
+              "Report Generate Designation",
+              "Total Count",
+            ]}
+            PDFData={{
+              Unit: data?.query_data?.unit || "All",
+              "Start Date": data?.query_data?.start_date
+                ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
+                : "ALL",
+              "End Date": data?.query_data?.end_date
+                ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
+                : "ALL",
+              Category: data?.query_data?.category || "ALL",
+              "Employee Type": data?.query_data?.employee_type || "ALL",
+              Key: data?.query_data?.key || "ALL",
+              "Report Generate Employee Name":
+                data?.query_data?.report_generate_employee_name,
+              "Report Generate Employee ID":
+                data?.query_data?.report_generate_employee_id,
+              "Report Generate Department":
+                data?.query_data?.report_generate_department,
+              "Report Generate Designation":
+                data?.query_data?.report_generate_designation,
+              "Total Count": data?.query_data?.total_count || 0,
+            }}
           />
         </Col>
       </Row>

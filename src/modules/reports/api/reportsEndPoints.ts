@@ -24,10 +24,16 @@ export const reportsEndPoints = api.injectEndpoints({
       providesTags: () => ["Asset-Report"],
     }),
     getTaskReport: build.query<ITaskReportResponse, IReportParams>({
-      query: (params) => ({
-        url: "/report/task-report",
-        params,
-      }),
+      query: (params) => {
+        const { category, ...rest } = params;
+        const queryString = category
+          ?.map((item: number) => `category=${item}`)
+          .join("&");
+        return {
+          url: `/report/task-report?${queryString}`,
+          params: { ...rest },
+        };
+      },
       providesTags: () => ["Asset-Report"],
     }),
 

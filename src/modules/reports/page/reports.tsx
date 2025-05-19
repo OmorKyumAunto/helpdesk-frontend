@@ -69,7 +69,7 @@ const ReportsPage: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: 24 }}>
+    <Card style={{ minHeight: "80vh" }}>
       <Title level={3} style={{ marginBottom: 24 }}>
         📊 Reports Dashboard
       </Title>
@@ -89,7 +89,13 @@ const ReportsPage: React.FC = () => {
               bodyStyle={{ padding: 20, height: 170 }}
               className="report-card"
             >
-              <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                }}
+              >
                 <div
                   style={{
                     display: "flex",
@@ -112,7 +118,10 @@ const ReportsPage: React.FC = () => {
                     {card.icon}
                   </div>
                 </div>
-                <Text type="secondary" style={{ fontSize: 13, lineHeight: 1.5 }}>
+                <Text
+                  type="secondary"
+                  style={{ fontSize: 13, lineHeight: 1.5 }}
+                >
                   {card.description}
                 </Text>
               </div>
@@ -133,7 +142,7 @@ const ReportsPage: React.FC = () => {
           }
         `}
       </style>
-    </div>
+    </Card>
   );
 };
 
