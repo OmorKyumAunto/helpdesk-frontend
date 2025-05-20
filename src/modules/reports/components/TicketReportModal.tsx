@@ -1,6 +1,6 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { Col, DatePicker, Input, Row, Select } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { rangePreset } from "../../../common/rangePreset";
@@ -12,6 +12,7 @@ import {
   useGetUnitsQuery,
 } from "../../Unit/api/unitEndPoint";
 import dayjs from "dayjs";
+import { UserList } from "../../Unit/types/unitTypes";
 const { Option } = Select;
 
 const TicketReportModal = () => {
@@ -20,7 +21,10 @@ const TicketReportModal = () => {
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
-  
+  const { data: allAdmin, isLoading: adminLoading } = useGetAdminWiseUnitsQuery(
+    filter.unit || 0,
+    { skip: !filter.unit }
+  );
   const { data: categoryData, isLoading: categoryLoading } =
     useGetCategoryListQuery({ status: "active" });
   const unitOptionForAdmin = unitData?.data?.filter((unit) =>
@@ -57,7 +61,24 @@ const TicketReportModal = () => {
             allowClear
           />
         </Col>
-        
+        <Col span={24}>
+          <Select
+            loading={adminLoading}
+            placeholder="Search Admin"
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={allAdmin?.data?.user_list?.map((item: UserList) => ({
+              value: item.user_id,
+              label: `[${item.employee_id}] ${item.name}`,
+            }))}
+            onChange={(e) => setFilter({ ...filter, user_id: e })}
+            allowClear
+            style={{ width: "100%" }}
+          />
+        </Col>
         <Col span={24}>
           <DatePicker.RangePicker
             presets={rangePreset}
@@ -129,7 +150,7 @@ const TicketReportModal = () => {
           <ExcelDownload
             isLoading={isLoading || isFetching}
             width="100%"
-            excelName={"Asset Report"}
+            excelName={"Ticket Report"}
             excelTableHead={[
               "Ticket ID",
               "Ticket Subject",
@@ -147,65 +168,65 @@ const TicketReportModal = () => {
             excelData={
               data?.data?.length
                 ? data?.data?.map(
-                  ({
-                    ticket_id,
-                    ticket_status,
-                    subject,
-                    priority,
-                    ticket_category_title,
-                    asset_serial_number,
-                    ticket_created_employee_name,
-                    ticket_created_employee_id,
-                    ticket_solved_employee_name,
-                    ticket_solved_employee_id,
-                    asset_unit_title,
-                    ticket_updated_at,
-                    ticket_created_at,
-                  }) => {
-                    // Parse timestamps
-                    const updatedAt = new Date(ticket_updated_at);
-                    const createdAt = new Date(ticket_created_at);
+                    ({
+                      ticket_id,
+                      ticket_status,
+                      subject,
+                      priority,
+                      ticket_category_title,
+                      asset_serial_number,
+                      ticket_created_employee_name,
+                      ticket_created_employee_id,
+                      ticket_solved_employee_name,
+                      ticket_solved_employee_id,
+                      asset_unit_title,
+                      ticket_updated_at,
+                      ticket_created_at,
+                    }) => {
+                      // Parse timestamps
+                      const updatedAt = new Date(ticket_updated_at);
+                      const createdAt = new Date(ticket_created_at);
 
-                    // Calculate time difference in milliseconds
-                    const timeDifference =
-                      updatedAt.getTime() - createdAt.getTime();
+                      // Calculate time difference in milliseconds
+                      const timeDifference =
+                        updatedAt.getTime() - createdAt.getTime();
 
-                    // Convert time difference to human-readable format (e.g., hours, minutes)
-                    const days = Math.floor(
-                      timeDifference / (1000 * 60 * 60 * 24)
-                    );
-                    const hours = Math.floor(
-                      (timeDifference % (1000 * 60 * 60 * 24)) /
-                      (1000 * 60 * 60)
-                    );
-                    const minutes = Math.floor(
-                      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-                    );
+                      // Convert time difference to human-readable format (e.g., hours, minutes)
+                      const days = Math.floor(
+                        timeDifference / (1000 * 60 * 60 * 24)
+                      );
+                      const hours = Math.floor(
+                        (timeDifference % (1000 * 60 * 60 * 24)) /
+                          (1000 * 60 * 60)
+                      );
+                      const minutes = Math.floor(
+                        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+                      );
 
-                    // Build solvingTime string dynamically
-                    const solvingTimeParts = [];
-                    if (days > 0) solvingTimeParts.push(`${days}d`);
-                    if (hours > 0) solvingTimeParts.push(`${hours}h`);
-                    if (minutes > 0) solvingTimeParts.push(`${minutes}m`);
+                      // Build solvingTime string dynamically
+                      const solvingTimeParts = [];
+                      if (days > 0) solvingTimeParts.push(`${days}d`);
+                      if (hours > 0) solvingTimeParts.push(`${hours}h`);
+                      if (minutes > 0) solvingTimeParts.push(`${minutes}m`);
 
-                    const solvingTime = solvingTimeParts.join(" ") || "0m"; // Default to "0m" if all parts are 0
+                      const solvingTime = solvingTimeParts.join(" ") || "0m"; // Default to "0m" if all parts are 0
 
-                    return {
-                      "Ticket ID": ticket_id,
-                      "Ticket Subject": subject,
-                      "Ticket Status": ticket_status,
-                      Category: ticket_category_title,
-                      Priority: priority,
-                      "Asset Serial Number": asset_serial_number,
-                      "Raised By": ticket_created_employee_name,
-                      "Raiser ID": ticket_created_employee_id,
-                      "Solved By": ticket_solved_employee_name,
-                      "Admin ID": ticket_solved_employee_id,
-                      "Unit Name": asset_unit_title,
-                      "Solving Time": solvingTime,
-                    };
-                  }
-                )
+                      return {
+                        "Ticket ID": ticket_id,
+                        "Ticket Subject": subject,
+                        "Ticket Status": ticket_status,
+                        Category: ticket_category_title,
+                        Priority: priority,
+                        "Asset Serial Number": asset_serial_number,
+                        "Raised By": ticket_created_employee_name,
+                        "Raiser ID": ticket_created_employee_id,
+                        "Solved By": ticket_solved_employee_name,
+                        "Admin ID": ticket_solved_employee_id,
+                        "Unit Name": asset_unit_title,
+                        "Solving Time": solvingTime,
+                      };
+                    }
+                  )
                 : []
             }
           />
@@ -224,7 +245,6 @@ const TicketReportModal = () => {
               "Overdue",
               "Unit Name",
               "Total Count",
-              
             ]}
             PDFData={{
               Key: data?.query_data?.key || "Not Applied",
@@ -239,9 +259,7 @@ const TicketReportModal = () => {
               Status: data?.query_data?.status || "ALL",
               Overdue: data?.query_data?.overdue || "ALL",
               "Unit Name": data?.query_data?.unit_name || "ALL",
-              "Total Count":data?.query_data?.total_count|| "0",
-              
-              
+              "Total Count": data?.query_data?.total_count || "0",
             }}
           />
         </Col>

@@ -1,8 +1,10 @@
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import moment from "moment";
 import { SiMicrosoftexcel } from "react-icons/si";
+import { useDispatch } from "react-redux";
+import { setCommonModal } from "../../app/slice/modalSlice";
 
 interface Props {
   excelName: string;
@@ -20,7 +22,7 @@ const ExcelDownload: React.FC<Props> = ({
   width = "auto",
 }) => {
   const date_time = moment().format("DD-MM-YYYY");
-
+  const dispatch = useDispatch();
   const saveExcel = async () => {
     try {
       const workbook = new Excel.Workbook();
@@ -91,6 +93,8 @@ const ExcelDownload: React.FC<Props> = ({
       // Generate Excel File
       const excelDataGenerate = await workbook.xlsx.writeBuffer();
       saveAs(new Blob([excelDataGenerate]), `${date_time}_${excelName}.xlsx`);
+      message.success("Excel file downloaded successfully!");
+      dispatch(setCommonModal());
     } catch (error: any) {
       console.error("Error generating Excel file:", error.message);
     }
