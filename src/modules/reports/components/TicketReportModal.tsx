@@ -6,8 +6,11 @@ import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { rangePreset } from "../../../common/rangePreset";
 import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
 import { useGetTicketReportQuery } from "../../ticket/api/ticketEndpoint";
-import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+import {
+  useGetAdminWiseUnitsQuery,
+  useGetUnitsQuery,
+} from "../../Unit/api/unitEndPoint";
 import dayjs from "dayjs";
 const { Option } = Select;
 
@@ -17,6 +20,7 @@ const TicketReportModal = () => {
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
+  
   const { data: categoryData, isLoading: categoryLoading } =
     useGetCategoryListQuery({ status: "active" });
   const unitOptionForAdmin = unitData?.data?.filter((unit) =>
@@ -53,6 +57,7 @@ const TicketReportModal = () => {
             allowClear
           />
         </Col>
+        
         <Col span={24}>
           <DatePicker.RangePicker
             presets={rangePreset}
@@ -142,65 +147,65 @@ const TicketReportModal = () => {
             excelData={
               data?.data?.length
                 ? data?.data?.map(
-                    ({
-                      ticket_id,
-                      ticket_status,
-                      subject,
-                      priority,
-                      ticket_category_title,
-                      asset_serial_number,
-                      ticket_created_employee_name,
-                      ticket_created_employee_id,
-                      ticket_solved_employee_name,
-                      ticket_solved_employee_id,
-                      asset_unit_title,
-                      ticket_updated_at,
-                      ticket_created_at,
-                    }) => {
-                      // Parse timestamps
-                      const updatedAt = new Date(ticket_updated_at);
-                      const createdAt = new Date(ticket_created_at);
+                  ({
+                    ticket_id,
+                    ticket_status,
+                    subject,
+                    priority,
+                    ticket_category_title,
+                    asset_serial_number,
+                    ticket_created_employee_name,
+                    ticket_created_employee_id,
+                    ticket_solved_employee_name,
+                    ticket_solved_employee_id,
+                    asset_unit_title,
+                    ticket_updated_at,
+                    ticket_created_at,
+                  }) => {
+                    // Parse timestamps
+                    const updatedAt = new Date(ticket_updated_at);
+                    const createdAt = new Date(ticket_created_at);
 
-                      // Calculate time difference in milliseconds
-                      const timeDifference =
-                        updatedAt.getTime() - createdAt.getTime();
+                    // Calculate time difference in milliseconds
+                    const timeDifference =
+                      updatedAt.getTime() - createdAt.getTime();
 
-                      // Convert time difference to human-readable format (e.g., hours, minutes)
-                      const days = Math.floor(
-                        timeDifference / (1000 * 60 * 60 * 24)
-                      );
-                      const hours = Math.floor(
-                        (timeDifference % (1000 * 60 * 60 * 24)) /
-                          (1000 * 60 * 60)
-                      );
-                      const minutes = Math.floor(
-                        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-                      );
+                    // Convert time difference to human-readable format (e.g., hours, minutes)
+                    const days = Math.floor(
+                      timeDifference / (1000 * 60 * 60 * 24)
+                    );
+                    const hours = Math.floor(
+                      (timeDifference % (1000 * 60 * 60 * 24)) /
+                      (1000 * 60 * 60)
+                    );
+                    const minutes = Math.floor(
+                      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+                    );
 
-                      // Build solvingTime string dynamically
-                      const solvingTimeParts = [];
-                      if (days > 0) solvingTimeParts.push(`${days}d`);
-                      if (hours > 0) solvingTimeParts.push(`${hours}h`);
-                      if (minutes > 0) solvingTimeParts.push(`${minutes}m`);
+                    // Build solvingTime string dynamically
+                    const solvingTimeParts = [];
+                    if (days > 0) solvingTimeParts.push(`${days}d`);
+                    if (hours > 0) solvingTimeParts.push(`${hours}h`);
+                    if (minutes > 0) solvingTimeParts.push(`${minutes}m`);
 
-                      const solvingTime = solvingTimeParts.join(" ") || "0m"; // Default to "0m" if all parts are 0
+                    const solvingTime = solvingTimeParts.join(" ") || "0m"; // Default to "0m" if all parts are 0
 
-                      return {
-                        "Ticket ID": ticket_id,
-                        "Ticket Subject": subject,
-                        "Ticket Status": ticket_status,
-                        Category: ticket_category_title,
-                        Priority: priority,
-                        "Asset Serial Number": asset_serial_number,
-                        "Raised By": ticket_created_employee_name,
-                        "Raiser ID": ticket_created_employee_id,
-                        "Solved By": ticket_solved_employee_name,
-                        "Admin ID": ticket_solved_employee_id,
-                        "Unit Name": asset_unit_title,
-                        "Solving Time": solvingTime,
-                      };
-                    }
-                  )
+                    return {
+                      "Ticket ID": ticket_id,
+                      "Ticket Subject": subject,
+                      "Ticket Status": ticket_status,
+                      Category: ticket_category_title,
+                      Priority: priority,
+                      "Asset Serial Number": asset_serial_number,
+                      "Raised By": ticket_created_employee_name,
+                      "Raiser ID": ticket_created_employee_id,
+                      "Solved By": ticket_solved_employee_name,
+                      "Admin ID": ticket_solved_employee_id,
+                      "Unit Name": asset_unit_title,
+                      "Solving Time": solvingTime,
+                    };
+                  }
+                )
                 : []
             }
           />
@@ -210,7 +215,7 @@ const TicketReportModal = () => {
             PDFFileName="ticket_report_query_data"
             fileHeader="Ticket Report Query Data"
             PDFHeader={[
-              "Key",
+              "Searching Keyword",
               "Start Date",
               "End Date",
               "Category",
@@ -218,30 +223,25 @@ const TicketReportModal = () => {
               "Status",
               "Overdue",
               "Unit Name",
-              "Employee Name",
-              "Employee ID",
-              "Report Generate Employee Name",
-              "Report Generate Employee ID",
+              "Total Count",
+              
             ]}
             PDFData={{
-              Key: data?.query_data?.key || "All",
+              Key: data?.query_data?.key || "Not Applied",
               "Start Date": data?.query_data?.start_date
                 ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
-                : "ALL",
+                : "Not Applied",
               "End Date": data?.query_data?.end_date
                 ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
-                : "ALL",
+                : "Not Applied",
               Category: data?.query_data?.category || "ALL",
               Priority: data?.query_data?.priority || "ALL",
               Status: data?.query_data?.status || "ALL",
               Overdue: data?.query_data?.overdue || "ALL",
               "Unit Name": data?.query_data?.unit_name || "ALL",
-              "Employee Name": data?.query_data?.employee_name || "ALL",
-              "Employee ID": data?.query_data?.employee_id || "ALL",
-              "Report Generate Employee Name":
-                data?.query_data?.report_generate_employee_name,
-              "Report Generate Employee ID":
-                data?.query_data?.report_generate_employee_id,
+              "Total Count":data?.query_data?.total_count|| "0",
+              
+              
             }}
           />
         </Col>

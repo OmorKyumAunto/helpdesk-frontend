@@ -32,7 +32,7 @@ const AssetReportModal = () => {
           <Input
             prefix={<SearchOutlined />}
             onChange={(e) => setFilter({ ...filter, key: e.target.value })}
-            placeholder="Search..."
+            placeholder="Search By Asset/Serial/PO or Model No..."
             allowClear
           />
         </Col>
@@ -55,6 +55,7 @@ const AssetReportModal = () => {
           <DatePicker.RangePicker
             presets={rangePreset}
             style={{ width: "100%" }}
+            placeholder={['Start Creation Date', 'End Creation Date']}
             onChange={(_, e) =>
               setFilter({
                 ...filter,
@@ -65,6 +66,21 @@ const AssetReportModal = () => {
           />
         </Col>
         <Col span={24}>
+          <DatePicker.RangePicker
+            presets={rangePreset}
+            style={{ width: "100%" }}
+            placeholder={['Start Purchase Date', 'End Purchase Date']}
+            onChange={(_, e) =>
+              setFilter({
+                ...filter,
+                start_purchase_date: e[0],
+                end_purchase_date: e[1],
+              })
+            }
+          />
+        </Col>
+
+        <Col span={24}>
           <Select
             style={{ width: "100%", marginBottom: 8 }}
             onChange={(e) => setFilter({ ...filter, category: e })}
@@ -73,7 +89,28 @@ const AssetReportModal = () => {
           >
             <Option value="laptop">Laptop</Option>
             <Option value="desktop">Desktop</Option>
+            <Option value="monitor">Monitor</Option>
+            <Option value="printer">Printer</Option>
             <Option value="accessories">Accessories</Option>
+            <Option value="tv">TV</Option>
+            <Option value="ipad/tab">Ipad/Tab</Option>
+            <Option value="projector">Projector</Option>
+            <Option value="attendence machine">Attendence Machine</Option>
+            <Option value="speaker">Speaker</Option>
+            <Option value="scanner">Scanner</Option>
+            <Option value="camera">Camera</Option>
+            <Option value="nvr/dvr">NVR/DVR</Option>
+            <Option value="online/industrial ups">Online/Industrial UPS</Option>
+            <Option value="conference system">Conference System</Option>
+            <Option value="firewall">Firewall</Option>
+            <Option value="core router">Core Router</Option>
+            <Option value="access point">Access Point</Option>
+            <Option value="server">Server</Option>
+            <Option value="network rack">Network Rack</Option>
+            <Option value="24 port switch managable">24 Port Switch Managable</Option>
+            <Option value="48 port switch managable">48 Port Switch Managable</Option>
+            <Option value="non managable switch">Non Managable Switch</Option>
+
           </Select>
         </Col>
         <Col span={24}>
@@ -105,41 +142,55 @@ const AssetReportModal = () => {
               "Location Name",
               "Price",
               "Remarks",
+              "Created By",
+              "Creator ID",
+              "Creator Designation",
+              "Creator Contact No",
             ]}
             excelData={
               data?.data?.length
                 ? data?.data?.map(
-                    ({
-                      name,
-                      category,
-                      purchase_date,
-                      serial_number,
-                      po_number,
-                      price,
-                      unit_name,
-                      model,
-                      specification,
-                      asset_no,
-                      remarks,
-                      location_name,
-                    }) => {
-                      return {
-                        "Asset No": asset_no || 0,
-                        Name: name,
-                        Category: category,
-                        "Purchase Date":
-                          dayjs(purchase_date).format("DD-MM-YYYY"),
-                        "Serial Number": serial_number,
-                        "PO Number": po_number,
-                        "Unit Name": unit_name,
-                        Model: model,
-                        Specification: specification,
-                        "Location Name": location_name,
-                        Price: price,
-                        Remarks: remarks,
-                      };
-                    }
-                  )
+                  ({
+                    name,
+                    category,
+                    purchase_date,
+                    serial_number,
+                    po_number,
+                    price,
+                    unit_name,
+                    model,
+                    specification,
+                    asset_no,
+                    remarks,
+                    location_name,
+                    asset_created_name,
+                    asset_created_employee_id,
+                    asset_created_department,
+                    asset_created_designation,
+                    asset_created_contact_no,
+                  }) => {
+                    return {
+                      "Asset No": asset_no || 0,
+                      Name: name,
+                      Category: category,
+                      "Purchase Date":
+                        dayjs(purchase_date).format("DD-MM-YYYY"),
+                      "Serial Number": serial_number,
+                      "PO Number": po_number,
+                      "Unit Name": unit_name,
+                      Model: model,
+                      Specification: specification,
+                      "Location Name": location_name,
+                      Price: price,
+                      Remarks: remarks,
+                      "Created By": asset_created_name,
+                      "Creator ID": asset_created_employee_id,
+                      "Creator Designation": asset_created_designation,
+                      "Creator Contact No": asset_created_contact_no
+
+                    };
+                  }
+                )
                 : []
             }
           />
@@ -147,34 +198,36 @@ const AssetReportModal = () => {
         <Col span={24}>
           <PDFDownload
             PDFFileName="asset_report_query_data"
-            fileHeader="Asset Report Query Data"
+            fileHeader="Asset Report Count Data"
             PDFHeader={[
               "Unit Name",
-              "Start Date",
-              "End Date",
+              "Start Creation Date",
+              "End Creation Date",
+              "Start Purchase Date",
+              "End Purchase Date",
               "Category",
               "Remarks",
               "Total Count",
-              "User Name",
-              "Employee ID",
-              "Department",
-              "Designation",
+
             ]}
             PDFData={{
               "Unit Name": data?.query_data?.unit_name || "All",
               "Start Date": data?.query_data?.start_date
                 ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
-                : "ALL",
+                : "Not Applied",
               "End Date": data?.query_data?.end_date
                 ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
-                : "ALL",
-              Category: data?.query_data?.category || "ALL",
-              Remarks: data?.query_data?.remarks || "ALL",
+                : "Not Applied",
+                "Start Purchase Date": data?.query_data?.start_purchase_date
+                ? dayjs(data?.query_data?.start_purchase_date).format("DD-MM-YYYY")
+                : "Not Applied",
+              "End Purchase Date": data?.query_data?.end_purchase_date
+                ? dayjs(data?.query_data?.end_purchase_date).format("DD-MM-YYYY")
+                : "Not Applied",
+              Category: data?.query_data?.category || "All",
+              Remarks: data?.query_data?.remarks || "All",
               "Total Count": data?.query_data?.total_count || 0,
-              "User Name": data?.query_data?.report_generate_employee_name,
-              "Employee ID": data?.query_data?.report_generate_employee_id,
-              Department: data?.query_data?.report_generate_department,
-              Designation: data?.query_data?.report_generate_designation,
+
             }}
           />
         </Col>

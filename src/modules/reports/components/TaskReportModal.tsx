@@ -218,41 +218,31 @@ const TaskReportModal = () => {
             PDFFileName="task_report_query_data"
             fileHeader="Task Report Query Data"
             PDFHeader={[
-              "Key",
+              "Searching Keyword",
               "Start Date",
               "End Date",
               "User Name",
               "Task Status",
               "Unit Name",
               "Overdue",
-              "Report Generate Employee Name",
-              "Report Generate Employee ID",
-              "Report Generate Department",
-              "Report Generate Designation",
+              
               // "Category Name",
               "Total Count",
             ]}
             PDFData={{
-              Key: data?.query_data?.key || "ALL",
+              Key: data?.query_data?.key || "Not Applied",
               "Start Date": data?.query_data?.start_date
                 ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
-                : "ALL",
+                : "Not Applied",
               "End Date": data?.query_data?.end_date
                 ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
-                : "ALL",
+                : "not Applied",
               "User Name": data?.query_data?.user_name || "All",
               "Task Status": data?.query_data?.task_status || "All",
               "Unit Name": data?.query_data?.unit_name || "All",
               Overdue: data?.query_data?.overdue || "All",
 
-              "Report Generate Employee Name":
-                data?.query_data?.report_generate_employee_name,
-              "Report Generate Employee ID":
-                data?.query_data?.report_generate_employee_id,
-              "Report Generate Department":
-                data?.query_data?.report_generate_department,
-              "Report Generate Designation":
-                data?.query_data?.report_generate_designation,
+            
               // "Category Name": data?.query_data?.category_name?.map((item)=>item.join(',')) || "",
               "Total Count": data?.query_data?.total_count || 0,
             }}

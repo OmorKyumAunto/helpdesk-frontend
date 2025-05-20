@@ -31,7 +31,7 @@ const DisbursementReportModal = () => {
           <Input
             prefix={<SearchOutlined />}
             onChange={(e) => setFilter({ ...filter, key: e.target.value })}
-            placeholder="Search..."
+            placeholder="Search By Emp ID/Name/Asset/Serial/PO or Model No..."
             allowClear
           />
         </Col>
@@ -72,7 +72,28 @@ const DisbursementReportModal = () => {
           >
             <Option value="laptop">Laptop</Option>
             <Option value="desktop">Desktop</Option>
+            <Option value="monitor">Monitor</Option>
+            <Option value="printer">Printer</Option>
             <Option value="accessories">Accessories</Option>
+            <Option value="tv">TV</Option>
+            <Option value="ipad/tab">Ipad/Tab</Option>
+            <Option value="projector">Projector</Option>
+            <Option value="attendence machine">Attendence Machine</Option>
+            <Option value="speaker">Speaker</Option>
+            <Option value="scanner">Scanner</Option>
+            <Option value="camera">Camera</Option>
+            <Option value="nvr/dvr">NVR/DVR</Option>
+            <Option value="online/industrial ups">Online/Industrial UPS</Option>
+            <Option value="conference system">Conference System</Option>
+            <Option value="firewall">Firewall</Option>
+            <Option value="core router">Core Router</Option>
+            <Option value="access point">Access Point</Option>
+            <Option value="server">Server</Option>
+            <Option value="network rack">Network Rack</Option>
+            <Option value="24 port switch managable">24 Port Switch Managable</Option>
+            <Option value="48 port switch managable">48 Port Switch Managable</Option>
+            <Option value="non managable switch">Non Managable Switch</Option>
+
           </Select>
         </Col>
         <Col span={24}>
@@ -113,45 +134,45 @@ const DisbursementReportModal = () => {
             excelData={
               data?.data?.length
                 ? data?.data?.map(
-                    ({
-                      name,
-                      category,
-                      purchase_date,
-                      serial_number,
-                      po_number,
-                      price,
-                      unit_name,
-                      model,
-                      specification,
-                      asset_no,
-                      remarks,
-                      location_name,
-                      department,
-                      designation,
-                      user_id_no,
-                      user_name,
-                    }) => {
-                      return {
-                        "User Name": user_name,
-                        "Employee ID": user_id_no,
-                        Designation: designation,
-                        Department: department,
-                        "Asset No": asset_no || 0,
-                        Name: name,
-                        Category: category,
-                        "Purchase Date":
-                          dayjs(purchase_date).format("DD-MM-YYYY"),
-                        "Serial Number": serial_number,
-                        "PO Number": po_number,
-                        "Unit Name": unit_name,
-                        Model: model,
-                        Specification: specification,
-                        "Location Name": location_name,
-                        Price: price,
-                        Remarks: remarks,
-                      };
-                    }
-                  )
+                  ({
+                    name,
+                    category,
+                    purchase_date,
+                    serial_number,
+                    po_number,
+                    price,
+                    unit_name,
+                    model,
+                    specification,
+                    asset_no,
+                    remarks,
+                    location_name,
+                    department,
+                    designation,
+                    user_id_no,
+                    user_name,
+                  }) => {
+                    return {
+                      "User Name": user_name,
+                      "Employee ID": user_id_no,
+                      Designation: designation,
+                      Department: department,
+                      "Asset No": asset_no || 0,
+                      Name: name,
+                      Category: category,
+                      "Purchase Date":
+                        dayjs(purchase_date).format("DD-MM-YYYY"),
+                      "Serial Number": serial_number,
+                      "PO Number": po_number,
+                      "Unit Name": unit_name,
+                      Model: model,
+                      Specification: specification,
+                      "Location Name": location_name,
+                      Price: price,
+                      Remarks: remarks,
+                    };
+                  }
+                )
                 : []
             }
           />
@@ -166,32 +187,22 @@ const DisbursementReportModal = () => {
               "End Date",
               "Category",
               "Employee Type",
-              "Key",
-              "Report Generate Employee Name",
-              "Report Generate Employee ID",
-              "Report Generate Department",
-              "Report Generate Designation",
+              "Searching Keywords",
+              
               "Total Count",
             ]}
             PDFData={{
-              Unit: data?.query_data?.unit || "All",
+              Unit: data?.query_data?.unit_name || "All",
               "Start Date": data?.query_data?.start_date
                 ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
-                : "ALL",
+                : "Not Applied",
               "End Date": data?.query_data?.end_date
                 ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
-                : "ALL",
-              Category: data?.query_data?.category || "ALL",
-              "Employee Type": data?.query_data?.employee_type || "ALL",
-              Key: data?.query_data?.key || "ALL",
-              "Report Generate Employee Name":
-                data?.query_data?.report_generate_employee_name,
-              "Report Generate Employee ID":
-                data?.query_data?.report_generate_employee_id,
-              "Report Generate Department":
-                data?.query_data?.report_generate_department,
-              "Report Generate Designation":
-                data?.query_data?.report_generate_designation,
+                : "not Applied",
+              Category: data?.query_data?.category || "All",
+              "Employee Type": data?.query_data?.employee_type || "All",
+              Key: data?.query_data?.key || "None",
+              
               "Total Count": data?.query_data?.total_count || 0,
             }}
           />

@@ -33,6 +33,11 @@ export interface IAssetReportList {
   designation: string;
   user_id_no: string;
   user_name: string;
+  asset_created_name:string;
+  asset_created_employee_id:string;
+  asset_created_department:string;
+  asset_created_designation:string;
+  asset_created_contact_no:string;
 }
 
 export interface IAssetReportQueryData {
@@ -40,6 +45,8 @@ export interface IAssetReportQueryData {
   title: string;
   start_date: string;
   end_date: string;
+  start_purchase_date:string;
+  end_purchase_date:string;
   category: string;
   remarks: string;
   unit_name: string;
