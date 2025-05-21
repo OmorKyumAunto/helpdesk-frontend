@@ -86,7 +86,7 @@ const CombineReportModal = () => {
         <Col span={24}>
           <CombineReportPDFDownload
             PDFFileName="combine_report_query_data"
-            fileHeader="Combine Report Query Data"
+            fileHeader="Combined Report Data"
             queryData={data?.query_data!}
             PDFHeader={[
               "Total Agv. Ticket",
