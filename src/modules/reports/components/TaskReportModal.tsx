@@ -15,10 +15,15 @@ import { useGetTaskReportQuery } from "../api/reportsEndPoints";
 import dayjs from "dayjs";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+import { useEffect} from "react";
 const { Option } = Select;
 
 const TaskReportModal = () => {
   const [filter, setFilter] = useState<any>({});
+    // Reset filters on open
+    useEffect(() => {
+      setFilter({});
+    }, []);
   const { data: profile } = useGetMeQuery();
   const [listIds, setListIds] = useState([]);
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({

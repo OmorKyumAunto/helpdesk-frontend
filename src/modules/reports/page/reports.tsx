@@ -40,7 +40,7 @@ const ReportsPage: React.FC = () => {
       icon: <FundProjectionScreenOutlined />,
       color: "#3B82F6",
       bgColor: "linear-gradient(135deg, #E0F2FE, #F0F9FF)",
-      modal: <AssetReportModal />,
+      modal: () => <AssetReportModal key={Date.now()} />,
     },
     {
       title: "Disbursement Report",
@@ -48,7 +48,7 @@ const ReportsPage: React.FC = () => {
       icon: <FileDoneOutlined />,
       color: "#F97316",
       bgColor: "linear-gradient(135deg, #FFF7ED, #FFF4E5)",
-      modal: <DisbursementReportModal />,
+      modal: () => <DisbursementReportModal key={Date.now()} />,
     },
     {
       title: "Ticket Report",
@@ -56,7 +56,7 @@ const ReportsPage: React.FC = () => {
       icon: <ProfileOutlined />,
       color: "#22C55E",
       bgColor: "linear-gradient(135deg, #F0FDF4, #DCFCE7)",
-      modal: <TicketReportModal />,
+      modal: () => <TicketReportModal key={Date.now()} />,
     },
     {
       title: "Task Report",
@@ -64,7 +64,7 @@ const ReportsPage: React.FC = () => {
       icon: <BarChartOutlined />,
       color: "#8B5CF6",
       bgColor: "linear-gradient(135deg, #F5F3FF, #EDE9FE)",
-      modal: <TaskReportModal />,
+      modal: () => <TaskReportModal key={Date.now()} />,
     },
   ];
 
@@ -78,7 +78,7 @@ const ReportsPage: React.FC = () => {
           <Col xs={24} sm={12} md={12} lg={6} key={index}>
             <Card
               hoverable
-              onClick={() => handleOpenModal(`${card.title} Query`, card.modal)}
+              onClick={() => handleOpenModal(`${card.title} Query`, card.modal())}
               style={{
                 borderRadius: 16,
                 background: card.bgColor,

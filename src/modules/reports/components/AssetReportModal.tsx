@@ -1,6 +1,6 @@
 import { Col, DatePicker, Input, Row, Select } from "antd";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { rangePreset } from "../../../common/rangePreset";
@@ -8,23 +8,32 @@ import { useGetAssetReportQuery } from "../api/reportsEndPoints";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import dayjs from "dayjs";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+
 const { Option } = Select;
 
 const AssetReportModal = () => {
   const [filter, setFilter] = useState<any>({});
+
+  // Reset filter on mount (when modal is opened)
+  useEffect(() => {
+    setFilter({});
+  }, []);
+
   const { data: profile } = useGetMeQuery();
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
+
   const unitOptionForAdmin = unitData?.data?.filter((unit) =>
     profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
   );
   const unitOption =
     profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
+
   const { data, isLoading, isFetching } = useGetAssetReportQuery({
     ...filter,
   });
-  console.log(data?.query_data?.total_count);
+
   return (
     <div>
       <Row gutter={[16, 16]}>
@@ -36,6 +45,7 @@ const AssetReportModal = () => {
             allowClear
           />
         </Col>
+
         <Col span={24}>
           <Select
             loading={unitIsLoading}
@@ -51,6 +61,7 @@ const AssetReportModal = () => {
             allowClear
           />
         </Col>
+
         <Col span={24}>
           <DatePicker.RangePicker
             presets={rangePreset}
@@ -65,6 +76,7 @@ const AssetReportModal = () => {
             }
           />
         </Col>
+
         <Col span={24}>
           <DatePicker.RangePicker
             presets={rangePreset}
@@ -110,9 +122,9 @@ const AssetReportModal = () => {
             <Option value="24 port switch managable">24 Port Switch Managable</Option>
             <Option value="48 port switch managable">48 Port Switch Managable</Option>
             <Option value="non managable switch">Non Managable Switch</Option>
-
           </Select>
         </Col>
+
         <Col span={24}>
           <Select
             style={{ width: "100%", marginBottom: 8 }}
@@ -124,6 +136,7 @@ const AssetReportModal = () => {
             <Option value="in_stock">In Stock</Option>
           </Select>
         </Col>
+
         <Col span={24}>
           <ExcelDownload
             isLoading={isLoading || isFetching}
@@ -150,51 +163,49 @@ const AssetReportModal = () => {
             excelData={
               data?.data?.length
                 ? data?.data?.map(
-                  ({
-                    name,
-                    category,
-                    purchase_date,
-                    serial_number,
-                    po_number,
-                    price,
-                    unit_name,
-                    model,
-                    specification,
-                    asset_no,
-                    remarks,
-                    location_name,
-                    asset_created_name,
-                    asset_created_employee_id,
-                    asset_created_department,
-                    asset_created_designation,
-                    asset_created_contact_no,
-                  }) => {
-                    return {
-                      "Asset No": asset_no || 0,
-                      Name: name,
-                      Category: category,
-                      "Purchase Date":
-                        dayjs(purchase_date).format("DD-MM-YYYY"),
-                      "Serial Number": serial_number,
-                      "PO Number": po_number,
-                      "Unit Name": unit_name,
-                      Model: model,
-                      Specification: specification,
-                      "Location Name": location_name,
-                      Price: price,
-                      Remarks: remarks,
-                      "Created By": asset_created_name,
-                      "Creator ID": asset_created_employee_id,
-                      "Creator Designation": asset_created_designation,
-                      "Creator Contact No": asset_created_contact_no
-
-                    };
-                  }
-                )
+                    ({
+                      name,
+                      category,
+                      purchase_date,
+                      serial_number,
+                      po_number,
+                      price,
+                      unit_name,
+                      model,
+                      specification,
+                      asset_no,
+                      remarks,
+                      location_name,
+                      asset_created_name,
+                      asset_created_employee_id,
+                      asset_created_designation,
+                      asset_created_contact_no,
+                    }) => {
+                      return {
+                        "Asset No": asset_no || 0,
+                        Name: name,
+                        Category: category,
+                        "Purchase Date": dayjs(purchase_date).format("DD-MM-YYYY"),
+                        "Serial Number": serial_number,
+                        "PO Number": po_number,
+                        "Unit Name": unit_name,
+                        Model: model,
+                        Specification: specification,
+                        "Location Name": location_name,
+                        Price: price,
+                        Remarks: remarks,
+                        "Created By": asset_created_name,
+                        "Creator ID": asset_created_employee_id,
+                        "Creator Designation": asset_created_designation,
+                        "Creator Contact No": asset_created_contact_no,
+                      };
+                    }
+                  )
                 : []
             }
           />
         </Col>
+
         <Col span={24}>
           <PDFDownload
             PDFFileName="asset_report_query_data"
@@ -208,17 +219,16 @@ const AssetReportModal = () => {
               "Category",
               "Remarks",
               "Total Count",
-
             ]}
             PDFData={{
               "Unit Name": data?.query_data?.unit_name || "All",
-              "Start Date": data?.query_data?.start_date
+              "Start Creation Date": data?.query_data?.start_date
                 ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
                 : "Not Applied",
-              "End Date": data?.query_data?.end_date
+              "End Creation Date": data?.query_data?.end_date
                 ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
                 : "Not Applied",
-                "Start Purchase Date": data?.query_data?.start_purchase_date
+              "Start Purchase Date": data?.query_data?.start_purchase_date
                 ? dayjs(data?.query_data?.start_purchase_date).format("DD-MM-YYYY")
                 : "Not Applied",
               "End Purchase Date": data?.query_data?.end_purchase_date
@@ -227,7 +237,6 @@ const AssetReportModal = () => {
               Category: data?.query_data?.category || "All",
               Remarks: data?.query_data?.remarks || "All",
               "Total Count": data?.query_data?.total_count || 0,
-
             }}
           />
         </Col>

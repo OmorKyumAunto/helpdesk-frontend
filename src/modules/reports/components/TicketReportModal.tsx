@@ -7,6 +7,7 @@ import { rangePreset } from "../../../common/rangePreset";
 import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
 import { useGetTicketReportQuery } from "../../ticket/api/ticketEndpoint";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+
 import {
   useGetAdminWiseUnitsQuery,
   useGetUnitsQuery,
@@ -17,6 +18,11 @@ const { Option } = Select;
 
 const TicketReportModal = () => {
   const [filter, setFilter] = useState<any>({});
+   // Reset filters on open
+  useEffect(() => {
+    setFilter({});
+  }, []);
+
   const { data: profile } = useGetMeQuery();
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
