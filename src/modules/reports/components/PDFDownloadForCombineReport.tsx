@@ -50,15 +50,15 @@ const CombineReportPDFDownload: React.FC<Props> = ({
     doc.setTextColor(90);
 
     let metaY = 45;
-    doc.text(`Name: ${employee_name || "N/A"}`, 10, metaY);
+    doc.text(`Name: ${employee_name || "Not Applicable"}`, 10, metaY);
     metaY += 5;
-    doc.text(`Employee ID: ${employee_id || "N/A"}`, 10, metaY);
+    doc.text(`Employee ID: ${employee_id || "Not Applicable"}`, 10, metaY);
     metaY += 5;
-    doc.text(`Designation: ${designation || "N/A"}`, 10, metaY);
+    doc.text(`Designation: ${designation || "Not Applicable"}`, 10, metaY);
     metaY += 5;
-    doc.text(`Department: ${department || "N/A"}`, 10, metaY);
+    doc.text(`Department: ${department || "Not Applicable"}`, 10, metaY);
     metaY += 5;
-    doc.text(`Unit Name: ${unit_name}`, 10, metaY);
+    doc.text(`Unit Name: ${unit_name || "All Unit"}`, 10, metaY);
 
     const tableStartY = metaY + 10; // ← Add padding before table
 
