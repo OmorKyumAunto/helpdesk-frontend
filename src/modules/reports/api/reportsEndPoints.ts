@@ -5,6 +5,7 @@ import {
   IAssetReportResponse,
   IUnit,
   ITaskReportResponse,
+  ICombineReportResponse,
 } from "../types/reportTypes";
 
 export const reportsEndPoints = api.injectEndpoints({
@@ -19,6 +20,13 @@ export const reportsEndPoints = api.injectEndpoints({
     getDisbursementsReport: build.query<IAssetReportResponse, IReportParams>({
       query: (params) => ({
         url: "/report/disbursements-report",
+        params,
+      }),
+      providesTags: () => ["Asset-Report"],
+    }),
+    getCombineReport: build.query<ICombineReportResponse, IReportParams>({
+      query: (params) => ({
+        url: "/report/combine-report",
         params,
       }),
       providesTags: () => ["Asset-Report"],
@@ -47,6 +55,7 @@ export const reportsEndPoints = api.injectEndpoints({
 export const {
   useGetAssetReportQuery,
   useGetDisbursementsReportQuery,
+  useGetCombineReportQuery,
   useGetActiveUnitsQuery,
   useGetTaskReportQuery,
 } = reportsEndPoints;

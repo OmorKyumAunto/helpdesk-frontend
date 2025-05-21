@@ -33,11 +33,11 @@ export interface IAssetReportList {
   designation: string;
   user_id_no: string;
   user_name: string;
-  asset_created_name:string;
-  asset_created_employee_id:string;
-  asset_created_department:string;
-  asset_created_designation:string;
-  asset_created_contact_no:string;
+  asset_created_name: string;
+  asset_created_employee_id: string;
+  asset_created_department: string;
+  asset_created_designation: string;
+  asset_created_contact_no: string;
 }
 
 export interface IAssetReportQueryData {
@@ -45,8 +45,8 @@ export interface IAssetReportQueryData {
   title: string;
   start_date: string;
   end_date: string;
-  start_purchase_date:string;
-  end_purchase_date:string;
+  start_purchase_date: string;
+  end_purchase_date: string;
   category: string;
   remarks: string;
   unit_name: string;
@@ -123,6 +123,41 @@ export interface ITaskReportQueryData {
 export interface ITaskReportResponse {
   data: ITaskReportList[];
   query_data: ITaskReportQueryData;
+  count: number;
+  message: string;
+  status: number;
+  success: boolean;
+}
+export interface ICombineReport {
+  total_avg_ticket: string;
+  total_avg_task: string;
+  total_avg_ticket_task: string;
+  total_ticket: number;
+  total_task: number;
+  total_ticket_task: number;
+}
+export interface ICombineReportQueryData {
+  start_date: string;
+  end_date: string;
+  unit: string;
+  unit_name: string;
+  user_id: number;
+  employee_name: string;
+  employee_id: string;
+  designation: string;
+  department: string;
+  admin_assign_unit_name: string;
+  admin_unit_name: string;
+  report_generate_employee_name: string;
+  report_generate_employee_id: string;
+  report_generate_department: string;
+  report_generate_designation: string;
+  total_count: number;
+}
+
+export interface ICombineReportResponse {
+  data: ICombineReport;
+  query_data: ICombineReportQueryData;
   count: number;
   message: string;
   status: number;

@@ -12,6 +12,7 @@ import AssetReportModal from "../components/AssetReportModal";
 import DisbursementReportModal from "../components/DisbursementReportModal";
 import TaskReportModal from "../components/TaskReportModal";
 import TicketReportModal from "../components/TicketReportModal";
+import CombineReportModal from "../components/CombineReportModal";
 
 const { Title, Text } = Typography;
 
@@ -66,6 +67,14 @@ const ReportsPage: React.FC = () => {
       bgColor: "linear-gradient(135deg, #F5F3FF, #EDE9FE)",
       modal: () => <TaskReportModal key={Date.now()} />,
     },
+    {
+      title: "Combine Report",
+      description: "Evaluate task timelines & owners.",
+      icon: <BarChartOutlined />,
+      color: "#8B5CF6",
+      bgColor: "linear-gradient(135deg, #F5F3FF, #EDE9FE)",
+      modal: () => <CombineReportModal key={Date.now()} />,
+    },
   ];
 
   return (
@@ -78,7 +87,9 @@ const ReportsPage: React.FC = () => {
           <Col xs={24} sm={12} md={12} lg={6} key={index}>
             <Card
               hoverable
-              onClick={() => handleOpenModal(`${card.title} Query`, card.modal())}
+              onClick={() =>
+                handleOpenModal(`${card.title} Query`, card.modal())
+              }
               style={{
                 borderRadius: 16,
                 background: card.bgColor,
