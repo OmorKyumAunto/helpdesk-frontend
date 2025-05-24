@@ -18,7 +18,7 @@ const { Option } = Select;
 
 const TicketReportModal = () => {
   const [filter, setFilter] = useState<any>({});
-   // Reset filters on open
+  // Reset filters on open
   useEffect(() => {
     setFilter({});
   }, []);
@@ -33,11 +33,11 @@ const TicketReportModal = () => {
   );
   const { data: categoryData, isLoading: categoryLoading } =
     useGetCategoryListQuery({ status: "active" });
-  const unitOptionForAdmin = unitData?.data?.filter((unit) =>
-    profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
-  );
-  const unitOption =
-    profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
+  // const unitOptionForAdmin = unitData?.data?.filter((unit) =>
+  //   profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
+  // );
+  // const unitOption =
+  //   profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
   const { data, isLoading, isFetching } = useGetTicketReportQuery({
     ...filter,
   });
@@ -60,7 +60,7 @@ const TicketReportModal = () => {
             showSearch
             optionFilterProp="children"
             onChange={(e) => setFilter({ ...filter, unit: e })}
-            options={unitOption?.map((unit: any) => ({
+            options={unitData?.data?.map((unit: any) => ({
               value: unit.id,
               label: unit.title,
             }))}

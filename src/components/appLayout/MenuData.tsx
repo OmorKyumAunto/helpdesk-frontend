@@ -64,16 +64,15 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
             key: "/employee/list",
             icon: <LuUsers2 size={20} />,
           },
-        ]
-      : []),
-
-    ...(roleId === 1
-      ? [
           {
             label: <Link to="/reports">Reports</Link>,
             key: "/reports",
             icon: <TbReport size={20} />,
           },
+        ]
+      : []),
+    ...(roleId === 1
+      ? [
           {
             label: <Link to="/admin/list">Admin Panel</Link>,
             key: "/admin/list",

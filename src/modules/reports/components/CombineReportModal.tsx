@@ -26,11 +26,11 @@ const CombineReportModal = () => {
     filter.unit || 0,
     { skip: !filter.unit }
   );
-  const unitOptionForAdmin = unitData?.data?.filter((unit) =>
-    profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
-  );
-  const unitOption =
-    profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
+  // const unitOptionForAdmin = unitData?.data?.filter((unit) =>
+  //   profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
+  // );
+  // const unitOption =
+  //   profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
   const { data } = useGetCombineReportQuery({
     ...filter,
   });
@@ -45,7 +45,7 @@ const CombineReportModal = () => {
             showSearch
             optionFilterProp="children"
             onChange={(e) => setFilter({ ...filter, unit: e })}
-            options={unitOption?.map((unit: any) => ({
+            options={unitData?.data?.map((unit: any) => ({
               value: unit.id,
               label: unit.title,
             }))}
