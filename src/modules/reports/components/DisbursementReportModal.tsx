@@ -144,46 +144,61 @@ const DisbursementReportModal = () => {
               "Location Name",
               "Price",
               "Remarks",
+              "Assigned By",
+              "Assigner ID",
+              "Assigner Designation",
+              "Assigned Contact"
+
             ]}
             excelData={
               data?.data?.length
                 ? data?.data?.map(
-                    ({
-                      name,
-                      category,
-                      purchase_date,
-                      serial_number,
-                      po_number,
-                      price,
-                      unit_name,
-                      model,
-                      specification,
-                      asset_no,
-                      remarks,
-                      location_name,
-                      department,
-                      designation,
-                      user_id_no,
-                      user_name,
-                    }) => ({
-                      "User Name": user_name,
-                      "Employee ID": user_id_no,
-                      Designation: designation,
-                      Department: department,
-                      "Asset No": asset_no || 0,
-                      Name: name,
-                      Category: category,
-                      "Purchase Date": dayjs(purchase_date).format("DD-MM-YYYY"),
-                      "Serial Number": serial_number,
-                      "PO Number": po_number,
-                      "Unit Name": unit_name,
-                      Model: model,
-                      Specification: specification,
-                      "Location Name": location_name,
-                      Price: price,
-                      Remarks: remarks,
-                    })
-                  )
+                  ({
+                    name,
+                    category,
+                    purchase_date,
+                    serial_number,
+                    po_number,
+                    price,
+                    unit_name,
+                    model,
+                    specification,
+                    asset_no,
+                    remarks,
+                    location_name,
+                    department,
+                    designation,
+                    user_id_no,
+                    user_name,
+
+                    assign_by_name,
+                    assign_by_employee_id,
+                    assign_by_designation,
+                    assign_by_contact_no,
+                  }) => ({
+                    "User Name": user_name,
+                    "Employee ID": user_id_no,
+                    Designation: designation,
+                    Department: department,
+                    "Asset No": asset_no || 0,
+                    Name: name,
+                    Category: category,
+                    "Purchase Date": dayjs(purchase_date).format("DD-MM-YYYY"),
+                    "Serial Number": serial_number,
+                    "PO Number": po_number,
+                    "Unit Name": unit_name,
+                    Model: model,
+                    Specification: specification,
+                    "Location Name": location_name,
+                    Price: price,
+                    Remarks: remarks,
+                    "Assigned By": assign_by_name,
+                    "Assigner ID": assign_by_employee_id,
+                    "Assigner Designation": assign_by_designation,
+                    "Assigned Contact": assign_by_contact_no
+
+                  })
+                )
                 : []
             }
           />

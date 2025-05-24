@@ -38,6 +38,10 @@ export interface IAssetReportList {
   asset_created_department: string;
   asset_created_designation: string;
   asset_created_contact_no: string;
+  assign_by_name: string,
+  assign_by_employee_id: string,
+  assign_by_designation: string,
+  assign_by_contact_no: string,
 }
 
 export interface IAssetReportQueryData {

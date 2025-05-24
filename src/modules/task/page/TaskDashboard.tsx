@@ -230,7 +230,7 @@ const TaskDashboard = ({ setTaskStatus, setActiveKey }: TaskDashboardProps) => {
                               setCommonModal({
                                 content: <SingleTask id={task.id} />,
                                 title: "Task Details",
-                                width: "68%",
+                                width: "72%",
                                 show: true,
                               })
                             );
