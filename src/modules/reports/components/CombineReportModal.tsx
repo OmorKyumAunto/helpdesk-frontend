@@ -86,33 +86,33 @@ const CombineReportModal = () => {
         <Col span={24}>
           <CombineReportPDFDownload
             PDFFileName="combine_report_query_data"
-            fileHeader="Combine Report Query Data"
+            fileHeader="Combined Report"
             queryData={data?.query_data!}
             PDFHeader={[
-              "Total Agv. Ticket",
-              "Total Avg. Task",
-              "Total Avg. Ticket Task",
-              "Total Ticket",
-              "Total Task",
-              "Total Ticket Task",
-              "Start Date",
-              "End Date",
+              "Average Ticket Time",
+              "Average Task Time",
+              "Total Avgerage Time",
+              "Total Ticket Solved",
+              "Total Task Completed",
+              "Total Ticket and Task Solved",
+              "From Date",
+              "To Date",
               "Assigned Unit",
             ]}
             PDFData={{
-              "Total Agv. Ticket":
+              "Average Ticket Time":
                 data?.data?.total_avg_ticket || "Not Applied",
-              "Total Avg. Task": data?.data?.total_avg_task || "Not Applied",
-              "Total Avg. Ticket Task":
+              "Average Task Time": data?.data?.total_avg_task || "Not Applied",
+              "Total Avgerage Time":
                 data?.data?.total_avg_ticket_task || "Not Applied",
-              "Total Ticket": data?.data?.total_ticket || "Not Applied",
-              "Total Task": data?.data?.total_task || "Not Applied",
-              "Total Ticket Task":
+              "Total Ticket Solved": data?.data?.total_ticket || "Not Applied",
+              "Total Task Completed": data?.data?.total_task || "Not Applied",
+              "Total Ticket and Task Solved":
                 data?.data?.total_ticket_task || "Not Applied",
-              "Start Date": data?.query_data?.start_date
+              "From Date": data?.query_data?.start_date
                 ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
                 : "Not Applied",
-              "End Date": data?.query_data?.end_date
+              "To Date": data?.query_data?.end_date
                 ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
                 : "Not Applied",
               "Assigned Unit":
