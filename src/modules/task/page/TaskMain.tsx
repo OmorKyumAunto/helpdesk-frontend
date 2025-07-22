@@ -50,15 +50,6 @@ const TaskMain: React.FC = () => {
               <SuperAdminTaskList key={activeKey} taskStatus={taskStatus} />
             ),
           },
-          // {
-          //   key: "3",
-          //   label: (
-          //     <span style={{ fontSize: "16px", fontWeight: "600" }}>
-          //       Reports
-          //     </span>
-          //   ),
-          //   children: <TaskReport />,
-          // },
         ]
       : []),
     ...(roleID === 2
@@ -103,19 +94,6 @@ const TaskMain: React.FC = () => {
           },
         ]
       : []),
-    // ...(roleID === 3
-    //   ? [
-    //       {
-    //         key: "6",
-    //         label: (
-    //           <span style={{ fontSize: "16px", fontWeight: "600" }}>
-    //             Create Task
-    //           </span>
-    //         ),
-    //         children: <CreateTask />,
-    //       },
-    //     ]
-    //   : []),
   ];
 
   return (

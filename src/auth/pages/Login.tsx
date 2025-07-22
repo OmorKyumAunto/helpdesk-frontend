@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../app/api/api";
 import logo from "../../assets/logo.png";
+import itlogo from "../../assets/itlogo.png";
 import SubmitButton from "../../components/submitButton/SubmitButton";
 import "./Login.css";
 type IInputs = {
@@ -24,9 +25,7 @@ export const Login = () => {
 
   return (
     <>
-      {/* <video className="video-background" autoPlay loop muted>
-        <source src={videoBg} type="video/mp4" />
-      </video> */}
+      
       <motion.div
         className="login-container"
         initial={{ opacity: 0 }}
@@ -100,7 +99,7 @@ export const Login = () => {
                       </div>
                     </Form.Item>
                   </Col>
-                  {/* <Divider style={{ marginTop: "0px", marginBottom: "10px" }} /> */}
+
                   <Col xs={24}>
                     <div
                       style={{
@@ -114,6 +113,12 @@ export const Login = () => {
                       </span>
                     </div>
                   </Col>
+                  <Col xs={24}>
+                    <div className="flex justify-center mt-[-10px] mb-[-5px]">
+                      <Image src={itlogo} preview={false} height={80} alt="IT Logo" />
+                    </div>
+                  </Col>
+
                 </Row>
               </Form>
             </div>
