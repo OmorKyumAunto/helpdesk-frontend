@@ -25,6 +25,23 @@ export const ticketEndpoint = api.injectEndpoints({
       },
       providesTags: () => ["ticket"],
     }),
+    ticketReRaise: build.mutation<unknown, { id: number; body: any }>({
+      query: ({ id, body }) => {
+        return {
+          url: `/raise-ticket/ticket-re-raise/${id}`,
+          method: "PUT",
+          body,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Ticket re-raised successfully");
+        });
+      },
+      invalidatesTags: () => ["ticket"],
+    }),
+
     getRaiseTicketAdminWise: build.query<HTTPResponse<IAdminTicketList[]>, any>(
       {
         query: (params) => {
@@ -129,6 +146,22 @@ export const ticketEndpoint = api.injectEndpoints({
       query: (body) => {
         return {
           url: `/raise-ticket`,
+          method: "POST",
+          body,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully ticket raised");
+        });
+      },
+      invalidatesTags: () => ["ticket"],
+    }),
+    createOnBehalfTicket: build.mutation<unknown, FormData>({
+      query: (body) => {
+        return {
+          url: `/raise-ticket/on-behalf-ticket`,
           method: "POST",
           body,
         };
@@ -254,6 +287,7 @@ export const ticketEndpoint = api.injectEndpoints({
 
 export const {
   useCreateRaiseTicketMutation,
+  useCreateOnBehalfTicketMutation,
   useCreateCommentMutation,
   useForwardTicketMutation,
   useGetTicketReportQuery,
@@ -270,4 +304,5 @@ export const {
   useUpdateTicketAdminStatusMutation,
   useUpdateTicketPriorityMutation,
   useDeleteTicketMutation,
+  useTicketReRaiseMutation
 } = ticketEndpoint;

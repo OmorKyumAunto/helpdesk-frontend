@@ -212,6 +212,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                     <Select placeholder="Select Unit Name">
                       {[
                         'Sylhet EZ',
+                        'Laxfo Electronics Ltd',
                         'Corporate Office',
                         'Jinnat Apparels Ltd',
                         'Jinnat Knitwears Ltd',

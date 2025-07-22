@@ -28,8 +28,10 @@ import noUser from "../../../assets/avatar2.png";
 import {
   EditOutlined,
   FilterOutlined,
-  
+
 } from "@ant-design/icons";
+import { TiArrowLoop } from "react-icons/ti";
+import { BsFillPeopleFill } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import {
   useDeleteTicketMutation,
@@ -117,7 +119,7 @@ const SuperAdminTicketList = ({
   return (
     <Card
       loading={isLoading}
-      style={{ width: "100%", padding: "1rem", backgroundColor: "#f5f5f5" }}
+      style={{ width: "100%" }}
       title="Super Admin Ticket List"
       extra={
         <Space direction={!sm ? "vertical" : "horizontal"}>
@@ -182,9 +184,60 @@ const SuperAdminTicketList = ({
                   }}
                 >
                   <div>
-                    <h3
-                      style={{ color: "#1890ff" }}
-                    >{`Ticket ID: ${ticket.ticket_id}`}</h3>
+                    <h3 style={{ display: "flex", alignItems: "center", color: "#1890ff" }}>
+                      <span>{`Ticket ID: ${ticket.ticket_id}`}</span>
+                      <Space
+                        size="small"
+                        style={{
+                          marginLeft: 10,
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {ticket.is_re_raise === 1 && (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              backgroundColor: "#fff7e6",
+                              color: "#fa8c16",
+                              border: "1px solid #ffd591",
+                              borderRadius: "6px",
+                              padding: "2px 8px",
+                              fontSize: "13px",
+                              fontWeight: 500,
+                              lineHeight: "16px",
+                              height: "22px",
+                            }}
+                          >
+                            <TiArrowLoop size={16} style={{ marginRight: 4 }} />
+                            Re-Raised
+                          </div>
+                        )}
+                        {ticket.is_on_behalf === 1 && (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              backgroundColor: "#f9f0ff",
+                              color: "#722ed1",
+                              border: "1px solid #d3adf7",
+                              borderRadius: "6px",
+                              padding: "2px 8px",
+                              fontSize: "13px",
+                              fontWeight: 500,
+                              lineHeight: "16px",
+                              height: "22px",
+                            }}
+                          >
+                            <BsFillPeopleFill size={15} style={{ marginRight: 4 }} />
+                            On Behalf
+                          </div>
+                        )}
+                      </Space>
+
+
+                    </h3>
                     <h3
                       style={{ color: "#000000" }}
                     >{`Title : ${ticket.subject}`}</h3>
@@ -476,22 +529,22 @@ const SuperAdminTicketList = ({
                         )}
                       </>
                       {ticket?.ticket_status === "unsolved" && (
-                          <Button
-                            size="small"
-                            type="primary"
-                            onClick={() => {
-                              dispatch(
-                                setCommonModal({
-                                  title: "Update Ticket Priority",
-                                  content: <UpdateTicketPriority single={ticket} />,
-                                  show: true,
-                                })
-                              );
-                            }}
-                          >
-                            <EditOutlined />
-                          </Button>
-                        )}
+                        <Button
+                          size="small"
+                          type="primary"
+                          onClick={() => {
+                            dispatch(
+                              setCommonModal({
+                                title: "Update Ticket Priority",
+                                content: <UpdateTicketPriority single={ticket} />,
+                                show: true,
+                              })
+                            );
+                          }}
+                        >
+                          <EditOutlined />
+                        </Button>
+                      )}
 
                     </div>
                   </Col>

@@ -103,7 +103,7 @@ const TicketDashboard = ({
   const ticketData = barData?.data || [];
 
   return (
-    <Card style={{ width: "100%", backgroundColor: "#f5f5f5" }}>
+    <Card style={{ width: "100%" }}>
       <Row gutter={[12, 12]}>
         {ticketPriorityCards?.map((item) => (
           <Col

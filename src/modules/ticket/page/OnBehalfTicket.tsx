@@ -13,27 +13,40 @@ import {
 import { PlusOutlined } from "@ant-design/icons";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetCategoryActiveListQuery } from "../../Category/api/categoryEndPoint";
-import { useGetEmployeeAllDistributedAssetQuery } from "../../assets/api/assetsEndPoint";
-import { useCreateRaiseTicketMutation } from "../api/ticketEndpoint";
+import { useGetEmployeeAssetQuery } from "../../assets/api/assetsEndPoint";
+import { useCreateOnBehalfTicketMutation } from "../api/ticketEndpoint";
 import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
 import { IEmployee } from "../../employee/types/employeeTypes";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+interface RaiseTicketFormProps {
+  setActiveKey: React.Dispatch<React.SetStateAction<string>>;
+}
 const { Option } = Select;
 const { TextArea } = Input;
 
-const RaiseTicketForm = () => {
+const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
   const [form] = Form.useForm();
-  const [isCcVisible, setIsCcVisible] = useState(false); // State to manage CC Select visibility
+  const [isCcVisible, setIsCcVisible] = useState(false);
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
   const { data: allEmployee, isLoading: empLoading } =
     useGetOverallEmployeesQuery();
-  const { data, isLoading } = useGetEmployeeAllDistributedAssetQuery({});
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
+  const { data, isLoading } = useGetEmployeeAssetQuery(
+    selectedUserId as number,
+    {
+      skip: selectedUserId === null,
+    }
+  );
+
+
+
   const { data: categoryData, isLoading: categoryLoading } =
     useGetCategoryActiveListQuery({});
-  const [create, { isSuccess }] = useCreateRaiseTicketMutation();
+  const [create, { isSuccess }] = useCreateOnBehalfTicketMutation();
   const editor = useRef(null);
   const handleSubmit = (values: any) => {
     const formData = new FormData();
@@ -55,9 +68,10 @@ const RaiseTicketForm = () => {
   useEffect(() => {
     if (isSuccess) {
       form.resetFields();
-      setIsCcVisible(false); // Reset CC visibility on form success
+      setIsCcVisible(false);
+      setActiveKey("5"); // Navigate to "My Tickets" tab after successful form submission
     }
-  }, [isSuccess, form]);
+  }, [isSuccess, form, setActiveKey]);
 
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
@@ -96,7 +110,7 @@ const RaiseTicketForm = () => {
           >
             <Form.Item
               label="Select Employee"
-              name="employee_id"
+              name="user_id"
               rules={[{ required: true, message: "Please select Employee" }]}
               style={{ marginBottom: "8px" }}
             >
@@ -104,20 +118,28 @@ const RaiseTicketForm = () => {
                 loading={empLoading}
                 placeholder="Search Employee"
                 showSearch
-                optionFilterProp="children"
+                allowClear
+                style={{ width: "100%" }}
+                optionFilterProp="label"
                 filterOption={(input, option) =>
-                  (option?.label ?? "")
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
+                  (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                 }
                 options={allEmployee?.data?.map((item: IEmployee) => ({
                   value: item.id,
                   label: `[${item.employee_id}] ${item.name} (${item.email})`,
                 }))}
-                allowClear
-                style={{ width: "100%" }}
+                onChange={(value) => {
+                  if (value) {
+                    setSelectedUserId(value);
+                  } else {
+                    setSelectedUserId(null); // 👈 avoid undefined
+                    form.setFieldsValue({ asset_id: undefined });
+                  }
+                }}
               />
             </Form.Item>
+
+
             <Form.Item
               label="Select Unit"
               name="unit_id"
@@ -255,16 +277,6 @@ const RaiseTicketForm = () => {
               </Form.Item>
             )}
 
-            {/* <Form.Item
-              label="Message"
-              name="description"
-              style={{ marginBottom: "8px" }}
-              rules={[
-                { required: true, message: "Please enter a description!" },
-              ]}
-            >
-              <TextArea rows={4} placeholder="Enter Description" />
-            </Form.Item> */}
             <Form.Item
               label="Message"
               name="description"

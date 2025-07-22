@@ -81,8 +81,8 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
             onChange={(_, e) =>
               setFilter({
                 ...filter,
-                from_date: e[0],
-                to_date: e[1],
+                start_date: e[0],
+                end_date: e[1],
                 offset: 0,
               })
             }

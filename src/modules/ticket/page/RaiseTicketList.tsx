@@ -16,6 +16,8 @@ import {
   Radio,
   Descriptions,
   Tooltip,
+  Modal,
+  message
 } from "antd";
 import {
   useCreateCommentMutation,
@@ -29,14 +31,54 @@ import noImage from "../../../assets/No_Image.jpg";
 import noUser from "../../../assets/avatar2.png";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import dayjs from "dayjs";
+import { TiArrowLoop } from "react-icons/ti";
+import { BsFillPeopleFill } from "react-icons/bs";
 import CountdownTimer from "../components/Countdown"
 import relativeTime from "dayjs/plugin/relativeTime";
 import { formatTimeDifference } from "../utils/timeFormat";
 dayjs.extend(relativeTime);
-
+import { useTicketReRaiseMutation } from "../api/ticketEndpoint";
 const { Option } = Select;
+
+
 const RaiseTicketList: React.FC = () => {
   const [page, setPage] = useState(1);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
+  const [reRaiseComment, setReRaiseComment] = useState("");
+  const showReRaiseModal = (ticketId: number) => {
+    setSelectedTicketId(ticketId);
+    setReRaiseComment("");
+    setIsModalVisible(true);
+  };
+  const handleReRaiseSubmit = () => {
+    if (!reRaiseComment.trim()) {
+      message.warning("Please enter a reason before submitting.");
+      return;
+    }
+
+    const body = {
+      comment: reRaiseComment,
+    };
+
+    ticketReRaise({ id: selectedTicketId!, body })
+      .unwrap()
+      .then(() => {
+        setIsModalVisible(false);
+        setSelectedTicketId(null);
+
+      })
+      .catch(() => {
+        message.error("Failed to re-raise ticket.");
+      });
+  };
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+    setSelectedTicketId(null);
+    setReRaiseComment("");
+  };
+
+
   const [pageSize, setPageSize] = useState(10);
   const skipValue = (page - 1) * pageSize;
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
@@ -73,6 +115,24 @@ const RaiseTicketList: React.FC = () => {
     createComment(body);
   };
 
+
+  const [ticketReRaise] = useTicketReRaiseMutation();
+
+  // const handleTicketReRaise = (ticketId: number) => {
+  //   const body = {
+  //     ticket_id: ticketId, // Re-raise ticket by passing ticket_id in body
+  //   };
+
+  //   ticketReRaise({ id: ticketId, body }) // Ensure this matches the mutation's expected format
+  //     .unwrap()
+  //     .then((response) => {
+  //       console.log('Ticket re-raised successfully:', response);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error re-raising ticket:', error);
+  //     });
+  // };
+
   useEffect(() => {
     if (isSuccess) {
       setNewComment("");
@@ -103,7 +163,7 @@ const RaiseTicketList: React.FC = () => {
   return (
     <Card
       loading={isLoading}
-      style={{ width: "100%", padding: "1rem", backgroundColor: "#f5f5f5" }}
+      style={{ width: "100%",}}
       title="Ticket List"
       extra={
         <Space>
@@ -167,12 +227,66 @@ const RaiseTicketList: React.FC = () => {
                   }}
                 >
                   <div>
-                    <h3
-                      style={{ color: "#1890ff" }}
-                    >{`Ticket ID: ${ticket.ticket_id}`}</h3>
+                    <h3 style={{ display: "flex", alignItems: "center", color: "#1890ff" }}>
+                      <span>{`Ticket ID: ${ticket.ticket_id}`}</span>
+                      <Space
+                        size="small"
+                        style={{
+                          marginLeft: 10,
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {ticket.is_re_raise === 1 && (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              backgroundColor: "#fff7e6",
+                              color: "#fa8c16",
+                              border: "1px solid #ffd591",
+                              borderRadius: "6px",
+                              padding: "2px 8px",
+                              fontSize: "13px",
+                              fontWeight: 500,
+                              lineHeight: "16px",
+                              height: "22px",
+                            }}
+                          >
+                            <TiArrowLoop size={16} style={{ marginRight: 4 }} />
+                            Re-Raised
+                          </div>
+                        )}
+                        {ticket.is_on_behalf === 1 && (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              backgroundColor: "#f9f0ff",
+                              color: "#722ed1",
+                              border: "1px solid #d3adf7",
+                              borderRadius: "6px",
+                              padding: "2px 8px",
+                              fontSize: "13px",
+                              fontWeight: 500,
+                              lineHeight: "16px",
+                              height: "22px",
+                            }}
+                          >
+                            <BsFillPeopleFill size={15} style={{ marginRight: 4 }} />
+                            On Behalf
+                          </div>
+                        )}
+                      </Space>
+
+
+                    </h3>
+
                     <h3
                       style={{ color: "#000000" }}
                     >{`Title: ${ticket.subject}`}</h3>
+
+
                     <div>
                       {ticket.ticket_status === "solved" && (
                         <strong>
@@ -282,25 +396,58 @@ const RaiseTicketList: React.FC = () => {
                           </Tooltip>
                         )}
                       </div>
-                      <div>
-                    {ticket.ticket_status === "unsolved" && (
-                      <Tag color="red-inverse">UNSOLVED</Tag>
-                    )}
-                    {ticket.ticket_status === "solved" && (
-                      <Tag color="green-inverse">SOLVED</Tag>
-                    )}
-                    {ticket.ticket_status === "forward" && (
-                      <Tag color="pink-inverse">FORWARD</Tag>
-                    )}
-                    {ticket.ticket_status === "inprogress" && (
-                      <Tag color="blue-inverse">IN PROGRESS</Tag>
-                    )}
-                  </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          flexWrap: "wrap", // optional, helps in small screens
+                        }}
+                      >
+                        {ticket.ticket_status === "unsolved" && (
+                          <Tag color="red-inverse">UNSOLVED</Tag>
+                        )}
+                        {ticket.ticket_status === "solved" && (
+                          <Tag color="green-inverse">SOLVED</Tag>
+                        )}
+                        {ticket.ticket_status === "forward" && (
+                          <Tag color="pink-inverse">FORWARD</Tag>
+                        )}
+                        {ticket.ticket_status === "inprogress" && (
+                          <Tag color="blue-inverse">IN PROGRESS</Tag>
+                        )}
+                        {ticket.ticket_status === "solved" && (
+                          <Button
+                            type="text"
+                            size="small"
+                            onClick={() => showReRaiseModal(ticket.id)}
+                            style={{
+                              backgroundColor: "#fff7e6",          // matches Tag orange-inverse
+                              color: "#fa8c16",                    // text color like tag
+                              border: "1px solid #ffd591",         // border similar to tag
+                              fontWeight: 600,                     // bold text
+                              fontSize: "12px",                    // slightly smaller font size
+                              borderRadius: "4px",                 // same as default Tag
+                              padding: "1px 6px",                  // slightly smaller padding
+                              height: "22px",                      // slightly reduced height
+                              lineHeight: "22px",                  // centers the text vertically
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",            // ensure both text and icon are centered
+                            }}
+                            icon={<TiArrowLoop size={16} />}
+                          >
+                            Re-Raise
+                          </Button>
+
+
+                        )}
+                      </div>
+
                     </strong>
                   </div>
-                  
+
                   <div>
-                  <CountdownTimer
+                    <CountdownTimer
                       ticketCreatedAt={ticket.created_at}
                       ticketUpdatedAt={ticket.updated_at}
                       responseTimeValue={ticket.response_time_value}
@@ -444,22 +591,22 @@ const RaiseTicketList: React.FC = () => {
                             )
                               ? "Not Updated Yet"
                               : `${dayjs(ticket.updated_at).format(
-                                  "DD MMM YYYY h:mm A"
-                                )} (${dayjs(ticket.updated_at).fromNow()})`,
+                                "DD MMM YYYY h:mm A"
+                              )} (${dayjs(ticket.updated_at).fromNow()})`,
                             span: 2,
                           },
                           ...(ticket.ticket_status === "solved"
                             ? [
-                                {
-                                  key: "4",
-                                  label: "Time Taken",
-                                  children: formatTimeDifference(
-                                    dayjs(ticket.created_at),
-                                    dayjs(ticket.updated_at)
-                                  ),
-                                  span: 2,
-                                },
-                              ]
+                              {
+                                key: "4",
+                                label: "Time Taken",
+                                children: formatTimeDifference(
+                                  dayjs(ticket.created_at),
+                                  dayjs(ticket.updated_at)
+                                ),
+                                span: 2,
+                              },
+                            ]
                             : []),
                         ]}
                       />
@@ -484,13 +631,12 @@ const RaiseTicketList: React.FC = () => {
                                   href={
                                     ticket.attachment.startsWith("https")
                                       ? ticket.attachment
-                                      : `${imageURLNew}/uploads/${
-                                          ticket.attachment.includes("ticket\\")
-                                            ? ticket.attachment.split(
-                                                "ticket\\"
-                                              )[1]
-                                            : ticket.attachment
-                                        }`
+                                      : `${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                        ? ticket.attachment.split(
+                                          "ticket\\"
+                                        )[1]
+                                        : ticket.attachment
+                                      }`
                                   }
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -508,11 +654,10 @@ const RaiseTicketList: React.FC = () => {
                               ) : (
                                 <a>
                                   <Image
-                                    src={`${imageURLNew}/uploads/${
-                                      ticket.attachment.includes("ticket\\")
-                                        ? ticket.attachment.split("ticket\\")[1]
-                                        : ticket.attachment
-                                    }`}
+                                    src={`${imageURLNew}/uploads/${ticket.attachment.includes("ticket\\")
+                                      ? ticket.attachment.split("ticket\\")[1]
+                                      : ticket.attachment
+                                      }`}
                                     alt="attachment"
                                     width={40}
                                     style={{ maxHeight: "40px" }}
@@ -578,7 +723,7 @@ const RaiseTicketList: React.FC = () => {
                                     color: "black", // Ensure all text is black
                                     backgroundColor:
                                       profile?.employee_id ===
-                                      comment.employee_id
+                                        comment.employee_id
                                         ? "#DCF8C6" // Light green for logged-in user's comment
                                         : "#ECE5DD", // Light grayish background for other users' comments
                                     padding: "8px 12px",
@@ -666,6 +811,22 @@ const RaiseTicketList: React.FC = () => {
           <Empty />
         </Card>
       )}
+      <Modal
+        title="Re-Raise Ticket"
+        open={isModalVisible}
+        onCancel={handleModalCancel}
+        onOk={handleReRaiseSubmit}
+        okText="Submit"
+        cancelText="Cancel"
+      >
+        <p>Please provide a reason for re-raising this ticket:</p>
+        <Input.TextArea
+          rows={4}
+          value={reRaiseComment}
+          onChange={(e) => setReRaiseComment(e.target.value)}
+          placeholder="Type your reason here..."
+        />
+      </Modal>
       <Pagination
         size="small"
         align="end"

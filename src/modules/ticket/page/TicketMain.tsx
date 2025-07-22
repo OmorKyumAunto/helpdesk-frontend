@@ -66,17 +66,17 @@ const TicketMain: React.FC = () => {
               />
             ),
           },
-          // {
-          //   key: "3",
-          //   label: (
-          //     <span style={{ fontSize: "16px", fontWeight: "600" }}>
-          //       Reports
-          //     </span>
-          //   ),
-          //   children: (
-          //     <TicketReport key={activeKey} ticketSolver={ticketSolver} />
-          //   ),
-          // },
+          {
+            key: "3",
+            label: (
+              <span style={{ fontSize: "16px", fontWeight: "600" }}>
+                Reports
+              </span>
+            ),
+            children: (
+              <TicketReport key={activeKey} ticketSolver={ticketSolver} />
+            ),
+          },
         ]
       : []),
     ...(roleID === 2
@@ -112,15 +112,15 @@ const TicketMain: React.FC = () => {
               />
             ),
           },
-          // {
-          //   key: "8",
-          //   label: (
-          //     <span style={{ fontSize: "16px", fontWeight: "600" }}>
-          //       On Behalf Ticket
-          //     </span>
-          //   ),
-          //   children: <OnBehalfTicket />,
-          // },
+          {
+            key: "8",
+            label: (
+              <span style={{ fontSize: "16px", fontWeight: "600" }}>
+                On Behalf Ticket
+              </span>
+            ),
+            children: <OnBehalfTicket setActiveKey={setActiveKey}/>,
+          },
         ]
       : []),
     ...(roleID === 3

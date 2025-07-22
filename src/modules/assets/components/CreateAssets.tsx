@@ -138,7 +138,7 @@ const CreateAsset = () => {
                     <Option value="24 Port Switch Managable">24 Port Switch Managable</Option>
                     <Option value="48 Port Switch Managable">48 Port Switch Managable</Option>
                     <Option value="Non Managable Switch">Non Managable Switch</Option>
-                    
+
                   </Select>
                 </Form.Item>
               </Col>
@@ -187,7 +187,7 @@ const CreateAsset = () => {
                 <Form.Item
                   label="PO Number"
                   name="po_number"
-                  // rules={[{ required: true }]}
+                // rules={[{ required: true }]}
                 >
                   <Input placeholder="Enter po number" />
                 </Form.Item>
@@ -196,7 +196,7 @@ const CreateAsset = () => {
                 <Form.Item
                   label="Asset No"
                   name="asset_no"
-                  // rules={[{ required: true }]}
+                // rules={[{ required: true }]}
                 >
                   <Input placeholder="Enter Asset No" />
                 </Form.Item>
@@ -232,9 +232,9 @@ const CreateAsset = () => {
                 <Form.Item
                   label="Location"
                   name="location"
-                  // rules={[
-                  //   { required: true, message: "Please Select Location" },
-                  // ]}
+                // rules={[
+                //   { required: true, message: "Please Select Location" },
+                // ]}
                 >
                   <Select
                     className="w-full "
@@ -431,11 +431,77 @@ const CreateAsset = () => {
                       ]}
                     >
                       <Select placeholder="Select Unit Name">
-                        <Option value="JTML">JTML</Option>
-                        <Option value="DIPL">DIPL</Option>
-                        <Option value="Corporate Office">
-                          Corporate Office
-                        </Option>
+                        {[
+                          'Sylhet EZ',
+                          'Laxfo Electronics Ltd',
+                          'Corporate Office',
+                          'Jinnat Apparels Ltd',
+                          'Jinnat Knitwears Ltd',
+                          'Jinnat Fashions Ltd',
+                          'Matin Spinning Mills PLC',
+                          'Thanbee Print World Ltd',
+                          'Hamza Textiles Ltd',
+                          'Flamingo Fashions Ltd',
+                          'DB Tex Ltd',
+                          'Dulal Brothers Ltd',
+                          'Color City Ltd',
+                          'DBL Digital Ltd',
+                          'Parkway Packaging and Printing Ltd',
+                          'Mymun Textiles Ltd',
+                          'DBL Pharmaceuticals Ltd',
+                          'DBL Ceramics Ltd',
+                          'DBL Telecom Ltd',
+                          'DBL Distributions Ltd',
+                          'DBL Lifestyles Ltd',
+                          'Digital Corporate',
+                          'ECO Thread Plant',
+                          'DBL Dredging Ltd.',
+                          'Farmgate Office',
+                          'Mawna Fashions Ltd.',
+                          'Ceramics Plant',
+                          'DB TRIMS Ltd.',
+                          'Jinnat Complex',
+                          'Mymun Complex',
+                          'Glory Textile and Apparels Limited',
+                          'DBL Industrial Park Ltd',
+                          'Knitting',
+                          'Thanbee Complex',
+                          'DBL Textile Recycling Ltd',
+                          'Matin Complex',
+                          'Jinnat Textile Mills Ltd',
+                          'Textile Testing Services Ltd',
+                          'Atelier Sourcing Ltd',
+                          'Mawna Fashions Ltd',
+                          'DBL Tours and Travels Limited',
+                          'Chittagong C and F Office',
+                          'Ceramics Field',
+                          'Flamingo2',
+                          'Dredging Office',
+                          'JKL2',
+                          'Pharma Field',
+                          'Pharma Plant',
+                          'Lifestyle Corporate',
+                          'Pharma Corporate',
+                          'ECO Thread Corporate',
+                          'DBTrims Plant',
+                          'Ceramics Corporate',
+                          'PPPL Corporate',
+                          'EUDB Accessories Limited',
+                          'PPPL Plant',
+                          'DBL Healthcare Ltd',
+                          'EUDB',
+                          'DBLCL',
+                          'Jinnat Knitting Ltd',
+                          'DBL Pharma',
+                          'FFL2',
+                          'eco Plant',
+                          'MSML Complex',
+                          'DTRL (Matin Complex)',
+                        ].map((unit) => (
+                          <Option key={unit} value={unit}>
+                            {unit}
+                          </Option>
+                        ))}
                       </Select>
                     </Form.Item>
                   </Col>
@@ -470,12 +536,12 @@ const CreateAsset = () => {
                     <Form.Item
                       label="Blood Group"
                       name="blood_group"
-                      // rules={[
-                      //   {
-                      //     required: true,
-                      //     message: "Please select blood group",
-                      //   },
-                      // ]}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //     message: "Please select blood group",
+                    //   },
+                    // ]}
                     >
                       <Select showSearch placeholder="Select Blood Group">
                         <Option value="A+">A+</Option>
@@ -550,7 +616,7 @@ const CreateAsset = () => {
                   )}
                 </>
               )}
-              
+
               <Col xs={24} sm={24} md={24}>
                 <Form.Item
                   name="specification"

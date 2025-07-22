@@ -141,6 +141,7 @@ const CreateEmployee = () => {
                   <Select placeholder="Select Unit Name">
                     {[
                       'Sylhet EZ',
+                      'Laxfo Electronics Ltd',
                       'Corporate Office',
                       'Jinnat Apparels Ltd',
                       'Jinnat Knitwears Ltd',
