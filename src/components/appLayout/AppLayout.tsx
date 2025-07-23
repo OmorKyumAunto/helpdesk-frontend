@@ -629,7 +629,7 @@ export const AppLayout = () => {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <Space size={4}>
+            <Space size={8}>
               {quickActions.map((action) =>
                 action.show && (
                   <Link key={action.key} to={action.path}>
@@ -656,7 +656,7 @@ export const AppLayout = () => {
               <Dropdown overlay={helpMenu} trigger={["click"]} placement="bottomRight">
                 <Tooltip title="Help & Documentation">
                   <Button
-                    icon={<FaBookOpen color="#2a3b4f" size={18} />}
+                    icon={<FaBookOpen color="#2a3b4f" size={20} style={{ marginTop: "3px" }} />}
                     style={{ ...professionalStyles.headerButton, height: "2rem", minWidth: "2rem" }}
                     size="large"
                     onMouseEnter={(e) => {
@@ -671,7 +671,7 @@ export const AppLayout = () => {
 
               <Tooltip title="Video Tutorials">
                 <Button
-                  icon={<PiYoutubeLogoFill color="#FF0000" size={20} />}
+                  icon={<PiYoutubeLogoFill color="#FF0000" size={25} style={{ marginTop: "3px" }} />}
                   style={{ ...professionalStyles.headerButton, height: "2rem", minWidth: "2rem" }}
                   size="large"
                   onClick={() =>
@@ -714,13 +714,17 @@ export const AppLayout = () => {
                   }}
                 >
                   <Avatar
-                    size={16}
-                    icon={<UserOutlined />}
+                    size={24}
+                    icon={<UserOutlined style={{ fontSize: "12px" }} />}
                     style={{
-                      background: roleId === 3 ? "#10b981" : "#3b82f6",
-                      fontSize: "0.625rem",
+                      backgroundColor: roleId === 3 ? "#10b981" : "#3b82f6",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "0.625rem", // 10px fallback if needed
                     }}
                   />
+
                 </Button>
               </Popover>
             </Space>
