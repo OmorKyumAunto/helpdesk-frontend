@@ -121,6 +121,17 @@ const TicketMain: React.FC = () => {
             ),
             children: <OnBehalfTicket setActiveKey={setActiveKey}/>,
           },
+          {
+            key: "10",
+            label: (
+              <span style={{ fontSize: "16px", fontWeight: "600" }}>
+                Reports
+              </span>
+            ),
+            children: (
+              <TicketReport key={activeKey} ticketSolver={ticketSolver} />
+            ),
+          },
         ]
       : []),
     ...(roleID === 3

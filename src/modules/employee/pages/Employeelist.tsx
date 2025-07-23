@@ -286,7 +286,6 @@ const EmployeeList = () => {
               /> */}
             </>
 
-            <Space>
               <ExcelDownload
                 excelName={"employee_list"}
                 excelTableHead={[
@@ -346,7 +345,6 @@ const EmployeeList = () => {
                     : []
                 }
               />
-            </Space>
             <CreateButton
               name="Upload"
               onClick={() => {
