@@ -273,60 +273,81 @@ const AdminTicketList = ({
                       style={{ color: "#000000" }}
                     >{`Title : ${ticket.subject}`}</h3>
                     <strong>
-                      <Tooltip
-                        title={
-                          <div>
-                            <p>
-                              <strong>Name:</strong>{" "}
-                              {ticket.ticket_created_employee_name}
-                            </p>
-                            <p>
-                              <strong>ID:</strong>{" "}
-                              {ticket.ticket_created_employee_id}
-                            </p>
-                            <p>
-                              <strong>Designation:</strong>{" "}
-                              {ticket.created_employee_designation}
-                            </p>
-                            <p>
-                              <strong>Department:</strong>{" "}
-                              {ticket.created_employee_department}
-                            </p>
-                            <p>
-                              <strong>Email:</strong>{" "}
-                              {ticket.ticket_created_employee_email}
-                            </p>
-                            <p>
-                              <strong>Phone No:</strong>{" "}
-                              {ticket.created_employee_contact_no}
-                            </p>
-                            <p>
-                              <strong>Unit:</strong>{" "}
-                              {ticket.created_employee_unit_name}
-                            </p>
-                          </div>
-                        }
-                      >
-                        {ticket.is_on_behalf === 1 ? (
-                          <>
+                      {ticket.is_on_behalf === 1 ? (
+                        <>
+                          <Tooltip
+                            title={
+                              <div>
+                                <p>
+                                  <strong>Name:</strong> {ticket.ticket_created_employee_name}
+                                </p>
+                                <p>
+                                  <strong>ID:</strong> {ticket.ticket_created_employee_id}
+                                </p>
+                                <p>
+                                  <strong>Designation:</strong> {ticket.created_employee_designation}
+                                </p>
+                                <p>
+                                  <strong>Department:</strong> {ticket.created_employee_department}
+                                </p>
+                                <p>
+                                  <strong>Email:</strong> {ticket.ticket_created_employee_email}
+                                </p>
+                                <p>
+                                  <strong>Phone No:</strong> {ticket.created_employee_contact_no}
+                                </p>
+                                <p>
+                                  <strong>Unit:</strong> {ticket.created_employee_unit_name}
+                                </p>
+                              </div>
+                            }
+                          >
                             <span>
-                              Ticket Owner:  {ticket.ticket_created_employee_name} (
+                              Ticket Owner: {ticket.ticket_created_employee_name} (
                               {ticket.ticket_created_employee_id})
                             </span>
-                            <br />
-                            <strong>
-                              On Behalf Created By:  {ticket.on_behalf_created_name} (
-                              {ticket.on_behalf_created_employee_id})
-                            </strong>
-                          </>
-                        ) : (
+                          </Tooltip>
+                          <br />
+                          <strong>
+                            On Behalf Created By: {ticket.on_behalf_created_name} (
+                            {ticket.on_behalf_created_employee_id})
+                          </strong>
+                        </>
+                      ) : (
+                        <Tooltip
+                          title={
+                            <div>
+                              <p>
+                                <strong>Name:</strong> {ticket.ticket_created_employee_name}
+                              </p>
+                              <p>
+                                <strong>ID:</strong> {ticket.ticket_created_employee_id}
+                              </p>
+                              <p>
+                                <strong>Designation:</strong> {ticket.created_employee_designation}
+                              </p>
+                              <p>
+                                <strong>Department:</strong> {ticket.created_employee_department}
+                              </p>
+                              <p>
+                                <strong>Email:</strong> {ticket.ticket_created_employee_email}
+                              </p>
+                              <p>
+                                <strong>Phone No:</strong> {ticket.created_employee_contact_no}
+                              </p>
+                              <p>
+                                <strong>Unit:</strong> {ticket.created_employee_unit_name}
+                              </p>
+                            </div>
+                          }
+                        >
                           <span>
-                            Ticket Owner:  {ticket.ticket_created_employee_name} (
+                            Ticket Owner: {ticket.ticket_created_employee_name} (
                             {ticket.ticket_created_employee_id})
                           </span>
-                        )}
+                        </Tooltip>
+                      )}
 
-                      </Tooltip>
                       <div>
                         {ticket.ticket_status === "solved" && (
                           <Tooltip
