@@ -9,10 +9,12 @@ type Props = {
   icon?: React.ReactNode;
   block?: boolean;
   onClick?: () => void;
-  style?: any;
+  style?: React.CSSProperties; // Use React.CSSProperties for better type safety
+  onMouseEnter?: (e: React.MouseEvent<HTMLButtonElement>) => void; // Add onMouseEnter
+  onMouseLeave?: (e: React.MouseEvent<HTMLButtonElement>) => void; // Add onMouseLeave
 };
 
-const SubmitButton = ({ loading, label, icon, onClick, style }: Props) => {
+const SubmitButton = ({ loading, label, icon, onClick, style, onMouseEnter, onMouseLeave }: Props) => {
   return (
     <Button
       style={style}
@@ -21,6 +23,8 @@ const SubmitButton = ({ loading, label, icon, onClick, style }: Props) => {
       htmlType="submit"
       loading={loading}
       icon={icon}
+      onMouseEnter={onMouseEnter} // Pass onMouseEnter
+      onMouseLeave={onMouseLeave} // Pass onMouseLeave
     >
       {label || "Submit"}
     </Button>
