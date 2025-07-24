@@ -163,7 +163,7 @@ const RaiseTicketList: React.FC = () => {
   return (
     <Card
       loading={isLoading}
-      style={{ width: "100%",}}
+      style={{ width: "100%", }}
       title="Ticket List"
       extra={
         <Space>
@@ -285,8 +285,15 @@ const RaiseTicketList: React.FC = () => {
                     <h3
                       style={{ color: "#000000" }}
                     >{`Title: ${ticket.subject}`}</h3>
+                    <div>
+                      {ticket.is_on_behalf === 1 && (
+                        <strong>
+                          On Behalf Created By: {ticket.on_behalf_created_name} (
+                          {ticket.on_behalf_created_employee_id})
+                        </strong>
+                      )}
 
-
+                    </div>
                     <div>
                       {ticket.ticket_status === "solved" && (
                         <strong>

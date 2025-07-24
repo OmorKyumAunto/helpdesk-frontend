@@ -307,10 +307,25 @@ const AdminTicketList = ({
                           </div>
                         }
                       >
-                        <span>
-                          Ticket Creator: {ticket.ticket_created_employee_name}{" "}
-                          ({ticket.ticket_created_employee_id})
-                        </span>
+                        {ticket.is_on_behalf === 1 ? (
+                          <>
+                            <span>
+                              Ticket Owner:  {ticket.ticket_created_employee_name} (
+                              {ticket.ticket_created_employee_id})
+                            </span>
+                            <br />
+                            <strong>
+                              On Behalf Created By:  {ticket.on_behalf_created_name} (
+                              {ticket.on_behalf_created_employee_id})
+                            </strong>
+                          </>
+                        ) : (
+                          <span>
+                            Ticket Owner:  {ticket.ticket_created_employee_name} (
+                            {ticket.ticket_created_employee_id})
+                          </span>
+                        )}
+
                       </Tooltip>
                       <div>
                         {ticket.ticket_status === "solved" && (

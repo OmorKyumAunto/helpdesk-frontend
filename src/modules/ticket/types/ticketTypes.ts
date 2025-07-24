@@ -44,6 +44,8 @@ export interface IRaiseTicketList {
   resolve_time_unit:string;
   is_re_raise: number;
   is_on_behalf: number;
+  on_behalf_created_name: string;
+  on_behalf_created_employee_id: number;
 
 }
 export interface IAdminTicketList {
@@ -103,6 +105,8 @@ export interface IAdminTicketList {
   resolve_time_unit:string;
    is_re_raise: number;
   is_on_behalf: number;
+  on_behalf_created_name: string;
+  on_behalf_created_employee_id: number;
 
 
 
