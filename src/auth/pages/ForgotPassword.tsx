@@ -7,6 +7,7 @@ import { useGetOTPMutation } from "../../forget_api/forgetApi";
 import logo from "../../assets/logo.png";
 import SubmitButton from "../../components/submitButton/SubmitButton";
 import "./Login.css";
+import itlogo from "../../assets/itlogo.png";
 
 type IForget = {
   email: string;
@@ -45,7 +46,7 @@ const ForgotPassword = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "10px",
+          padding: "0px",
         }}
       >
         {/* SVG Bubble 1 - Bottom Left */}
@@ -377,6 +378,29 @@ const ForgotPassword = () => {
           </div>
         </motion.div>
       </motion.div>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "20px",
+          right: "20px",
+          zIndex: 1,
+        }}
+      >
+        <div className="flex justify-center mt-[-10px] mb-[-5px]">
+          <Image
+            src={itlogo}
+            preview={false}
+            height={35}
+            alt="IT Logo"
+            style={{
+              transform: "scale(1)",
+              transition: "transform 0.3s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          />
+        </div>
+      </div>
     </>
   );
 };

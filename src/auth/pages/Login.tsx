@@ -31,14 +31,14 @@ export const Login = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
         style={{
-          background: "#F0F7FF", // Light blue background for light theme
+          background: "#F0F7FF",
           minHeight: "100vh",
           position: "relative",
           overflow: "hidden",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "10px",
+          padding: "0px",
         }}
       >
         {/* SVG Bubble 1 - Bottom Left */}
@@ -213,7 +213,7 @@ export const Login = () => {
           preserveAspectRatio="none"
         >
           <path
-            fill="#3B82F6" // Corrected invalid color #5684f8ff to valid #3B82F6
+            fill="#3B82F6"
             d="M0,128L48,138.7C96,149,192,171,288,181.3C384,192,480,192,576,181.3C672,171,768,149,864,138.7C960,128,1056,128,1152,149.3C1248,171,1344,213,1392,234.7L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
           >
             <animate
@@ -364,7 +364,7 @@ export const Login = () => {
                   <Col xs={24}>
                     <div
                       style={{
-                        display: "flex", // Fixed from "fixed" to "flex"
+                        display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                       }}
@@ -382,27 +382,35 @@ export const Login = () => {
                       </span>
                     </div>
                   </Col>
-                  <Col xs={24}>
-                    <div className="flex justify-center mt-[-10px] mb-[-5px]">
-                      <Image
-                        src={itlogo}
-                        preview={false}
-                        height={80}
-                        alt="IT Logo"
-                        style={{
-                          transform: "scale(1)",
-                          transition: "transform 0.3s ease",
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
-                        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                      />
-                    </div>
-                  </Col>
                 </Row>
               </Form>
             </div>
           </div>
         </motion.div>
+        {/* Developed by Logo - Bottom Right */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: "20px",
+            right: "20px",
+            zIndex: 1,
+          }}
+        >
+          <div className="flex justify-center mt-[-10px] mb-[-5px]">
+            <Image
+              src={itlogo}
+              preview={false}
+              height={35}
+              alt="IT Logo"
+              style={{
+                transform: "scale(1)",
+                transition: "transform 0.3s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            />
+          </div>
+        </div>
       </motion.div>
     </>
   );
