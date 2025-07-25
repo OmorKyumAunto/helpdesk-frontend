@@ -733,7 +733,7 @@ export const AppLayout = () => {
 
         <Content
           style={{
-            padding: gridBreak.xs ? "0.5rem" : "1rem",
+            padding: location.pathname === "/about" ? "0rem" : gridBreak.xs ? "0.5rem" : "1rem",
             minHeight: 280,
             boxShadow: "0 1px 4px rgba(0, 0, 0, 0.04)",
             border: "1px solid #e5e7eb",
