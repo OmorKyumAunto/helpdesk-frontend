@@ -11,8 +11,7 @@ const baseURL = "https://helpdesk.dbl-group.com:3003/api/v1";
 
 export const socket_url = "https://test.socket.com";
 export const imageURLNew = "https://helpdesk.dbl-group.com:3003"; //! avoid / end of the line otherwise image and pdf won't work!
-export const imageURL =
-  "https://m360ict-ecommerce.s3.ap-south-1.amazonaws.com/amcham-storage/";
+
 export const baseQuery = fetchBaseQuery({
   baseUrl: baseURL,
   credentials: "include",
@@ -30,13 +29,16 @@ export const baseQueryWithReAuth: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
+
+  const isReloading = localStorage.getItem("isReloading") === "true";
+
   if (
-    // result?.error?.status === 400 ||
-    result?.error?.status === 401 ||
-    result?.error?.status === "CUSTOM_ERROR" ||
-    result?.error?.status === "FETCH_ERROR" ||
-    result?.error?.status === "PARSING_ERROR" ||
-    result?.error?.status === "TIMEOUT_ERROR"
+    !isReloading && // ✅ skip logout during reload
+    (result?.error?.status === 401 ||
+      result?.error?.status === "CUSTOM_ERROR" ||
+      result?.error?.status === "FETCH_ERROR" ||
+      result?.error?.status === "PARSING_ERROR" ||
+      result?.error?.status === "TIMEOUT_ERROR")
   ) {
     api.dispatch(setLogout());
   }

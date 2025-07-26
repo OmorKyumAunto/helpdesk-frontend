@@ -155,7 +155,7 @@ const About = () => {
                   <div className="text-xs sm:text-sm text-gray-500">
                     Experience
                   </div>
-                  <div className={`w-12 h-1 mx-auto mt-4 rounded-full transition-all duration-500 ${hoveredStat === 'years' ? 'w-16 bg-gradient-to-r from-blue-500 to-indigo-500' : 'bg-gray-300'
+                  <div className={`w-12 h-1 mx-auto mt-4 rounded-full transition-all duration-500 ${hoveredStat === 'years' ? 'w-16 bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gray-300'
                     }`}></div>
                 </div>
               </div>
@@ -230,7 +230,7 @@ const About = () => {
                   <div className="text-xs sm:text-sm text-gray-500">
                     Turnover
                   </div>
-                  <div className={`w-12 h-1 mx-auto mt-4 rounded-full transition-all duration-500 ${hoveredStat === 'turnover' ? 'w-16 bg-gradient-to-r from-blue-500 to-indigo-500' : 'bg-gray-300'
+                  <div className={`w-12 h-1 mx-auto mt-4 rounded-full transition-all duration-500 ${hoveredStat === 'turnover' ? 'w-16 bg-gradient-to-r from-gray-800 to-blue-600' : 'bg-gray-300'
                     }`}></div>
                 </div>
               </div>
@@ -256,7 +256,7 @@ const About = () => {
             {teamMembers.map((member, index) => (
               <Col xs={24} sm={12} md={8} lg={6} key={index}>
                 <Card className="border-0 shadow-md hover:shadow-lg transition-all duration-500 group bg-white rounded-xl overflow-hidden h-full flex flex-col transform hover:-translate-y-2">
-                  <div className="relative overflow-hidden rounded-t-xl -mx-6 -mt-5">
+                  <div className="relative overflow-hidden rounded-t-xl -mx-6 -mt-6">
                     <div className="aspect-[3/4] scale-100">
                       <img
                         alt={member.name}
