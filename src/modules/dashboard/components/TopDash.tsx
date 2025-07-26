@@ -6,7 +6,7 @@ import MorningSunIcon from "../../../assets/morning.png";
 import AfternoonSunIcon from "../../../assets/afternoon.png";
 import EveningMoonIcon from "../../../assets/evening.png";
 import NightMoonIcon from "../../../assets/night.png";
-import { imageURL } from "../../../app/slice/baseQuery";
+// import { imageURL } from "../../../app/slice/baseQuery";
 import WeatherWidgetTop from "../components/WeatherWidgetTop";
 import { useGetMeQuery } from "../../../app/api/userApi";
 
