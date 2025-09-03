@@ -23,7 +23,26 @@ export const AdminEndPoint = api.injectEndpoints({
       },
       providesTags: () => ["Admin"],
     }),
-    demoteToAdmin: build.mutation<unknown, { id: number }>({
+    getUnitSuperAdminList: build.query<HTTPResponse<IAdmin[]>, IAdminParams>({
+      query: (params) => {
+        return {
+          url: `/unit-super-admin/list`,
+          params,
+        };
+      },
+      providesTags: () => ["Admin"],
+    }),
+    getUnitAdminList: build.query<HTTPResponse<IAdmin[]>, IAdminParams>({
+      query: (params) => {
+        return {
+          url: `/unit-super-admin/admin-list`,
+          params,
+        };
+      },
+      providesTags: () => ["Admin"],
+    }),
+    
+    demoteToEmployee: build.mutation<unknown, { id: number }>({
       query: (id) => {
         return {
           url: `/employee/assign-admin-demoted/${id}`,
@@ -33,7 +52,37 @@ export const AdminEndPoint = api.injectEndpoints({
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully demote admin");
+          notification("success", "Successfully Demoted To Employee");
+        });
+      },
+      invalidatesTags: () => ["Admin"],
+    }),
+    promoteToSuperAdmin: build.mutation<unknown, { id: number }>({
+      query: (id) => {
+        return {
+          url: `/employee/promoted-unit-super-admin/${id}`,
+          method: "POST",
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully promoted to Unit Super Admin");
+        });
+      },
+      invalidatesTags: () => ["Admin"],
+    }),
+    demoteToUnitAdmin: build.mutation<unknown, { id: number }>({
+      query: (id) => {
+        return {
+          url: `/employee/demoted-unit-super-admin/${id}`,
+          method: "POST",
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully demote Super Admin to Unit Admin");
         });
       },
       invalidatesTags: () => ["Admin"],
@@ -54,12 +103,33 @@ export const AdminEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["Admin"],
     }),
+    assignLocationToAdmin: build.mutation<unknown, { id: number; body: { seating_location: number[] } }>({
+      query: ({ id, body }) => {
+        return {
+          url: `/seating-location/assign/${id}`,
+          method: "POST",
+          body,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully location assigned");
+        });
+      },
+      invalidatesTags: () => ["Admin"],
+    }),
   }),
 });
 
 export const {
   useGetAdminsQuery,
   useGetOverallAdminsQuery,
-  useDemoteToAdminMutation,
+  useGetUnitSuperAdminListQuery,
+  useGetUnitAdminListQuery,
+  useDemoteToEmployeeMutation,
+  usePromoteToSuperAdminMutation,
+  useDemoteToUnitAdminMutation,
   useAssignUnitToAdminMutation,
+  useAssignLocationToAdminMutation,
 } = AdminEndPoint;

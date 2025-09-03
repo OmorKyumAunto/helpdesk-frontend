@@ -13,11 +13,15 @@ import DisbursementReportModal from "../components/DisbursementReportModal";
 import TaskReportModal from "../components/TaskReportModal";
 import TicketReportModal from "../components/TicketReportModal";
 import CombineReportModal from "../components/CombineReportModal";
+import { useGetMeQuery } from "../../../app/api/userApi";
 
 const { Title, Text } = Typography;
 
 const ReportsPage: React.FC = () => {
   const dispatch = useDispatch();
+  const { data: profile } = useGetMeQuery();
+  const employee_id = profile?.data?.employee_id;
+
 
   const handleOpenModal = (
     title: string,
@@ -76,14 +80,19 @@ const ReportsPage: React.FC = () => {
       modal: () => <CombineReportModal key={Date.now()} />,
     },
   ];
-
+  const filteredCards = cards.filter(card => {
+    if (employee_id === "Assetteam") {
+      return !["Task Report", "Ticket Report", "Combine Report"].includes(card.title);
+    }
+    return true;
+  });
   return (
     <Card style={{ minHeight: "80vh" }}>
       <Title level={3} style={{ marginBottom: 24 }}>
         📊 Reports Dashboard
       </Title>
       <Row gutter={[24, 24]}>
-        {cards.map((card, index) => (
+        {filteredCards.map((card, index) => (
           <Col xs={24} sm={12} md={12} lg={6} key={index}>
             <Card
               hoverable

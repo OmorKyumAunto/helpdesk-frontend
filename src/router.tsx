@@ -10,7 +10,7 @@ import NotFound from "./components/notFound/NotFound";
 import UnauthorizePage from "./components/notFound/UnauthorizePage";
 import About from "./modules/about/page/About";
 import Reports from "./modules/reports/page/reports";
-import AdminList from "./modules/admin/pages/Adminlist";
+import AdminPanel from "./modules/admin/pages/AdminPanel";
 import AssetsList from "./modules/assets/pages/AssetsList";
 import DistributedAsset from "./modules/assets/pages/DistributedAsset";
 import EmployeeDistributedAsset from "./modules/assets/pages/EmployeeDistributedAsset";
@@ -34,6 +34,7 @@ import TaskConfigurationList from "./modules/taskConfiguration/pages/TaskCategor
 import TaskConfiguration from "./modules/taskConfiguration/pages/TaskConfiguration";
 import TaskCategoryList from "./modules/taskConfiguration/pages/TaskCategoryList";
 import EmpDatabase from "./modules/empDatabase/pages/EmpDatabase";
+import ComplexConfig from "./modules/complex/pages/ComplexConfig";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -102,7 +103,7 @@ export const routers = createBrowserRouter([
       },
       {
         path: "/admin/list",
-        element: <AdminList />,
+        element: <AdminPanel />,
       },
       {
         path: "/tickets/list",
@@ -146,6 +147,10 @@ export const routers = createBrowserRouter([
           {
             path: "license",
             element: <LicenseList />,
+          },
+          {
+            path: "complex-config",
+            element: <ComplexConfig />,
           },
           {
             path: "tickets-config",

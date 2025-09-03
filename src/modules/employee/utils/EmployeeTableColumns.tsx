@@ -11,11 +11,14 @@ import {
 import UpdateEmployee from "../components/UpdateEmployee";
 import EmployeeDetails from "../pages/EmployeeDetails";
 import { IEmployee } from "../types/employeeTypes";
+import { useGetMeQuery } from "../../../app/api/userApi";
 
 export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
   const [deleteEmployee] = useDeleteEmployeeMutation();
   const [updateStatus] = useUpdateEmployeeStatusMutation();
   const dispatch = useDispatch();
+  const { data: profile } = useGetMeQuery();
+      const employeeID = profile?.data?.employee_id;
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const confirm = (id: number) => {
     if (id) {
@@ -97,29 +100,33 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
           >
             <EyeOutlined />
           </Button>
-          <Button
-            size="small"
-            style={{ color: "#1775BB" }}
-            onClick={() => {
-              dispatch(
-                setCommonModal({
-                  title: "Update Employee",
-                  content: <UpdateEmployee employee={record} />,
-                  show: true,
-                  width: 678,
-                })
-              );
-            }}
-          >
-            <EditOutlined />
-          </Button>
-          <>
-            <Switch
-              defaultChecked={record.status === 1 ? true : false}
-              style={{ background: record.status === 1 ? "green" : "red" }}
-              onChange={() => updateStatus(record.id)}
-            />
-          </>
+          {employeeID !== "Assetteam" && (
+            <>
+              <Button
+                size="small"
+                style={{ color: "#1775BB" }}
+                onClick={() => {
+                  dispatch(
+                    setCommonModal({
+                      title: "Update Employee",
+                      content: <UpdateEmployee employee={record} />,
+                      show: true,
+                      width: 678,
+                    })
+                  );
+                }}
+              >
+                <EditOutlined />
+              </Button>
+
+              <Switch
+                checked={record.status === 1}
+                style={{ background: record.status === 1 ? "green" : "red" }}
+                onChange={() => updateStatus(record.id)}
+              />
+            </>
+          )}
+
           {roleId === 1 && (
             <>
               <Popconfirm

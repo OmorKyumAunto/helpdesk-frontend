@@ -124,6 +124,34 @@ export const employeeEndPoint = api.injectEndpoints({
         { type: "dashboardTypes", id: "dashboard" },
       ],
     }),
+    UpdateEmployeeSeatingLocation: build.mutation<
+      unknown,
+      { id: number; data: any }
+    >({
+      query: ({ id, data }) => {
+        return {
+          url: `/seating-location/employee-seating-location/${id}`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          notification(
+            "success",
+            "Successfully updated employee seating location"
+          );
+        } catch (err: any) {
+          notification(
+            "error",
+            err?.data?.message || "Failed to update seating location"
+          );
+        }
+      },
+      invalidatesTags: () => ["employee"],
+    }),
+
     employeeAssignToAdmin: build.mutation<unknown, number>({
       query: (id) => {
         return {
@@ -189,4 +217,5 @@ export const {
   useEmployeeAssignToAdminMutation,
   useUpdateEmployeeStatusMutation,
   useChangeEmployeePasswordMutation,
+  useUpdateEmployeeSeatingLocationMutation,
 } = employeeEndPoint;

@@ -13,10 +13,13 @@ import CreateEmployee from "../components/CreateEmployee";
 import { IEmployeeParams } from "../types/employeeTypes";
 import { EmployeeTableColumns } from "../utils/EmployeeTableColumns";
 import EmployeeFileUpdate from "./EmployeeFileUpdate";
+import { useGetMeQuery } from "../../../app/api/userApi";
 const { Option } = Select;
 
 const EmployeeList = () => {
   const dispatch = useDispatch();
+  const { data: profile } = useGetMeQuery();
+    const employeeID = profile?.data?.employee_id;
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 50,
@@ -286,79 +289,84 @@ const EmployeeList = () => {
               /> */}
             </>
 
-              <ExcelDownload
-                excelName={"employee_list"}
-                excelTableHead={[
-                  "Employee ID",
-                  "Employee Name",
-                  "Department",
-                  "Designation",
-                  "Email",
-                  "Contact No",
-                  "Blood Group",
-                  "Date of Joining",
-                  "Location",
-                  "Business Type",
-                  "Line of Business",
-                  "Grade",
-                  "PABX",
-                ]}
-                excelData={
-                  data?.data?.length
-                    ? data?.data?.map(
-                      ({
-                        employee_id,
-                        name,
-                        department,
-                        designation,
-                        email,
-                        contact_no,
-                        joining_date,
-                        unit_name,
-                        licenses,
-                        blood_group,
-                        business_type,
-                        line_of_business,
-                        grade,
-                        pabx,
-                      }: any) => {
-                        const data = {
-                          "Employee ID": employee_id,
-                          "Employee Name": name,
-                          Department: department,
-                          Designation: designation,
-                          Email: email,
-                          "Contact No": contact_no,
-                          "Blood Group": blood_group,
-                          "Date of Joining":
-                            dayjs(joining_date).format("DD-MM-YYYY"),
-                          Location: unit_name,
-                          Licenses: licenses,
-                          "Business Type": business_type,
-                          "Line of Business": line_of_business,
-                          Grade: grade,
-                          PABX: pabx,
-                        };
-                        return data;
-                      }
-                    )
-                    : []
-                }
-              />
-            <CreateButton
-              name="Upload"
-              onClick={() => {
-                dispatch(
-                  setCommonModal({
-                    title: "Upload Employee",
-                    content: <EmployeeFileUpdate />,
-                    show: true,
-                    width: 400,
-                  })
-                );
-              }}
+            <ExcelDownload
+              excelName={"employee_list"}
+              excelTableHead={[
+                "Employee ID",
+                "Employee Name",
+                "Department",
+                "Designation",
+                "Email",
+                "Contact No",
+                "Blood Group",
+                "Date of Joining",
+                "Location",
+                "Business Type",
+                "Line of Business",
+                "Grade",
+                "PABX",
+              ]}
+              excelData={
+                data?.data?.length
+                  ? data?.data?.map(
+                    ({
+                      employee_id,
+                      name,
+                      department,
+                      designation,
+                      email,
+                      contact_no,
+                      joining_date,
+                      unit_name,
+                      licenses,
+                      blood_group,
+                      business_type,
+                      line_of_business,
+                      grade,
+                      pabx,
+                    }: any) => {
+                      const data = {
+                        "Employee ID": employee_id,
+                        "Employee Name": name,
+                        Department: department,
+                        Designation: designation,
+                        Email: email,
+                        "Contact No": contact_no,
+                        "Blood Group": blood_group,
+                        "Date of Joining":
+                          dayjs(joining_date).format("DD-MM-YYYY"),
+                        Location: unit_name,
+                        Licenses: licenses,
+                        "Business Type": business_type,
+                        "Line of Business": line_of_business,
+                        Grade: grade,
+                        PABX: pabx,
+                      };
+                      return data;
+                    }
+                  )
+                  : []
+              }
             />
-            <CreateButton name="Create" onClick={showModal} />
+            {employeeID !== "Assetteam" && (
+              <>
+                <CreateButton
+                  name="Upload"
+                  onClick={() => {
+                    dispatch(
+                      setCommonModal({
+                        title: "Upload Employee",
+                        content: <EmployeeFileUpdate />,
+                        show: true,
+                        width: 400,
+                      })
+                    );
+                  }}
+                />
+                <CreateButton name="Create" onClick={showModal} />
+              </>
+            )}
+
           </div>
           <div>
             <Table

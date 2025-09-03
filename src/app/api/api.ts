@@ -44,7 +44,7 @@ export const api = createApi({
     "Admin",
     "member",
     "payroll",
-    "s-payroll",
+    "complex",
     "employee",
     "accounts",
     "event",

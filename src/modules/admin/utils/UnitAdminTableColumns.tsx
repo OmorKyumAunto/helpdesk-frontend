@@ -5,16 +5,15 @@ import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useDemoteToEmployeeMutation, useDemoteToUnitAdminMutation, usePromoteToSuperAdminMutation } from "../api/adminEndPoint";
 import AssignUnitToAdmin from "../components/AssignUnitToAdmin";
+import AssignCategoryToAdmin from "../../assignCategory/components/AssignCategoryToAdmin";
 import AssignLocationToAdmin from "../components/AssignLocationToAdmin";
 import { IAdmin } from "../types/adminTypes";
-import { useGetMeQuery } from "../../../app/api/userApi";
-export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
+export const UnitAdminTableColumns = (): TableProps<IAdmin>["columns"] => {
   const dispatch = useDispatch();
   const [demote] = useDemoteToEmployeeMutation();
   const [promoteSuperAdmin] = usePromoteToSuperAdminMutation();
   const [demoteToUnitAdmin] = useDemoteToUnitAdminMutation();
-  const { data: profile } = useGetMeQuery();
-  const roleID = profile?.data?.role_id;
+
 
   return [
     {
@@ -61,6 +60,16 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
     //   key: "unit_name",
     // },
     {
+        title: "Asset Units",
+        dataIndex: "asset_unit_titles",
+        key: "asset_unit_titles",
+      },
+      {
+        title: "Ticket Categories",
+        dataIndex: "ticket_category_titles",
+        key: "ticket_category_titles",
+      },
+    {
       title: "Role",
       key: "role",
       render: (record) => (
@@ -78,68 +87,67 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
       render: (record) => (
         <Space size="middle">
           <>
-            {/* Hide Assign Unit for roleID 4 */}
-            {roleID !== 4 && (
-              <Button
-                size="small"
-                type="primary"
-                onClick={() => {
-                  dispatch(
-                    setCommonModal({
-                      title: "Assign Unit",
-                      content: (
-                        <AssignUnitToAdmin
-                          id={record?.id}
-                          searchAccess={record?.searchAccess}
-                        />
-                      ),
-                      show: true,
-                    })
-                  );
-                }}
-              >
-                Assign Unit
-              </Button>
-            )}
 
-            {/* Hide Assign Location for roleID 1 */}
-            {roleID !== 1 && (
-              <Button
-                size="small"
-                type="primary"
-                onClick={() => {
-                  dispatch(
-                    setCommonModal({
-                      title: "Assign Location",
-                      content: (
-                        <AssignLocationToAdmin
-                          id={record?.id}
-                          searchAccess={record?.searchAccess}
-                        />
-                      ),
-                      show: true,
-                    })
-                  );
-                }}
-              >
-                Assign Location
-              </Button>
-            )}
-
-            {/* Hide Promote to Unit Super Admin for roleID 4 */}
-            {roleID !== 4 && (
-              <Popconfirm
-                title="Promote to Unit Super Admin"
-                description="Are you sure to promote to Unit Superadmin?"
-                onConfirm={() => promoteSuperAdmin(record?.id)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button size="small" type="primary">
-                  Promote
-                </Button>
-              </Popconfirm>
-            )}
+            {/* <Button
+              size="small"
+              type="primary"
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
+                    title: "Assign Unit",
+                    content: (
+                      <AssignUnitToAdmin
+                        id={record?.id}
+                        searchAccess={record?.searchAccess}
+                      />
+                    ),
+                    show: true,
+                  })
+                );
+              }}
+            >
+              Assign Unit
+            </Button> */}
+            <Button
+              size="small"
+              type="primary"
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
+                    title: "Assign Location",
+                    content: (
+                      <AssignLocationToAdmin
+                        id={record?.id}
+                        searchAccess={record?.searchAccess}
+                      />
+                    ),
+                    show: true,
+                  })
+                );
+              }}
+            >
+              Assign Location
+            </Button>
+            <Button
+              size="small"
+              type="primary"
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
+                    title: "Assign Category",
+                    content: (
+                      <AssignCategoryToAdmin
+                        id={record?.user_id}
+                        assign_category={record?.assign_category}
+                      />
+                    ),
+                    show: true,
+                  })
+                );
+              }}
+            >
+              Assign Category
+            </Button>
 
             <Popconfirm
               title="Remove the admin"
@@ -152,10 +160,10 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
                 Remove
               </Button>
             </Popconfirm>
+
           </>
         </Space>
       ),
-    }
-
+    },
   ];
 };

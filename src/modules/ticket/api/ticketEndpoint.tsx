@@ -92,6 +92,18 @@ export const ticketEndpoint = api.injectEndpoints({
       },
       providesTags: () => ["ticket"],
     }),
+    getRaiseTicketUnitSuperAdminWise: build.query<
+      HTTPResponse<IAdminTicketList[]>,
+      any
+    >({
+      query: (params) => {
+        return {
+          url: `/raise-ticket/unit-super-admin-ticket`,
+          params,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
     getCategoryWiseDashboardData: build.query<
       HTTPResponse<ICategoryWiseDashboard[]>,
       void
@@ -293,6 +305,7 @@ export const {
   useGetTicketReportQuery,
   useGetTicketDashboardCountQuery,
   useGetRaiseTicketUserWiseQuery,
+  useGetRaiseTicketUnitSuperAdminWiseQuery,
   useGetRaiseSolveDashboardDataQuery,
   useGetDashboardBarDataQuery,
   useGetPriorityWiseDashboardDataQuery,

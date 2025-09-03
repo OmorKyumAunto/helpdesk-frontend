@@ -15,6 +15,7 @@ const { Option } = Select;
 
 const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
   const { data: profile } = useGetMeQuery();
+  const employeeID = profile?.data?.employee_id;
   console.log(profile?.data?.role_id);
   const {
     id,
@@ -137,9 +138,14 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                     label="Employee ID"
                     required
                   >
-                    <Input placeholder="Enter Employee ID" type="text" />
+                    <Input
+                      placeholder="Enter Employee ID"
+                      type="text"
+                      disabled={employeeID === "Assetteam" || employeeID === "Laxfo"}
+                    />
                   </Form.Item>
                 </Col>
+
                 <Col xs={24} sm={24} md={12}>
                   <Form.Item
                     name="name"

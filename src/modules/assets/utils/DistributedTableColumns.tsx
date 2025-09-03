@@ -6,10 +6,13 @@ import { setCommonModal } from "../../../app/slice/modalSlice";
 import DistributeAssetDetails from "../components/DistributedAssetDetails";
 import { IAsset } from "../types/assetsTypes";
 import UpdateAsset from "../components/UpdateAssets";
+import { useGetMeQuery } from "../../../app/api/userApi";
 
 export const DistributedAssetsTableColumns =
   (): TableProps<IAsset>["columns"] => {
     const dispatch = useDispatch();
+    const { data: profile } = useGetMeQuery();
+    const employeeID = profile?.data?.employee_id;
 
     return [
       {
@@ -142,22 +145,25 @@ export const DistributedAssetsTableColumns =
             >
               <EyeOutlined />
             </Button>
-            <Button
-              size="small"
-              style={{ color: "#1775BB" }}
-              onClick={() => {
-                dispatch(
-                  setCommonModal({
-                    title: "Update Distributed Asset",
-                    content: <UpdateAsset asset={record} />,
-                    show: true,
-                    width: 678,
-                  })
-                );
-              }}
-            >
-              <EditOutlined />
-            </Button>
+            {employeeID !== "Assetteam" && (
+              <Button
+                size="small"
+                style={{ color: "#1775BB" }}
+                onClick={() => {
+                  dispatch(
+                    setCommonModal({
+                      title: "Update Distributed Asset",
+                      content: <UpdateAsset asset={record} />,
+                      show: true,
+                      width: 678,
+                    })
+                  );
+                }}
+              >
+                <EditOutlined />
+              </Button>
+            )}
+
           </Space>
         ),
       },

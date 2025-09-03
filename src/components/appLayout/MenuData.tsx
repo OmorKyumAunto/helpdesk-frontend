@@ -19,6 +19,7 @@ import { PiTicket } from "react-icons/pi";
 import { IoTicketOutline } from "react-icons/io5";
 import { TbReport } from "react-icons/tb";
 import { MdOutlineSync } from "react-icons/md";
+import { HiBuildingLibrary } from "react-icons/hi2";
 
 export const sideBarItems = (employee_id: string, roleId: number) => {
   let menuData: IMenuData[] = [
@@ -29,131 +30,169 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
     },
     ...(roleId !== 3
       ? [
-          {
-            label: <Link to="/assets/list">Stock</Link>,
-            key: "/assets/list",
-            icon: <AiOutlinePlusSquare size={20} />,
-          },
-          {
-            label: <Link to="/assets/distributed">Disbursements</Link>,
-            key: "/assets/distributed",
-            icon: <MdListAlt size={20} />,
-          },
-          {
-            label: <Link to="/employee/distributed">My Assets</Link>,
-            key: "/employee/distributed",
-            icon: <MdOutlineAssignment size={20} />,
-          },
-        ]
+        {
+          label: <Link to="/assets/list">Stock</Link>,
+          key: "/assets/list",
+          icon: <AiOutlinePlusSquare size={20} />,
+        },
+        {
+          label: <Link to="/assets/distributed">Disbursements</Link>,
+          key: "/assets/distributed",
+          icon: <MdListAlt size={20} />,
+        },
+        {
+          label: <Link to="/employee/distributed">My Assets</Link>,
+          key: "/employee/distributed",
+          icon: <MdOutlineAssignment size={20} />,
+        },
+      ]
       : [
-          {
-            label: <Link to="/employee/distributed">My Assets</Link>,
-            key: "/employee/distributed",
-            icon: <MdOutlineAssignment size={20} />,
-          },
-          {
-            label: <Link to="/employee/employee-list">Address Book</Link>,
-            key: "/employee/employee-list",
-            icon: <LuUsers2 size={20} />,
-          },
-        ]),
+        {
+          label: <Link to="/employee/distributed">My Assets</Link>,
+          key: "/employee/distributed",
+          icon: <MdOutlineAssignment size={20} />,
+        },
+        {
+          label: <Link to="/employee/employee-list">Address Book</Link>,
+          key: "/employee/employee-list",
+          icon: <LuUsers2 size={20} />,
+        },
+      ]),
     ...(roleId !== 3
       ? [
-          {
-            label: <Link to="/employee/list">Address Book</Link>,
-            key: "/employee/list",
-            icon: <LuUsers2 size={20} />,
-          },
-          {
-            label: <Link to="/reports">Reports</Link>,
-            key: "/reports",
-            icon: <TbReport size={20} />,
-          },
-        ]
+        {
+          label: <Link to="/employee/list">Address Book</Link>,
+          key: "/employee/list",
+          icon: <LuUsers2 size={20} />,
+        },
+        {
+          label: <Link to="/reports">Reports</Link>,
+          key: "/reports",
+          icon: <TbReport size={20} />,
+        },
+      ]
       : []),
-    ...(roleId === 1
+    ...(roleId === 1 || roleId === 4
       ? [
-          {
-            label: <Link to="/admin/list">Admin Panel</Link>,
-            key: "/admin/list",
-            icon: <LiaUsersCogSolid size={20} />,
-          },
-        ]
+        {
+          label: <Link to="/admin/list">Admin Panel</Link>,
+          key: "/admin/list",
+          icon: <LiaUsersCogSolid size={20} />,
+        },
+      ]
       : []),
     ...(roleId !== 3
       ? [
-          {
-            label: <Link to="/ctc/list">IT CTC</Link>,
-            key: "/ctc/list",
-            icon: <MdOutlineFactCheck size={20} />,
-          },
-          {
-            label: <Link to="/sop/list">IT SOP</Link>,
-            key: "/sop/list",
-            icon: <FaRegFileAlt size={20} />,
-          },
-        ]
+        {
+          label: <Link to="/ctc/list">IT CTC</Link>,
+          key: "/ctc/list",
+          icon: <MdOutlineFactCheck size={20} />,
+        },
+        {
+          label: <Link to="/sop/list">IT SOP</Link>,
+          key: "/sop/list",
+          icon: <FaRegFileAlt size={20} />,
+        },
+      ]
       : []),
     ...(employee_id === "15100107"
       ? [
-          {
-            label: <Link to="/ctc/list">IT CTC</Link>,
-            key: "/ctc/list",
-            icon: <MdOutlineFactCheck size={20} />,
-          },
-        ]
+        {
+          label: <Link to="/ctc/list">IT CTC</Link>,
+          key: "/ctc/list",
+          icon: <MdOutlineFactCheck size={20} />,
+        },
+      ]
       : []),
     {
       label: <Link to="/forms">Templates</Link>,
       key: "/forms",
       icon: <MdWebAsset size={20} />,
     },
-    ...(roleId === 1
+    ...(roleId === 1 || roleId === 4
       ? [
-          {
-            label: "Settings",
-            key: "settings",
-            icon: <LuSettings size={20} />,
-            children: [
-              {
-                label: <Link to="/settings/unit">Unit</Link>,
-                key: "/settings/unit",
-                icon: <FaRegListAlt size={16} />,
-              },
-              {
-                label: <Link to="/settings/location">Sub Unit</Link>,
-                key: "/settings/location",
-                icon: <MdOutlineLocationOn size={16} />,
-              },
-              {
-                label: <Link to="/settings/license">Licenses</Link>,
-                key: "/settings/license",
-                icon: <TbLicense size={16} />,
-              },
-              {
-                label: (
-                  <Link to="/settings/tickets-config">
-                    Ticket Configuration
-                  </Link>
-                ),
-                key: "/settings/tickets-config",
-                icon: <GrConfigure size={16} />,
-              },
-              {
-                label: (
-                  <Link to="/settings/task-config">Task Configuration</Link>
-                ),
-                key: "/settings/task-config",
-                icon: <GoTasklist size={16} />,
-              },
-              {
-                label: <Link to="/settings/zing-hr-sync">ZingHR Sync</Link>,
-                key: "/settings/zing-hr-sync",
-                icon: <MdOutlineSync size={16} />,
-              },
-            ],
-          },
-        ]
+        {
+          label: "Settings",
+          key: "settings",
+          icon: <LuSettings size={20} />,
+          children: [
+
+
+            // Only for roleId 1
+            ...(roleId === 1
+              ? [
+                {
+                  label: <Link to="/settings/unit">Unit</Link>,
+                  key: "/settings/unit",
+                  icon: <FaRegListAlt size={16} />,
+                },
+              ]
+              : []),
+            // Common for both roleId 1 & 4 (if included)
+            ...(roleId === 1 || roleId === 4
+              ? [
+                {
+                  label: <Link to="/settings/location">Sub Unit</Link>,
+                  key: "/settings/location",
+                  icon: <MdOutlineLocationOn size={16} />,
+                },
+              ]
+              : []),
+            // Common for both roleId 1 & 4
+            ...(roleId === 1 || roleId === 4
+              ? [
+                {
+                  label: (
+                    <Link to="/settings/complex-config">
+                      Complex Configure
+                    </Link>
+                  ),
+                  key: "/settings/complex-config",
+                  icon: <HiBuildingLibrary size={16} />,
+                },
+                
+              ]
+              : []),
+
+            // Only for roleId 1
+            ...(roleId === 1
+              ? [
+                {
+                  label: (
+                    <Link to="/settings/tickets-config">
+                      Ticket Configuration
+                    </Link>
+                  ),
+                  key: "/settings/tickets-config",
+                  icon: <GrConfigure size={16} />,
+                },
+                {
+                  label: (
+                    <Link to="/settings/task-config">
+                      Task Configuration
+                    </Link>
+                  ),
+                  key: "/settings/task-config",
+                  icon: <GoTasklist size={16} />,
+                },
+
+                {
+                  label: <Link to="/settings/license">Licenses</Link>,
+                  key: "/settings/license",
+                  icon: <TbLicense size={16} />,
+                },
+                {
+                  label: (
+                    <Link to="/settings/zing-hr-sync">ZingHR Sync</Link>
+                  ),
+                  key: "/settings/zing-hr-sync",
+                  icon: <MdOutlineSync size={16} />,
+                },
+              ]
+              : []),
+          ],
+        },
+      ]
       : []),
 
     {

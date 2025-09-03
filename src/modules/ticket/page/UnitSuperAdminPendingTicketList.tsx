@@ -20,7 +20,7 @@ import {
 } from "antd";
 import {
   useCreateCommentMutation,
-  useGetRaiseTicketAdminWiseQuery,
+  useGetRaiseTicketUnitSuperAdminWiseQuery,
   useLazyGetCommentDataQuery,
 } from "../api/ticketEndpoint";
 import { TiArrowLoop } from "react-icons/ti";
@@ -63,14 +63,16 @@ const AdminTicketList = ({
     key?: string;
     priority?: string;
     status?: string;
+    search?: string;
     limit: number;
     offset: number;
   }>({
     limit: Number(pageSize),
     offset: skipValue,
+    search: "pending",
   });
   const dispatch = useDispatch();
-  const { data, isLoading } = useGetRaiseTicketAdminWiseQuery({ ...filter });
+  const { data, isLoading } = useGetRaiseTicketUnitSuperAdminWiseQuery({ ...filter });
   const [getComments, { data: commentData, isLoading: commentLoader }] =
     useLazyGetCommentDataQuery();
   const { data: { data: profile } = {} } = useGetMeQuery();
@@ -120,7 +122,6 @@ const AdminTicketList = ({
   const options = [
     { label: "All", value: "" },
     { label: "In Progress", value: "inprogress" },
-    { label: "Solved", value: "solved" },
     { label: "Unsolved", value: "unsolved" },
     { label: "Forward", value: "forward" },
   ];
@@ -138,7 +139,7 @@ const AdminTicketList = ({
     <Card
       loading={isLoading}
       style={{ width: "100%" }}
-      title="Admin Ticket List"
+      title="Pending Ticket List"
       extra={
         <Space direction={!sm ? "vertical" : "horizontal"}>
           <Radio.Group

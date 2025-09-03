@@ -1,4 +1,5 @@
 export interface IUnit {
+  building: any;
   id: number;
   title: string;
   status: number;

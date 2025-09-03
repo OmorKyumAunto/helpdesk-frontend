@@ -148,6 +148,7 @@ export const AppLayout = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const employee_id = profile?.data?.employee_id;
 
   const memoizedMenuItems = useMemo(
     () => menuItems(profile?.data, roleId as number),
@@ -329,15 +330,16 @@ export const AppLayout = () => {
       key: "tasks",
       label: "Task Manager",
       path: "/task/list",
-      show: roleId !== 3,
+      show: roleId !== 3 && employee_id !== "Assetteam",
     },
     {
       key: "tickets",
       label: "Ticketing System",
       path: "/tickets/list",
-      show: true,
+      show: employee_id !== "Assetteam", // example restriction
     },
   ];
+
 
   return (
     <Layout style={{ minHeight: "100vh", background: "#f8fafc" }}>
@@ -444,9 +446,15 @@ export const AppLayout = () => {
                       "⚡ Admin"
                     ) : roleId === 3 ? (
                       "👤 User"
-                    ) : (
-                      "❓ Unknown"
-                    )}
+                    ) :
+                      roleId === 4 ? (
+                        <span>
+                          <span style={{ position: "relative", top: "-1.5px" }}>👑</span> Unit Super Admin
+                        </span>
+                      )
+                        : (
+                          "❓ Unknown"
+                        )}
                   </Text>
                 </div>
               </Space>
@@ -630,7 +638,7 @@ export const AppLayout = () => {
 
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <Space size={8}>
-              {quickActions.map((action) =>
+              {quickActions.filter(action => action.show).map((action) =>
                 action.show && (
                   <Link key={action.key} to={action.path}>
                     <Tooltip title={action.label}>

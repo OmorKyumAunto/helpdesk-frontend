@@ -38,6 +38,7 @@ const AssetsList = () => {
   const { data: profile } = useGetMeQuery();
   const { data: locationData, isLoading: locationIsLoading } =
     useGetActiveLocationsQuery({});
+  const employeeID = profile?.data?.employee_id;
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
@@ -227,59 +228,64 @@ const AssetsList = () => {
               excelData={
                 data?.data?.length
                   ? data?.data?.map(
-                      ({
-                        serial_number,
-                        remarks,
-                        model,
-                        category,
-                        po_number,
-                        asset_no,
-                        specification,
-                        unit_name,
-                        location_name,
-                        name,
-                        purchase_date,
-                        price,
-                        warranty,
-                        device_remarks,
-                      }: any) => {
-                        const data = {
-                          "Asset Name": name,
-                          Category: category,
-                          Model: model,
-                          "Serial No": serial_number,
-                          "PO No": po_number,
-                          "Asset No": asset_no,
-                          Specification: specification,
-                          Remarks: remarks,
-                          Unit: unit_name,
-                          Location: location_name,
-                          "Purchase Date":
-                            dayjs(purchase_date).format("DD-MM-YYYY"),
-                          Price: price,
-                          Warranty: warranty,
-                          "Device Remarks": device_remarks,
-                        };
-                        return data;
-                      }
-                    )
+                    ({
+                      serial_number,
+                      remarks,
+                      model,
+                      category,
+                      po_number,
+                      asset_no,
+                      specification,
+                      unit_name,
+                      location_name,
+                      name,
+                      purchase_date,
+                      price,
+                      warranty,
+                      device_remarks,
+                    }: any) => {
+                      const data = {
+                        "Asset Name": name,
+                        Category: category,
+                        Model: model,
+                        "Serial No": serial_number,
+                        "PO No": po_number,
+                        "Asset No": asset_no,
+                        Specification: specification,
+                        Remarks: remarks,
+                        Unit: unit_name,
+                        Location: location_name,
+                        "Purchase Date":
+                          dayjs(purchase_date).format("DD-MM-YYYY"),
+                        Price: price,
+                        Warranty: warranty,
+                        "Device Remarks": device_remarks,
+                      };
+                      return data;
+                    }
+                  )
                   : []
               }
             />
-            <CreateButton
-              name="Upload Asset"
-              onClick={() => {
-                dispatch(
-                  setCommonModal({
-                    title: "Upload Asset",
-                    content: <UploadAssetFile />,
-                    show: true,
-                    width: 400,
-                  })
-                );
-              }}
-            />
-            <CreateButton name="Create Assets" onClick={showModal} />
+            {employeeID !== "Assetteam" && (
+              <>
+                <CreateButton
+                  name="Upload Asset"
+                  onClick={() => {
+                    dispatch(
+                      setCommonModal({
+                        title: "Upload Asset",
+                        content: <UploadAssetFile />,
+                        show: true,
+                        width: 400,
+                      })
+                    );
+                  }}
+                />
+                <CreateButton name="Create Assets" onClick={showModal} />
+              </>
+            )}
+
           </div>
           <div>
             <Table

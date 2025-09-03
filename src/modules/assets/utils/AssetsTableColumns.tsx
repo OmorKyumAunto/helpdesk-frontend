@@ -12,10 +12,13 @@ import { useDispatch, useSelector } from "react-redux";
 import AssignEmployee from "../components/AssignEmployee";
 import AssetDetails from "../components/AssetDetails";
 import { RootState } from "../../../app/store/store";
+import { useGetMeQuery } from "../../../app/api/userApi";
 
 export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
   const dispatch = useDispatch();
   const { roleId } = useSelector((state: RootState) => state.userSlice);
+  const { data: profile } = useGetMeQuery();
+  const employeeID = profile?.data?.employee_id;
   const [deleteAsset] = useDeleteAssetsMutation();
   const [updateStatus, { isSuccess }] = useUpdateAssetStatusMutation();
   const confirm = (id: number) => {
@@ -92,32 +95,35 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
           >
             <EyeOutlined />
           </Button>
-          <Button
-            size="small"
-            style={{ color: "#1775BB" }}
-            onClick={() => {
-              dispatch(
-                setCommonModal({
-                  title: "Update Asset",
-                  content: <UpdateAsset asset={record} />,
-                  show: true,
-                  width: 678,
-                })
-              );
-            }}
-          >
-            <EditOutlined />
-          </Button>
+          {employeeID !== "Assetteam" && (
+            <>
+              <Button
+                size="small"
+                style={{ color: "#1775BB" }}
+                onClick={() => {
+                  dispatch(
+                    setCommonModal({
+                      title: "Update Asset",
+                      content: <UpdateAsset asset={record} />,
+                      show: true,
+                      width: 678,
+                    })
+                  );
+                }}
+              >
+                <EditOutlined />
+              </Button>
 
-          <>
-            <Switch
-              checked={record.status === 1 ? true : false}
-              style={{
-                background: record.status === 1 ? "green" : "red",
-              }}
-              onChange={() => updateStatus(record.id)}
-            />
-          </>
+              <Switch
+                checked={record.status === 1}
+                style={{
+                  background: record.status === 1 ? "green" : "red",
+                }}
+                onChange={() => updateStatus(record.id)}
+              />
+            </>
+          )}
+
 
           {roleId === 1 && (
             <Popconfirm
@@ -132,23 +138,25 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
               </Button>
             </Popconfirm>
           )}
-          <Button
-            size="small"
-            type="primary"
-            className={record?.is_assign === 0 ? "block" : "hidden"}
-            onClick={() => {
-              dispatch(
-                setCommonModal({
-                  title: "Assign Employee",
-                  content: <AssignEmployee id={record.id} />,
-                  show: true,
-                  width: 500,
-                })
-              );
-            }}
-          >
-            Assign
-          </Button>
+          {employeeID !== "Assetteam" && record?.is_assign === 0 && (
+            <Button
+              size="small"
+              type="primary"
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
+                    title: "Assign Employee",
+                    content: <AssignEmployee id={record.id} />,
+                    show: true,
+                    width: 500,
+                  })
+                );
+              }}
+            >
+              Assign
+            </Button>
+          )}
+
         </Space>
       ),
     },

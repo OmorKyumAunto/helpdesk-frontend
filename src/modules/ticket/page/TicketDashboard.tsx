@@ -318,107 +318,192 @@ const TicketDashboard = ({
         </Col>
 
         {/* Top Ticket Solver  */}
-
-        <Col xs={24} sm={24} md={24} lg={6}>
+        <Col
+          xs={24}
+          sm={24}
+          md={24}
+          lg={6}
+        >
           <Card
-            title="Top Ticket Solvers"
+            title={
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                color: "#1f2937",
+                fontWeight: "600",
+                fontSize: window.innerWidth < 576 ? "14px" : "16px"
+              }}>
+                <div style={{
+                  width: "30px",
+                  height: "30px",
+                  borderRadius: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "white",
+                  fontSize: "22px"
+                }}>
+                  🏆
+                </div>
+                Top Ticket Solvers
+              </div>
+            }
             style={{
               height: "335px",
-              borderRadius: "12px",
-              boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
-              border: "1px solid #f0f0f0",
+              borderRadius: "8px",
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+              border: "1px solid #e5e7eb",
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
+              background: "#ffffff"
+            }}
+            bodyStyle={{
+              padding: "0 0 8px 0",
+              flex: 1,
+              display: "flex",
+              flexDirection: "column"
             }}
           >
-            <Table
-              size="small"
-              bordered={false}
-              pagination={false}
-              columns={[
-                {
-                  title: "Name",
-                  render: (record) => (
-                    <AntdTooltip
-                      title={
-                        <div style={{ lineHeight: "1.6" }}>
-                          <p>
-                            <strong>Name:</strong> {record?.solved_by_name}
-                          </p>
-                          <p>
-                            <strong>ID:</strong> {record?.employee_id}
-                          </p>
-                          <p>
-                            <strong>Email:</strong> {record?.email}
-                          </p>
-                          <p>
-                            <strong>Phone No:</strong> {record?.contact_no}
-                          </p>
-                          <p>
-                            <strong>Unit:</strong> {record?.unit_name}
-                          </p>
-                          <p>
-                            <strong>Total Solved Tickets:</strong>{" "}
-                            {record?.solved_ticket_count}
-                          </p>
-                        </div>
-                      }
-                    >
-                      <span
+            <div style={{ flex: 1, overflowY: "auto", paddingBottom: "0" }}>
+              <Table
+                size="small"
+                bordered={false}
+                pagination={false}
+                scroll={{ y: 245 }}
+                showHeader={false}
+                columns={[
+                  {
+                    title: "Solver",
+                    width: "100%",
+                    render: (record, _, index) => (
+                      <div
                         style={{
-                          fontWeight: 400,
-                          fontSize: ".8em",
-                          cursor: "pointer",
-                          color: "#1775bb",
-                          transition: "color 0.3s ease",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: window.innerWidth < 576 ? "10px 6px" : "12px 8px",
+                          background: "#ffffff",
+                          borderBottom: "1px solid #f3f4f6",
+                          transition: "background-color 0.2s ease",
+                          cursor: roleID === 1 ? "pointer" : "default"
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "#f8fafc";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "#ffffff";
                         }}
                         onClick={() => {
                           if (roleID === 1) {
                             setActiveKey && setActiveKey("3");
-                            setTicketSolver &&
-                              setTicketSolver(record?.solved_by_name);
+                            setTicketSolver && setTicketSolver(record?.solved_by_name);
                           }
                         }}
-                        onMouseEnter={(e) =>
-                          ((e.target as HTMLSpanElement).style.color =
-                            "#0056b3")
-                        }
-                        onMouseLeave={(e) =>
-                          ((e.target as HTMLSpanElement).style.color =
-                            "#1775bb")
-                        }
                       >
-                        {record?.solved_by_name}
-                      </span>
-                    </AntdTooltip>
-                  ),
-                },
-                {
-                  title: "Total",
-                  dataIndex: "solved_ticket_count",
-                  render: (text) => (
-                    <span
-                      style={{
-                        fontWeight: "bold",
-                        color: "#8dc73f",
-                        fontSize: ".9em",
-                      }}
-                    >
-                      {text}
-                    </span>
-                  ),
-                },
-              ]}
-              dataSource={topSolver?.data?.length ? topSolver?.data : []}
-              rowClassName={(record, index) =>
-                index % 2 === 0 ? "table-row-light" : "table-row-dark"
-              }
-              style={{
-                borderRadius: "10px",
-                overflow: "hidden",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              }}
-            />
+                        {/* Rank Number */}
+                        <div style={{
+                          width: window.innerWidth < 576 ? "20px" : "24px",
+                          height: window.innerWidth < 576 ? "20px" : "24px",
+                          background: index < 3 ? "#3b82f6" : "#6b7280",
+                          color: "white",
+                          borderRadius: "50%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: window.innerWidth < 576 ? "10px" : "12px",
+                          fontWeight: "600",
+                          flexShrink: 0
+                        }}>
+                          {index + 1}
+                        </div>
+
+                        {/* User Info */}
+                        <div style={{
+                          flex: 1,
+                          marginLeft: window.innerWidth < 576 ? "8px" : "12px",
+                          minWidth: 0
+                        }}>
+                          <AntdTooltip
+                            title={
+                              <div style={{ lineHeight: "1.6" }}>
+                                <p style={{ margin: "4px 0" }}>
+                                  <strong>Name:</strong> {record?.solved_by_name}
+                                </p>
+                                <p style={{ margin: "4px 0" }}>
+                                  <strong>ID:</strong> {record?.employee_id}
+                                </p>
+                                <p style={{ margin: "4px 0" }}>
+                                  <strong>Email:</strong> {record?.email}
+                                </p>
+                                <p style={{ margin: "4px 0" }}>
+                                  <strong>Phone:</strong> {record?.contact_no}
+                                </p>
+                                <p style={{ margin: "4px 0" }}>
+                                  <strong>Unit:</strong> {record?.unit_name}
+                                </p>
+                                <p style={{ margin: "4px 0 0 0" }}>
+                                  <strong>Total Solved Tickets:</strong> {record?.solved_ticket_count}
+                                </p>
+                              </div>
+                            }
+                            placement="left"
+                          >
+                            <div>
+                              <div style={{
+                                fontWeight: "500",
+                                fontSize: window.innerWidth < 576 ? "12px" : "14px",
+                                color: roleID === 1 ? "#1d4ed8" : "#374151",
+                                marginBottom: "2px",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis"
+                              }}>
+                                {record?.solved_by_name}
+                              </div>
+                              <div style={{
+                                fontSize: window.innerWidth < 576 ? "10px" : "12px",
+                                color: "#6b7280",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis"
+                              }}>
+                                {record?.unit_name}
+                              </div>
+                            </div>
+                          </AntdTooltip>
+                        </div>
+
+                        {/* Tickets Count */}
+                        <div style={{
+                          background: "#f3f4f6",
+                          color: "#374151",
+                          fontWeight: "600",
+                          fontSize: window.innerWidth < 576 ? "12px" : "14px",
+                          padding: window.innerWidth < 576 ? "3px 6px" : "4px 8px",
+                          borderRadius: "4px",
+                          minWidth: window.innerWidth < 576 ? "30px" : "40px",
+                          textAlign: "center",
+                          marginLeft: window.innerWidth < 576 ? "4px" : "8px"
+                        }}>
+                          {record?.solved_ticket_count}
+                        </div>
+                      </div>
+                    ),
+                  },
+                ]}
+                dataSource={topSolver?.data?.length ? topSolver?.data : []}
+                rowClassName={() => ""}
+                style={{
+                  borderRadius: "4px",
+                  overflow: "hidden"
+                }}
+              />
+            </div>
           </Card>
         </Col>
+
         {/* Bar Chart */}
         <Col xs={24} sm={24} md={24} lg={18}>
           <Card title="Last 12 Months Ticket Count">
