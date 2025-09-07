@@ -48,18 +48,6 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
       dataIndex: "contact_no",
       key: "contact_no",
     },
-
-    // {
-    //   title: "Date of Joining",
-    //   dataIndex: "joining_date",
-    //   key: "joining_date",
-    //   render: (joining_date) => dayjs(joining_date).format("DD-MM-YYYY"),
-    // },
-    // {
-    //   title: "Location",
-    //   dataIndex: "unit_name",
-    //   key: "unit_name",
-    // },
     {
       title: "Role",
       key: "role",
@@ -103,7 +91,8 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
             )}
 
             {/* Hide Assign Location for roleID 1 */}
-            {roleID !== 1 && (
+            {/* Assign Location button */}
+            {roleID !== 1 && (!record.seating_location || record.seating_location.length === 0) && (
               <Button
                 size="small"
                 type="primary"
@@ -114,7 +103,6 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
                       content: (
                         <AssignLocationToAdmin
                           id={record?.id}
-                          searchAccess={record?.searchAccess}
                         />
                       ),
                       show: true,
@@ -125,6 +113,7 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
                 Assign Location
               </Button>
             )}
+
 
             {/* Hide Promote to Unit Super Admin for roleID 4 */}
             {roleID !== 4 && (
@@ -140,18 +129,20 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
                 </Button>
               </Popconfirm>
             )}
+            {roleID === 1 && (
+              <Popconfirm
+                title="Remove the admin"
+                description="Are you sure to remove this admin?"
+                onConfirm={() => demote(record?.id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button size="small" type="primary" danger>
+                  Remove
+                </Button>
+              </Popconfirm>
+            )}
 
-            <Popconfirm
-              title="Remove the admin"
-              description="Are you sure to remove this admin?"
-              onConfirm={() => demote(record?.id)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button size="small" type="primary" danger>
-                Remove
-              </Button>
-            </Popconfirm>
           </>
         </Space>
       ),

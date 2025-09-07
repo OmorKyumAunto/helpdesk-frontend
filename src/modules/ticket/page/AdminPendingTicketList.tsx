@@ -122,7 +122,6 @@ const AdminPendingTicketList = ({
   const options = [
     { label: "All", value: "" },
     { label: "In Progress", value: "inprogress" },
-    { label: "Solved", value: "solved" },
     { label: "Unsolved", value: "unsolved" },
     { label: "Forward", value: "forward" },
   ];

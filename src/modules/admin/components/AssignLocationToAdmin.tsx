@@ -1,5 +1,5 @@
 import { SendOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Row, Select, Modal, message } from "antd";
+import { Button, Card, Col, Form, Row, Select, Modal, message, Spin } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
@@ -8,19 +8,30 @@ import { useGetUserUnitBuildingQuery } from "../../complex/api/complexEndPoint";
 import { useGetBuildingWiseLocationQuery } from "../../complex/api/complexlocationEndPoint";
 import { skipToken } from "@reduxjs/toolkit/query";
 
-const AssignLocationToAdmin = ({ id, searchAccess }: any) => {
+interface IAssignLocationProps {
+  id: number; // required
+}
+
+const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+
+  // Selected states
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectedComplexIds, setSelectedComplexIds] = useState<number[]>([]);
   const [buildingIds, setBuildingIds] = useState<number[] | typeof skipToken>(skipToken);
 
   const [assignLocation, { isLoading, isSuccess, isError }] = useAssignLocationToAdminMutation();
 
-  const { data: complexData, isLoading: complexLoading } = useGetUserUnitBuildingQuery({ id });
-  const { data: unitOptionsData, isLoading: unitLoading } = useGetBuildingWiseLocationQuery(buildingIds);
+  // Fetch user unit building info (ID-wise)
+  const { data: complexData, isLoading: complexLoading, isError: complexError } =
+    useGetUserUnitBuildingQuery({ id });
 
-  // Reset form and state when ID changes
+  // Fetch unit locations for selected complexes
+  const { data: unitOptionsData, isLoading: unitLoading, isError: unitError } =
+    useGetBuildingWiseLocationQuery(Array.isArray(buildingIds) && buildingIds.length > 0 ? buildingIds : skipToken);
+
+  // Reset form and states when id changes
   useEffect(() => {
     form.resetFields();
     setSelectedItems([]);
@@ -28,50 +39,50 @@ const AssignLocationToAdmin = ({ id, searchAccess }: any) => {
     setBuildingIds(skipToken);
   }, [id, form]);
 
-  // Memoized complex options
+  // Preload API data once fetched
+  useEffect(() => {
+    if (!complexData?.data) return;
+
+    // Preselect complexes
+    const preselectedComplexIds = complexData.data.complex?.map((c: any) => c.building_id) || [];
+    setSelectedComplexIds(preselectedComplexIds);
+    form.setFieldValue("complex_id", preselectedComplexIds);
+    setBuildingIds(preselectedComplexIds.length > 0 ? preselectedComplexIds : skipToken);
+
+    // Preselect seating locations
+    const preselectedLocations = complexData.data.seating_location?.map(
+      (loc: any) => loc.seating_location_id
+    ) || [];
+    setSelectedItems(preselectedLocations);
+    form.setFieldValue("unit_id", preselectedLocations);
+  }, [complexData, form]);
+
+  // Complex options for Select
   const complexOptions = useMemo(() => {
-    return complexData?.data?.map((complex: any) => ({
-      value: complex.id,
-      label: complex.name,
-    })) || [];
+    if (!Array.isArray(complexData?.data?.complex)) return [];
+    return complexData.data.complex.map((c: any) => ({
+      value: c.building_id,
+      label: c.building_name,
+    }));
   }, [complexData]);
 
-  // Memoized unit options (exclude pre-assigned units)
+  // Unit options for Select
   const unitOptions = useMemo(() => {
-    return unitOptionsData?.data?.map((unit: any) => ({
-      value: unit.id,
-      label: unit.name,
-    })) || [];
+    if (!Array.isArray(unitOptionsData?.data)) return [];
+    return unitOptionsData.data.map((u: any) => ({
+      value: u.id,
+      label: u.name,
+    }));
   }, [unitOptionsData]);
 
-  // Assigned units from `searchAccess`
+  // Assigned units (read-only)
   const assignedUnitOptions = useMemo(() => {
-    return (searchAccess || []).map((unit: any) => ({
+    if (!Array.isArray(complexData?.data?.searchAccess)) return [];
+    return complexData.data.searchAccess.map((unit: any) => ({
       value: unit.unit_id,
       label: unit.unit_name || String(unit.unit_id),
     }));
-  }, [searchAccess]);
-
-  // Prefill unit_id if needed (optional, can be removed)
-  useEffect(() => {
-    form.setFieldValue("unit_id", []);
-    setSelectedItems([]);
-  }, [form, searchAccess]);
-
-  // Show success message and close modal
-  useEffect(() => {
-    if (isSuccess) {
-      dispatch(setCommonModal());
-      message.success("Location assigned successfully");
-    }
-  }, [isSuccess, dispatch]);
-
-  // Show error message
-  useEffect(() => {
-    if (isError) {
-      message.error("Failed to assign location. Please try again.");
-    }
-  }, [isError]);
+  }, [complexData]);
 
   const handleComplexChange = (complexIds: number[]) => {
     setSelectedComplexIds(complexIds);
@@ -81,40 +92,58 @@ const AssignLocationToAdmin = ({ id, searchAccess }: any) => {
   };
 
   const onFinish = () => {
+    if (selectedItems.length === 0) {
+      message.warning("Please select at least one location.");
+      return;
+    }
+
     Modal.confirm({
       title: "Confirm Assignment",
       content: "Are you sure you want to assign these locations?",
       onOk: () => {
         assignLocation({
           id,
-          body: {
-            seating_location: selectedItems.filter((item): item is number => typeof item === "number"),
-          },
+          body: { seating_location: selectedItems },
         });
       },
     });
   };
+
+  // Success / Error messages
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setCommonModal());
+      message.success("Location assigned successfully");
+    }
+    if (isError) {
+      message.error("Failed to assign location. Please try again.");
+    }
+  }, [isSuccess, isError, dispatch]);
+
+  // Show loading or error for initial fetch
+  if (complexLoading || unitLoading) return <Spin tip="Loading..." />;
+  if (complexError || unitError) return <div>Error loading data</div>;
 
   return (
     <Row justify="center" align="middle">
       <Col xs={24}>
         <Form layout="vertical" form={form} onFinish={onFinish}>
           <Card className="border" style={{ marginBottom: 16, marginTop: 16 }}>
-
-             {/* Assigned Units (Read-only) */}
+            {/* Assigned Units (Read-only) */}
             <Row gutter={[5, 16]}>
               <Col xs={24}>
                 <Form.Item label="Assigned Units">
                   <Select
                     mode="multiple"
                     disabled
-                    value={assignedUnitOptions.map(({ value }: { value: number; label: string }) => value)}
+                    value={assignedUnitOptions.map((u: { value: any; }) => u.value)}
                     style={{ width: "100%" }}
                     options={assignedUnitOptions}
                   />
                 </Form.Item>
               </Col>
             </Row>
+
             {/* Complex Selector */}
             <Row gutter={[5, 16]}>
               <Col xs={24}>
@@ -131,12 +160,11 @@ const AssignLocationToAdmin = ({ id, searchAccess }: any) => {
                     loading={complexLoading}
                     style={{ width: "100%" }}
                     options={complexOptions}
+                    allowClear
                   />
                 </Form.Item>
               </Col>
             </Row>
-
-           
 
             {/* Assign New Locations */}
             <Row gutter={[5, 16]}>
@@ -152,12 +180,13 @@ const AssignLocationToAdmin = ({ id, searchAccess }: any) => {
                     value={selectedItems}
                     onChange={setSelectedItems}
                     loading={unitLoading}
-                    disabled={selectedComplexIds.length === 0}
+                    disabled={selectedComplexIds.length === 0 || unitOptions.length === 0}
                     style={{ width: "100%" }}
                     options={unitOptions}
                     filterOption={(input, option) =>
                       (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                     }
+                    allowClear
                   />
                 </Form.Item>
               </Col>
@@ -173,7 +202,7 @@ const AssignLocationToAdmin = ({ id, searchAccess }: any) => {
                 loading={isLoading}
                 disabled={selectedItems.length === 0}
               >
-                Create
+                Assign
               </Button>
             </div>
           </Form.Item>

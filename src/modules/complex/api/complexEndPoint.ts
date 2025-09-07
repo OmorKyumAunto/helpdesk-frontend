@@ -3,7 +3,11 @@ import { HTTPResponse } from "../../../app/types/commonTypes";
 import notification from "../../../common/utils/Notification";
 import asyncWrapper from "../../../utils/asyncWrapper";
 import UpdateComplex from "../components/UpdateComplex";
-import { IComplex, IComplexParams } from "../types/complextypes";
+import {
+  IComplex,
+  IComplexParams,
+  IUserUnitBuildingResponse,
+} from "../types/complextypes";
 
 export const complexEndPoint = api.injectEndpoints({
   endpoints: (build) => ({
@@ -16,11 +20,11 @@ export const complexEndPoint = api.injectEndpoints({
       },
       providesTags: () => ["complex"],
     }),
-    getUserUnitBuilding: build.query<HTTPResponse<IComplex[]>, IComplexParams>({
-      query: (params) => ({
-        url: `/building/user-unit-building/${params.id}`, // Path parameter
-        params: { id: params.id }, // Query parameter
-      }),
+    getUserUnitBuilding: build.query<
+      HTTPResponse<IUserUnitBuildingResponse>, // ✅ correct type
+      { id: number }
+    >({
+      query: ({ id }) => `/building/user-unit-building/${id}`,
       providesTags: () => ["complex"],
     }),
 

@@ -12,7 +12,7 @@ const TaskMain: React.FC = () => {
   const roleID = profile?.data?.role_id;
 
   const [activeKey, setActiveKey] = useState(
-    roleID === 1 ? "1" : roleID === 2 ? "4" : "6"
+    roleID === 1 ? "1" : roleID === 2 || roleID === 4 ? "4" : "6"
   );
   const [taskStatus, setTaskStatus] = useState("");
   const onChange = (key: string) => {
@@ -52,7 +52,7 @@ const TaskMain: React.FC = () => {
           },
         ]
       : []),
-    ...(roleID === 2
+    ...(roleID === 2 || roleID === 4
       ? [
           {
             key: "4",
@@ -102,5 +102,6 @@ const TaskMain: React.FC = () => {
     </Card>
   );
 };
+
 
 export default TaskMain;

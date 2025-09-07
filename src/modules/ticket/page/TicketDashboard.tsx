@@ -52,11 +52,11 @@ const TicketDashboard = ({
   const ticketPriorityCards = [
     {
       id: 1,
-      title: "All Ticket",
+      title: "Total Ticket",
       value: "",
       data: data?.data?.total_ticket,
-      color: "rgba(61,91,241,255)", // Orange for All Ticket
-      icon: <FaTicketAlt size={28} />, // Ticket icon for "All Ticket"
+      color: "rgba(61,91,241,255)", // Orange for Total Ticket
+      icon: <FaTicketAlt size={28} />, // Ticket icon for "Total Ticket"
     },
     {
       id: 2,
@@ -113,12 +113,27 @@ const TicketDashboard = ({
             <Card
               className="card-hover-stat"
               onClick={() => {
-                setActiveKey &&
-                  item.value !== "total_avg_time" &&
-                  setActiveKey(roleID === 1 ? "2" : "5");
-                setTicketValue &&
-                  item.value !== "total_avg_time" &&
+                // Skip Avg. Time
+                if (item.value === "total_avg_time") return;
+
+                // Total Ticket only works for role 1
+                if (item.value === "" && roleID !== 1) return;
+
+                if (setActiveKey) {
+                  if (roleID === 1) {
+                    setActiveKey("2");
+                  } else if (roleID === 2) {
+                    setActiveKey(item.value === "solved" ? "5" : "10");
+                  } else if (roleID === 4) {
+                    setActiveKey(item.value === "solved" ? "13" : "12");
+                  } else {
+                    setActiveKey("5"); // fallback
+                  }
+                }
+
+                if (setTicketValue) {
                   setTicketValue(item.value);
+                }
               }}
               style={{
                 textAlign: "center",
@@ -239,9 +254,19 @@ const TicketDashboard = ({
                 <Card
                   key={label}
                   onClick={() => {
-                    setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
+                    if (setActiveKey) {
+                      if (roleID === 1) {
+                        setActiveKey("2");
+                      } else if (roleID === 4) {
+                        setActiveKey("13");
+                      } else {
+                        setActiveKey("5");
+                      }
+                    }
+
                     setTicketPriorityValue && setTicketPriorityValue(value);
                   }}
+
                   style={{
                     borderRadius: "12px",
                     background: "#fff",

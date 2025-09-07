@@ -48,9 +48,9 @@ export const EmployeeTableColumnsForEmployeePanel =
         key: "pabx",
       },
       {
-        title: "Blood Group",
-        dataIndex: "blood_group",
-        key: "blood_group",
+        title: "Contact No",
+        dataIndex: "contact_no",
+        key: "contact_no",
       },
       // {
       //   title: "Date of Joining",

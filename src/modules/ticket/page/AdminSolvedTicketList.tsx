@@ -119,13 +119,6 @@ const AdminSolvedTicketList = ({
     getComments(id);
     handleExpand(id);
   };
-  const options = [
-    { label: "All", value: "" },
-    { label: "In Progress", value: "inprogress" },
-    { label: "Solved", value: "solved" },
-    { label: "Unsolved", value: "unsolved" },
-    { label: "Forward", value: "forward" },
-  ];
 
   useEffect(() => {
     setFilter((prevFilter) => ({
@@ -143,16 +136,6 @@ const AdminSolvedTicketList = ({
       title="Admin Ticket List"
       extra={
         <Space direction={!sm ? "vertical" : "horizontal"}>
-          <Radio.Group
-            // block
-            options={options}
-            defaultValue={ticketValue}
-            optionType="button"
-            buttonStyle="solid"
-            onChange={(e) =>
-              setFilter({ ...filter, status: e.target.value, offset: 0 })
-            }
-          />
           <Input
             prefix={<SearchOutlined />}
             style={{ width: "160px" }}

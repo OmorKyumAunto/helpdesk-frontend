@@ -140,7 +140,7 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
             </Form.Item>
 
 
-            <Form.Item
+            {/* <Form.Item
               label="Select Unit"
               name="unit_id"
               rules={[{ required: true, message: "Please select a unit!" }]}
@@ -162,7 +162,7 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
                 }))}
                 allowClear
               />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               label="Select Category"

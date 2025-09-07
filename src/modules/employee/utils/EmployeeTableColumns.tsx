@@ -63,9 +63,9 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
       key: "pabx",
     },
     {
-      title: "Blood Group",
-      dataIndex: "blood_group",
-      key: "blood_group",
+      title: "Contact No",
+      dataIndex: "contact_no",
+      key: "contact_no",
     },
 
     // {
@@ -74,11 +74,11 @@ export const EmployeeTableColumns = (): TableProps<IEmployee>["columns"] => {
     //   key: "joining_date",
     //   render: (joining_date) => dayjs(joining_date).format("DD-MM-YYYY"),
     // },
-    {
-      title: "Payroll Unit",
-      dataIndex: "unit_name",
-      key: "unit_name",
-    },
+    // {
+    //   title: "Payroll Unit",
+    //   dataIndex: "unit_name",
+    //   key: "unit_name",
+    // },
     {
       title: "Actions",
       key: "action",

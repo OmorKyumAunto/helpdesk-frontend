@@ -21,3 +21,17 @@ export interface IComplexParams {
   from_date?: string;
   to_date?: string;
 }
+export interface IUserUnitBuildingResponse {
+  searchAccess: {
+    unit_id: number;
+    unit_name: string;
+  }[];
+  seating_location: {
+    seating_location_id: number;
+    seating_location_name: string;
+  }[];
+  complex: {
+    building_id: number;
+    building_name: string;
+  }[];
+}

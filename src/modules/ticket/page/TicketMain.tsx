@@ -17,7 +17,7 @@ const TicketMain: React.FC = () => {
   const roleID = profile?.data?.role_id;
 
   const [activeKey, setActiveKey] = useState(
-    roleID === 1 ? "1" : roleID === 2 ? "4" : roleID === 4 ? "1" : "6"
+    roleID === 1 ? "1" : roleID === 2 ? "4" : roleID === 4 ? "11" : "6"
   );
   const [ticketValue, setTicketValue] = useState("");
   const [ticketPriorityValue, setTicketPriorityValue] = useState("");
@@ -103,7 +103,7 @@ const TicketMain: React.FC = () => {
           ),
         },
         {
-          key: "11",
+          key: "10",
           label: (
             <span style={{ fontSize: "16px", fontWeight: "600" }}>
               Pending Tickets
@@ -142,7 +142,7 @@ const TicketMain: React.FC = () => {
           children: <OnBehalfTicket setActiveKey={setActiveKey} />,
         },
         {
-          key: "10",
+          key: "9",
           label: (
             <span style={{ fontSize: "16px", fontWeight: "600" }}>
               Reports
@@ -179,7 +179,7 @@ const TicketMain: React.FC = () => {
     ...(roleID === 4
       ? [
         {
-          key: "1",
+          key: "11",
           label: (
             <span style={{ fontSize: "16px", fontWeight: "600" }}>
               Dashboard
@@ -196,7 +196,7 @@ const TicketMain: React.FC = () => {
           ),
         },
         {
-          key: "2",
+          key: "12",
           label: (
             <span style={{ fontSize: "16px", fontWeight: "600" }}>
               Pending Tickets
@@ -211,7 +211,7 @@ const TicketMain: React.FC = () => {
           ),
         },
         {
-          key: "4",
+          key: "13",
           label: (
             <span style={{ fontSize: "16px", fontWeight: "600" }}>
               Solved Tickets
@@ -227,7 +227,7 @@ const TicketMain: React.FC = () => {
         },
 
         {
-          key: "3",
+          key: "14",
           label: (
             <span style={{ fontSize: "16px", fontWeight: "600" }}>
               Reports
