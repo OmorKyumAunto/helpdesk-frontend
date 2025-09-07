@@ -28,6 +28,14 @@ export const complexEndPoint = api.injectEndpoints({
       providesTags: () => ["complex"],
     }),
 
+    getUnitWiseBuildings: build.query<
+      HTTPResponse<IUserUnitBuildingResponse>, // or define a new type if needed
+      { id: number }
+    >({
+      query: ({ id }) => `/asset-unit/unit-wise-building/${id}`,
+      providesTags: () => ["complex"],
+    }),
+
     getActiveComplexes: build.query<HTTPResponse<IComplex[]>, any>({
       query: (params) => {
         return {
@@ -37,6 +45,7 @@ export const complexEndPoint = api.injectEndpoints({
       },
       providesTags: () => ["complex"],
     }),
+
     createComplex: build.mutation<unknown, { unit_id: number; name: string }>({
       query: (data) => {
         return {
@@ -106,6 +115,7 @@ export const {
   useGetComplexesQuery,
   useGetActiveComplexesQuery,
   useGetUserUnitBuildingQuery,
+  useGetUnitWiseBuildingsQuery,
   useCreateComplexMutation,
   useUpdateComplexMutation,
   useDeleteComplexMutation,

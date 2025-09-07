@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useAssignLocationToAdminMutation } from "../api/adminEndPoint";
-import { useGetUserUnitBuildingQuery } from "../../complex/api/complexEndPoint";
+import { useGetUserUnitBuildingQuery,useGetUnitWiseBuildingsQuery,} from "../../complex/api/complexEndPoint";
 import { useGetBuildingWiseLocationQuery } from "../../complex/api/complexlocationEndPoint";
 import { skipToken } from "@reduxjs/toolkit/query";
 

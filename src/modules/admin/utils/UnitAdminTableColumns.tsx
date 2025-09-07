@@ -131,7 +131,7 @@ export const UnitAdminTableColumns = (): TableProps<IAdmin>["columns"] => {
               openModal(
                 "Assign Category",
                 <AssignCategoryToAdmin
-                  id={record?.user_id}
+                  id={record.id} // <-- use the correct field
                   assign_category={record?.assign_category}
                 />
               )
@@ -139,6 +139,7 @@ export const UnitAdminTableColumns = (): TableProps<IAdmin>["columns"] => {
           >
             Assign Category
           </Button>
+
 
           <Popconfirm
             title="Remove the admin"

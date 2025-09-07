@@ -10,25 +10,21 @@ export const assignCategoryEndPoint = api.injectEndpoints({
       HTTPResponse<IAssignCategoryList[]>,
       any
     >({
-      query: (params) => {
-        return {
-          url: `/assign-category/after-assign-list`,
-          params,
-        };
-      },
+      query: (params) => ({
+        url: `/assign-category/after-assign-list`,
+        params,
+      }),
       providesTags: () => ["assign-category"],
     }),
     assignCategory: build.mutation<
       unknown,
       { id: number; body: { category_id: number[] } }
     >({
-      query: ({ id, body }) => {
-        return {
-          url: `/assign-category/${id}`,
-          method: "POST",
-          body,
-        };
-      },
+      query: ({ id, body }) => ({
+        url: `/assign-category/${id}`,
+        method: "POST",
+        body,
+      }),
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
@@ -37,54 +33,21 @@ export const assignCategoryEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["assign-category"],
     }),
-    // UpdateCategory: build.mutation<unknown, { title: string; id: number }>({
-    //   query: ({ title, id }) => {
-    //     return {
-    //       url: `/ticket-category/update/${id}`,
-    //       method: "PUT",
-    //       body: title,
-    //     };
-    //   },
-    //   onQueryStarted: async (_arg, { queryFulfilled }) => {
-    //     asyncWrapper(async () => {
-    //       await queryFulfilled;
-    //       notification("success", "Successfully category update ");
-    //     });
-    //   },
-    //   invalidatesTags: () => ["category"],
-    // }),
-    // UpdateCategoryStatus: build.mutation<unknown, { id: number }>({
-    //   query: (id) => {
-    //     return {
-    //       url: `/ticket-category/changeStatus/${id}`,
-    //       method: "PUT",
-    //     };
-    //   },
-    //   onQueryStarted: async (_arg, { queryFulfilled }) => {
-    //     asyncWrapper(async () => {
-    //       await queryFulfilled;
-    //       notification("success", "Successfully update category status");
-    //     });
-    //   },
-    //   invalidatesTags: () => ["category"],
-    // }),
-    // deleteCategory: build.mutation<unknown, number>({
-    //   query: (id) => {
-    //     return {
-    //       url: `/ticket-category/delete/${id}`,
-    //       method: "DELETE",
-    //     };
-    //   },
-    //   onQueryStarted: async (_arg, { queryFulfilled }) => {
-    //     asyncWrapper(async () => {
-    //       await queryFulfilled;
-    //       notification("success", "Successfully delete category");
-    //     });
-    //   },
-    //   invalidatesTags: () => ["category"],
-    // }),
+    // New endpoint: user-wise ticket category
+    getUserWiseTicketCategory: build.query<
+      HTTPResponse<IAssignCategoryList[]>,
+      number // user ID
+    >({
+      query: (id) => ({
+        url: `/assign-category/user-wise-ticket-category/${id}`,
+      }),
+      providesTags: () => ["assign-category"],
+    }),
   }),
 });
 
-export const { useGetAssignCategoryListQuery, useAssignCategoryMutation } =
-  assignCategoryEndPoint;
+export const {
+  useGetAssignCategoryListQuery,
+  useAssignCategoryMutation,
+  useGetUserWiseTicketCategoryQuery, // <-- new hook
+} = assignCategoryEndPoint;
