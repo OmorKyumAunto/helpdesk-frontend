@@ -29,10 +29,14 @@ export const complexEndPoint = api.injectEndpoints({
     }),
 
     getUnitWiseBuildings: build.query<
-      HTTPResponse<IUserUnitBuildingResponse>, // or define a new type if needed
-      { id: number }
+      HTTPResponse<IUserUnitBuildingResponse>,
+      { id: number[] } // <-- change from number to number[]
     >({
-      query: ({ id }) => `/asset-unit/unit-wise-building/${id}`,
+      query: ({ id }) => ({
+        url: `/asset-unit/unit-wise-building`,
+        method: "POST",
+        body: { id }, // send array in body
+      }),
       providesTags: () => ["complex"],
     }),
 
