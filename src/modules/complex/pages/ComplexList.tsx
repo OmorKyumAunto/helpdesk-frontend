@@ -8,7 +8,7 @@ import CreateComplex from "../components/CreateComplex";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { IComplexParams } from "../types/complextypes";
+import { IComplexParams } from "../types/complexTypes";
 import { SearchOutlined } from "@ant-design/icons";
 import { generatePagination } from "../../../common/TablePagination copy";
 
@@ -81,7 +81,7 @@ const ComplexList = () => {
               showSearch
               optionFilterProp="children"
               onChange={(e) => {
-                setFilter({ ...filter, unit: e, offset: 0 });
+                setFilter({ ...filter, unit_id: e, offset: 0 });
               }}
               filterOption={(
                 input: string,

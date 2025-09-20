@@ -81,7 +81,7 @@ const ComplexLocationList = () => {
               showSearch
               optionFilterProp="children"
               onChange={(e) => {
-                setFilter({ ...filter, unit: e, offset: 0 });
+                setFilter({ ...filter, unit_id: e, offset: 0 });
               }}
               filterOption={(
                 input: string,

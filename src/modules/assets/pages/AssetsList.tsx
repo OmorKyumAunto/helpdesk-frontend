@@ -46,7 +46,9 @@ const AssetsList = () => {
     profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
   );
   const unitOption =
-    profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
+  profile?.data?.role_id === 2 || profile?.data?.role_id === 4
+    ? unitOptionForAdmin
+    : unitData?.data;
   const [filter, setFilter] = useState<IAssetParams>({
     limit: Number(pageSize),
     offset: skipValue,
@@ -70,7 +72,11 @@ const AssetsList = () => {
     isFetching: adminFetching,
   } = useGetAssetsForAdminQuery({ ...filter });
 
-  const assetsTableData = profile?.data?.role_id === 2 ? adminData : data;
+ const assetsTableData =
+  profile?.data?.role_id === 2 || profile?.data?.role_id === 4
+    ? adminData
+    : data;
+
   // console.log(assetsTableData?.data);
   const showModal = () => {
     dispatch(

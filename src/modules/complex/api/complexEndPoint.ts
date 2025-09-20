@@ -7,7 +7,7 @@ import {
   IComplex,
   IComplexParams,
   IUserUnitBuildingResponse,
-} from "../types/complextypes";
+} from "../types/complexTypes";
 
 export const complexEndPoint = api.injectEndpoints({
   endpoints: (build) => ({

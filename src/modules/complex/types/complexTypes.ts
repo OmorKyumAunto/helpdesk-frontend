@@ -14,7 +14,7 @@ export interface IComplexParams {
   offset?: number;
   key?: string;
   id?: number;
-  unit?: number | null;
+  unit_id?: number | null;
   location?: number;
   type?: string;
   status?: number;

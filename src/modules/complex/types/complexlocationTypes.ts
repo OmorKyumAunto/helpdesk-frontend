@@ -14,5 +14,5 @@ export interface IComplexLocationParams {
   offset?: number;
   id?: number;
   key?: string;
-  unit?: number;
+  unit_id?: number;
 }

@@ -34,7 +34,7 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
   // Extract unitIds from searchAccess
   const unitIds = useMemo(() => {
     if (!Array.isArray(complexData?.data?.searchAccess)) return [];
-    return complexData.data.searchAccess.map((u: any) => u.unit_id);
+    return complexData?.data?.searchAccess?.map((u: any) => u.unit_id) ?? [];
   }, [complexData]);
 
   // Fetch unit-wise complexes via POST body
@@ -80,28 +80,28 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
   // Complex options for Select
   const complexOptions = useMemo(() => {
     if (!Array.isArray(unitWiseBuildingData?.data)) return [];
-    return unitWiseBuildingData.data.map((c: any) => ({
+    return unitWiseBuildingData?.data?.map((c: any) => ({
       value: c.id,
       label: c.name,
-    }));
+    })) ?? [];
   }, [unitWiseBuildingData]);
 
   // Location options for Select
   const unitOptions = useMemo(() => {
     if (!Array.isArray(unitOptionsData?.data)) return [];
-    return unitOptionsData.data.map((u: any) => ({
+    return unitOptionsData?.data?.map((u: any) => ({
       value: u.id,
       label: u.name,
-    }));
+    })) ?? [];
   }, [unitOptionsData]);
 
   // Assigned units (read-only)
   const assignedUnitOptions = useMemo(() => {
     if (!Array.isArray(complexData?.data?.searchAccess)) return [];
-    return complexData.data.searchAccess.map((unit: any) => ({
+    return complexData?.data?.searchAccess?.map((unit: any) => ({
       value: unit.unit_id,
       label: unit.unit_name || String(unit.unit_id),
-    }));
+    })) ?? [];
   }, [complexData]);
 
   const handleComplexChange = (complexIds: number[]) => {

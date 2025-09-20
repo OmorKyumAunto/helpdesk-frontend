@@ -1,6 +1,6 @@
 import { Button, Popconfirm, Space, Switch } from "antd";
 import { TableProps } from "antd/lib";
-import { IComplex } from "../types/complextypes";
+import { IComplex } from "../types/complexTypes";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";

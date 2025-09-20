@@ -4,7 +4,7 @@ import { SendOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { IComplex } from "../types/complextypes";
+import { IComplex } from "../types/complexTypes";
 import { useUpdateComplexLocationMutation } from "../api/complexlocationEndPoint";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 const UpdateComplexLocation = ({ single }: { single: IComplex }) => {

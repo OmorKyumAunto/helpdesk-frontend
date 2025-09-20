@@ -9,6 +9,7 @@ import {
   Col,
   Card,
   message,
+  Modal,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useGetCategoryActiveListQuery } from "../../Category/api/categoryEndPoint";
@@ -16,7 +17,6 @@ import { useGetEmployeeAllDistributedAssetQuery } from "../../assets/api/assetsE
 import { useCreateRaiseTicketMutation } from "../api/ticketEndpoint";
 import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint";
 import { IEmployee } from "../../employee/types/employeeTypes";
-import SeatingLocationModal from "../../employee/components/SeatingLocationModal";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -29,8 +29,6 @@ interface RaiseTicketFormProps {
 const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
   const [form] = Form.useForm();
   const [isCcVisible, setIsCcVisible] = useState(false);
-  const [isSeatingModalVisible, setIsSeatingModalVisible] = useState(false);
-  const [pendingFormValues, setPendingFormValues] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
   const { data: allEmployee, isLoading: empLoading } = useGetOverallEmployeesQuery();
   const { data, isLoading } = useGetEmployeeAllDistributedAssetQuery({});
@@ -65,10 +63,12 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
         err?.data?.message ===
         "Your seating location has not been updated. Please update your current seating location."
       ) {
-        if (!isRetry) {
-          setPendingFormValues(values);
-          setIsSeatingModalVisible(true);
-        }
+        Modal.error({
+          title: "Seating Location Not Updated",
+          content: "Your Seating Location hasn't been updated. Please contact with IT Support Team.",
+          centered: true,
+          okText: "OK",
+        });
       } else {
         message.error(err?.data?.message || "Something went wrong!");
       }
@@ -82,7 +82,6 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
       form.resetFields();
       setIsCcVisible(false);
       setActiveKey("7");
-      setPendingFormValues(null);
     }
   }, [isSuccess, form, setActiveKey]);
 
@@ -246,12 +245,6 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
           </Col>
         </Row>
       </Form>
-
-      {/* Seating Location Modal */}
-      <SeatingLocationModal
-        open={isSeatingModalVisible}
-        onCancel={() => setIsSeatingModalVisible(false)}
-      />
     </>
   );
 };

@@ -9,6 +9,7 @@ import { useAppDispatch } from "../../app/store/store";
 import user from "../../assets/user.png";
 import UpdateEmployee from "../../modules/employee/components/UpdateEmployee";
 import ChangeEmployeePassword from "./ChangePassword";
+import SeatingLocationModal from "../../modules/employee/components/SeatingLocationModal";
 
 const ProfileSection = () => {
   const dispatch = useAppDispatch();
@@ -40,6 +41,26 @@ const ProfileSection = () => {
         title="Profile Details"
         extra={
           <Space wrap>
+            <Button
+              onClick={() => {
+                dispatch(
+                  setCommonModal({
+                    content: <SeatingLocationModal employee={record as any} />,
+                    show: true,
+                    width: 600, // you can adjust modal width
+                  })
+                );
+              }}
+              style={{
+                fontSize: "14px",
+                padding: "8px 16px",
+                borderRadius: "6px",
+                backgroundColor: "#52c41a",
+                color: "#fff",
+              }}
+            >
+              Seating Location
+            </Button>
             <Button
               type="primary"
               onClick={() => {

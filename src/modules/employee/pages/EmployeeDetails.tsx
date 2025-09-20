@@ -95,7 +95,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
           </Col>
           <Col xs={24} md={12}>
             <Card>
-              
+
               <FieldItem label="Business Type" value={business_type} />
               <FieldItem label="Line of Business" value={line_of_business} />
               <FieldItem label="PABX" value={pabx} />
@@ -106,43 +106,59 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
         </Row>
       ),
     },
+    {
+      key: "5",
+      label: "Seating Location",
+      children: (
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={12}>
+            <Card>
+              <FieldItem
+                label="Seating Location"
+                value={"N/A"}
+              />
+            </Card>
+          </Col>
+        </Row>
+      ),
+    },
     ...(roleId !== 3
       ? [
-          {
-            key: "3",
-            label: "Licenses",
-            children: (
-              <Card>
-                <Text>
-                  {licenses?.length
-                    ? licenses.map((item) => item?.title).join(", ")
-                    : "No Licenses Assigned"}
-                </Text>
-              </Card>
-            ),
-          },
-        ]
+        {
+          key: "3",
+          label: "Licenses",
+          children: (
+            <Card>
+              <Text>
+                {licenses?.length
+                  ? licenses.map((item) => item?.title).join(", ")
+                  : "No Licenses Assigned"}
+              </Text>
+            </Card>
+          ),
+        },
+      ]
       : []),
     ...(role_id === 3 && roleId === 1
       ? [
-          {
-            key: "4",
-            label: "Admin Control",
-            children: (
-              <Card>
-                <Popconfirm
-                  title="Assign to admin"
-                  description="Are you sure to assign this employee as an admin?"
-                  onConfirm={() => assignToAdmin(id)}
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <Button type="primary">Confirm Admin</Button>
-                </Popconfirm>
-              </Card>
-            ),
-          },
-        ]
+        {
+          key: "4",
+          label: "Admin Control",
+          children: (
+            <Card>
+              <Popconfirm
+                title="Assign to admin"
+                description="Are you sure to assign this employee as an admin?"
+                onConfirm={() => assignToAdmin(id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button type="primary">Confirm Admin</Button>
+              </Popconfirm>
+            </Card>
+          ),
+        },
+      ]
       : []),
   ];
 

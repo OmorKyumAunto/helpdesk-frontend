@@ -36,7 +36,9 @@ const DistributedAsset = () => {
     profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
   );
   const unitOption =
-    profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
+  profile?.data?.role_id === 2 || profile?.data?.role_id === 4
+    ? unitOptionForAdmin
+    : unitData?.data;
 
   const [filter, setFilter] = useState<any>({
     limit: Number(pageSize),
