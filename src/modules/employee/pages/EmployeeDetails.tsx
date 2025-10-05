@@ -1,11 +1,17 @@
-import { Button, Card, Col, Popconfirm, Row, Tabs, Tag, Typography } from "antd";
+import { Button, Card, Col, Popconfirm, Row, Tabs, Tag, Typography, Select, Space, message } from "antd";
 import dayjs from "dayjs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { RootState } from "../../../app/store/store";
 import { useEmployeeAssignToAdminMutation } from "../api/employeeEndPoint";
 import { IEmployee } from "../types/employeeTypes";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import { useGetBuildingWiseLocationQuery } from "../../complex/api/complexlocationEndPoint";
+import { useGetMeQuery } from "../../../app/api/userApi";
+import { useUpdateEmployeeSeatingLocationMutation } from "../api/employeeEndPoint";
+import { Form } from "antd";
 
 const { Title, Text } = Typography;
 
@@ -19,7 +25,49 @@ const FieldItem = ({ label, value }: { label: string; value?: string | React.Rea
 const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
   const [assignToAdmin, { isSuccess }] = useEmployeeAssignToAdminMutation();
+  const [buildings, setBuildings] = useState<{ value: number; label: string }[]>([]);
+  const [buildingId, setBuildingId] = useState<number[] | typeof skipToken>(skipToken);
+
+
+
+  // Queries
+  const { data: { data: profile } = {} } = useGetMeQuery();
+  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({ status: "active" });
+  const { data: locationData, isLoading: locationLoading } =
+    useGetBuildingWiseLocationQuery(buildingId);
+
+  // Mutation
+  const [updateSeatingLocation, { isLoading: updateLoading }] =
+    useUpdateEmployeeSeatingLocationMutation();
+
+  // Populate buildings on unit change
+  const handleUnitChange = (unitId: number) => {
+    const selectedUnit = unitData?.data?.find((u: any) => u.id === unitId);
+
+    if (selectedUnit) {
+      setBuildings(
+        selectedUnit.building?.map((b: any) => ({
+          value: b.id,
+          label: b.name,
+        })) || []
+      );
+    } else {
+      setBuildings([]);
+    }
+
+    setBuildingId(skipToken);
+    form.setFieldsValue({ building_id: undefined, seating_location: undefined });
+  };
+
+  // Handle building change
+  const handleBuildingChange = (id: number) => {
+    setBuildingId(id ? [id] : skipToken);
+    form.setFieldsValue({ seating_location: undefined });
+  };
+  // 🔹 Local state for seating location update UI
+  const [isEditingLocation, setIsEditingLocation] = useState(false);
 
   const {
     id,
@@ -43,6 +91,10 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
     line_of_business,
     business_type,
     pabx,
+    seating_location,
+    seating_location_name,
+    building_id,
+    building_name
   } = employee || {};
 
   useEffect(() => {
@@ -50,6 +102,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
       dispatch(setCommonModal());
     }
   }, [isSuccess, dispatch]);
+
 
   const items = [
     {
@@ -95,7 +148,6 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
           </Col>
           <Col xs={24} md={12}>
             <Card>
-
               <FieldItem label="Business Type" value={business_type} />
               <FieldItem label="Line of Business" value={line_of_business} />
               <FieldItem label="PABX" value={pabx} />
@@ -111,17 +163,117 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
       label: "Seating Location",
       children: (
         <Row gutter={[16, 16]}>
-          <Col xs={24} md={12}>
+          <Col xs={24} md={24}>
             <Card>
               <FieldItem
                 label="Seating Location"
-                value={"N/A"}
+                value={
+                  seating_location_name
+                    ? `${seating_location_name} (${building_name || "N/A"})`
+                    : "N/A"
+                }
               />
+
+              {!isEditingLocation ? (
+                <Button type="primary" onClick={() => setIsEditingLocation(true)}>
+                  Update Location
+                </Button>
+              ) : (
+                <Form
+                  form={form}
+                  layout="vertical"
+                  onFinish={async (values) => {
+                    try {
+                      await updateSeatingLocation({
+                        id, // employee.id from table
+                        data: { seating_location: values.seating_location }, // 👈 must be "data"
+                      }).unwrap();
+
+                      message.success("Seating location updated successfully!");
+                      setIsEditingLocation(false);
+                    } catch (err: any) {
+                      message.error(err?.data?.message || "Failed to update seating location");
+                    }
+                  }}
+                >
+
+                  <Space direction="vertical" style={{ width: "100%", marginTop: 12 }}>
+                    <Form.Item
+                      label="Unit"
+                      name="unit_id"
+                      rules={[{ required: true, message: "Please select a unit!" }]}
+                    >
+                      <Select
+                        loading={unitIsLoading}
+                        placeholder="Select Unit"
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                        }
+                        options={unitData?.data?.map((unit: any) => ({
+                          value: unit.id,
+                          label: unit.title,
+                        }))}
+                        onChange={handleUnitChange}
+                        allowClear
+                      />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Complex"
+                      name="building_id"
+                      rules={[{ required: true, message: "Please select a complex!" }]}
+                    >
+                      <Select
+                        placeholder="Select Complex"
+                        options={buildings}
+                        disabled={buildings.length === 0}
+                        onChange={handleBuildingChange}
+                      />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Seating Location"
+                      name="seating_location"
+                      rules={[{ required: true, message: "Please select seating location!" }]}
+                    >
+                      <Select
+                        placeholder="Select Location"
+                        options={
+                          locationData?.data?.map((loc: any) => ({
+                            value: loc.id,
+                            label: loc.name || loc.location,
+                          })) || []
+                        }
+                        loading={locationLoading}
+                        disabled={buildingId === skipToken}
+                      />
+                    </Form.Item>
+
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      loading={updateLoading}
+                      style={{
+                        borderRadius: 8,
+                        marginLeft: 12,
+                        padding: "6px 20px",
+                        background: "linear-gradient(90deg, #1677ff 0%, #4096ff 100%)",
+                        border: "none",
+                      }}
+                    >
+                      Save Changes
+                    </Button>
+                  </Space>
+                </Form>
+              )}
             </Card>
           </Col>
         </Row>
       ),
-    },
+    }
+    ,
     ...(roleId !== 3
       ? [
         {

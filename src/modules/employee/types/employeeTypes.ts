@@ -26,6 +26,11 @@ export interface IEmployee {
   line_of_business: string;
   business_type: string;
   pabx: number;
+  seating_location: number | null;
+  seating_location_name: string | null;
+  building_id: number | null;
+  building_name: string | null;
+
 }
 
 export interface IAdjustSalary {
