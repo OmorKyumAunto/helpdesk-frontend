@@ -92,6 +92,11 @@ const CombineReportModal = () => {
               "Average Ticket Time",
               "Average Task Time",
               "Total Avgerage Time",
+              "SLA Maintained Time",
+              "Actual Time Taken",
+              "Expected Time",
+              "Avg Work Time Per Day",
+              "Avg SLA Work Time Per Day",
               "Total Ticket Solved",
               "Total Task Completed",
               "Total Ticket and Task Solved",
@@ -105,6 +110,16 @@ const CombineReportModal = () => {
               "Average Task Time": data?.data?.total_avg_task || "Not Applied",
               "Total Avgerage Time":
                 data?.data?.total_avg_ticket_task || "Not Applied",
+                "SLA Maintained Time":
+                data?.data?.combine_avg_sla_time || "Not Applied",
+              "Actual Time Taken":
+                data?.data?.total_actual_time || "Not Applied",
+                "Expected Time":
+                data?.data?.expected_work_time_8h_per_day || "Not Applied",
+                "Avg Work Time Per Day":
+                data?.data?.avg_work_hours_per_day || "Not Applied",
+                "Avg SLA Work Time Per Day":
+                data?.data?.avg_work_hours_per_day_sla_wise || "Not Applied",
               "Total Ticket Solved": data?.data?.total_ticket || "Not Applied",
               "Total Task Completed": data?.data?.total_task || "Not Applied",
               "Total Ticket and Task Solved":

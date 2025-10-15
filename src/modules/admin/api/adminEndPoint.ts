@@ -57,6 +57,21 @@ export const AdminEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["Admin"],
     }),
+    demoteToAdmin: build.mutation<unknown, { id: number }>({
+      query: (id) => {
+        return {
+          url: `/unit-super-admin/remove-unit-admin/${id}`,
+          method: "PUT",
+        };
+      },
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Successfully Demoted To Admin");
+        });
+      },
+      invalidatesTags: () => ["Admin"],
+    }),
     promoteToSuperAdmin: build.mutation<unknown, { id: number }>({
       query: (id) => {
         return {
@@ -128,6 +143,7 @@ export const {
   useGetUnitSuperAdminListQuery,
   useGetUnitAdminListQuery,
   useDemoteToEmployeeMutation,
+  useDemoteToAdminMutation,
   usePromoteToSuperAdminMutation,
   useDemoteToUnitAdminMutation,
   useAssignUnitToAdminMutation,

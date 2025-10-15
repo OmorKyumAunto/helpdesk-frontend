@@ -180,6 +180,9 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
                 "Asset Serial Number",
                 "Raised By",
                 "Raiser ID",
+                "Raiser Seating Unit",
+                "Raiser Seating Building",
+                "Raiser Seating Location",
                 "Solved By",
                 "Admin ID",
                 "Solving Time",
@@ -188,65 +191,71 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
               excelData={
                 data?.data?.length
                   ? data?.data?.map(
-                      ({
-                        ticket_id,
-                        ticket_status,
-                        subject,
-                        priority,
-                        ticket_category_title,
-                        asset_serial_number,
-                        ticket_created_employee_name,
-                        ticket_created_employee_id,
-                        ticket_solved_employee_name,
-                        ticket_solved_employee_id,
-                        asset_unit_title,
-                        ticket_updated_at,
-                        ticket_created_at,
-                      }) => {
-                        // Parse timestamps
-                        const updatedAt = new Date(ticket_updated_at);
-                        const createdAt = new Date(ticket_created_at);
+                    ({
+                      ticket_id,
+                      ticket_status,
+                      subject,
+                      priority,
+                      ticket_category_title,
+                      asset_serial_number,
+                      ticket_created_employee_name,
+                      ticket_created_employee_id,
+                      seating_unit_name,
+                      complex_name,
+                      seating_location_name,
+                      ticket_solved_employee_name,
+                      ticket_solved_employee_id,
+                      asset_unit_title,
+                      ticket_updated_at,
+                      ticket_created_at,
+                    }) => {
+                      // Parse timestamps
+                      const updatedAt = new Date(ticket_updated_at);
+                      const createdAt = new Date(ticket_created_at);
 
-                        // Calculate time difference in milliseconds
-                        const timeDifference =
-                          updatedAt.getTime() - createdAt.getTime();
+                      // Calculate time difference in milliseconds
+                      const timeDifference =
+                        updatedAt.getTime() - createdAt.getTime();
 
-                        // Convert time difference to human-readable format (e.g., hours, minutes)
-                        const days = Math.floor(
-                          timeDifference / (1000 * 60 * 60 * 24)
-                        );
-                        const hours = Math.floor(
-                          (timeDifference % (1000 * 60 * 60 * 24)) /
-                            (1000 * 60 * 60)
-                        );
-                        const minutes = Math.floor(
-                          (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-                        );
+                      // Convert time difference to human-readable format (e.g., hours, minutes)
+                      const days = Math.floor(
+                        timeDifference / (1000 * 60 * 60 * 24)
+                      );
+                      const hours = Math.floor(
+                        (timeDifference % (1000 * 60 * 60 * 24)) /
+                        (1000 * 60 * 60)
+                      );
+                      const minutes = Math.floor(
+                        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+                      );
 
-                        // Build solvingTime string dynamically
-                        const solvingTimeParts = [];
-                        if (days > 0) solvingTimeParts.push(`${days}d`);
-                        if (hours > 0) solvingTimeParts.push(`${hours}h`);
-                        if (minutes > 0) solvingTimeParts.push(`${minutes}m`);
+                      // Build solvingTime string dynamically
+                      const solvingTimeParts = [];
+                      if (days > 0) solvingTimeParts.push(`${days}d`);
+                      if (hours > 0) solvingTimeParts.push(`${hours}h`);
+                      if (minutes > 0) solvingTimeParts.push(`${minutes}m`);
 
-                        const solvingTime = solvingTimeParts.join(" ") || "0m"; // Default to "0m" if all parts are 0
+                      const solvingTime = solvingTimeParts.join(" ") || "0m"; // Default to "0m" if all parts are 0
 
-                        return {
-                          "Ticket ID": ticket_id,
-                          "Ticket Subject": subject,
-                          "Ticket Status": ticket_status,
-                          Category: ticket_category_title,
-                          Priority: priority,
-                          "Asset Serial Number": asset_serial_number,
-                          "Raised By": ticket_created_employee_name,
-                          "Raiser ID": ticket_created_employee_id,
-                          "Solved By": ticket_solved_employee_name,
-                          "Admin ID": ticket_solved_employee_id,
-                          "Unit Name": asset_unit_title,
-                          "Solving Time": solvingTime,
-                        };
-                      }
-                    )
+                      return {
+                        "Ticket ID": ticket_id,
+                        "Ticket Subject": subject,
+                        "Ticket Status": ticket_status,
+                        Category: ticket_category_title,
+                        Priority: priority,
+                        "Asset Serial Number": asset_serial_number,
+                        "Raised By": ticket_created_employee_name,
+                        "Raiser ID": ticket_created_employee_id,
+                        "Raiser Seating Unit": seating_unit_name,
+                        "Raiser Seating Building": complex_name,
+                        "Raiser Seating Location": seating_location_name,
+                        "Solved By": ticket_solved_employee_name,
+                        "Admin ID": ticket_solved_employee_id,
+                        "Unit Name": asset_unit_title,
+                        "Solving Time": solvingTime,
+                      };
+                    }
+                  )
                   : []
               }
             />

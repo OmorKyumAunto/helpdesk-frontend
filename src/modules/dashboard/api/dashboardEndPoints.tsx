@@ -10,6 +10,12 @@ export const dashboardEndpoints = api.injectEndpoints({
       }),
       providesTags: () => [{ type: "dashboardTypes", id: "dashboard" }],
     }),
+    getAllCountEmployee: build.query<HTTPResponse<any>, void>({
+      query: () => ({
+        url: `/dashboard/mobile-count-data`,
+      }),
+      providesTags: () => [{ type: "dashboardTypes", id: "dashboard" }],
+    }),
     getDashboardPieData: build.query<HTTPResponse<any>, void>({
       query: () => ({
         url: `/dashboard/accessories-count`,
@@ -72,6 +78,7 @@ export const dashboardEndpoints = api.injectEndpoints({
 
 export const {
   useGetAllDashboardQuery,
+  useGetAllCountEmployeeQuery,
   useGetDashboardGraphDataQuery,
   useGetDashboardBloodDataQuery,
   useGetDashboardPieDataQuery,

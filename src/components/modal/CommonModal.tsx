@@ -28,9 +28,11 @@ const CommonModal = () => {
       onCancel={handleCancel}
       footer={false}
       width={width}
+      destroyOnClose   // <-- ADD THIS LINE
     >
       {content}
     </Modal>
+
   );
 };
 

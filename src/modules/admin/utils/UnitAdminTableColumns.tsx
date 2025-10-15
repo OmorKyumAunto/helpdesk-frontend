@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import {
+  useDemoteToAdminMutation,
   useDemoteToEmployeeMutation,
   useDemoteToUnitAdminMutation,
   usePromoteToSuperAdminMutation,
@@ -15,6 +16,7 @@ import { IAdmin } from "../types/adminTypes";
 export const UnitAdminTableColumns = (): TableProps<IAdmin>["columns"] => {
   const dispatch = useDispatch();
   const [demote, { isLoading: isDemoting }] = useDemoteToEmployeeMutation();
+  const [demoteToAdmin, { isLoading: isDemotingToAdmin }] = useDemoteToAdminMutation();
   const [promoteSuperAdmin] = usePromoteToSuperAdminMutation();
   const [demoteToUnitAdmin] = useDemoteToUnitAdminMutation();
 
@@ -142,11 +144,11 @@ export const UnitAdminTableColumns = (): TableProps<IAdmin>["columns"] => {
 
 
           <Popconfirm
-            title="Remove the admin"
+            title="Remove From Admin Role"
             description="Are you sure to remove this admin?"
             onConfirm={async () => {
               try {
-                await demote(record.id).unwrap();
+                await demoteToAdmin(record.id).unwrap();
                 message.success("Admin removed successfully");
               } catch {
                 message.error("Failed to remove admin");
@@ -155,7 +157,7 @@ export const UnitAdminTableColumns = (): TableProps<IAdmin>["columns"] => {
             okText="Yes"
             cancelText="No"
           >
-            <Button size="small" type="primary" danger loading={isDemoting}>
+            <Button size="small" type="primary" danger loading={isDemotingToAdmin}>
               Remove
             </Button>
           </Popconfirm>

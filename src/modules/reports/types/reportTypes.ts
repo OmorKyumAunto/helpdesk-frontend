@@ -136,6 +136,11 @@ export interface ICombineReport {
   total_avg_ticket: string;
   total_avg_task: string;
   total_avg_ticket_task: string;
+  combine_avg_sla_time: string;
+  total_actual_time: string;
+  expected_work_time_8h_per_day: string;
+  avg_work_hours_per_day: string;
+  avg_work_hours_per_day_sla_wise: string;
   total_ticket: number;
   total_task: number;
   total_ticket_task: number;

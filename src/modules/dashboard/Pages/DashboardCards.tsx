@@ -1,7 +1,7 @@
 import { Card, Col, Row, Typography } from "antd";
 import dayjs from "dayjs";
 import { FaComputer } from "react-icons/fa6";
-import { LuUsers2 } from "react-icons/lu";
+import { LuUsers2,LuTicket } from "react-icons/lu";
 import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -9,6 +9,7 @@ import { useGetMeQuery } from "../../../app/api/userApi";
 import { RootState } from "../../../app/store/store";
 import {
   useGetAllDashboardQuery,
+  useGetAllCountEmployeeQuery,
   useGetDashboardAssetDataForAdminQuery,
   useGetDashboardDistributedAssetDataForAdminQuery,
   useGetDashboardEmployeeDataForEmployeeQuery,
@@ -29,6 +30,7 @@ const DashboardCards = () => {
     useGetDashboardDistributedAssetDataForAdminQuery({});
   const { data: empData } = useGetDashboardEmployeeDataForEmployeeQuery({});
   const { data } = useGetAllDashboardQuery();
+  const { data: countData } = useGetAllCountEmployeeQuery();
   console.log(empData);
   const { data: profile } = useGetMeQuery();
   const {
@@ -233,7 +235,7 @@ const DashboardCards = () => {
                     >
                       {role_id === 2
                         ? distributedAsset?.data?.employee_assign_asset_count ||
-                          0
+                        0
                         : data?.data?.total_assign_asset || 0}
                     </p>
                   </div>
@@ -313,10 +315,86 @@ const DashboardCards = () => {
           <Col xs={24} sm={24} md={24} lg={8}>
             <Row gutter={[6, 12]}>
               <Col xs={24} sm={24} md={24}>
-                <div>
-                  <WeatherWidget />
-                </div>
+                <Link to={"/employee/my-tickets"}>
+                  <Card className="bg-[#4c9aff] text-white card-hover-ticket">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "3px",
+                        position: "relative",
+                      }}
+                    >
+                      <div>
+                        <Typography.Title style={{ color: "white" }} level={5}>
+                          My Tickets
+                        </Typography.Title>
+                        <p
+                          style={{
+                            textAlign: "center",
+                            fontSize: "20px",
+                            fontWeight: "bold",
+                            marginTop: "4px",
+                          }}
+                        >
+                          {countData?.data?.total_ticket || 0}
+                        </p>
+                      </div>
+                      <div>
+                        <div
+                          className="bg-[#7fbfff]"
+                          style={{
+                            height: "70px",
+                            width: "70px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: "50%",
+                          }}
+                        >
+                          <LuTicket size={50} />
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+
+                  <style>
+                    {`
+        .card-hover-ticket {
+          position: relative;
+          overflow: hidden;
+          border-radius: 15px;
+          transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .card-hover-ticket:hover {
+          transform: scale(1.05);
+          background-color: #3b8de5;
+        }
+
+        .card-hover-ticket::before {
+          content: "";
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          right: 10px;
+          bottom: 10px;
+          border: 2px solid rgba(255, 255, 255, 0.1);
+          border-radius: 15px;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+        }
+
+        .card-hover-ticket:hover::before {
+          opacity: 0;
+        }
+      `}
+                  </style>
+                </Link>
               </Col>
+
 
               <Col xs={24} sm={24} md={24}>
                 <Link to={"/employee/distributed"}>
@@ -332,7 +410,7 @@ const DashboardCards = () => {
                     >
                       <div>
                         <Typography.Title style={{ color: "white" }} level={5}>
-                          Disbursements
+                          My Assets
                         </Typography.Title>
                         <p
                           style={{
@@ -342,7 +420,7 @@ const DashboardCards = () => {
                             marginTop: "4px",
                           }}
                         >
-                          {empData?.data?.total_assign_count || 0}
+                          {countData?.data?.total_asset || 0}
                         </p>
                       </div>
                       <div>
@@ -412,7 +490,7 @@ const DashboardCards = () => {
                     >
                       <div>
                         <Typography.Title style={{ color: "white" }} level={5}>
-                          Total Employee
+                          Address Book
                         </Typography.Title>
                         <p
                           style={{
@@ -422,7 +500,7 @@ const DashboardCards = () => {
                             marginTop: "4px",
                           }}
                         >
-                          {data?.data?.total_employee || 0}
+                          {countData?.data?.total_user || 0}
                         </p>
                       </div>
                       <div>

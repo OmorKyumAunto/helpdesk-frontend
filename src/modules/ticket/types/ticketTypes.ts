@@ -168,6 +168,9 @@ export interface ITicketDashboardReport {
   ticket_created_employee_id: string;
   created_employee_designation: string;
   created_employee_department: string;
+  seating_unit_name: string;
+  complex_name: string;
+  seating_location_name: string;
   ticket_solved_employee_name: string;
   ticket_solved_employee_id: string;
   solved_employee_department: string;

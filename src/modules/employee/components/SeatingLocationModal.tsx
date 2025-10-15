@@ -24,16 +24,32 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
   // Current logged-in user profile
   const { data: { data: profile } = {} } = useGetMeQuery();
 
-  // Queries
-  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({ status: "active" });
-  const { data: locationData, isLoading: locationLoading } =
-    useGetBuildingWiseLocationQuery(buildingId);
+  // Queries with always fresh data
+  const {
+    data: unitData,
+    isLoading: unitIsLoading,
+    refetch: refetchUnits,
+  } = useGetUnitsQuery({ status: "active" }, { refetchOnMountOrArgChange: true });
+
+  const {
+    data: locationData,
+    isLoading: locationLoading,
+    refetch: refetchLocations,
+  } = useGetBuildingWiseLocationQuery(buildingId, { refetchOnMountOrArgChange: true });
 
   // Mutation
   const [updateSeatingLocation, { isLoading: updateLoading }] =
     useUpdateEmployeeSeatingLocationMutation();
 
-  // Populate buildings on unit change
+  // Clear form and state on modal open
+  useEffect(() => {
+    form.resetFields();
+    setBuildings([]);
+    setBuildingId(skipToken);
+    refetchUnits();
+  }, [employee, form, refetchUnits]);
+
+  // Handle unit change
   const handleUnitChange = (unitId: number) => {
     const selectedUnit = unitData?.data?.find((u: any) => u.id === unitId);
 
@@ -58,6 +74,32 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
     form.setFieldsValue({ seating_location: undefined });
   };
 
+  // Prefill form if employee exists
+  useEffect(() => {
+    if (!employee || !unitData?.data?.length) return;
+
+    const { seating_unit_id, building_id, seating_location } = employee;
+
+    if (seating_unit_id) {
+      form.setFieldsValue({ unit_id: seating_unit_id });
+      handleUnitChange(seating_unit_id);
+
+      // Set building and location after dropdowns populate
+      if (building_id) {
+        setTimeout(() => {
+          form.setFieldsValue({ building_id });
+          handleBuildingChange(building_id);
+
+          if (seating_location) {
+            setTimeout(() => {
+              form.setFieldsValue({ seating_location });
+            }, 50);
+          }
+        }, 50);
+      }
+    }
+  }, [employee, unitData]);
+
   // Submit handler
   const handleSubmit = async () => {
     try {
@@ -77,17 +119,6 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
       message.error("❌ Failed to update seating location. Try again.");
     }
   };
-
-  // Prefill existing location
-  useEffect(() => {
-    if (employee?.seating_location) {
-      form.setFieldsValue({
-        seating_location: employee.seating_location.id,
-        unit_id: employee.unit?.id,
-        building_id: employee.building?.id,
-      });
-    }
-  }, [employee, form]);
 
   return (
     <div style={{ padding: 12 }}>

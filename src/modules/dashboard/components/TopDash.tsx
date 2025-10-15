@@ -65,11 +65,10 @@ const TopDash = () => {
           <div className="icon-wrapper">
             <img src={icon} alt={`${timeOfDay} Icon`} className="time-icon" />
           </div>
-          {(profile?.data?.role_id === 1 || profile?.data?.role_id === 2) && (
-            <div className="weather-wrapper">
-              <WeatherWidgetTop />
-            </div>
-          )}
+          <div className="weather-wrapper">
+            <WeatherWidgetTop />
+          </div>
+
         </div>
       </div>
     </StyledCard>
