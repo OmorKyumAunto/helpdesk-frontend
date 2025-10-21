@@ -24,19 +24,22 @@ const ReportsPage: React.FC = () => {
 
 
   const handleOpenModal = (
-    title: string,
-    content: JSX.Element,
-    width: number = 520
-  ) => {
-    dispatch(
-      setCommonModal({
-        title,
-        content,
-        show: true,
-        width,
-      })
-    );
-  };
+  title: string,
+  content: JSX.Element,
+  width?: number
+) => {
+  const modalWidth = width ?? window.innerWidth * 0.5; // 50% of screen width
+
+  dispatch(
+    setCommonModal({
+      title,
+      content,
+      show: true,
+      width: modalWidth,
+    })
+  );
+};
+
 
   const cards = [
     {

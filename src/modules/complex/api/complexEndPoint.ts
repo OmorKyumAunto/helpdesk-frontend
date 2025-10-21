@@ -21,7 +21,7 @@ export const complexEndPoint = api.injectEndpoints({
       providesTags: () => ["complex"],
     }),
     getUserUnitBuilding: build.query<
-      HTTPResponse<IUserUnitBuildingResponse>, // ✅ correct type
+      HTTPResponse<IUserUnitBuildingResponse>, 
       { id: number }
     >({
       query: ({ id }) => `/building/user-unit-building/${id}`,
@@ -30,7 +30,7 @@ export const complexEndPoint = api.injectEndpoints({
 
     getUnitWiseBuildings: build.query<
       HTTPResponse<IUserUnitBuildingResponse>,
-      { id: number[] } // <-- change from number to number[]
+      { id: number[] }
     >({
       query: ({ id }) => ({
         url: `/asset-unit/unit-wise-building`,

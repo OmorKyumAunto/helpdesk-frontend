@@ -315,7 +315,7 @@ const DashboardCards = () => {
           <Col xs={24} sm={24} md={24} lg={8}>
             <Row gutter={[6, 12]}>
               <Col xs={24} sm={24} md={24}>
-                <Link to={"/employee/my-tickets"}>
+                <Link to={"/tickets/list"}>
                   <Card className="bg-[#4c9aff] text-white card-hover-ticket">
                     <div
                       style={{

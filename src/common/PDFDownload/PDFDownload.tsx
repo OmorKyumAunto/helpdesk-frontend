@@ -117,7 +117,7 @@ const PDFDownload: React.FC<Props> = ({
       onClick={savePDF}
       type="primary"
       style={{
-        backgroundColor: "#1A237E", // Deep navy
+        backgroundColor: "#b40d0dff", // Deep navy
         color: "#fff",
         width: "100%",
       }}
