@@ -140,9 +140,6 @@ const UpdateTicketStatus = ({ single }: { single: IAdminTicketList }) => {
                     <Form.Item
                       label="Remarks"
                       name="remarks"
-                      // rules={[
-                      //   { required: true, message: "Please select a category!" },
-                      // ]}
                     >
                       <TextArea rows={3} placeholder="Write here" />
                     </Form.Item>

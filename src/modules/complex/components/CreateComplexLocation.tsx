@@ -5,14 +5,25 @@ import { useDispatch } from "react-redux";
 import { useCreateComplexLocationMutation } from "../api/complexlocationEndPoint";
 import { useEffect } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useGetActiveComplexesQuery } from "../api/complexEndPoint";
+import { useGetActiveComplexesQuery, useGetActiveComplexesforUnitSuperAdminQuery } from "../api/complexEndPoint";
+import { useGetMeQuery } from "../../../app/api/userApi";
+
 
 const CreateLocation = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const { data: { data: profile } = {} } = useGetMeQuery();
   const { data: complexData, isLoading: complexIsLoading } = useGetActiveComplexesQuery({
     status: "active",
   });
+
+  const { data: UnitsuperAdminData, isLoading: superAdminIsLoading } = useGetActiveComplexesforUnitSuperAdminQuery({
+    status: "active",
+
+  },
+    { skip: profile?.role_id !== 4 }
+  );
+
   const [create, { isLoading, isSuccess }] = useCreateComplexLocationMutation();
 
   const onFinish = (value: any) => {
@@ -47,7 +58,7 @@ const CreateLocation = () => {
                 >
                   <Select
                     style={{ width: "100%" }}
-                    loading={complexIsLoading}
+                    loading={complexIsLoading || superAdminIsLoading}
                     placeholder="Select Building"
                     showSearch
                     optionFilterProp="children"
@@ -55,11 +66,12 @@ const CreateLocation = () => {
                       input: string,
                       option?: { label: string; value: number }
                     ) =>
-                      (option?.label ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
+                      (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                     }
-                    options={complexData?.data?.map((unit: any) => ({
+                    options={(profile?.role_id === 4
+                      ? UnitsuperAdminData?.data
+                      : complexData?.data
+                    )?.map((unit: any) => ({
                       value: unit.id,
                       label: unit.name,
                     }))}
@@ -67,6 +79,7 @@ const CreateLocation = () => {
                   />
                 </Form.Item>
               </Col>
+
               <Col xs={24} sm={24}>
                 <Form.Item
                   name="name"

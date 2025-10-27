@@ -158,122 +158,125 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
         </Row>
       ),
     },
-    {
-      key: "5",
-      label: "Seating Location",
-      children: (
-        <Row gutter={[16, 16]}>
-          <Col xs={24} md={24}>
-            <Card>
-              <FieldItem
-                label="Seating Location"
-                value={
-                  seating_location_name
-                    ? `${seating_location_name} (${building_name || "N/A"})`
-                    : "N/A"
-                }
-              />
-
-              {!isEditingLocation ? (
-                <Button type="primary" onClick={() => setIsEditingLocation(true)}>
-                  Update Location
-                </Button>
-              ) : (
-                <Form
-                  form={form}
-                  layout="vertical"
-                  onFinish={async (values) => {
-                    try {
-                      await updateSeatingLocation({
-                        id, // employee.id from table
-                        data: { seating_location: values.seating_location }, // 👈 must be "data"
-                      }).unwrap();
-
-                      message.success("Seating location updated successfully!");
-                      setIsEditingLocation(false);
-                    } catch (err: any) {
-                      message.error(err?.data?.message || "Failed to update seating location");
+    ...(roleId !== 3
+      ? [
+        {
+          key: "5",
+          label: "Seating Location",
+          children: (
+            <Row gutter={[16, 16]}>
+              <Col xs={24} md={24}>
+                <Card>
+                  <FieldItem
+                    label="Seating Location"
+                    value={
+                      seating_location_name
+                        ? `${seating_location_name} (${building_name || "N/A"})`
+                        : "N/A"
                     }
-                  }}
-                >
+                  />
 
-                  <Space direction="vertical" style={{ width: "100%", marginTop: 12 }}>
-                    <Form.Item
-                      label="Unit"
-                      name="unit_id"
-                      rules={[{ required: true, message: "Please select a unit!" }]}
-                    >
-                      <Select
-                        loading={unitIsLoading}
-                        placeholder="Select Unit"
-                        showSearch
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                  {!isEditingLocation ? (
+                    <Button type="primary" onClick={() => setIsEditingLocation(true)}>
+                      Update Location
+                    </Button>
+                  ) : (
+                    <Form
+                      form={form}
+                      layout="vertical"
+                      onFinish={async (values) => {
+                        try {
+                          await updateSeatingLocation({
+                            id, // employee.id from table
+                            data: { seating_location: values.seating_location }, // 👈 must be "data"
+                          }).unwrap();
+
+                          message.success("Seating location updated successfully!");
+                          setIsEditingLocation(false);
+                        } catch (err: any) {
+                          message.error(err?.data?.message || "Failed to update seating location");
                         }
-                        options={unitData?.data?.map((unit: any) => ({
-                          value: unit.id,
-                          label: unit.title,
-                        }))}
-                        onChange={handleUnitChange}
-                        allowClear
-                      />
-                    </Form.Item>
-
-                    <Form.Item
-                      label="Complex"
-                      name="building_id"
-                      rules={[{ required: true, message: "Please select a complex!" }]}
-                    >
-                      <Select
-                        placeholder="Select Complex"
-                        options={buildings}
-                        disabled={buildings.length === 0}
-                        onChange={handleBuildingChange}
-                      />
-                    </Form.Item>
-
-                    <Form.Item
-                      label="Seating Location"
-                      name="seating_location"
-                      rules={[{ required: true, message: "Please select seating location!" }]}
-                    >
-                      <Select
-                        placeholder="Select Location"
-                        options={
-                          locationData?.data?.map((loc: any) => ({
-                            value: loc.id,
-                            label: loc.name || loc.location,
-                          })) || []
-                        }
-                        loading={locationLoading}
-                        disabled={buildingId === skipToken}
-                      />
-                    </Form.Item>
-
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      loading={updateLoading}
-                      style={{
-                        borderRadius: 8,
-                        marginLeft: 12,
-                        padding: "6px 20px",
-                        background: "linear-gradient(90deg, #1677ff 0%, #4096ff 100%)",
-                        border: "none",
                       }}
                     >
-                      Save Changes
-                    </Button>
-                  </Space>
-                </Form>
-              )}
-            </Card>
-          </Col>
-        </Row>
-      ),
-    }
-    ,
+
+                      <Space direction="vertical" style={{ width: "100%", marginTop: 12 }}>
+                        <Form.Item
+                          label="Unit"
+                          name="unit_id"
+                          rules={[{ required: true, message: "Please select a unit!" }]}
+                        >
+                          <Select
+                            loading={unitIsLoading}
+                            placeholder="Select Unit"
+                            showSearch
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                            }
+                            options={unitData?.data?.map((unit: any) => ({
+                              value: unit.id,
+                              label: unit.title,
+                            }))}
+                            onChange={handleUnitChange}
+                            allowClear
+                          />
+                        </Form.Item>
+
+                        <Form.Item
+                          label="Complex"
+                          name="building_id"
+                          rules={[{ required: true, message: "Please select a complex!" }]}
+                        >
+                          <Select
+                            placeholder="Select Complex"
+                            options={buildings}
+                            disabled={buildings.length === 0}
+                            onChange={handleBuildingChange}
+                          />
+                        </Form.Item>
+
+                        <Form.Item
+                          label="Seating Location"
+                          name="seating_location"
+                          rules={[{ required: true, message: "Please select seating location!" }]}
+                        >
+                          <Select
+                            placeholder="Select Location"
+                            options={
+                              locationData?.data?.map((loc: any) => ({
+                                value: loc.id,
+                                label: loc.name || loc.location,
+                              })) || []
+                            }
+                            loading={locationLoading}
+                            disabled={buildingId === skipToken}
+                          />
+                        </Form.Item>
+
+                        <Button
+                          type="primary"
+                          htmlType="submit"
+                          loading={updateLoading}
+                          style={{
+                            borderRadius: 8,
+                            marginLeft: 12,
+                            padding: "6px 20px",
+                            background: "linear-gradient(90deg, #1677ff 0%, #4096ff 100%)",
+                            border: "none",
+                          }}
+                        >
+                          Save Changes
+                        </Button>
+                      </Space>
+                    </Form>
+                  )}
+                </Card>
+              </Col>
+            </Row>
+          ),
+        }
+      ]
+      : []),
     ...(roleId !== 3
       ? [
         {

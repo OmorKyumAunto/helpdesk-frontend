@@ -50,6 +50,15 @@ export const complexEndPoint = api.injectEndpoints({
       providesTags: () => ["complex"],
     }),
 
+    getActiveComplexesforUnitSuperAdmin: build.query<HTTPResponse<IComplex[]>, any>({
+      query: (params) => {
+        return {
+          url: `/building/super-admin-building-list`,
+          params,
+        };
+      },
+      providesTags: () => ["complex"],
+    }),
     createComplex: build.mutation<unknown, { unit_id: number; name: string }>({
       query: (data) => {
         return {
@@ -118,6 +127,7 @@ export const complexEndPoint = api.injectEndpoints({
 export const {
   useGetComplexesQuery,
   useGetActiveComplexesQuery,
+  useGetActiveComplexesforUnitSuperAdminQuery,
   useGetUserUnitBuildingQuery,
   useGetUnitWiseBuildingsQuery,
   useCreateComplexMutation,

@@ -29,7 +29,9 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
 
   // Fetch user unit building info
   const { data: complexData, isLoading: complexLoading, isError: complexError } =
-    useGetUserUnitBuildingQuery({ id });
+    useGetUserUnitBuildingQuery({ id },
+      { refetchOnMountOrArgChange: true }
+    );
 
   // Extract unitIds from searchAccess
   const unitIds = useMemo(() => {
@@ -42,7 +44,8 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
     useGetUnitWiseBuildingsQuery(
       unitIds.length > 0
         ? { id: unitIds } // POST body with id array
-        : skipToken
+        : skipToken,
+      { refetchOnMountOrArgChange: true }
     );
 
   // Fetch locations for selected complexes
@@ -50,7 +53,8 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
     useGetBuildingWiseLocationQuery(
       Array.isArray(buildingIds) && buildingIds.length > 0
         ? buildingIds
-        : skipToken
+        : skipToken,
+      { refetchOnMountOrArgChange: true }
     );
 
   // Reset form and states when modal id changes
@@ -106,9 +110,17 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
 
   const handleComplexChange = (complexIds: number[]) => {
     setSelectedComplexIds(complexIds);
-    setSelectedItems([]);
-    form.setFieldValue("unit_id", []);
-    setBuildingIds(complexIds.length > 0 ? complexIds : skipToken);
+
+    // If no complex selected, clear locations
+    if (complexIds.length === 0) {
+      setSelectedItems([]);
+      form.setFieldValue("unit_id", []);
+      setBuildingIds(skipToken);
+      return;
+    }
+
+    // ✅ Keep existing locations if user adds new complex
+    setBuildingIds(complexIds);
   };
 
   const handleLocationChange = (locationIds: number[]) => {

@@ -78,26 +78,6 @@ export const UnitAdminTableColumns = (): TableProps<IAdmin>["columns"] => {
     { title: "Designation", dataIndex: "designation", key: "designation" },
     { title: "Email", dataIndex: "email", key: "email" },
     { title: "Contact No", dataIndex: "contact_no", key: "contact_no" },
-    { title: "Location", dataIndex: "unit_name", key: "unit_name" },
-    {
-      title: "Asset Units",
-      dataIndex: "asset_unit_titles",
-      key: "asset_unit_titles",
-      render: (items) => renderTagsWithMore(items),
-    },
-    {
-      title: "Ticket Categories",
-      dataIndex: "ticket_category_titles",
-      key: "ticket_category_titles",
-      render: (items) => renderTagsWithMore(items),
-    },
-    {
-      title: "Seating Locations",
-      dataIndex: "seating_location_titles",
-      key: "seating_location_titles",
-      render: (items) => renderTagsWithMore(items),
-    },
-
     {
       title: "Role",
       key: "role",
