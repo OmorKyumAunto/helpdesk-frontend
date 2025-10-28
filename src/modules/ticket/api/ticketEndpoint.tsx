@@ -214,7 +214,7 @@ export const ticketEndpoint = api.injectEndpoints({
     >({
       query: ({ body, id }) => {
         return {
-          url: `/raise-ticket/ticket-forword/${id}`,
+          url: `/raise-ticket/ticket-forward/${id}`,
           method: "POST",
           body,
         };

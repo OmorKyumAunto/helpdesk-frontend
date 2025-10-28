@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { IMenuData } from "../../../Types/MenuData";
 import { BsTicketDetailed } from "react-icons/bs";
 import { GrConfigure } from "react-icons/gr";
+import { TfiAnnouncement } from "react-icons/tfi";
 import { GoTasklist } from "react-icons/go";
 import { PiTicket } from "react-icons/pi";
 import { IoTicketOutline } from "react-icons/io5";
@@ -72,6 +73,21 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
         },
       ]
       : []),
+
+      ...(roleId === 1 || roleId === 4
+              ? [
+                {
+                  label: (
+                    <Link to="/announcements">
+                      Announcements
+                    </Link>
+                  ),
+                  key: "/announcements",
+                  icon: <TfiAnnouncement size={20} />,
+                },
+                
+              ]
+              : []),
     ...(roleId === 1 || roleId === 4
       ? [
         {
