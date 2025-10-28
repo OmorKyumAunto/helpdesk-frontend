@@ -64,7 +64,7 @@ const renderActiveShape = (props: any) => {
       />
       <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
       <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`Available: ${value}`}</text>
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`${value}`}</text>
       <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
         {`(${(percent * 100).toFixed(2)}%)`}
       </text>
@@ -128,8 +128,8 @@ const ExampleWithAPI = () => {
           data={chartData}
           cx="50%"
           cy="50%"
-          innerRadius={80}
-          outerRadius={120}
+          innerRadius={50}
+          outerRadius={90}
           dataKey="value"
           onMouseEnter={onPieEnter}
         />

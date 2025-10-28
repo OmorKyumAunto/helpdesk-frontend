@@ -36,6 +36,7 @@ import TaskCategoryList from "./modules/taskConfiguration/pages/TaskCategoryList
 import EmpDatabase from "./modules/empDatabase/pages/EmpDatabase";
 import ComplexConfig from "./modules/complex/pages/ComplexConfig";
 import Announcements from "./modules/announcements/pages/announcements";
+import CreateAnnouncement from "./modules/announcements/components/CreateAnnouncements";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -133,6 +134,10 @@ export const routers = createBrowserRouter([
       {
         path: "/announcements",
         element: <Announcements />,
+      },
+      {
+        path: "/announcements/create",
+        element: <CreateAnnouncement />,
       },
       {
         path: "/sop/list",

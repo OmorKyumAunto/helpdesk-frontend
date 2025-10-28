@@ -3932,6 +3932,11 @@ sweetalert2@^11.6.13:
   resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.6.13.tgz"
   integrity sha512-n5yVF0FNx1lm4XzpPyb1HIaiptzODfVyeCzmB809tpK+1bPdoKoevKOxYjrtId75DV7xuIp4r6cjn8xUAB8dPQ==
 
+swiper@^12.0.3:
+  version "12.0.3"
+  resolved "https://registry.npmjs.org/swiper/-/swiper-12.0.3.tgz"
+  integrity sha512-BHd6U1VPEIksrXlyXjMmRWO0onmdNPaTAFduzqR3pgjvi7KfmUCAm/0cj49u2D7B0zNjMw02TSeXfinC1hDCXg==
+
 tabbable@^6.0.0:
   version "6.2.0"
   resolved "https://registry.npmjs.org/tabbable/-/tabbable-6.2.0.tgz"

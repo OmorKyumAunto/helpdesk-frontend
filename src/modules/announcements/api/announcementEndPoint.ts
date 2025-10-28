@@ -20,6 +20,14 @@ export const announcementEndPoint = api.injectEndpoints({
       providesTags: ["Admin"],
     }),
 
+    getDashboardAnnouncements: builder.query<AnnouncementListResponse, AnnouncementQueryParams>({
+      query: (params) => ({
+        url: "/mobile/mobile-announcement",
+        params,
+      }),
+      providesTags: ["Admin"],
+    }),
+
     createAnnouncement: builder.mutation<
       any,
       {
@@ -53,4 +61,5 @@ export const {
   useGetAnnouncementsQuery,
   useCreateAnnouncementMutation,
   useDeleteAnnouncementMutation,
+  useGetDashboardAnnouncementsQuery,
 } = announcementEndPoint;

@@ -22,6 +22,7 @@ import WeatherWidget from "../components/WeatherWidget";
 import GraphChartV2 from "../components/GraphChartV2";
 import CategoryPieChart from "../components/CategoryPieChat";
 import TicketPieChart from "../components/TicketPieChart";
+import AnnouncementSlider from "../components/AnnouncementSlider";
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
@@ -311,8 +312,10 @@ const DashboardCards = () => {
           </Col>
         </Row>
       ) : (
+
+
         <Row style={{ marginTop: "5px" }} gutter={[12, 6]}>
-          <Col xs={24} sm={24} md={24} lg={8}>
+          <Col xs={24} sm={24} md={24} lg={6}>
             <Row gutter={[6, 12]}>
               <Col xs={24} sm={24} md={24}>
                 <Link to={"/tickets/list"}>
@@ -558,12 +561,21 @@ const DashboardCards = () => {
               </Col>
             </Row>
           </Col>
-          <Col xs={24} sm={24} md={16}>
+
+          
+        
+          <Col xs={24} sm={24} md={16} lg={9}>
             {/* <BloodTypeChart /> */}
             <Card title="Available Blood Group">
               <ApexPieChart />
             </Card>
           </Col>
+          <Col xs={24} sm={24} md={16} lg={9}>
+            <Card title="📢 Announcements">
+              <AnnouncementSlider />
+            </Card>
+          </Col>
+
           <Col xs={24} sm={24} md={24} lg={24}>
             <Row style={{ marginTop: "4px" }} justify="center">
               <Col xs={24} sm={22} md={20} lg={24}>
