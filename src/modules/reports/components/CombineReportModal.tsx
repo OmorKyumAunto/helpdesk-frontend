@@ -109,9 +109,9 @@ const CombineReportModal = () => {
               </Col>
               <Col xs={8} sm={8}>
                 <Statistic
-                  title={<span style={{ fontSize: "clamp(10px, 1.5vw, 12px)", color: "#666" }}>Combined</span>}
+                  title={<span style={{ fontSize: "clamp(10px, 1.5vw, 12px)", color: "#666" }}>Total Combined</span>}
                   value={report.ticket_task_count?.total_ticket_task ?? 0}
-                  valueStyle={{ fontSize: "clamp(18px, 3vw, 24px)", fontWeight: 600, color: "#722ed1" }}
+                  valueStyle={{ fontSize: "clamp(18px, 3vw, 24px)", fontWeight: 600, color: "#3c0091ff" }}
                 />
               </Col>
             </Row>
@@ -296,10 +296,10 @@ const CombineReportModal = () => {
               { title: "Avg Task Time", value: report.ticket_task_count?.avg_task_time },
               { title: "Avg Combined Time", value: report.ticket_task_count?.avg_ticket_task_time },
               { title: "Work Time/Day", value: report.per_day_wise_work },
-              { title: "SLA Time/Day", value: report.per_day_wise_sla },
+              { title: "SLA-Wise Should/Day", value: report.per_day_wise_sla },
               { title: "Working Days", value: report.total_working_day },
             ].map((item, idx) => (
-              <Col xs={12} sm={8} md={8} lg={8} xl={4} key={idx}>
+              <Col xs={12} sm={8} md={8} lg={8} xl={8} key={idx}>
                 <div
                   style={{
                     background: "#fafafa",

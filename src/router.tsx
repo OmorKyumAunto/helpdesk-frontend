@@ -37,6 +37,7 @@ import EmpDatabase from "./modules/empDatabase/pages/EmpDatabase";
 import ComplexConfig from "./modules/complex/pages/ComplexConfig";
 import Announcements from "./modules/announcements/pages/announcements";
 import CreateAnnouncement from "./modules/announcements/components/CreateAnnouncements";
+import CombineReportModal from "./modules/reports/components/CombineReportModal";
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
@@ -130,6 +131,10 @@ export const routers = createBrowserRouter([
       {
         path: "/reports",
         element: <Reports />,
+      },
+      {
+        path: "/combine-report",
+        element: <CombineReportModal />,
       },
       {
         path: "/announcements",
