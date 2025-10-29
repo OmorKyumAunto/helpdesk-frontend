@@ -560,16 +560,14 @@ const DashboardCards = () => {
                 </Link>
               </Col>
             </Row>
-          </Col>
-
-          
+          </Col>          
         
           <Col xs={24} sm={24} md={16} lg={9}>
-            {/* <BloodTypeChart /> */}
             <Card title="Available Blood Group">
               <ApexPieChart />
             </Card>
           </Col>
+
           <Col xs={24} sm={24} md={16} lg={9}>
             <Card title="📢 Announcements">
               <AnnouncementSlider />
