@@ -130,7 +130,7 @@ const TaskReportModal = () => {
                             user_employee_id,
                             created_at,
                             overdue,
-                          }) => {
+                          }: any) => {
                             return {
                               "Category Title": category_title,
                               Description: description,
@@ -152,7 +152,7 @@ const TaskReportModal = () => {
                               "User Name": user_name,
                               "User Employee ID": user_employee_id,
                               "Created At": created_at,
-                              Overdue: overdue,
+                              Overdue: overdue === 1 ? "Yes" : "No",
                             };
                           }
                         )

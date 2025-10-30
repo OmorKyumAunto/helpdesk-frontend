@@ -57,29 +57,30 @@ const ExcelDownload: React.FC<Props> = ({
       });
 
       // Auto-adjust column widths based on header and data length
+      // ✅ Use fixed column widths and enable text wrapping
       worksheet.columns = excelTableHead.map((header) => {
-        const maxDataLength = Math.max(
-          header.length,
-          ...excelData.map((row) =>
-            row[header] ? row[header].toString().length : 0
-          )
-        );
+        // You can customize widths per column if needed
+        let width = 25; // default width
+        if (header === "Description" || header === "Remarks" || header === "Ticket Subject") width = 60;
+        if (header === "Category Title") width = 30;
+
         return {
           header,
           key: header,
-          width: maxDataLength + 2, // Add a small buffer to the width
+          width,
         };
       });
 
-      // Add Data Rows
+      // ✅ Add Data Rows with wrapping
       excelData.forEach((rowData) => {
         const values = excelTableHead.map((header) => rowData[header] || "");
         const row = worksheet.addRow(values);
+        row.height = 30; // optional: slightly taller rows for readability
         row.eachCell((cell) => {
           cell.alignment = {
             vertical: "middle",
             horizontal: "left",
-            wrapText: true,
+            wrapText: true, // wrap long text properly
           };
           cell.border = {
             top: { style: "thin" },
@@ -89,6 +90,7 @@ const ExcelDownload: React.FC<Props> = ({
           };
         });
       });
+
 
       // Generate Excel File
       const excelDataGenerate = await workbook.xlsx.writeBuffer();

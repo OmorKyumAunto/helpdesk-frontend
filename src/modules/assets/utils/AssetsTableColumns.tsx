@@ -125,7 +125,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
           )}
 
 
-          {roleId === 1 && (
+          {(roleId === 1 || roleId === 4) && (
             <Popconfirm
               title="Delete this Asset"
               description="Are You Sure to Delete This?"

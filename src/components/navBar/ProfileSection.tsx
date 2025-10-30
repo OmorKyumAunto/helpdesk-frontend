@@ -41,26 +41,28 @@ const ProfileSection = () => {
         title="Profile Details"
         extra={
           <Space wrap>
-            <Button
-              onClick={() => {
-                dispatch(
-                  setCommonModal({
-                    content: <SeatingLocationModal employee={record as any} />,
-                    show: true,
-                    width: 600, // you can adjust modal width
-                  })
-                );
-              }}
-              style={{
-                fontSize: "14px",
-                padding: "8px 16px",
-                borderRadius: "6px",
-                backgroundColor: "#52c41a",
-                color: "#fff",
-              }}
-            >
-              Seating Location
-            </Button>
+            {role_id === 3 && ( // ✅ Show only for role_id 3 (Employee)
+              <Button
+                onClick={() => {
+                  dispatch(
+                    setCommonModal({
+                      content: <SeatingLocationModal employee={record as any} />,
+                      show: true,
+                      width: 600,
+                    })
+                  );
+                }}
+                style={{
+                  fontSize: "14px",
+                  padding: "8px 16px",
+                  borderRadius: "6px",
+                  backgroundColor: "#52c41a",
+                  color: "#fff",
+                }}
+              >
+                Seating Location
+              </Button>
+            )}
             <Button
               type="primary"
               onClick={() => {
