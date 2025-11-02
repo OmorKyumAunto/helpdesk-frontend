@@ -85,7 +85,7 @@ const AssetReportModal = () => {
         bodyStyle={{ padding: "clamp(12px, 2vw, 16px)" }}
       >
         <Row gutter={[8, 12]} align="middle">
-          <Col xs={24} sm={24} md={18} lg={18}>
+          <Col xs={24} sm={24} md={18} lg={16}>
             <Row gutter={[8, 12]}>
               <Col xs={8} sm={8} md={8}>
                 <Statistic
@@ -116,7 +116,7 @@ const AssetReportModal = () => {
                   }
                 />
               </Col>
-              <Col xs={8} sm={8} md={8}>
+              <Col xs={8} sm={8} md={11}>
                 <Statistic
                   title={
                     <span
@@ -157,16 +157,16 @@ const AssetReportModal = () => {
                       return `${(num / 10000000).toFixed(1)} Crore`;
                     } else if (num >= 100000) {
                       // Lakhs (1 L = 100,000)
-                      return `${(num / 100000).toFixed(1)} Lakh`;
+                      return `${(num / 100000).toFixed(1)} Lakhs`;
                     } else if (num >= 1000) {
                       // Thousands
-                      return `${(num / 1000).toFixed(1)}K`;
+                      return `${(num / 1000).toFixed(1)} K`;
                     }
                     return num.toLocaleString('en-IN');
                   }}
                 />
               </Col>
-              <Col xs={8} sm={8} md={8}>
+              <Col xs={8} sm={8} md={5}>
                 <Statistic
                   title={
                     <span
@@ -205,7 +205,7 @@ const AssetReportModal = () => {
             xs={24}
             sm={24}
             md={6}
-            lg={6}
+            lg={8}
             style={{
               textAlign: window.innerWidth > 768 ? "right" : "center",
             }}
