@@ -10,8 +10,21 @@ import {
   Card,
   message,
   Modal,
+  Typography,
+  Space,
+  Tag
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  InboxOutlined,
+  UserAddOutlined,
+  SendOutlined,
+  PaperClipOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  WarningOutlined,
+  FireOutlined,
+} from "@ant-design/icons";
 import { useGetCategoryActiveListQuery } from "../../Category/api/categoryEndPoint";
 import { useGetEmployeeAllDistributedAssetQuery } from "../../assets/api/assetsEndPoint";
 import { useCreateRaiseTicketMutation } from "../api/ticketEndpoint";
@@ -21,6 +34,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const { Option } = Select;
+const { Title, Text } = Typography;
 
 interface RaiseTicketFormProps {
   setActiveKey: React.Dispatch<React.SetStateAction<string>>;
@@ -29,7 +43,9 @@ interface RaiseTicketFormProps {
 const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
   const [form] = Form.useForm();
   const [isCcVisible, setIsCcVisible] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedPriority, setSelectedPriority] = useState<string>("");
+
   const { data: allEmployee, isLoading: empLoading } = useGetOverallEmployeesQuery();
   const { data, isLoading } = useGetEmployeeAllDistributedAssetQuery({});
   const { data: categoryData, isLoading: categoryLoading } = useGetCategoryActiveListQuery({});
@@ -39,6 +55,7 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
 
   const normFile = (e: any) => (Array.isArray(e) ? e : e?.fileList);
   const handleCcButtonClick = () => setIsCcVisible(!isCcVisible);
+
   // Ticket form submission
   const handleSubmit = async (values: any, isRetry = false) => {
     setIsSubmitting(true);
@@ -58,6 +75,7 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
 
     try {
       await create(formData).unwrap();
+      message.success("Ticket raised successfully!");
     } catch (err: any) {
       if (
         err?.data?.message ===
@@ -81,171 +99,537 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
     if (isSuccess) {
       form.resetFields();
       setIsCcVisible(false);
+      setSelectedPriority("");
       setActiveKey("7");
     }
   }, [isSuccess, form, setActiveKey]);
 
+  // Priority configuration
+  const priorityConfig = {
+    low: {
+      color: "#52c41a",
+      icon: <CheckCircleOutlined />,
+      label: "Low",
+      bgColor: "#f6ffed",
+      borderColor: "#b7eb8f",
+    },
+    medium: {
+      color: "#faad14",
+      icon: <ClockCircleOutlined />,
+      label: "Medium",
+      bgColor: "#fffbe6",
+      borderColor: "#ffe58f",
+    },
+    high: {
+      color: "#ff7a45",
+      icon: <WarningOutlined />,
+      label: "High",
+      bgColor: "#fff2e8",
+      borderColor: "#ffbb96",
+    },
+    urgent: {
+      color: "#ff4d4f",
+      icon: <FireOutlined />,
+      label: "Urgent",
+      bgColor: "#fff1f0",
+      borderColor: "#ffccc7",
+    },
+  };
+
   return (
-    <>
-      <Form form={form} layout="vertical" onFinish={handleSubmit} style={{ maxWidth: "100%", margin: "auto" }}>
-        <Row gutter={[16, 16]}>
-          {/* Left Card */}
-          <Col xs={24} md={8}>
-            <Card
-              bordered
-              hoverable
-              style={{ borderRadius: "8px", padding: "3px", boxShadow: "0 2px 8px rgba(0,0,0,0.15)", transition: "transform 0.3s ease" }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            >
+    <div
+      style={{
+        minHeight: "100vh",
+        padding: "3px 2px",
+      }}
+    >
+      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
 
-              <Form.Item label="Select Category" name="category_id" rules={[{ required: true, message: "Please select a category!" }]} style={{ marginBottom: "8px" }}>
-                <Select
-                  loading={categoryLoading}
-                  placeholder="Select Category"
-                  showSearch
-                  allowClear
-                  optionFilterProp="children"
-                  filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())}
-                  options={categoryData?.data?.map((item) => ({ value: item.id, label: item.title }))}
-                />
-              </Form.Item>
-
-              <Form.Item label="Select Priority" name="priority" rules={[{ required: true, message: "Please select a priority!" }]} style={{ marginBottom: "8px" }}>
-                <Select placeholder="Select Priority">
-                  <Option value="low">Low</Option>
-                  <Option value="medium">Medium</Option>
-                  <Option value="high">High</Option>
-                  <Option value="urgent">Urgent</Option>
-                </Select>
-              </Form.Item>
-
-              <Form.Item label="Select Asset" name="asset_id">
-                <Select
-                  loading={isLoading}
-                  placeholder="Select Asset Name"
-                  showSearch
-                  optionFilterProp="children"
-                  filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())}
-                  options={data?.data?.map((item: any) => ({ value: item.id, label: `${item.asset_name} (${item.serial_number})` }))}
-                  allowClear
-                />
-              </Form.Item>
-            </Card>
-          </Col>
-
-          {/* Right Card */}
-          <Col xs={24} md={16}>
-            <Card
-              bordered
-              hoverable
-              style={{
-                borderRadius: "8px",
-                padding: "3px",
-                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
-                transition: "transform 0.3s ease",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.03)")
-              }
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            >
-              <Form.Item
-                label="Subject"
-                name="subject"
-                style={{ marginBottom: "8px" }}
-                rules={[{ required: true, message: "Please enter a subject!" }]}
+        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+          <Row gutter={[24, 24]}>
+            {/* Left Column */}
+            <Col xs={24} lg={10}>
+              <Card
+                style={{
+                  borderRadius: "12px",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                  border: "1px solid #e8e8e8",
+                }}
               >
-                <Input placeholder="Enter Subject" />
-              </Form.Item>
+                <Title level={5} style={{ marginBottom: "20px", color: "#262626" }}>
+                  Ticket Details
+                </Title>
 
-              <Button
-                onClick={handleCcButtonClick}
-                size="small"
-                style={{ marginBottom: "8px" }}
-              >
-                CC
-              </Button>
-              {isCcVisible && (
-                <Form.Item name="cc" style={{ marginBottom: "8px" }}>
+                <Form.Item
+                  label="Category"
+                  name="category_id"
+                  rules={[{ required: true, message: "Please select a category!" }]}
+                >
                   <Select
-                    loading={empLoading}
-                    placeholder="Select Employee"
+                    loading={categoryLoading}
+                    placeholder="Choose ticket category"
                     showSearch
+                    allowClear
+                    size="large"
                     optionFilterProp="children"
                     filterOption={(input, option) =>
-                      (option?.label ?? "")
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
+                      (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                     }
-                    options={allEmployee?.data?.map((item: IEmployee) => ({
+                    options={categoryData?.data?.map((item) => ({
                       value: item.id,
-                      label: `${item.name} (${item.email})`,
+                      label: item.title,
                     }))}
-                    allowClear
-                    style={{ width: "100%" }}
                   />
                 </Form.Item>
-              )}
 
-              <Form.Item
-                label="Message"
-                name="description"
-                style={{ marginBottom: "8px" }}
-                rules={[
-                  { required: true, message: "Please enter a description!" },
-                ]}
-              >
-                <ReactQuill theme="snow" placeholder="Enter Description..." />
-              </Form.Item>
-
-              <Form.Item
-                name="attachment"
-                label="Attachment (Optional)"
-                valuePropName="fileList"
-                style={{ marginBottom: "8px" }}
-                getValueFromEvent={normFile}
-              >
-                <Upload
-                  beforeUpload={() => false}
-                  maxCount={1}
-                  listType="picture"
-                  accept="image/*,.pdf"
-                  showUploadList={{ showRemoveIcon: true }}
+                <Form.Item
+                  label="Priority"
+                  name="priority"
+                  rules={[{ required: true, message: "Please select a priority!" }]}
                 >
-                  <Button style={{ width: "100%" }} icon={<PlusOutlined />}>
-                    Click to Upload
-                  </Button>
-                  <span style={{ fontSize: "12px", color: "#888" }}>
-                    Only JPG, JPEG, PNG, and PDF files are allowed. Maximum size:
-                    2MB.
-                  </span>
-                </Upload>
-              </Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
+                  <Select
+                    placeholder="Select priority level"
+                    size="large"
+                    onChange={(value) => setSelectedPriority(value)}
+                  >
+                    {Object.entries(priorityConfig).map(([key, config]) => (
+                      <Option key={key} value={key}>
+                        <Space>
+                          <span style={{ color: config.color }}>{config.icon}</span>
+                          <Text strong>{config.label}</Text>
+                        </Space>
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+
+                {selectedPriority && (
+                  <div
+                    style={{
+                      padding: "12px 16px",
+                      borderRadius: "8px",
+                      marginBottom: "20px",
+                      background: priorityConfig[selectedPriority as keyof typeof priorityConfig].bgColor,
+                      border: `1px solid ${priorityConfig[selectedPriority as keyof typeof priorityConfig].borderColor}`,
+                    }}
+                  >
+                    <Space>
+                      <span style={{
+                        color: priorityConfig[selectedPriority as keyof typeof priorityConfig].color,
+                        fontSize: "18px"
+                      }}>
+                        {priorityConfig[selectedPriority as keyof typeof priorityConfig].icon}
+                      </span>
+                      <Text style={{ fontSize: "13px", color: "#595959" }}>
+                        <strong>{priorityConfig[selectedPriority as keyof typeof priorityConfig].label} Priority</strong> selected
+                      </Text>
+                    </Space>
+                  </div>
+                )}
+
+                <Form.Item
+                  label={
+                    <Space size={6}>
+                      <Text strong style={{ fontSize: "14px" }}>
+                        Related Asset
+                      </Text>
+                      <Tag color="blue" style={{ fontSize: "11px", padding: "0 6px", margin: 0 }}>
+                        Optional
+                      </Tag>
+                    </Space>
+                  }
+                  name="asset_id"
+                >
+                  <Select
+                    loading={isLoading}
+                    placeholder="Select asset if applicable"
+                    showSearch
+                    size="large"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                    }
+                    options={data?.data?.map((item: any) => ({
+                      value: item.id,
+                      label: `${item.asset_name} (${item.serial_number})`,
+                    }))}
+                    allowClear
+                  />
+                </Form.Item>
+
+                {/* Enhanced Help Box */}
+                <div
+                  style={{
+                    background: "linear-gradient(135deg, #e6f7ff 0%, #f0f9ff 100%)",
+                    border: "2px solid #91d5ff",
+                    borderRadius: "12px",
+                    padding: "20px",
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "-20px",
+                      right: "-20px",
+                      width: "80px",
+                      height: "80px",
+                      background: "rgba(24, 144, 255, 0.08)",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <Space align="start" size={12}>
+                    <div
+                      style={{
+                        fontSize: "24px",
+                        filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))",
+                      }}
+                    >
+                      💡
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <Text strong style={{ color: "#0050b3", display: "block", marginBottom: "6px", fontSize: "14px" }}>
+                        Pro Tip for Faster Resolution
+                      </Text>
+                      <Text style={{ fontSize: "13px", color: "#595959", lineHeight: "1.6" }}>
+                        Be specific about your issue. Include error messages, screenshots, or steps to reproduce the problem for quicker assistance.
+                      </Text>
+                    </div>
+                  </Space>
+                </div>
+              </Card>
+            </Col>
+
+            {/* Right Column */}
+            <Col xs={24} lg={14}>
+              <Card
                 style={{
-                  width: "100%",
-                  backgroundColor: "#1775bb",
-                  borderColor: "#1775bb",
-                  fontWeight: "bold",
-                  transition: "background-color 0.3s ease",
+                  borderRadius: "12px",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                  border: "1px solid #e8e8e8",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#144b8b")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#1775bb")
-                }
               >
-                Raise a Ticket
-              </Button>
-            </Card>
-          </Col>
-        </Row>
-      </Form>
-    </>
+                <Title level={5} style={{ marginBottom: "20px", color: "#262626" }}>
+                  Message & Attachments
+                </Title>
+
+                <Form.Item
+                  label="Subject"
+                  name="subject"
+                  rules={[{ required: true, message: "Please enter a subject!" }]}
+                >
+                  <Input
+                    placeholder="Brief description of your issue"
+                    size="large"
+                    prefix={<span style={{ color: "#bfbfbf", marginRight: "4px" }}>📌</span>}
+                  />
+                </Form.Item>
+
+                <div style={{ marginBottom: "20px" }}>
+                  <Button
+                    onClick={handleCcButtonClick}
+                    icon={<UserAddOutlined />}
+                    style={{
+                      borderColor: isCcVisible ? "#1890ff" : "#d9d9d9",
+                      color: isCcVisible ? "#1890ff" : "#595959",
+                    }}
+                  >
+                    {isCcVisible ? "Hide CC" : "Add CC"}
+                  </Button>
+
+                  {isCcVisible && (
+                    <Form.Item
+                      name="cc"
+                      style={{ marginTop: "12px", marginBottom: 0 }}
+                    >
+                      <Select
+                        loading={empLoading}
+                        placeholder="Select one person to CC"
+                        showSearch
+                        size="large"
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                        }
+                        options={allEmployee?.data?.map((item: IEmployee) => ({
+                          value: item.id,
+                          label: `${item.name} (${item.email})`,
+                        }))}
+                        allowClear
+                      />
+                    </Form.Item>
+                  )}
+                </div>
+
+                <Form.Item
+                  label="Description"
+                  name="description"
+                  rules={[{ required: true, message: "Please enter a description!" }]}
+                >
+                  <ReactQuill
+                    theme="snow"
+                    placeholder="Describe your issue in detail..."
+                    style={{
+                      height: "140px",
+                      marginBottom: "40px",
+                    }}
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label={
+                    <Space size={6}>
+                      <PaperClipOutlined style={{ fontSize: "16px" }} />
+                      <Text strong style={{ fontSize: "14px" }}>
+                        Attachment
+                      </Text>
+                      <Tag color="blue" style={{ fontSize: "11px", padding: "0 6px", margin: 0 }}>
+                        Optional
+                      </Tag>
+                    </Space>
+                  }
+                >
+                  <Form.Item
+                    name="attachment"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
+                    noStyle
+                  >
+                    <Upload
+                      beforeUpload={() => false}
+                      maxCount={1}
+                      accept="image/*,.pdf"
+                      showUploadList={false}
+                      className="modern-upload"
+                    >
+                      <div
+                        style={{
+                          border: "2px dashed #d9d9d9",
+                          borderRadius: "12px",
+                          padding: "15px",
+                          textAlign: "center",
+                          cursor: "pointer",
+                          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                          background: "#fafafa",
+                        }}
+                        className="upload-box"
+                      >
+                        <div
+                          style={{
+                            width: "38px",
+                            height: "38px",
+                            margin: "0 auto 1px",
+                            background: "linear-gradient(135deg, #1890ff 0%, #096dd9 100%)",
+                            borderRadius: "12px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            transition: "all 0.3s ease",
+                          }}
+                          className="upload-icon"
+                        >
+                          <InboxOutlined style={{ fontSize: "24px", color: "#fff" }} />
+                        </div>
+                        <Text strong style={{ display: "block", fontSize: "14px" }}>
+                          Click to upload or drag & drop
+                        </Text>
+                        <Text type="secondary" style={{ fontSize: "12px" }}>
+                          JPG, PNG, PDF (Max 2MB)
+                        </Text>
+                      </div>
+                    </Upload>
+                  </Form.Item>
+
+                  <Form.Item noStyle shouldUpdate>
+                    {({ getFieldValue }) => {
+                      const fileList = getFieldValue("attachment");
+                      if (fileList && fileList.length > 0) {
+                        const file = fileList[0];
+                        return (
+                          <div
+                            style={{
+                              marginTop: "16px",
+                              padding: "12px",
+                              background: "#fff",
+                              border: "2px solid #1890ff",
+                              borderRadius: "12px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              animation: "slideIn 0.3s ease-out",
+                            }}
+                          >
+                            <Space>
+                              <div
+                                style={{
+                                  width: "40px",
+                                  height: "40px",
+                                  background: "linear-gradient(135deg, #1890ff 0%, #096dd9 100%)",
+                                  borderRadius: "8px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <PaperClipOutlined style={{ fontSize: "18px", color: "#fff" }} />
+                              </div>
+                              <div>
+                                <Text strong style={{ display: "block", fontSize: "14px" }}>
+                                  {file.name}
+                                </Text>
+                                <Text type="secondary" style={{ fontSize: "12px" }}>
+                                  {file.size ? `${(file.size / 1024).toFixed(2)} KB` : "Ready to upload"}
+                                </Text>
+                              </div>
+                            </Space>
+                            <Button
+                              type="text"
+                              danger
+                              icon={<span style={{ fontSize: "18px" }}>×</span>}
+                              onClick={() => form.setFieldValue("attachment", [])}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: "32px",
+                                height: "32px",
+                                borderRadius: "8px",
+                              }}
+                            />
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  </Form.Item>
+                </Form.Item>
+
+                <Form.Item style={{ marginBottom: 0, marginTop: "24px" }}>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={isSubmitting}
+                    icon={<SendOutlined />}
+                    size="large"
+                    block
+                    style={{
+                      height: "48px",
+                      fontSize: "16px",
+                      fontWeight: 500,
+                      borderRadius: "8px",
+                    }}
+                  >
+                    {isSubmitting ? "Submitting..." : "Submit Ticket"}
+                  </Button>
+                </Form.Item>
+              </Card>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+
+      <style>{`
+        /* Smooth transitions */
+        .ant-card {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .ant-card:hover {
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+        }
+
+        /* Button hover effects */
+        .ant-btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+        }
+
+        /* Input focus effects */
+        .ant-input:focus,
+        .ant-select-focused .ant-select-selector,
+        .ant-input:hover,
+        .ant-select:hover .ant-select-selector {
+          border-color: #40a9ff !important;
+          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1) !important;
+        }
+
+        /* Modern Upload Styling */
+        .upload-box:hover {
+          border-color: #40a9ff !important;
+          background: #f0f9ff !important;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
+        }
+
+        .upload-box:hover .upload-icon {
+          transform: scale(1.1) rotate(5deg);
+        }
+
+        .upload-icon {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Slide in animation for uploaded file */
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* Pulse animation for upload icon */
+        @keyframes pulse {
+          0%, 100% {
+            box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.4);
+          }
+          50% {
+            box-shadow: 0 0 0 8px rgba(24, 144, 255, 0);
+          }
+        }
+
+        .upload-icon {
+          animation: pulse 2s infinite;
+        }
+
+        /* Quill editor */
+        .ql-container {
+          font-size: 14px;
+        }
+
+        .ql-editor.ql-blank::before {
+          color: #bfbfbf;
+          font-style: normal;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+          .ant-card {
+            margin-bottom: 16px;
+          }
+        }
+
+        /* Tag animations */
+        .ant-tag {
+          transition: all 0.2s ease;
+        }
+
+        /* Selection */
+        ::selection {
+          background: #bae7ff;
+          color: #003a8c;
+        }
+
+        /* Smooth scrolling */
+        html {
+          scroll-behavior: smooth;
+        }
+      `}</style>
+    </div>
   );
 };
 
