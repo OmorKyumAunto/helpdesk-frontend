@@ -469,7 +469,7 @@ const RaiseTicketList: React.FC = () => {
                 </div>
                 <Divider style={{ margin: "6px 0px 12px" }} />
                 <Row gutter={12}>
-                  <Col xs={12} sm={12} md={8} lg={4}>
+                  <Col xs={12} sm={12} md={8} lg={3}>
                     <div
                       style={{
                         textAlign: "left",
@@ -494,7 +494,7 @@ const RaiseTicketList: React.FC = () => {
                     </div>
                   </Col>
 
-                  <Col xs={12} sm={12} md={8} lg={4}>
+                  <Col xs={12} sm={12} md={8} lg={3}>
                     <div
                       style={{
                         textAlign: "left",
