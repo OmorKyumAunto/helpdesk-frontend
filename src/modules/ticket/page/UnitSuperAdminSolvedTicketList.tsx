@@ -43,6 +43,7 @@ import noUser from "../../../assets/avatar2.png";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { formatTimeDifference } from "../utils/timeFormat";
+import { Ticket } from "lucide-react";
 dayjs.extend(relativeTime);
 
 const { Option } = Select;
@@ -135,7 +136,7 @@ const AdminTicketList = ({
       title="Solved Ticket List"
       extra={
         <Space direction={!sm ? "vertical" : "horizontal"}>
-          
+
           <Input
             prefix={<SearchOutlined />}
             style={{ width: "160px" }}
@@ -528,7 +529,7 @@ const AdminTicketList = ({
                 </div>
                 <Divider style={{ margin: "6px 0px 12px" }} />
                 <Row gutter={12}>
-                  <Col xs={12} sm={12} md={8} lg={4}>
+                  <Col xs={12} sm={12} md={8} lg={3}>
                     <div
                       style={{
                         textAlign: "left",
@@ -552,19 +553,7 @@ const AdminTicketList = ({
                       <p>{ticket.asset_serial_number || "N/A"}</p>
                     </div>
                   </Col>
-                  <Col xs={12} sm={12} md={8} lg={4}>
-                    <div
-                      style={{
-                        textAlign: "left",
-                        fontSize: "15px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      <p style={{ color: "gray" }}>Asset Category</p>
-                      <p>{ticket.asset_category}</p>
-                    </div>
-                  </Col>
-                  <Col xs={12} sm={12} md={8} lg={4}>
+                  <Col xs={12} sm={12} md={8} lg={3}>
                     <div
                       style={{
                         textAlign: "left",
@@ -620,7 +609,7 @@ const AdminTicketList = ({
                       <p>{ticket.ticket_category_title}</p>
                     </div>
                   </Col>
-                  <Col xs={12} sm={12} md={8} lg={4}>
+                  <Col xs={12} sm={12} md={8} lg={3}>
                     <div
                       style={{
                         textAlign: "left",
@@ -629,7 +618,23 @@ const AdminTicketList = ({
                       }}
                     >
                       <p style={{ color: "gray" }}>Unit Name</p>
-                      <p>{ticket.asset_unit_title}</p>
+                      <p>{ticket.seating_unit_name ||ticket.asset_unit_title|| "Not Updated"}</p>
+                    </div>
+                  </Col>
+                  <Col xs={12} sm={12} md={8} lg={7}>
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <p style={{ color: "gray" }}>Location</p>
+                      <p>
+                        {ticket.complex_name && ticket.seating_location_name
+                          ? `${ticket.complex_name} - ${ticket.seating_location_name}`
+                          : ticket.complex_name || ticket.seating_location_name || "Not Updated"}
+                      </p>
                     </div>
                   </Col>
                 </Row>
@@ -724,53 +729,6 @@ const AdminTicketList = ({
                       />
 
                       <Divider />
-                      {/* <Descriptions
-                        bordered
-                        layout="vertical"
-                        size="small"
-                        items={[
-                          {
-                            key: "1",
-                            label: "Attachment",
-                            children: (
-                              <>
-                                {isPDF ? (
-                                  <a
-                                    href={`${imageURLNew}/uploads/${
-                                      ticket?.attachment?.split("ticket\\")[1]
-                                    }`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <Button size="small">View PDF</Button>
-                                  </a>
-                                ) : (
-                                  <Image
-                                    src={
-                                      ticket.attachment
-                                        ? `${imageURLNew}/uploads/${
-                                            ticket?.attachment?.split(
-                                              "ticket\\"
-                                            )[1]
-                                          }`
-                                        : noImage
-                                    }
-                                    alt="attachment"
-                                    width={30}
-                                    style={{ maxHeight: "30px" }}
-                                    onClick={(e) => e.stopPropagation()}
-                                  />
-                                )}
-                              </>
-                            ),
-                          },
-                          {
-                            key: "2",
-                            label: "Message",
-                            children: ticket.description,
-                          },
-                        ]}
-                      /> */}
                       <Descriptions bordered layout="vertical" size="small">
                         <Descriptions.Item
                           style={{ backgroundColor: "#ffffff" }}

@@ -226,69 +226,6 @@ const EmployeeList = () => {
               <Button icon={<FilterOutlined />}>Filters</Button>
             </Dropdown>
 
-
-
-            <>
-              {/* <PDFDownload
-                PDFFileName="employee_list"
-                fileHeader="EMPLOYEE LIST"
-                PDFHeader={[
-                  "Employee ID",
-                  "Employee Name",
-                  "Department",
-                  "Designation",
-                  "Email",
-                  "Contact No",
-                  "Blood Group",
-                  "Date of Joining",
-                  "Unit Name",
-                  "Business Type",
-                  "Line of Business",
-                  "Grade",
-                  "PABX",
-                ]}
-                PDFData={
-                  data?.data?.length
-                    ? data?.data?.map(
-                        ({
-                          employee_id,
-                          name,
-                          department,
-                          designation,
-                          email,
-                          contact_no,
-                          joining_date,
-                          unit_name,
-                          blood_group,
-                          business_type,
-                          line_of_business,
-                          grade,
-                          pabx,
-                        }: any) => {
-                          const data = {
-                            "Employee ID": employee_id,
-                            "Employee Name": name,
-                            Department: department,
-                            Designation: designation,
-                            Email: email,
-                            "Contact No": contact_no,
-                            "Blood Group": blood_group,
-                            "Date of Joining":
-                              dayjs(joining_date).format("DD-MM-YYYY"),
-                            "Unit Name": unit_name,
-                            "Business Type": business_type,
-                            "Line of Business": line_of_business,
-                            Grade: grade,
-                            PABX: pabx,
-                          };
-                          return data;
-                        }
-                      )
-                    : []
-                }
-              /> */}
-            </>
-
             <ExcelDownload
               excelName={"employee_list"}
               excelTableHead={[

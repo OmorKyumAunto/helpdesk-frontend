@@ -41,7 +41,7 @@ const ProfileSection = () => {
         title="Profile Details"
         extra={
           <Space wrap>
-            {role_id === 3 && ( // ✅ Show only for role_id 3 (Employee)
+            {role_id !== 1 && (
               <Button
                 onClick={() => {
                   dispatch(

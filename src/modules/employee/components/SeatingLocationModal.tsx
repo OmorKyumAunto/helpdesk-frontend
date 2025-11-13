@@ -10,6 +10,28 @@ import { useUpdateEmployeeSeatingLocationMutation } from "../api/employeeEndPoin
 
 const { Title, Text } = Typography;
 
+interface Building {
+  id: number;
+  name: string;
+}
+
+interface Unit {
+  id: number;
+  title: string;
+  building?: Building[];
+}
+
+interface Location {
+  id: number;
+  name?: string;
+  location?: string;
+}
+
+interface BuildingOption {
+  value: number;
+  label: string;
+}
+
 interface SeatingLocationModalProps {
   employee?: any;
 }
@@ -18,105 +40,185 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
 
-  const [buildings, setBuildings] = useState<{ value: number; label: string }[]>([]);
+  const [buildings, setBuildings] = useState<BuildingOption[]>([]);
   const [buildingId, setBuildingId] = useState<number[] | typeof skipToken>(skipToken);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Current logged-in user profile
-  const { data: { data: profile } = {} } = useGetMeQuery();
+  // Current logged-in user profile - always fetch fresh
+  const { data: { data: profile } = {}, refetch: refetchProfile } = useGetMeQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   // Queries with always fresh data
   const {
     data: unitData,
     isLoading: unitIsLoading,
     refetch: refetchUnits,
-  } = useGetUnitsQuery({ status: "active" }, { refetchOnMountOrArgChange: true });
+  } = useGetUnitsQuery(
+    { status: "active" },
+    { 
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+    }
+  );
 
   const {
     data: locationData,
     isLoading: locationLoading,
     refetch: refetchLocations,
-  } = useGetBuildingWiseLocationQuery(buildingId, { refetchOnMountOrArgChange: true });
+  } = useGetBuildingWiseLocationQuery(buildingId, {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+    skip: buildingId === skipToken,
+  });
 
   // Mutation
   const [updateSeatingLocation, { isLoading: updateLoading }] =
     useUpdateEmployeeSeatingLocationMutation();
 
-  // Clear form and state on modal open
+  // Force refetch all data when modal opens
   useEffect(() => {
-    form.resetFields();
-    setBuildings([]);
-    setBuildingId(skipToken);
-    refetchUnits();
-  }, [employee, form, refetchUnits]);
+    const initializeModal = async () => {
+      // Reset all states
+      form.resetFields();
+      setBuildings([]);
+      setBuildingId(skipToken);
+      setIsInitialized(false);
+
+      // Force refetch all data
+      await Promise.all([
+        refetchProfile(),
+        refetchUnits(),
+      ]);
+
+      setIsInitialized(true);
+    };
+
+    initializeModal();
+
+    // Cleanup on unmount
+    return () => {
+      form.resetFields();
+      setBuildings([]);
+      setBuildingId(skipToken);
+      setIsInitialized(false);
+    };
+  }, []); // Empty dependency - runs only on mount/unmount
 
   // Handle unit change
   const handleUnitChange = (unitId: number) => {
-    const selectedUnit = unitData?.data?.find((u: any) => u.id === unitId);
+    const selectedUnit = unitData?.data?.find((u: Unit) => u.id === unitId);
 
     if (selectedUnit) {
-      setBuildings(
-        selectedUnit.building?.map((b: any) => ({
-          value: b.id,
-          label: b.name,
-        })) || []
-      );
+      const buildingOptions = selectedUnit.building?.map((b: Building) => ({
+        value: b.id,
+        label: b.name,
+      })) || [];
+      
+      setBuildings(buildingOptions);
     } else {
       setBuildings([]);
     }
 
+    // Reset dependent fields
     setBuildingId(skipToken);
-    form.setFieldsValue({ building_id: undefined, seating_location: undefined });
+    form.setFieldsValue({ 
+      building_id: undefined, 
+      seating_location: undefined 
+    });
   };
 
   // Handle building change
-  const handleBuildingChange = (id: number) => {
-    setBuildingId(id ? [id] : skipToken);
-    form.setFieldsValue({ seating_location: undefined });
+  const handleBuildingChange = async (id: number) => {
+    if (id) {
+      setBuildingId([id]);
+      form.setFieldsValue({ seating_location: undefined });
+      
+      // Force refetch locations for the new building
+      setTimeout(() => {
+        refetchLocations();
+      }, 100);
+    } else {
+      setBuildingId(skipToken);
+      form.setFieldsValue({ seating_location: undefined });
+    }
   };
 
-  // Prefill form if employee exists
+  // Prefill form with employee data - only after initialization
   useEffect(() => {
-    if (!employee || !unitData?.data?.length) return;
+    if (!isInitialized || !employee || !unitData?.data?.length) return;
 
     const { seating_unit_id, building_id, seating_location } = employee;
 
     if (seating_unit_id) {
+      // Set unit
       form.setFieldsValue({ unit_id: seating_unit_id });
-      handleUnitChange(seating_unit_id);
+      
+      // Trigger unit change to populate buildings
+      const selectedUnit = unitData.data.find((u: Unit) => u.id === seating_unit_id);
+      if (selectedUnit) {
+        const buildingOptions = selectedUnit.building?.map((b: Building) => ({
+          value: b.id,
+          label: b.name,
+        })) || [];
+        
+        setBuildings(buildingOptions);
 
-      // Set building and location after dropdowns populate
-      if (building_id) {
-        setTimeout(() => {
-          form.setFieldsValue({ building_id });
-          handleBuildingChange(building_id);
+        // Set building and location after dropdowns populate
+        if (building_id && buildingOptions.some((b: BuildingOption) => b.value === building_id)) {
+          setTimeout(() => {
+            form.setFieldsValue({ building_id });
+            setBuildingId([building_id]);
 
-          if (seating_location) {
-            setTimeout(() => {
-              form.setFieldsValue({ seating_location });
-            }, 50);
-          }
-        }, 50);
+            if (seating_location) {
+              setTimeout(() => {
+                form.setFieldsValue({ seating_location });
+              }, 150);
+            }
+          }, 100);
+        }
       }
     }
-  }, [employee, unitData]);
+  }, [isInitialized, employee, unitData]);
+
+  // Refetch locations when buildingId changes
+  useEffect(() => {
+    if (buildingId !== skipToken) {
+      refetchLocations();
+    }
+  }, [buildingId, refetchLocations]);
 
   // Submit handler
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
 
-      if (profile?.id) {
-        await updateSeatingLocation({
-          id: profile.id,
-          data: { seating_location: values.seating_location },
-        }).unwrap();
+      const userId = profile?.id || employee?.id;
+      
+      if (!userId) {
+        message.error("❌ User information not found. Please try again.");
+        return;
       }
 
+      await updateSeatingLocation({
+        id: userId,
+        data: { seating_location: values.seating_location },
+      }).unwrap();
+
       message.success("✅ Seating location updated successfully!");
+      
+      // Reset form and close modal
       form.resetFields();
+      setBuildings([]);
+      setBuildingId(skipToken);
+      
       dispatch(setCommonModal({ show: false }));
-    } catch {
-      message.error("❌ Failed to update seating location. Try again.");
+      
+      // Refetch profile to get updated data
+      refetchProfile();
+    } catch (error: any) {
+      console.error("Update error:", error);
+      message.error(error?.data?.message || "❌ Failed to update seating location. Try again.");
     }
   };
 
@@ -135,7 +237,13 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
       </div>
 
       {/* Form */}
-      <Form form={form} layout="vertical" onFinish={handleSubmit} style={{ marginTop: 12 }}>
+      <Form 
+        form={form} 
+        layout="vertical" 
+        onFinish={handleSubmit} 
+        style={{ marginTop: 12 }}
+        preserve={false}
+      >
         <Row gutter={16}>
           {/* Select Unit */}
           <Col span={12}>
@@ -145,19 +253,20 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
               rules={[{ required: true, message: "Please select a unit!" }]}
             >
               <Select
-                loading={unitIsLoading}
+                loading={unitIsLoading || !isInitialized}
                 placeholder="Select Unit"
                 showSearch
                 optionFilterProp="children"
                 filterOption={(input, option) =>
                   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                 }
-                options={unitData?.data?.map((unit: any) => ({
+                options={unitData?.data?.map((unit: Unit) => ({
                   value: unit.id,
                   label: unit.title,
                 }))}
                 onChange={handleUnitChange}
                 allowClear
+                disabled={!isInitialized}
               />
             </Form.Item>
           </Col>
@@ -172,8 +281,9 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
               <Select
                 placeholder="Select Complex"
                 options={buildings}
-                disabled={buildings.length === 0}
+                disabled={buildings.length === 0 || !isInitialized}
                 onChange={handleBuildingChange}
+                allowClear
               />
             </Form.Item>
           </Col>
@@ -188,21 +298,28 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
           <Select
             placeholder="Select Location"
             options={
-              locationData?.data?.map((loc: any) => ({
+              locationData?.data?.map((loc: Location) => ({
                 value: loc.id,
                 label: loc.name || loc.location,
               })) || []
             }
             loading={locationLoading}
-            disabled={buildingId === skipToken}
+            disabled={buildingId === skipToken || !isInitialized}
+            allowClear
           />
         </Form.Item>
 
         {/* Buttons */}
-        <Form.Item style={{ textAlign: "right", marginTop: 24 }}>
+        <Form.Item style={{ textAlign: "right", marginTop: 24, marginBottom: 0 }}>
           <Button
-            onClick={() => dispatch(setCommonModal({ show: false }))}
+            onClick={() => {
+              form.resetFields();
+              setBuildings([]);
+              setBuildingId(skipToken);
+              dispatch(setCommonModal({ show: false }));
+            }}
             style={{ borderRadius: 8, padding: "6px 18px" }}
+            disabled={updateLoading}
           >
             Cancel
           </Button>
@@ -210,6 +327,7 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
             type="primary"
             htmlType="submit"
             loading={updateLoading}
+            disabled={!isInitialized}
             style={{
               borderRadius: 8,
               marginLeft: 12,
@@ -218,7 +336,7 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
               border: "none",
             }}
           >
-            Save Changes
+            {updateLoading ? "Saving..." : "Save Changes"}
           </Button>
         </Form.Item>
       </Form>

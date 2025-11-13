@@ -46,6 +46,10 @@ export interface IRaiseTicketList {
   is_on_behalf: number;
   on_behalf_created_name: string;
   on_behalf_created_employee_id: number;
+  seating_unit_name:string;
+  complex_name:string;
+  seating_location_name:string;
+
 
 }
 export interface IAdminTicketList {
@@ -107,6 +111,9 @@ export interface IAdminTicketList {
   is_on_behalf: number;
   on_behalf_created_name: string;
   on_behalf_created_employee_id: number;
+  seating_unit_name:string;
+  complex_name:string;
+  seating_location_name:string;
 
 
 

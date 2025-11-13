@@ -257,7 +257,6 @@ export const ticketEndpoint = api.injectEndpoints({
       onQueryStarted: async (_arg, { queryFulfilled }) => {
         asyncWrapper(async () => {
           await queryFulfilled;
-          notification("success", "Successfully update ticket status");
         });
       },
       invalidatesTags: () => ["ticket"],

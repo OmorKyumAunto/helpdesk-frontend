@@ -32,6 +32,10 @@ import { useGetOverallEmployeesQuery } from "../../employee/api/employeeEndPoint
 import { IEmployee } from "../../employee/types/employeeTypes";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useAppDispatch } from "../../../app/store/store";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { useGetMeQuery } from "../../../app/api/userApi";
+import SeatingLocationModal from "../../employee/components/SeatingLocationModal";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -42,19 +46,52 @@ interface RaiseTicketFormProps {
 
 const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
   const [form] = Form.useForm();
+  const dispatch = useAppDispatch();
   const [isCcVisible, setIsCcVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedPriority, setSelectedPriority] = useState<string>("");
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [countdown, setCountdown] = useState(3);
 
   const { data: allEmployee, isLoading: empLoading } = useGetOverallEmployeesQuery();
   const { data, isLoading } = useGetEmployeeAllDistributedAssetQuery({});
   const { data: categoryData, isLoading: categoryLoading } = useGetCategoryActiveListQuery({});
+  const { data: { data: profile } = {} } = useGetMeQuery();
 
   const [create, { isSuccess }] = useCreateRaiseTicketMutation();
   const editor = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const normFile = (e: any) => (Array.isArray(e) ? e : e?.fileList);
   const handleCcButtonClick = () => setIsCcVisible(!isCcVisible);
+
+  // Handle countdown and auto-open seating location modal
+  useEffect(() => {
+    if (errorModalVisible && countdown > 0) {
+      timerRef.current = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+    } else if (errorModalVisible && countdown === 0) {
+      // Close error modal and open seating location modal
+      setErrorModalVisible(false);
+      setCountdown(3); // Reset countdown for next time
+      
+      // Open seating location modal
+      dispatch(
+        setCommonModal({
+          show: true,
+          title: "Update Seating Location",
+          content: <SeatingLocationModal employee={profile} />,
+        })
+      );
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [errorModalVisible, countdown, dispatch, profile]);
 
   // Ticket form submission
   const handleSubmit = async (values: any, isRetry = false) => {
@@ -81,12 +118,9 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
         err?.data?.message ===
         "Your seating location has not been updated. Please update your current seating location."
       ) {
-        Modal.error({
-          title: "Seating Location Not Updated",
-          content: "Your Seating Location hasn't been updated. Please contact with IT Support Team.",
-          centered: true,
-          okText: "OK",
-        });
+        // Show error modal with countdown
+        setErrorModalVisible(true);
+        setCountdown(3);
       } else {
         message.error(err?.data?.message || "Something went wrong!");
       }
@@ -529,6 +563,62 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
         </Form>
       </div>
 
+      {/* Auto-closing Error Modal with Countdown */}
+      <Modal
+        open={errorModalVisible}
+        centered
+        closable={false}
+        footer={null}
+        onCancel={() => {
+          setErrorModalVisible(false);
+          setCountdown(3);
+        }}
+        width={420}
+      >
+        <div style={{ textAlign: "center", padding: "20px 0" }}>
+          <div
+            style={{
+              width: "64px",
+              height: "64px",
+              margin: "0 auto 16px",
+              background: "linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%)",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              animation: "pulse 1.5s infinite",
+            }}
+          >
+            <WarningOutlined style={{ fontSize: "32px", color: "#fff" }} />
+          </div>
+          
+          <Title level={4} style={{ marginBottom: "8px", color: "#262626" }}>
+            Seating Location Not Updated
+          </Title>
+          
+          <Text type="secondary" style={{ fontSize: "14px", display: "block", marginBottom: "16px" }}>
+            Your Seating Location hasn't been updated. Please contact with IT Support Team.
+          </Text>
+
+          <div
+            style={{
+              background: "#f5f5f5",
+              borderRadius: "8px",
+              padding: "12px",
+              marginTop: "20px",
+            }}
+          >
+            <Text style={{ fontSize: "13px", color: "#595959" }}>
+              Opening seating location form in{" "}
+              <Text strong style={{ fontSize: "18px", color: "#1890ff" }}>
+                {countdown}
+              </Text>
+              {" "}second{countdown !== 1 ? "s" : ""}...
+            </Text>
+          </div>
+        </div>
+      </Modal>
+
       <style>{`
         /* Smooth transitions */
         .ant-card {
@@ -582,7 +672,7 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
           }
         }
 
-        /* Pulse animation for upload icon */
+        /* Pulse animation for upload icon and error modal */
         @keyframes pulse {
           0%, 100% {
             box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.4);

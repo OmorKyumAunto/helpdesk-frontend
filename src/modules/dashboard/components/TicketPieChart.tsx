@@ -16,15 +16,30 @@ const TicketDonutChart = () => {
     series: number[];
     options: ApexOptions;
   }>({
-    series: [44, 55, 41, 17, 15], // Default static data, replaced dynamically
+    series: [44, 55, 41, 17],
     options: {
       chart: {
         type: "donut",
       },
-      labels: ["Solved", "In Progress", "Unsolved", "Forward"], // Default labels
+      labels: ["Solved", "In Progress", "Unsolved", "Forward"],
       colors: ["#72b92b", "#0088FE", "#FF0000", "#FFA500"],
       legend: {
         position: "bottom",
+      },
+      plotOptions: {
+        pie: {
+          customScale: 0.85, // 👈 controls outer radius (smaller circle)
+          donut: {
+            size: "65%", // 👈 controls inner radius (hole size)
+            labels: {
+              show: true,
+              total: {
+                show: false,
+                formatter: () => " ",
+              },
+            },
+          },
+        },
       },
       responsive: [
         {
@@ -59,14 +74,12 @@ const TicketDonutChart = () => {
 
   return (
     <div style={{ maxWidth: "260px", margin: "0 auto" }}>
-      <div id="chart">
-        <ReactApexChart
-          options={state.options}
-          series={state.series}
-          type="donut"
-          height={300}
-        />
-      </div>
+      <ReactApexChart
+        options={state.options}
+        series={state.series}
+        type="donut"
+        height={300}
+      />
     </div>
   );
 };

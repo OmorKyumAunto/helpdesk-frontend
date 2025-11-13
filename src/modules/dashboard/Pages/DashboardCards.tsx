@@ -293,18 +293,23 @@ const DashboardCards = () => {
               </style>
             </Link>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={8}>
-            <Card size="small" title="Ticketing Statistics">
+          <Col xs={24} sm={24} md={24} lg={6}>
+            <Card size="small" title="Ticketing Statistics" style={{ height: "100%" }}>
               <TicketPieChart />
             </Card>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={16}>
+          <Col xs={24} sm={24} md={24} lg={10}>
             <Card
               size="small"
               title="Asset Category Statistics"
               style={{ height: "100%" }}
             >
               <CategoryPieChart />
+            </Card>
+          </Col>
+          <Col xs={24} sm={24} md={16} lg={8}>
+            <Card title="📢 Announcements" style={{ height: "100%" }}>
+              <AnnouncementSlider />
             </Card>
           </Col>
           <Col xs={24} sm={24} md={24}>

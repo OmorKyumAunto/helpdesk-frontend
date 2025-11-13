@@ -420,7 +420,7 @@ const ITSop: React.FC = () => {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              width: "80%",
+              width: "65%",
               height: "80%",
               backgroundColor: "#fff",
               borderRadius: "12px",

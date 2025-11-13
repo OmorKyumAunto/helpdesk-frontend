@@ -493,18 +493,7 @@ const RaiseTicketList: React.FC = () => {
                       <p>{ticket.serial_number || "N/A"}</p>
                     </div>
                   </Col>
-                  <Col xs={12} sm={12} md={8} lg={4}>
-                    <div
-                      style={{
-                        textAlign: "left",
-                        fontSize: "15px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      <p style={{ color: "gray" }}>Asset Category</p>
-                      <p>{ticket.asset_category || "N/A"}</p>
-                    </div>
-                  </Col>
+
                   <Col xs={12} sm={12} md={8} lg={4}>
                     <div
                       style={{
@@ -542,7 +531,7 @@ const RaiseTicketList: React.FC = () => {
                       <p>{ticket.category_name}</p>
                     </div>
                   </Col>
-                  <Col xs={12} sm={12} md={8} lg={4}>
+                  <Col xs={12} sm={12} md={8} lg={3}>
                     <div
                       style={{
                         textAlign: "left",
@@ -551,7 +540,23 @@ const RaiseTicketList: React.FC = () => {
                       }}
                     >
                       <p style={{ color: "gray" }}>Unit Name</p>
-                      <p>{ticket.unit_name}</p>
+                      <p>{ticket.seating_unit_name || ticket.unit_name || "Not Updated"}</p>
+                    </div>
+                  </Col>
+                  <Col xs={12} sm={12} md={8} lg={7}>
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <p style={{ color: "gray" }}>Location</p>
+                      <p>
+                        {ticket.complex_name && ticket.seating_location_name
+                          ? `${ticket.complex_name} - ${ticket.seating_location_name}`
+                          : ticket.complex_name || ticket.seating_location_name || "Not Updated"}
+                      </p>
                     </div>
                   </Col>
                 </Row>

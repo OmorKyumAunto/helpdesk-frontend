@@ -544,7 +544,7 @@ const AdminPendingTicketList = ({
                 </div>
                 <Divider style={{ margin: "6px 0px 12px" }} />
                 <Row gutter={12}>
-                  <Col xs={12} sm={12} md={8} lg={4}>
+                  <Col xs={12} sm={12} md={8} lg={3}>
                     <div
                       style={{
                         textAlign: "left",
@@ -568,19 +568,7 @@ const AdminPendingTicketList = ({
                       <p>{ticket.asset_serial_number || "N/A"}</p>
                     </div>
                   </Col>
-                  <Col xs={12} sm={12} md={8} lg={4}>
-                    <div
-                      style={{
-                        textAlign: "left",
-                        fontSize: "15px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      <p style={{ color: "gray" }}>Asset Category</p>
-                      <p>{ticket.asset_category}</p>
-                    </div>
-                  </Col>
-                  <Col xs={12} sm={12} md={8} lg={4}>
+                  <Col xs={12} sm={12} md={8} lg={3}>
                     <div
                       style={{
                         textAlign: "left",
@@ -636,7 +624,7 @@ const AdminPendingTicketList = ({
                       <p>{ticket.ticket_category_title}</p>
                     </div>
                   </Col>
-                  <Col xs={12} sm={12} md={8} lg={4}>
+                  <Col xs={12} sm={12} md={8} lg={3}>
                     <div
                       style={{
                         textAlign: "left",
@@ -645,7 +633,23 @@ const AdminPendingTicketList = ({
                       }}
                     >
                       <p style={{ color: "gray" }}>Unit Name</p>
-                      <p>{ticket.asset_unit_title}</p>
+                      <p>{ticket.seating_unit_name || ticket.asset_unit_title || "Not Updated"}</p>
+                    </div>
+                  </Col>
+                  <Col xs={12} sm={12} md={8} lg={7}>
+                    <div
+                      style={{
+                        textAlign: "left",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <p style={{ color: "gray" }}>Location</p>
+                      <p>
+                        {ticket.complex_name && ticket.seating_location_name
+                          ? `${ticket.complex_name} - ${ticket.seating_location_name}`
+                          : ticket.complex_name || ticket.seating_location_name || "Not Updated"}
+                      </p>
                     </div>
                   </Col>
                 </Row>
