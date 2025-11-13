@@ -422,6 +422,7 @@ const TicketReportModal = () => {
                     end_date: e[1],
                   })
                 }
+                disabledDate={(current) => current && current > dayjs().endOf("day")}
               />
             </Col>
           </Row>

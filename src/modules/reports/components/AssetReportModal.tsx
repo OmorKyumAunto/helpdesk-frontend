@@ -133,8 +133,8 @@ const AssetReportModal = () => {
                     color: "#1890ff",
                   }}
                   prefix={
-                    <AppstoreOutlined 
-                      style={{ fontSize: "clamp(14px, 2.5vw, 18px)" }} 
+                    <AppstoreOutlined
+                      style={{ fontSize: "clamp(14px, 2.5vw, 18px)" }}
                     />
                   }
                 />
@@ -164,8 +164,8 @@ const AssetReportModal = () => {
                     lineHeight: 1.3,
                   }}
                   prefix={
-                    <DollarOutlined 
-                      style={{ fontSize: "clamp(11px, 1.8vw, 14px)", marginRight: 4 }} 
+                    <DollarOutlined
+                      style={{ fontSize: "clamp(11px, 1.8vw, 14px)", marginRight: 4 }}
                     />
                   }
                   suffix={
@@ -216,8 +216,8 @@ const AssetReportModal = () => {
                     color: "#722ed1",
                   }}
                   prefix={
-                    <ShoppingOutlined 
-                      style={{ fontSize: "clamp(14px, 2.5vw, 18px)" }} 
+                    <ShoppingOutlined
+                      style={{ fontSize: "clamp(14px, 2.5vw, 18px)" }}
                     />
                   }
                 />
@@ -258,44 +258,44 @@ const AssetReportModal = () => {
                 excelData={
                   data?.data?.length
                     ? data?.data.map(
-                        ({
-                          name,
-                          category,
-                          purchase_date,
-                          serial_number,
-                          po_number,
-                          price,
-                          unit_name,
-                          model,
-                          specification,
-                          asset_no,
-                          remarks,
-                          location_name,
-                          asset_created_name,
-                          asset_created_employee_id,
-                          asset_created_designation,
-                          asset_created_contact_no,
-                        }: any) => ({
-                          "Asset No": asset_no || 0,
-                          Name: name,
-                          Category: category,
-                          "Purchase Date": dayjs(purchase_date).format(
-                            "DD-MM-YYYY"
-                          ),
-                          "Serial Number": serial_number,
-                          "PO Number": po_number,
-                          "Unit Name": unit_name,
-                          Model: model,
-                          Specification: specification,
-                          "Location Name": location_name,
-                          Price: price,
-                          Remarks: remarks,
-                          "Created By": asset_created_name,
-                          "Creator ID": asset_created_employee_id,
-                          "Creator Designation": asset_created_designation,
-                          "Creator Contact No": asset_created_contact_no,
-                        })
-                      )
+                      ({
+                        name,
+                        category,
+                        purchase_date,
+                        serial_number,
+                        po_number,
+                        price,
+                        unit_name,
+                        model,
+                        specification,
+                        asset_no,
+                        remarks,
+                        location_name,
+                        asset_created_name,
+                        asset_created_employee_id,
+                        asset_created_designation,
+                        asset_created_contact_no,
+                      }: any) => ({
+                        "Asset No": asset_no || 0,
+                        Name: name,
+                        Category: category,
+                        "Purchase Date": dayjs(purchase_date).format(
+                          "DD-MM-YYYY"
+                        ),
+                        "Serial Number": serial_number,
+                        "PO Number": po_number,
+                        "Unit Name": unit_name,
+                        Model: model,
+                        Specification: specification,
+                        "Location Name": location_name,
+                        Price: price,
+                        Remarks: remarks,
+                        "Created By": asset_created_name,
+                        "Creator ID": asset_created_employee_id,
+                        "Creator Designation": asset_created_designation,
+                        "Creator Contact No": asset_created_contact_no,
+                      })
+                    )
                     : []
                 }
               />
@@ -322,13 +322,13 @@ const AssetReportModal = () => {
                     : "Not Applied",
                   "Start Purchase Date": data?.query_data?.start_purchase_date
                     ? dayjs(data?.query_data?.start_purchase_date).format(
-                        "DD-MM-YYYY"
-                      )
+                      "DD-MM-YYYY"
+                    )
                     : "Not Applied",
                   "End Purchase Date": data?.query_data?.end_purchase_date
                     ? dayjs(data?.query_data?.end_purchase_date).format(
-                        "DD-MM-YYYY"
-                      )
+                      "DD-MM-YYYY"
+                    )
                     : "Not Applied",
                   Category: data?.query_data?.category || "All",
                   Remarks: data?.query_data?.remarks || "All",
@@ -918,6 +918,7 @@ const AssetReportModal = () => {
                     ? [dayjs(filter.start_date), dayjs(filter.end_date)]
                     : undefined
                 }
+                disabledDate={(current) => current && current > dayjs().endOf("day")}
               />
             </Space>
           </Col>
@@ -949,14 +950,16 @@ const AssetReportModal = () => {
                 value={
                   filter.start_purchase_date && filter.end_purchase_date
                     ? [
-                        dayjs(filter.start_purchase_date),
-                        dayjs(filter.end_purchase_date),
-                      ]
+                      dayjs(filter.start_purchase_date),
+                      dayjs(filter.end_purchase_date),
+                    ]
                     : undefined
                 }
+                disabledDate={(current) => current && current > dayjs().endOf("day")}
               />
             </Space>
           </Col>
+
         </Row>
       </Card>
 
@@ -1070,9 +1073,8 @@ const AssetReportModal = () => {
                 </Text>
                 <Text strong style={{ fontSize: "clamp(12px, 2vw, 13px)" }}>
                   {data.query_data.report_generate_employee_name
-                    ? `${data.query_data.report_generate_employee_name} (${
-                        data.query_data.report_generate_employee_id || ""
-                      })`
+                    ? `${data.query_data.report_generate_employee_name} (${data.query_data.report_generate_employee_id || ""
+                    })`
                     : "N/A"}
                 </Text>
               </Space>

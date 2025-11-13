@@ -908,6 +908,7 @@ const DisbursementReportModal = () => {
                     ? [dayjs(filter.start_date), dayjs(filter.end_date)]
                     : undefined
                 }
+                disabledDate={(current) => current && current > dayjs().endOf("day")}
               />
             </Space>
           </Col>

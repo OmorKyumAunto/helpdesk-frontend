@@ -29,8 +29,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
   const [assignToAdmin, { isSuccess }] = useEmployeeAssignToAdminMutation();
   const [buildings, setBuildings] = useState<{ value: number; label: string }[]>([]);
   const [buildingId, setBuildingId] = useState<number[] | typeof skipToken>(skipToken);
-
-
+  const [isEditingLocation, setIsEditingLocation] = useState(false);
 
   // Queries
   const { data: { data: profile } = {} } = useGetMeQuery();
@@ -39,7 +38,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
     useGetBuildingWiseLocationQuery(buildingId);
 
   // Mutation
-  const [updateSeatingLocation, { isLoading: updateLoading }] =
+  const [updateSeatingLocation, { isLoading: updateLoading, isSuccess: updateSuccess }] =
     useUpdateEmployeeSeatingLocationMutation();
 
   // Populate buildings on unit change
@@ -66,8 +65,6 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
     setBuildingId(id ? [id] : skipToken);
     form.setFieldsValue({ seating_location: undefined });
   };
-  // 🔹 Local state for seating location update UI
-  const [isEditingLocation, setIsEditingLocation] = useState(false);
 
   const {
     id,
@@ -97,12 +94,28 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
     building_name
   } = employee || {};
 
+  // Close modal when assign to admin is successful
   useEffect(() => {
     if (isSuccess) {
       dispatch(setCommonModal());
     }
   }, [isSuccess, dispatch]);
 
+  // Close modal when seating location update is successful
+  useEffect(() => {
+    if (updateSuccess) {
+
+      dispatch(setCommonModal());
+    }
+  }, [updateSuccess, dispatch]);
+
+  // Reset form state when modal opens/closes
+  useEffect(() => {
+    setIsEditingLocation(false);
+    form.resetFields();
+    setBuildings([]);
+    setBuildingId(skipToken);
+  }, [employee?.id]); // Reset when employee changes (modal reopens)
 
   const items = [
     {
@@ -187,18 +200,15 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
                       onFinish={async (values) => {
                         try {
                           await updateSeatingLocation({
-                            id, // employee.id from table
-                            data: { seating_location: values.seating_location }, // 👈 must be "data"
+                            id,
+                            data: { seating_location: values.seating_location },
                           }).unwrap();
-
-                          message.success("Seating location updated successfully!");
-                          setIsEditingLocation(false);
+                          // Success message and modal close handled by useEffect
                         } catch (err: any) {
                           message.error(err?.data?.message || "Failed to update seating location");
                         }
                       }}
                     >
-
                       <Space direction="vertical" style={{ width: "100%", marginTop: 12 }}>
                         <Form.Item
                           label="Unit"
@@ -253,20 +263,31 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
                           />
                         </Form.Item>
 
-                        <Button
-                          type="primary"
-                          htmlType="submit"
-                          loading={updateLoading}
-                          style={{
-                            borderRadius: 8,
-                            marginLeft: 12,
-                            padding: "6px 20px",
-                            background: "linear-gradient(90deg, #1677ff 0%, #4096ff 100%)",
-                            border: "none",
-                          }}
-                        >
-                          Save Changes
-                        </Button>
+                        <Space>
+                          <Button
+                            type="primary"
+                            htmlType="submit"
+                            loading={updateLoading}
+                            style={{
+                              borderRadius: 8,
+                              padding: "6px 20px",
+                              background: "linear-gradient(90deg, #1677ff 0%, #4096ff 100%)",
+                              border: "none",
+                            }}
+                          >
+                            Save Changes
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setIsEditingLocation(false);
+                              form.resetFields();
+                              setBuildings([]);
+                              setBuildingId(skipToken);
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </Space>
                       </Space>
                     </Form>
                   )}

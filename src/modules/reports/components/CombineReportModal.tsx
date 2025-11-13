@@ -99,7 +99,7 @@ const CombineReportModal = () => {
       const breakMinutes = workMinutes - slaMinutes;
 
       if (breakMinutes < 0) return "0 min";
-      
+
       const hours = Math.floor(breakMinutes / 60);
       const minutes = breakMinutes % 60;
 
@@ -134,7 +134,7 @@ const CombineReportModal = () => {
   }
 
   return (
-    <div style={{ 
+    <div style={{
       padding: "clamp(8px, 2vw, 16px)",
       background: "#f5f5f5"
     }}>
@@ -504,7 +504,7 @@ const CombineReportModal = () => {
                 }))}
                 onChange={(e) => setFilter({ ...filter, user_id: e })}
                 allowClear={!filter.unit}
-                style={{ 
+                style={{
                   width: "100%",
                 }}
                 status={filter.unit && !filter.user_id ? "error" : undefined}
@@ -547,9 +547,11 @@ const CombineReportModal = () => {
                     ? [dayjs(filter.start_date), dayjs(filter.end_date)]
                     : undefined
                 }
+                disabledDate={(current) => current && current > dayjs().endOf("day")}
               />
             </Space>
           </Col>
+
         </Row>
       </Card>
 
