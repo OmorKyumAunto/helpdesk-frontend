@@ -179,7 +179,7 @@ const AssetReport = () => {
                         asset_no,
                         remarks,
                         location_name,
-                      }) => {
+                      }: any) => {
                         return {
                           "Asset No": asset_no || 0,
                           Name: name,

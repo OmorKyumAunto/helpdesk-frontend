@@ -13,6 +13,8 @@ import {
 } from "../../Unit/api/unitEndPoint";
 import dayjs from "dayjs";
 import { UserList } from "../../Unit/types/unitTypes";
+import Lottie from "lottie-react";
+import blueLoader from "../../../assets/blueloader.json";
 
 const { Option } = Select;
 
@@ -45,6 +47,25 @@ const TicketReportModal = () => {
   const activeFilterCount = Object.keys(filter).filter(
     key => filter[key] !== undefined && filter[key] !== null && filter[key] !== ''
   ).length;
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+          background: "#f5f5f5",
+        }}
+      >
+        <Lottie
+          animationData={blueLoader}
+          loop={true}
+          style={{ width: 200, height: 200 }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '8px' }}>

@@ -23,6 +23,7 @@ import {
   ShoppingOutlined,
   BarChartOutlined,
 } from "@ant-design/icons";
+import Lottie from "lottie-react";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { useGetAssetReportQuery } from "../api/reportsEndPoints";
@@ -31,6 +32,7 @@ import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import blueLoader from "../../../assets/blueloader.json";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -60,11 +62,32 @@ const AssetReportModal = () => {
       filter[key] !== undefined && filter[key] !== null && filter[key] !== ""
   ).length;
 
-  const categoryData = data?.category_data?.[0] || {};
+  const categoryData = (data?.category_data?.[0] || {}) as Record<string, any>;
   const totalPrice = data?.data?.reduce(
     (sum: number, item: any) => sum + (item.price || 0),
     0
   );
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+          background: "#f5f5f5",
+        }}
+      >
+        <Lottie
+          animationData={blueLoader}
+          loop={true}
+          style={{ width: 200, height: 200 }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div

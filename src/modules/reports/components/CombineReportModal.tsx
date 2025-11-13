@@ -23,6 +23,7 @@ import {
   WarningOutlined,
   BarChartOutlined,
 } from "@ant-design/icons";
+import Lottie from "lottie-react";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { rangePreset } from "../../../common/rangePreset";
 import dayjs from "dayjs";
@@ -33,6 +34,7 @@ import {
 import { UserList } from "../../Unit/types/unitTypes";
 import { useGetCombineReportQuery } from "../api/reportsEndPoints";
 import CombineReportPDFDownload from "./PDFDownloadForCombineReport";
+import blueLoader from "../../../assets/blueloader.json";
 
 const { Title, Text } = Typography;
 
@@ -50,7 +52,7 @@ const CombineReportModal = () => {
   });
   const { data: allAdmin, isLoading: adminLoading } =
     useGetAdminWiseUnitsQuery(filter.unit || 0, { skip: !filter.unit });
-  const { data } = useGetCombineReportQuery({ ...filter });
+  const { data, isLoading: reportLoading } = useGetCombineReportQuery({ ...filter });
 
   const clearAllFilters = () => setFilter({});
   const activeFilterCount = Object.keys(filter).filter(
@@ -73,6 +75,63 @@ const CombineReportModal = () => {
     }
     return timeString;
   };
+
+  const calculateSLABreakTime = () => {
+    const workTime = report.per_day_wise_work;
+    const slaTime = report.per_day_wise_sla;
+
+    if (!workTime || !slaTime) return "N/A";
+
+    try {
+      // Parse time strings to minutes
+      const parseTimeToMinutes = (timeStr: string) => {
+        const cleaned = timeStr.split(".")[0];
+        const parts = cleaned.split(":").map((p) => parseInt(p, 10));
+        if (parts.length >= 2 && !parts.some(isNaN)) {
+          const [h, m] = parts;
+          return h * 60 + m;
+        }
+        return 0;
+      };
+
+      const workMinutes = parseTimeToMinutes(workTime);
+      const slaMinutes = parseTimeToMinutes(slaTime);
+      const breakMinutes = workMinutes - slaMinutes;
+
+      if (breakMinutes < 0) return "0 min";
+      
+      const hours = Math.floor(breakMinutes / 60);
+      const minutes = breakMinutes % 60;
+
+      if (hours === 0 && minutes === 0) return "0 min";
+      if (hours === 0) return `${minutes} min`;
+      if (minutes === 0) return `${hours} hr`;
+      return `${hours} hr ${minutes} min`;
+    } catch (error) {
+      return "N/A";
+    }
+  };
+
+  // Loading state
+  if (reportLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+          background: "#f5f5f5",
+        }}
+      >
+        <Lottie
+          animationData={blueLoader}
+          loop={true}
+          style={{ width: 200, height: 200 }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div style={{ 
@@ -174,7 +233,7 @@ const CombineReportModal = () => {
 
       {/* Status Cards */}
       <Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
-        <Col xs={12} sm={6}>
+        <Col xs={12} sm={12} md={12} lg={4} xl={6}>
           <Card
             size="small"
             bordered={false}
@@ -196,7 +255,7 @@ const CombineReportModal = () => {
           </Card>
         </Col>
 
-        <Col xs={12} sm={6}>
+        <Col xs={12} sm={12} md={12} lg={4} xl={6}>
           <Card
             size="small"
             bordered={false}
@@ -218,7 +277,7 @@ const CombineReportModal = () => {
           </Card>
         </Col>
 
-        <Col xs={12} sm={6}>
+        <Col xs={12} sm={12} md={8} lg={4} xl={6}>
           <Card
             size="small"
             bordered={false}
@@ -240,7 +299,7 @@ const CombineReportModal = () => {
           </Card>
         </Col>
 
-        <Col xs={12} sm={6}>
+        <Col xs={12} sm={12} md={8} lg={4} xl={6}>
           <Card
             size="small"
             bordered={false}
@@ -290,7 +349,7 @@ const CombineReportModal = () => {
               { title: "Avg Combined Time", value: report.ticket_task_count?.avg_ticket_task_time },
               { title: "Working Time Per Day Without SLA", value: report.per_day_wise_work },
               { title: "Work Should Be Completed With SLA", value: report.per_day_wise_sla },
-              { title: "Working Days", value: report.total_working_day },
+              { title: "SLA Break Time", value: calculateSLABreakTime(), isCalculated: true },
             ].map((item, idx) => (
               <Col xs={12} sm={8} md={8} lg={8} xl={8} key={idx}>
                 <div
@@ -323,7 +382,7 @@ const CombineReportModal = () => {
                       color: "#262626",
                     }}
                   >
-                    {formatTimeNoSeconds(item.value)}
+                    {item.isCalculated ? item.value : formatTimeNoSeconds(item.value)}
                   </Text>
                 </div>
               </Col>
@@ -426,11 +485,14 @@ const CombineReportModal = () => {
                 }}
               >
                 Admin
+                {filter.unit && (
+                  <span style={{ color: "#ff4d4f", marginLeft: 4 }}>*</span>
+                )}
               </Text>
               <Select
                 size="middle"
                 loading={adminLoading}
-                placeholder="Select Admin"
+                placeholder={filter.unit ? "Select Admin (Required)" : "Select Admin"}
                 showSearch
                 optionFilterProp="children"
                 filterOption={(input, option) =>
@@ -441,10 +503,19 @@ const CombineReportModal = () => {
                   label: `[${item.employee_id}] ${item.name}`,
                 }))}
                 onChange={(e) => setFilter({ ...filter, user_id: e })}
-                allowClear
-                style={{ width: "100%" }}
+                allowClear={!filter.unit}
+                style={{ 
+                  width: "100%",
+                }}
+                status={filter.unit && !filter.user_id ? "error" : undefined}
                 value={filter.user_id}
+                disabled={!filter.unit}
               />
+              {filter.unit && !filter.user_id && (
+                <Text type="danger" style={{ fontSize: "clamp(10px, 1.5vw, 11px)" }}>
+                  Please select an admin
+                </Text>
+              )}
             </Space>
           </Col>
 

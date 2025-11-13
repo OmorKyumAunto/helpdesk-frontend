@@ -30,6 +30,9 @@ import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import Lottie from "lottie-react";
+import blueLoader from "../../../assets/blueloader.json";
+
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -62,7 +65,26 @@ const DisbursementReportModal = () => {
       filter[key] !== undefined && filter[key] !== null && filter[key] !== ""
   ).length;
 
-  const categoryData = data?.category_data?.[0] || {};
+  const categoryData = (data?.category_data?.[0] || {}) as Record<string, any>;
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+          background: "#f5f5f5",
+        }}
+      >
+        <Lottie
+          animationData={blueLoader}
+          loop={true}
+          style={{ width: 200, height: 200 }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -222,50 +244,50 @@ const DisbursementReportModal = () => {
                 excelData={
                   data?.data?.length
                     ? data.data.map(
-                        ({
-                          asset_name,
-                          category,
-                          purchase_date,
-                          serial_number,
-                          po_number,
-                          asset_unit_name,
-                          model,
-                          specification,
-                          asset_no,
-                          device_remarks,
-                          location_name,
-                          department,
-                          designation,
-                          user_id_no,
-                          user_name,
-                          assign_by_name,
-                          assign_by_employee_id,
-                          assign_by_designation,
-                          assign_by_contact_no,
-                        }: any) => ({
-                          "User Name": user_name,
-                          "Employee ID": user_id_no,
-                          Designation: designation,
-                          Department: department,
-                          "Asset No": asset_no || 0,
-                          Name: asset_name,
-                          Category: category,
-                          "Purchase Date": dayjs(purchase_date).format(
-                            "DD-MM-YYYY"
-                          ),
-                          "Serial Number": serial_number,
-                          "PO Number": po_number,
-                          "Unit Name": asset_unit_name,
-                          Model: model,
-                          Specification: specification,
-                          "Location Name": location_name,
-                          "Device Remarks": device_remarks,
-                          "Assigned By": assign_by_name,
-                          "Assigner ID": assign_by_employee_id,
-                          "Assigner Designation": assign_by_designation,
-                          "Assigned Contact": assign_by_contact_no,
-                        })
-                      )
+                      ({
+                        asset_name,
+                        category,
+                        purchase_date,
+                        serial_number,
+                        po_number,
+                        asset_unit_name,
+                        model,
+                        specification,
+                        asset_no,
+                        device_remarks,
+                        location_name,
+                        department,
+                        designation,
+                        user_id_no,
+                        user_name,
+                        assign_by_name,
+                        assign_by_employee_id,
+                        assign_by_designation,
+                        assign_by_contact_no,
+                      }: any) => ({
+                        "User Name": user_name,
+                        "Employee ID": user_id_no,
+                        Designation: designation,
+                        Department: department,
+                        "Asset No": asset_no || 0,
+                        Name: asset_name,
+                        Category: category,
+                        "Purchase Date": dayjs(purchase_date).format(
+                          "DD-MM-YYYY"
+                        ),
+                        "Serial Number": serial_number,
+                        "PO Number": po_number,
+                        "Unit Name": asset_unit_name,
+                        Model: model,
+                        Specification: specification,
+                        "Location Name": location_name,
+                        "Device Remarks": device_remarks,
+                        "Assigned By": assign_by_name,
+                        "Assigner ID": assign_by_employee_id,
+                        "Assigner Designation": assign_by_designation,
+                        "Assigned Contact": assign_by_contact_no,
+                      })
+                    )
                     : []
                 }
               />
@@ -994,9 +1016,8 @@ const DisbursementReportModal = () => {
                 </Text>
                 <Text strong style={{ fontSize: "clamp(12px, 2vw, 13px)" }}>
                   {data.query_data.report_generate_employee_name
-                    ? `${data.query_data.report_generate_employee_name} (${
-                        data.query_data.report_generate_employee_id || ""
-                      })`
+                    ? `${data.query_data.report_generate_employee_name} (${data.query_data.report_generate_employee_id || ""
+                    })`
                     : "N/A"}
                 </Text>
               </Space>

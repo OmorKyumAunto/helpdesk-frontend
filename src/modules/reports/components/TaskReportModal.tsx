@@ -15,6 +15,8 @@ import { useGetTaskReportQuery } from "../api/reportsEndPoints";
 import dayjs from "dayjs";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
+import Lottie from "lottie-react";
+import blueLoader from "../../../assets/blueloader.json";
 
 const { Option } = Select;
 
@@ -51,6 +53,25 @@ const TaskReportModal = () => {
   const activeFilterCount = Object.keys(filter).filter(
     key => filter[key] !== undefined && filter[key] !== null && filter[key] !== ''
   ).length + (listIds.length > 0 ? 1 : 0);
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+          background: "#f5f5f5",
+        }}
+      >
+        <Lottie
+          animationData={blueLoader}
+          loop={true}
+          style={{ width: 200, height: 200 }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '8px' }}>

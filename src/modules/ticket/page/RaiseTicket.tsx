@@ -36,6 +36,9 @@ import { useAppDispatch } from "../../../app/store/store";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import SeatingLocationModal from "../../employee/components/SeatingLocationModal";
+import Lottie from "lottie-react";
+import DoneAnimation from "../../../assets/Done.json";
+import SadAnimation from "../../../assets/sadloader.json";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -51,6 +54,7 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedPriority, setSelectedPriority] = useState<string>("");
   const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
   const [countdown, setCountdown] = useState(3);
 
   const { data: allEmployee, isLoading: empLoading } = useGetOverallEmployeesQuery();
@@ -58,9 +62,10 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
   const { data: categoryData, isLoading: categoryLoading } = useGetCategoryActiveListQuery({});
   const { data: { data: profile } = {} } = useGetMeQuery();
 
-  const [create, { isSuccess }] = useCreateRaiseTicketMutation();
+  const [create, { isSuccess, isLoading: isCreating }] = useCreateRaiseTicketMutation();
   const editor = useRef(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const successTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const normFile = (e: any) => (Array.isArray(e) ? e : e?.fileList);
   const handleCcButtonClick = () => setIsCcVisible(!isCcVisible);
@@ -93,6 +98,28 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
     };
   }, [errorModalVisible, countdown, dispatch, profile]);
 
+  // Handle success modal and redirect
+  useEffect(() => {
+    if (isSuccess) {
+      setSuccessModalVisible(true);
+      
+      // Close modal and redirect after 2 seconds
+      successTimerRef.current = setTimeout(() => {
+        setSuccessModalVisible(false);
+        form.resetFields();
+        setIsCcVisible(false);
+        setSelectedPriority("");
+        setActiveKey("7");
+      }, 2000);
+    }
+
+    return () => {
+      if (successTimerRef.current) {
+        clearTimeout(successTimerRef.current);
+      }
+    };
+  }, [isSuccess, form, setActiveKey]);
+
   // Ticket form submission
   const handleSubmit = async (values: any, isRetry = false) => {
     setIsSubmitting(true);
@@ -112,7 +139,7 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
 
     try {
       await create(formData).unwrap();
-      message.success("Ticket raised successfully!");
+      // Success modal will be shown by useEffect
     } catch (err: any) {
       if (
         err?.data?.message ===
@@ -128,15 +155,6 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
       setIsSubmitting(false);
     }
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      form.resetFields();
-      setIsCcVisible(false);
-      setSelectedPriority("");
-      setActiveKey("7");
-    }
-  }, [isSuccess, form, setActiveKey]);
 
   // Priority configuration
   const priorityConfig = {
@@ -563,6 +581,54 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
         </Form>
       </div>
 
+      {/* Loading Modal - Shows during API call */}
+      <Modal
+        open={isCreating}
+        centered
+        closable={false}
+        footer={null}
+        width={400}
+        maskStyle={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
+      >
+        <div style={{ textAlign: "center", padding: "20px 0" }}>
+          <Lottie
+            animationData={DoneAnimation}
+            loop={true}
+            style={{ width: 200, height: 200, margin: "0 auto" }}
+          />
+          <Title level={4} style={{ marginTop: "16px", marginBottom: "8px", color: "#262626" }}>
+            Submitting Your Ticket
+          </Title>
+          <Text type="secondary" style={{ fontSize: "14px" }}>
+            Please wait while we process your request...
+          </Text>
+        </div>
+      </Modal>
+
+      {/* Success Modal - Shows after successful submission */}
+      <Modal
+        open={successModalVisible}
+        centered
+        closable={false}
+        footer={null}
+        width={400}
+        maskStyle={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
+      >
+        <div style={{ textAlign: "center", padding: "20px 0" }}>
+          <Lottie
+            animationData={DoneAnimation}
+            loop={false}
+            style={{ width: 200, height: 200, margin: "0 auto" }}
+          />
+          <Title level={4} style={{ marginTop: "16px", marginBottom: "8px", color: "#52c41a" }}>
+            Ticket Submitted Successfully!
+          </Title>
+          <Text type="secondary" style={{ fontSize: "14px" }}>
+            Redirecting you to your tickets...
+          </Text>
+        </div>
+      </Modal>
+
       {/* Auto-closing Error Modal with Countdown */}
       <Modal
         open={errorModalVisible}
@@ -576,7 +642,7 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
         width={420}
       >
         <div style={{ textAlign: "center", padding: "20px 0" }}>
-          <div
+          {/* <div
             style={{
               width: "64px",
               height: "64px",
@@ -590,10 +656,15 @@ const RaiseTicketForm: React.FC<RaiseTicketFormProps> = ({ setActiveKey }) => {
             }}
           >
             <WarningOutlined style={{ fontSize: "32px", color: "#fff" }} />
-          </div>
+          </div> */}
+          <Lottie
+            animationData={SadAnimation}
+            loop={false}
+            style={{ width: 160, height: 160, marginBottom: "12px", margin: "0 auto" }}
+          />
           
           <Title level={4} style={{ marginBottom: "8px", color: "#262626" }}>
-            Seating Location Not Updated
+            Opps!!! Seating Location Not Updated
           </Title>
           
           <Text type="secondary" style={{ fontSize: "14px", display: "block", marginBottom: "16px" }}>
