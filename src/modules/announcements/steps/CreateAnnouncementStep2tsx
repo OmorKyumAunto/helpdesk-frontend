@@ -1,0 +1,93 @@
+import React from "react";
+import { Form, Select, Input, Button, Space, message } from "antd";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import { useGetMeQuery } from "../../../app/api/userApi";
+
+interface Step2Props {
+  data: Record<string, any>;
+  onNext: (values: Record<string, any>) => void;
+  onPrev: () => void;
+}
+
+const CreateAnnouncementStep2: React.FC<Step2Props> = ({ data, onNext, onPrev }) => {
+  const [form] = Form.useForm();
+
+  const { data: unitData } = useGetUnitsQuery({ status: "active" });
+  const { data: profile } = useGetMeQuery();
+
+  const unitOptionForAdmin = unitData?.data?.filter((unit: any) =>
+    profile?.data?.searchAccess?.some((item: any) => item.unit_id === unit.id)
+  );
+
+  const unitOption =
+    profile?.data?.role_id === 4 ? unitOptionForAdmin : unitData?.data;
+
+  const handleNext = async () => {
+    try {
+      const values = await form.validateFields();
+      onNext(values);
+    } catch {
+      message.error("Please complete all required fields.");
+    }
+  };
+
+  return (
+    <Form
+      layout="vertical"
+      form={form}
+      initialValues={{
+        unit_id: data.unit_id || [],
+        break_time: data.break_time || "",
+        priority: data.priority || "medium",
+      }}
+    >
+      <Form.Item label="Select Units" name="unit_id">
+        <Select
+          mode="multiple"
+          allowClear
+          placeholder={
+            profile?.data?.role_id === 4
+              ? "Select units you have access to"
+              : "Select units (leave empty for all)"
+          }
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+          }
+          options={unitOption?.map((unit: any) => ({
+            value: unit.id,
+            label: unit.title,
+          }))}
+        />
+      </Form.Item>
+
+      <Form.Item label="Break Time (optional)" name="break_time">
+        <Input placeholder="e.g. 2pm-3pm" />
+      </Form.Item>
+
+      <Form.Item
+        label="Priority"
+        name="priority"
+        rules={[{ required: true, message: "Select a priority" }]}
+      >
+        <Select
+          options={[
+            { label: "High", value: "high" },
+            { label: "Medium", value: "medium" },
+            { label: "Low", value: "low" },
+          ]}
+        />
+      </Form.Item>
+
+      <Space style={{ display: "flex", justifyContent: "space-between", marginTop: 24 }}>
+        <Button onClick={onPrev}>← Previous</Button>
+        <Button type="primary" onClick={handleNext}>
+          Next →
+        </Button>
+      </Space>
+    </Form>
+  );
+};
+
+export default CreateAnnouncementStep2;
