@@ -161,12 +161,14 @@ const UpdateTicketStatus = ({ single }: { single: IAdminTicketList }) => {
                                 .toLowerCase()
                                 .includes(input.toLowerCase())
                             }
-                            options={adminData?.data?.user_list?.map(
-                              (admin: any) => ({
+                            options={adminData?.data?.user_list
+                              ?.filter((admin: any) => admin.role_id !== 4) // ⛔ remove role_id = 4
+                              .map((admin: any) => ({
                                 value: admin.user_id,
                                 label: `[${admin.employee_id}] ${admin.name}`,
-                              })
-                            )}
+                              }))
+                            }
+
                           />
                         </Form.Item>
                       </Col>
