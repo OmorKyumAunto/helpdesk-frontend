@@ -2,7 +2,7 @@ import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Card, DatePicker, Dropdown, Input, Space, Select } from "antd";
 import { Table } from "antd/lib";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { generatePagination } from "../../../common/TablePagination copy";
@@ -17,46 +17,79 @@ import { rangePreset } from "../../../common/rangePreset";
 const { Option } = Select;
 
 const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 50,
-  });
-
   const [searchParams, setSearchParams] = useSearchParams({
     page: "1",
-    pageSize: "50",
+    pageSize: "30",
   });
-  const page = searchParams.get("page") || "1";
-  const pageSize = searchParams.get("pageSize") || "50";
-  const skipValue = (Number(page) - 1) * Number(pageSize);
+  
+  const page = Number(searchParams.get("page") || "1");
+  const pageSize = Number(searchParams.get("pageSize") || "30");
+  const skipValue = (page - 1) * pageSize;
+
   const { data: profile } = useGetMeQuery();
   const { data: categoryData, isLoading: categoryLoading } =
     useGetCategoryListQuery({ status: "active" });
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
-  const unitOptionForAdmin = unitData?.data?.filter((unit) =>
-    profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
-  );
-  const unitOption =
-    profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
 
-  const [filter, setFilter] = useState<any>({
-    limit: Number(pageSize),
+  const unitOption = useMemo(() => {
+    const unitOptionForAdmin = unitData?.data?.filter((unit) =>
+      profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
+    );
+    return profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
+  }, [unitData?.data, profile?.data?.searchAccess, profile?.data?.role_id]);
+
+  const [localFilters, setLocalFilters] = useState<any>({
+    start_date: undefined,
+    end_date: undefined,
+    key: ticketSolver || undefined,
+    unit: undefined,
+    status: undefined,
+    priority: undefined,
+    category: undefined,
+  });
+
+  // Memoize the API filter to prevent unnecessary re-renders
+  const apiFilter = useMemo(() => ({
+    limit: pageSize,
     offset: skipValue,
-  });
+    ...(localFilters.start_date && { start_date: localFilters.start_date }),
+    ...(localFilters.end_date && { end_date: localFilters.end_date }),
+    ...(localFilters.key && { key: localFilters.key }),
+    ...(localFilters.unit && { unit: localFilters.unit }),
+    ...(localFilters.status && { status: localFilters.status }),
+    ...(localFilters.priority && { priority: localFilters.priority }),
+    ...(localFilters.category && { category: localFilters.category }),
+  }), [pageSize, skipValue, localFilters]);
 
+  const { data, isLoading, isFetching } = useGetTicketReportQuery(apiFilter);
+
+  // Update local filters when ticketSolver prop changes
   useEffect(() => {
-    setFilter((prevFilter: any) => ({
-      ...prevFilter,
-      limit: Number(pageSize),
-      offset: skipValue,
-      key: ticketSolver || prevFilter?.key,
+    if (ticketSolver) {
+      setLocalFilters((prev: any) => ({ ...prev, key: ticketSolver }));
+    }
+  }, [ticketSolver]);
+
+  const handleFilterChange = (key: string, value: any) => {
+    setLocalFilters((prev: any) => ({
+      ...prev,
+      [key]: value,
     }));
-  }, [page, pageSize, skipValue, ticketSolver]);
-  const { data, isLoading, isFetching } = useGetTicketReportQuery({
-    ...filter,
-  });
+    // Reset to first page when filters change
+    if (key !== 'limit' && key !== 'offset') {
+      setSearchParams({ page: "1", pageSize: String(pageSize) });
+    }
+  };
+
+  const handleTableChange = (pagination: any) => {
+    setSearchParams({
+      page: String(pagination.current),
+      pageSize: String(pagination.pageSize),
+    });
+  };
+
   return (
     <div>
       <Card
@@ -78,22 +111,16 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
         >
           <DatePicker.RangePicker
             presets={rangePreset}
-            onChange={(_, e) =>
-              setFilter({
-                ...filter,
-                start_date: e[0],
-                end_date: e[1],
-                offset: 0,
-              })
-            }
+            onChange={(_, e) => {
+              handleFilterChange('start_date', e[0]);
+              handleFilterChange('end_date', e[1]);
+            }}
           />
           <div style={{ width: "160px" }}>
             <Input
               prefix={<SearchOutlined />}
               defaultValue={ticketSolver}
-              onChange={(e) =>
-                setFilter({ ...filter, key: e.target.value, offset: 0 })
-              }
+              onChange={(e) => handleFilterChange('key', e.target.value)}
               placeholder="Search..."
               allowClear
             />
@@ -104,7 +131,7 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
             placeholder="Select Unit Name"
             showSearch
             optionFilterProp="children"
-            onChange={(e) => setFilter({ ...filter, unit: e, offset: 0 })}
+            onChange={(e) => handleFilterChange('unit', e)}
             options={unitOption?.map((unit: any) => ({
               value: unit.id,
               label: unit.title,
@@ -113,7 +140,7 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
           />
           <Select
             style={{ width: "160px" }}
-            onChange={(e) => setFilter({ ...filter, status: e, offset: 0 })}
+            onChange={(e) => handleFilterChange('status', e)}
             placeholder="Select Status"
             allowClear
           >
@@ -136,9 +163,7 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
               >
                 <Select
                   style={{ width: "100%", marginBottom: 8 }}
-                  onChange={(e) =>
-                    setFilter({ ...filter, priority: e, offset: 0 })
-                  }
+                  onChange={(e) => handleFilterChange('priority', e)}
                   placeholder="Select Priority"
                   allowClear
                 >
@@ -154,9 +179,7 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
                   placeholder="Select Category"
                   showSearch
                   optionFilterProp="children"
-                  onChange={(e) =>
-                    setFilter({ ...filter, category: e, offset: 0 })
-                  }
+                  onChange={(e) => handleFilterChange('category', e)}
                   options={categoryData?.data?.map((item: any) => ({
                     value: item.id,
                     label: item.title,
@@ -209,33 +232,20 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
                       ticket_updated_at,
                       ticket_created_at,
                     }) => {
-                      // Parse timestamps
                       const updatedAt = new Date(ticket_updated_at);
                       const createdAt = new Date(ticket_created_at);
+                      const timeDifference = updatedAt.getTime() - createdAt.getTime();
 
-                      // Calculate time difference in milliseconds
-                      const timeDifference =
-                        updatedAt.getTime() - createdAt.getTime();
+                      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
 
-                      // Convert time difference to human-readable format (e.g., hours, minutes)
-                      const days = Math.floor(
-                        timeDifference / (1000 * 60 * 60 * 24)
-                      );
-                      const hours = Math.floor(
-                        (timeDifference % (1000 * 60 * 60 * 24)) /
-                        (1000 * 60 * 60)
-                      );
-                      const minutes = Math.floor(
-                        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-                      );
-
-                      // Build solvingTime string dynamically
                       const solvingTimeParts = [];
                       if (days > 0) solvingTimeParts.push(`${days}d`);
                       if (hours > 0) solvingTimeParts.push(`${hours}h`);
                       if (minutes > 0) solvingTimeParts.push(`${minutes}m`);
 
-                      const solvingTime = solvingTimeParts.join(" ") || "0m"; // Default to "0m" if all parts are 0
+                      const solvingTime = solvingTimeParts.join(" ") || "0m";
 
                       return {
                         "Ticket ID": ticket_id,
@@ -267,34 +277,19 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
             size="small"
             bordered
             loading={isLoading || isFetching}
-            dataSource={data?.data?.length ? data.data : []}
+            dataSource={data?.data || []}
             columns={TicketReportColumn()}
             scroll={{ x: true }}
             pagination={{
-              ...generatePagination(
-                Number(data?.total),
-                setPagination,
-                pagination
-              ),
-              current: Number(page),
+              current: page,
+              pageSize: pageSize,
               showSizeChanger: true,
-              defaultPageSize: 50,
-              pageSizeOptions: ["50", "100", "200", "300", "500", "1000"],
-              total: data ? Number(data?.total) : 0,
-              showTotal: (total) => `Total ${total} `,
+              defaultPageSize: 30,
+              pageSizeOptions: ["30", "50", "100", "200", "300", "500", "1000"],
+              total: data?.total || 0,
+              showTotal: (total) => `Total ${total}`,
             }}
-            onChange={(pagination) => {
-              setSearchParams({
-                page: String(pagination.current),
-                pageSize: String(pagination.pageSize),
-              });
-              setFilter({
-                ...filter,
-                offset:
-                  ((pagination.current || 1) - 1) * (pagination.pageSize || 50),
-                limit: pagination.pageSize!,
-              });
-            }}
+            onChange={handleTableChange}
           />
         </div>
       </Card>
