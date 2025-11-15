@@ -35,6 +35,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
     line_of_business,
     grade,
     pabx,
+    date_of_birth,
   } = employee || {};
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -43,7 +44,11 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
     useUpdateEmployeeMutation();
   const { data } = useGetLicensesQuery({ status: "active" });
   const { refetch } = useGetMeQuery();
+  
   useEffect(() => {
+    // FIX: Handle licenses being either array or empty string
+    const licenseIds = Array.isArray(licenses) ? licenses?.map((item) => item?.id) : [];
+    
     form.setFieldsValue({
       employee_id,
       name,
@@ -53,7 +58,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
       contact_no,
       unit_name,
       status,
-      licenses: licenses?.map((item) => item?.id),
+      licenses: licenseIds,
       blood_group,
       business_type,
       line_of_business,
@@ -64,6 +69,11 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
       form.setFieldValue("joining_date", dayjs(joining_date));
     } else {
       form.setFieldValue("joining_date", null);
+    }
+    if (date_of_birth) {
+      form.setFieldValue("date_of_birth", dayjs(date_of_birth));
+    } else {
+      form.setFieldValue("date_of_birth", null);
     }
   }, [
     form,
@@ -76,33 +86,21 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
     unit_name,
     status,
     joining_date,
+    licenses,
     blood_group,
     business_type,
     line_of_business,
     grade,
     pabx,
+    date_of_birth,
   ]);
-
-  // const setFileField = (field: string, path: any) => {
-  //   if (path) {
-  //     form.setFieldsValue({
-  //       [field]: [
-  //         {
-  //           name: path.split("/")[1],
-  //           status: "done",
-  //           url: imageURL + path,
-  //         },
-  //       ],
-  //     });
-  //   }
-  // };
 
   const onFinish = (values: IFromData) => {
     const formattedData: any = {};
 
     for (const key in values) {
       if (values[key]) {
-        if (key === "joining_date") {
+        if (key === "joining_date" || key === "date_of_birth") {
           formattedData[key] = dayjs(values[key]).format("YYYY-MM-DD");
         } else {
           formattedData[key] = values[key];
@@ -112,12 +110,14 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
 
     UpdateEmployee({ data: formattedData, id });
   };
+  
   useEffect(() => {
     if (isSuccess) {
       refetch();
       dispatch(setCommonModal());
     }
   }, [isSuccess]);
+  
   return (
     <>
       <Row justify="center" align="middle" style={{ maxWidth: "auto" }}>
@@ -210,6 +210,13 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                   />
                 </Col>
                 <Col xs={24} sm={24} md={12}>
+                  <DateInput
+                    label="Date of Birth"
+                    name="date_of_birth"
+                    placeholder="Select Date of Birth"
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12}>
                   <Form.Item
                     label="Payroll Unit"
                     name="unit_name"
@@ -256,7 +263,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                         'Jinnat Textile Mills Ltd',
                         'Textile Testing Services Ltd',
                         'Atelier Sourcing Ltd',
-                        'Mawna Fashions Ltd',
+                        'Mawna Fashings Ltd',
                         'DBL Tours and Travels Limited',
                         'Chittagong C and F Office',
                         'Ceramics Field',

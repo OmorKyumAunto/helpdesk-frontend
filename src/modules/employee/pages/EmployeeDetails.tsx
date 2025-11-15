@@ -233,7 +233,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
                         </Form.Item>
 
                         <Form.Item
-                          label="Complex"
+                          label="Building"
                           name="building_id"
                           rules={[{ required: true, message: "Please select a complex!" }]}
                         >

@@ -274,7 +274,7 @@ const SeatingLocationModal: React.FC<SeatingLocationModalProps> = ({ employee })
           {/* Select Complex */}
           <Col span={12}>
             <Form.Item
-              label="Complex"
+              label="Building"
               name="building_id"
               rules={[{ required: true, message: "Please select a complex!" }]}
             >
