@@ -27,6 +27,8 @@ import { useNavigate } from "react-router-dom";
 import { useCreateAnnouncementMutation } from "../api/announcementEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -69,11 +71,37 @@ const CreateAnnouncementPage = () => {
     }
   }, [isSuccess, form]);
 
+  // ReactQuill modules configuration
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ color: [] }, { background: [] }],
+      [{ align: [] }],
+      ["link"],
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "bullet",
+    "color",
+    "background",
+    "align",
+    "link",
+  ];
+
   return (
     <div
       style={{
         minHeight: "100vh",
-
         display: "flex",
         flexDirection: "column",
       }}
@@ -86,8 +114,6 @@ const CreateAnnouncementPage = () => {
           margin: "0 auto 24px",
         }}
       >
-        
-
         <Card
           style={{
             borderRadius: 12,
@@ -191,10 +217,15 @@ const CreateAnnouncementPage = () => {
                     ]}
                     style={{ marginBottom: 0 }}
                   >
-                    <TextArea
-                      rows={6}
+                    <ReactQuill
+                      theme="snow"
+                      modules={modules}
+                      formats={formats}
                       placeholder="Provide detailed information about the announcement..."
-                      style={{ borderRadius: 8, fontSize: 14 }}
+                      style={{
+                        borderRadius: 8,
+                        background: "#fff",
+                      }}
                     />
                   </Form.Item>
                 </Card>
@@ -277,9 +308,7 @@ const CreateAnnouncementPage = () => {
                     boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
                   }}
                   bodyStyle={{ padding: "24px" }}
-
                 >
-
                   <Text
                     type="secondary"
                     style={{ fontSize: 13, display: "block", marginBottom: 12 }}
@@ -288,12 +317,20 @@ const CreateAnnouncementPage = () => {
                       ? "Select units you have access to"
                       : "Leave IT empty to broadcast in All Units"}
                   </Text>
-                  <Form.Item name="unit_id" style={{ marginBottom: 0 }}
+                  <Form.Item
+                    name="unit_id"
+                    style={{ marginBottom: 0 }}
                     rules={
                       profile?.data?.role_id === 4
-                        ? [{ required: true, message: "Please select at least one unit" }]
+                        ? [
+                            {
+                              required: true,
+                              message: "Please select at least one unit",
+                            },
+                          ]
                         : []
-                    }>
+                    }
+                  >
                     <Select
                       mode="multiple"
                       allowClear

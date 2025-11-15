@@ -7,7 +7,7 @@ import {
 import { setLogout } from "../features/userSlice";
 import { RootState } from "../store/store";
 
-const baseURL = "http://localhost:3003/api/v1";
+const baseURL = "https://helpdesk.dbl-group.com:3003/api/v1";
 
 export const socket_url = "http://localhost:3003";
 export const imageURLNew = "https://helpdesk.dbl-group.com:3003"; //! avoid / end of the line otherwise image and pdf won't work!
@@ -29,19 +29,23 @@ export const baseQueryWithReAuth: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
-
-  const isReloading = localStorage.getItem("isReloading") === "true";
-
-  if (
-    !isReloading && // ✅ skip logout during reload
-    (result?.error?.status === 401 ||
-      result?.error?.status === "CUSTOM_ERROR" ||
-      result?.error?.status === "FETCH_ERROR" ||
-      result?.error?.status === "PARSING_ERROR" ||
-      result?.error?.status === "TIMEOUT_ERROR")
-  ) {
+  // ✅ Only logout on authentication failure
+  if (result?.error?.status === 401) {
     api.dispatch(setLogout());
   }
+
+  // const isReloading = localStorage.getItem("isReloading") === "true";
+
+  // if (
+  //   !isReloading && // ✅ skip logout during reload
+  //   (result?.error?.status === 401 ||
+  //     result?.error?.status === "CUSTOM_ERROR" ||
+  //     result?.error?.status === "FETCH_ERROR" ||
+  //     result?.error?.status === "PARSING_ERROR" ||
+  //     result?.error?.status === "TIMEOUT_ERROR")
+  // ) {
+  //   api.dispatch(setLogout());
+  // }
 
   return result;
 };
