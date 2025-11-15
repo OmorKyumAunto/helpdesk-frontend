@@ -154,6 +154,15 @@ export const ticketEndpoint = api.injectEndpoints({
       },
       providesTags: () => ["ticket"],
     }),
+    getTicketReportList: build.query<HTTPResponse<ITicketDashboardReport[]>, any>({
+      query: (params) => {
+        return {
+          url: `/report/ticket-report-list`,
+          params,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
     createRaiseTicket: build.mutation<unknown, FormData>({
       query: (body) => {
         return {
@@ -302,6 +311,7 @@ export const {
   useCreateCommentMutation,
   useForwardTicketMutation,
   useGetTicketReportQuery,
+  useGetTicketReportListQuery,
   useGetTicketDashboardCountQuery,
   useGetRaiseTicketUserWiseQuery,
   useGetRaiseTicketUnitSuperAdminWiseQuery,

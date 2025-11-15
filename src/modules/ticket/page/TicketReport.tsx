@@ -9,7 +9,7 @@ import { generatePagination } from "../../../common/TablePagination copy";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
-import { useGetTicketReportQuery } from "../api/ticketEndpoint";
+import { useGetTicketReportListQuery } from "../api/ticketEndpoint";
 import { TicketReportColumn } from "../utils/TicketReportColumns";
 import { useGetAssignCategoryListQuery } from "../../assignCategory/api/assignCategoryEndPoint";
 import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
@@ -19,11 +19,11 @@ const { Option } = Select;
 const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
   const [searchParams, setSearchParams] = useSearchParams({
     page: "1",
-    pageSize: "30",
+    pageSize: "50",
   });
   
   const page = Number(searchParams.get("page") || "1");
-  const pageSize = Number(searchParams.get("pageSize") || "30");
+  const pageSize = Number(searchParams.get("pageSize") || "50");
   const skipValue = (page - 1) * pageSize;
 
   const { data: profile } = useGetMeQuery();
@@ -63,7 +63,7 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
     ...(localFilters.category && { category: localFilters.category }),
   }), [pageSize, skipValue, localFilters]);
 
-  const { data, isLoading, isFetching } = useGetTicketReportQuery(apiFilter);
+  const { data, isLoading, isFetching } = useGetTicketReportListQuery(apiFilter);
 
   // Update local filters when ticketSolver prop changes
   useEffect(() => {
@@ -284,8 +284,8 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
               current: page,
               pageSize: pageSize,
               showSizeChanger: true,
-              defaultPageSize: 30,
-              pageSizeOptions: ["30", "50", "100", "200", "300", "500", "1000"],
+              defaultPageSize: 50,
+              pageSizeOptions: ["50", "100", "200", "300", "500", "1000"],
               total: data?.total || 0,
               showTotal: (total) => `Total ${total}`,
             }}
