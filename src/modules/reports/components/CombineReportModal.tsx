@@ -11,7 +11,7 @@ import {
   Typography,
   Tag,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FilterOutlined,
   ClearOutlined,
@@ -50,6 +50,17 @@ const CombineReportModal = () => {
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
+
+  const unitOption = useMemo(() => {
+    const unitOptionForAdmin = unitData?.data?.filter((unit) =>
+      profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
+    );
+
+    return (profile?.data?.role_id === 2 || profile?.data?.role_id === 4)
+      ? unitOptionForAdmin
+      : unitData?.data;
+  }, [unitData?.data, profile?.data?.searchAccess, profile?.data?.role_id]);
+
   const { data: allAdmin, isLoading: adminLoading } =
     useGetAdminWiseUnitsQuery(filter.unit || 0, { skip: !filter.unit });
   const { data, isLoading: reportLoading } = useGetCombineReportQuery({ ...filter });
@@ -457,7 +468,7 @@ const CombineReportModal = () => {
               >
                 Unit Name
               </Text>
-              <Select
+              {/* <Select
                 size="middle"
                 loading={unitIsLoading}
                 style={{ width: "100%" }}
@@ -466,6 +477,21 @@ const CombineReportModal = () => {
                 optionFilterProp="children"
                 onChange={(e) => setFilter({ ...filter, unit: e })}
                 options={unitData?.data?.map((unit: any) => ({
+                  value: unit.id,
+                  label: unit.title,
+                }))}
+                allowClear
+                value={filter.unit}
+              /> */}
+              <Select
+                size="middle"
+                loading={unitIsLoading}
+                style={{ width: "100%" }}
+                placeholder="Select Unit"
+                showSearch
+                optionFilterProp="children"
+                onChange={(e) => setFilter({ ...filter, unit: e })}
+                options={unitOption?.map((unit: any) => ({
                   value: unit.id,
                   label: unit.title,
                 }))}

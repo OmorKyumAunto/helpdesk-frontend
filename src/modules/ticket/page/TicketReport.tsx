@@ -34,11 +34,15 @@ const TicketReport = ({ ticketSolver }: { ticketSolver?: string }) => {
   });
 
   const unitOption = useMemo(() => {
-    const unitOptionForAdmin = unitData?.data?.filter((unit) =>
-      profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
-    );
-    return profile?.data?.role_id === 2 ? unitOptionForAdmin : unitData?.data;
-  }, [unitData?.data, profile?.data?.searchAccess, profile?.data?.role_id]);
+  const unitOptionForAdmin = unitData?.data?.filter((unit) =>
+    profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
+  );
+
+  return (profile?.data?.role_id === 2 || profile?.data?.role_id === 4)
+    ? unitOptionForAdmin
+    : unitData?.data;
+}, [unitData?.data, profile?.data?.searchAccess, profile?.data?.role_id]);
+
 
   const [localFilters, setLocalFilters] = useState<any>({
     start_date: undefined,

@@ -1,6 +1,6 @@
 import { SearchOutlined, FilterOutlined, ClearOutlined } from "@ant-design/icons";
 import { Col, DatePicker, Input, Row, Select, Card, Space, Button, Statistic, Badge } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { rangePreset } from "../../../common/rangePreset";
@@ -34,6 +34,16 @@ const TicketReportModal = () => {
     filter.unit || 0,
     { skip: !filter.unit }
   );
+  const unitOption = useMemo(() => {
+    const unitOptionForAdmin = unitData?.data?.filter((unit) =>
+      profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
+    );
+
+    return (profile?.data?.role_id === 2 || profile?.data?.role_id === 4)
+      ? unitOptionForAdmin
+      : unitData?.data;
+  }, [unitData?.data, profile?.data?.searchAccess, profile?.data?.role_id]);
+
   const { data: categoryData, isLoading: categoryLoading } =
     useGetCategoryListQuery({ status: "active" });
   const { data, isLoading, isFetching } = useGetTicketReportQuery({
@@ -70,9 +80,9 @@ const TicketReportModal = () => {
   return (
     <div style={{ padding: '8px' }}>
       {/* Header Section with Stats */}
-      <Card 
-        bordered={false} 
-        style={{ 
+      <Card
+        bordered={false}
+        style={{
           marginBottom: 16,
           background: 'linear-gradient(135deg, #01315bff 0%, #00f2fe 100%)',
           color: 'white'
@@ -210,7 +220,7 @@ const TicketReportModal = () => {
       </Card>
 
       {/* Filters Section */}
-      <Card 
+      <Card
         title={
           <Space>
             <FilterOutlined />
@@ -224,17 +234,17 @@ const TicketReportModal = () => {
         extra={
           <Space>
             {activeFilterCount > 0 && (
-              <Button 
-                type="link" 
-                icon={<ClearOutlined />} 
+              <Button
+                type="link"
+                icon={<ClearOutlined />}
                 onClick={clearAllFilters}
                 danger
               >
                 Clear All
               </Button>
             )}
-            <Button 
-              type="text" 
+            <Button
+              type="text"
               onClick={() => setIsFilterExpanded(!isFilterExpanded)}
             >
               {isFilterExpanded ? 'Collapse' : 'Expand'}
@@ -269,7 +279,7 @@ const TicketReportModal = () => {
                   Unit Name
                 </label>
               </div>
-              <Select
+              {/* <Select
                 size="large"
                 loading={unitIsLoading}
                 style={{ width: "100%" }}
@@ -278,6 +288,21 @@ const TicketReportModal = () => {
                 optionFilterProp="children"
                 onChange={(e) => setFilter({ ...filter, unit: e })}
                 options={unitData?.data?.map((unit: any) => ({
+                  value: unit.id,
+                  label: unit.title,
+                }))}
+                allowClear
+                value={filter.unit}
+              /> */}
+              <Select
+                size="large"
+                style={{ width: "100%" }}
+                loading={unitIsLoading}
+                placeholder="Select Unit Name"
+                showSearch
+                optionFilterProp="children"
+                onChange={(e) => setFilter({ ...filter, unit: e })}
+                options={unitOption?.map((unit: any) => ({
                   value: unit.id,
                   label: unit.title,
                 }))}
@@ -431,11 +456,11 @@ const TicketReportModal = () => {
 
       {/* Applied Filters Summary */}
       {activeFilterCount > 0 && (
-        <Card 
-          size="small" 
+        <Card
+          size="small"
           bordered={false}
-          style={{ 
-            marginBottom: 16, 
+          style={{
+            marginBottom: 16,
             background: '#e6f7ff',
             borderLeft: '3px solid #00f2fe'
           }}
