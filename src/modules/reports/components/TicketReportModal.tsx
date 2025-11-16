@@ -382,7 +382,7 @@ const TicketReportModal = () => {
             </Col>
 
             {/* Overdue */}
-            <Col xs={24} sm={12} lg={6}>
+            {/* <Col xs={24} sm={12} lg={6}>
               <div style={{ marginBottom: 8 }}>
                 <label style={{ fontWeight: 500, fontSize: '13px', color: '#666', display: 'block' }}>
                   Overdue
@@ -401,7 +401,7 @@ const TicketReportModal = () => {
                 ]}
                 value={filter.overdue}
               />
-            </Col>
+            </Col> */}
 
             {/* Date Range */}
             <Col xs={24} lg={12}>
