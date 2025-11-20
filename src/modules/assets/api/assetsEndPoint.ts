@@ -44,8 +44,23 @@ export const assetsEndPoint = api.injectEndpoints({
           params,
         };
       },
+      // Force unique cache key for each filter combination
+      serializeQueryArgs: ({ queryArgs }) => {
+        return JSON.stringify(queryArgs);
+      },
+      // Don't keep any unused data
+      keepUnusedDataFor: 0,
       providesTags: () => ["asset"],
     }),
+    // getAllDistributedAsset: build.query<HTTPResponse<any[]>, IAssetParams>({
+    //   query: (params) => {
+    //     return {
+    //       url: `/asset/distributed-asset`,
+    //       params,
+    //     };
+    //   },
+    //   providesTags: () => ["asset"],
+    // }),
     getSingleDistributedAsset: build.query<
       HTTPResponse<IDistributedSingle>,
       number

@@ -36,9 +36,9 @@ const DistributedAsset = () => {
     profile?.data?.searchAccess?.some((item: any) => item?.unit_id === unit?.id)
   );
   const unitOption =
-  profile?.data?.role_id === 2 || profile?.data?.role_id === 4
-    ? unitOptionForAdmin
-    : unitData?.data;
+    profile?.data?.role_id === 2 || profile?.data?.role_id === 4
+      ? unitOptionForAdmin
+      : unitData?.data;
 
   const [filter, setFilter] = useState<any>({
     limit: Number(pageSize),
@@ -55,9 +55,18 @@ const DistributedAsset = () => {
       offset: skipValue,
     });
   }, [page, pageSize, skipValue]);
-  const { data, isLoading, isFetching } = useGetAllDistributedAssetQuery({
-    ...filter,
-  });
+  const { data, isLoading, isFetching } = useGetAllDistributedAssetQuery(
+    { ...filter },
+    {
+      refetchOnMountOrArgChange: true,
+      skip: false,
+    }
+  );
+  useEffect(() => {
+    console.log("API Response:", data);
+    console.log("Is Loading:", isLoading);
+    console.log("Is Fetching:", isFetching);
+  }, [data, isLoading, isFetching]);
   return (
     <div>
       <Card
@@ -185,29 +194,29 @@ const DistributedAsset = () => {
               excelData={
                 data?.data?.length
                   ? data?.data?.map(
-                      ({
-                        user_id_no,
-                        user_name,
-                        department,
-                        category,
-                        assign_date,
-                        serial_number,
-                        employee_unit_name,
-                        location_name,
-                      }: any) => {
-                        return {
-                          "Employee ID": user_id_no,
-                          "Employee Name": user_name,
-                          Department: department,
-                          Unit: employee_unit_name,
-                          Location: location_name,
-                          "Asset Type": category,
-                          "Serial No": serial_number,
-                          "Assigning Date":
-                            dayjs(assign_date).format("DD-MM-YYYY"),
-                        };
-                      }
-                    )
+                    ({
+                      user_id_no,
+                      user_name,
+                      department,
+                      category,
+                      assign_date,
+                      serial_number,
+                      employee_unit_name,
+                      location_name,
+                    }: any) => {
+                      return {
+                        "Employee ID": user_id_no,
+                        "Employee Name": user_name,
+                        Department: department,
+                        Unit: employee_unit_name,
+                        Location: location_name,
+                        "Asset Type": category,
+                        "Serial No": serial_number,
+                        "Assigning Date":
+                          dayjs(assign_date).format("DD-MM-YYYY"),
+                      };
+                    }
+                  )
                   : []
               }
             />
@@ -219,7 +228,11 @@ const DistributedAsset = () => {
             size="small"
             bordered
             loading={isLoading || isFetching}
-            dataSource={data?.data?.length ? data.data : []}
+            dataSource={
+              isLoading || isFetching
+                ? [] // Show empty while loading
+                : (data?.data?.length ? data.data : [])
+            }
             columns={DistributedAssetsTableColumns()}
             scroll={{ x: true }}
             pagination={{
