@@ -153,6 +153,7 @@ const RaiseTicketList: React.FC = () => {
     getComments(id);
     handleExpand(id);
   };
+
   const options = [
     { label: "All", value: "" },
     { label: "In Progress", value: "inprogress" },
@@ -161,6 +162,7 @@ const RaiseTicketList: React.FC = () => {
     { label: "Forward", value: "forward" },
   ];
   return (
+
     <Card
       loading={isLoading}
       style={{ width: "100%", }}
@@ -422,32 +424,33 @@ const RaiseTicketList: React.FC = () => {
                         {ticket.ticket_status === "inprogress" && (
                           <Tag color="blue-inverse">IN PROGRESS</Tag>
                         )}
-                        {ticket.ticket_status === "solved" && (
-                          <Button
-                            type="text"
-                            size="small"
-                            onClick={() => showReRaiseModal(ticket.id)}
-                            style={{
-                              backgroundColor: "#fff7e6",          // matches Tag orange-inverse
-                              color: "#fa8c16",                    // text color like tag
-                              border: "1px solid #ffd591",         // border similar to tag
-                              fontWeight: 600,                     // bold text
-                              fontSize: "12px",                    // slightly smaller font size
-                              borderRadius: "4px",                 // same as default Tag
-                              padding: "1px 6px",                  // slightly smaller padding
-                              height: "22px",                      // slightly reduced height
-                              lineHeight: "22px",                  // centers the text vertically
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",            // ensure both text and icon are centered
-                            }}
-                            icon={<TiArrowLoop size={16} />}
-                          >
-                            Re-Raise
-                          </Button>
+                        {ticket.ticket_status === "solved" &&
+                          dayjs().diff(dayjs(ticket.created_at), "day") <= 15 && (
+                            <Button
+                              type="text"
+                              size="small"
+                              onClick={() => showReRaiseModal(ticket.id)}
+                              style={{
+                                backgroundColor: "#fff7e6",          // matches Tag orange-inverse
+                                color: "#fa8c16",                    // text color like tag
+                                border: "1px solid #ffd591",         // border similar to tag
+                                fontWeight: 600,                     // bold text
+                                fontSize: "12px",                    // slightly smaller font size
+                                borderRadius: "4px",                 // same as default Tag
+                                padding: "1px 6px",                  // slightly smaller padding
+                                height: "22px",                      // slightly reduced height
+                                lineHeight: "22px",                  // centers the text vertically
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",            // ensure both text and icon are centered
+                              }}
+                              icon={<TiArrowLoop size={16} />}
+                            >
+                              Re-Raise
+                            </Button>
 
 
-                        )}
+                          )}
                       </div>
 
                     </strong>

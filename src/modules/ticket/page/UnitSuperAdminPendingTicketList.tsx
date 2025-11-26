@@ -291,9 +291,7 @@ const AdminTicketList = ({
                                 <p>
                                   <strong>Department:</strong> {ticket.created_employee_department}
                                 </p>
-                                <p>
-                                  <strong>Email:</strong> {ticket.ticket_created_employee_email}
-                                </p>
+                               
                                 <p>
                                   <strong>Phone No:</strong> {ticket.created_employee_contact_no}
                                 </p>
@@ -330,9 +328,7 @@ const AdminTicketList = ({
                               <p>
                                 <strong>Department:</strong> {ticket.created_employee_department}
                               </p>
-                              <p>
-                                <strong>Email:</strong> {ticket.ticket_created_employee_email}
-                              </p>
+                              
                               <p>
                                 <strong>Phone No:</strong> {ticket.created_employee_contact_no}
                               </p>
@@ -365,14 +361,6 @@ const AdminTicketList = ({
                                 <p>
                                   <strong>Designation:</strong>{" "}
                                   {ticket.solved_employee_designation}
-                                </p>
-                                <p>
-                                  <strong>Department:</strong>{" "}
-                                  {ticket.solved_employee_department}
-                                </p>
-                                <p>
-                                  <strong>Email:</strong>{" "}
-                                  {ticket.solved_employee_email}
                                 </p>
                                 <p>
                                   <strong>Phone No:</strong>{" "}
@@ -466,14 +454,7 @@ const AdminTicketList = ({
                                   <strong>Designation:</strong>{" "}
                                   {ticket.action_by_designation || "N/A"}
                                 </p>
-                                <p>
-                                  <strong>Department:</strong>{" "}
-                                  {ticket.action_by_department || "N/A"}
-                                </p>
-                                <p>
-                                  <strong>Email:</strong>{" "}
-                                  {ticket.action_by_email || "N/A"}
-                                </p>
+                                
                                 <p>
                                   <strong>Phone No:</strong>{" "}
                                   {ticket.action_by_contact_no || "N/A"}
