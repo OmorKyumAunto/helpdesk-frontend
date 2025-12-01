@@ -5,8 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../app/api/api";
 import logo from "../../assets/logo.png";
 import itlogo from "../../assets/itlogo.png";
+import googleplay from "../../assets/googleplay.png";
 import SubmitButton from "../../components/submitButton/SubmitButton";
 import "./Login.css";
+
 type IInputs = {
   id: string;
   password: string;
@@ -21,6 +23,10 @@ export const Login = () => {
       password: values.password,
     };
     login(body);
+  };
+
+  const handlePlayStoreClick = () => {
+    window.open("https://play.google.com/store/apps/details?id=com.dblgroup.dbl_helpdesk", "_blank");
   };
 
   return (
@@ -380,6 +386,37 @@ export const Login = () => {
                       >
                         <Link to="/forget-password"> Forget Password? </Link>
                       </span>
+                    </div>
+                  </Col>
+                  {/* Google Play Store Button */}
+                  <Col xs={24}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: "15px",
+                        paddingTop: "15px",
+                        borderTop: "1px solid rgba(59, 130, 246, 0.2)",
+                      }}
+                    >
+                      <div
+                        onClick={handlePlayStoreClick}
+                        style={{
+                          cursor: "pointer",
+                          transform: "scale(1)",
+                          transition: "transform 0.3s ease",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      >
+                        <Image
+                          src={googleplay}
+                          preview={false}
+                          height={35}
+                          alt="Get it on Google Play"
+                        />
+                      </div>
                     </div>
                   </Col>
                 </Row>

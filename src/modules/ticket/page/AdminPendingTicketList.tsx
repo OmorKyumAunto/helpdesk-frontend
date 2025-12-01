@@ -291,9 +291,7 @@ const AdminPendingTicketList = ({
                                 <p>
                                   <strong>Department:</strong> {ticket.created_employee_department}
                                 </p>
-                                <p>
-                                  <strong>Email:</strong> {ticket.ticket_created_employee_email}
-                                </p>
+                               
                                 <p>
                                   <strong>Phone No:</strong> {ticket.created_employee_contact_no}
                                 </p>
@@ -330,9 +328,7 @@ const AdminPendingTicketList = ({
                               <p>
                                 <strong>Department:</strong> {ticket.created_employee_department}
                               </p>
-                              <p>
-                                <strong>Email:</strong> {ticket.ticket_created_employee_email}
-                              </p>
+                              
                               <p>
                                 <strong>Phone No:</strong> {ticket.created_employee_contact_no}
                               </p>
