@@ -92,6 +92,42 @@ export const ticketEndpoint = api.injectEndpoints({
       },
       providesTags: () => ["ticket"],
     }),
+    getArchivedTicketSuperAdminWise: build.query<
+      HTTPResponse<IAdminTicketList[]>,
+      any
+    >({
+      query: (params) => {
+        return {
+          url: `/raise-ticket/unit-super-admin-archive-ticket`,
+          params,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
+    getAdminArchivedTicket: build.query<
+      HTTPResponse<IAdminTicketList[]>,
+      any
+    >({
+      query: (params) => {
+        return {
+          url: `/raise-ticket/admin-archive-ticket`,
+          params,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
+    getEmployeeWiseArchived: build.query<
+      HTTPResponse<IAdminTicketList[]>,
+      any
+    >({
+      query: (params) => {
+        return {
+          url: `/raise-ticket/user-wise-archive-ticket`,
+          params,
+        };
+      },
+      providesTags: () => ["ticket"],
+    }),
     getRaiseTicketUnitSuperAdminWise: build.query<
       HTTPResponse<IAdminTicketList[]>,
       any
@@ -322,6 +358,9 @@ export const {
   useGetCategoryWiseDashboardDataQuery,
   useGetRaiseTicketAdminWiseQuery,
   useGetRaiseTicketSuperAdminWiseQuery,
+  useGetArchivedTicketSuperAdminWiseQuery,
+  useGetAdminArchivedTicketQuery,
+  useGetEmployeeWiseArchivedQuery,
   useLazyGetCommentDataQuery,
   useUpdateTicketAdminStatusMutation,
   useUpdateTicketPriorityMutation,

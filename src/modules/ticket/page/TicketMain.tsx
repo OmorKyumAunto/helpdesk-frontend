@@ -23,6 +23,7 @@ import TicketReport from "./TicketReport";
 import OnBehalfTicket from "./OnBehalfTicket";
 import UnitSuperAdminPendingTicketList from "./UnitSuperAdminPendingTicketList";
 import UnitSuperAdminSolvedTicketList from "./UnitSuperAdminSolvedTicketList";
+import ArchivedTicketList from "./ArchivedTicketList";
 
 const Container = styled.div`
   background: #ffffff;
@@ -314,6 +315,18 @@ const TicketMain: React.FC = () => {
             ),
           },
           {
+            key: "16",
+            icon: <Ticket />,
+            label: "Archived Tickets",
+            content: (
+              <ArchivedTicketList
+                key={activeKey}
+                ticketPriorityValue={ticketPriorityValue}
+                ticketValue={ticketValue}
+              />
+            ),
+          },
+          {
             key: "3",
             icon: <BarChart3 />,
             label: "Reports",
@@ -367,6 +380,18 @@ const TicketMain: React.FC = () => {
             content: <OnBehalfTicket setActiveKey={setActiveKey} />,
           },
           {
+            key: "19",
+            icon: <Ticket />,
+            label: "Archived Tickets",
+            content: (
+              <ArchivedTicketList
+                key={activeKey}
+                ticketPriorityValue={ticketPriorityValue}
+                ticketValue={ticketValue}
+              />
+            ),
+          },
+          {
             key: "9",
             icon: <BarChart3 />,
             label: "Reports",
@@ -387,6 +412,18 @@ const TicketMain: React.FC = () => {
             icon: <FileText />,
             label: "My Tickets",
             content: <RaiseTicketList />,
+          },
+          {
+            key: "18",
+            icon: <Ticket />,
+            label: "Archived Tickets",
+            content: (
+              <ArchivedTicketList
+                key={activeKey}
+                ticketPriorityValue={ticketPriorityValue}
+                ticketValue={ticketValue}
+              />
+            ),
           },
         ]
       : []),
@@ -424,6 +461,18 @@ const TicketMain: React.FC = () => {
             label: "Solved Tickets",
             content: (
               <UnitSuperAdminSolvedTicketList
+                key={activeKey}
+                ticketPriorityValue={ticketPriorityValue}
+                ticketValue={ticketValue}
+              />
+            ),
+          },
+          {
+            key: "17",
+            icon: <Ticket />,
+            label: "Archived Tickets",
+            content: (
+              <ArchivedTicketList
                 key={activeKey}
                 ticketPriorityValue={ticketPriorityValue}
                 ticketValue={ticketValue}
