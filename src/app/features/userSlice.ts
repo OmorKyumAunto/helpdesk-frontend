@@ -33,9 +33,12 @@ export const userSlice = createSlice({
       state.user = action.payload;
     },
     setLogout: (state) => {
+      const eid = localStorage.getItem("dbl_employee_id");
+      if (eid) localStorage.removeItem(`dbl_ai_chat_${eid}`);
       // console.log("logout called");
       localStorage.removeItem(TOKEN);
       localStorage.removeItem("roleID");
+      localStorage.removeItem("dbl_employee_id");
       state.user = null;
       state.token = null;
       state.roleId = null;

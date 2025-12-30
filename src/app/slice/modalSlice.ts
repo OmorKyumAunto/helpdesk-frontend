@@ -9,7 +9,7 @@ interface IError {
 }
 
 interface ICommonModalState {
-  title?: any;
+  title?: ReactNode;
   content?: ReactNode;
   show?: boolean;
   width?: number | string;
@@ -19,8 +19,8 @@ interface IState {
   isModal: boolean;
   modalLoading: boolean;
   defaultLoading: boolean;
-  title: any;
-  content: ReactNode;
+  title: ReactNode;
+  content: ReactNode | null;
   show: boolean;
   width: number | string;
 }
@@ -30,10 +30,10 @@ const initialState: IState = {
   isModal: false,
   modalLoading: false,
   defaultLoading: false,
-  title: {} || "",
+  title: "",
   content: null,
   show: false,
-  width: "",
+  width: 678,
 };
 
 const modalSlice = createSlice({

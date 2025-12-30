@@ -37,6 +37,7 @@ import { api } from "../../app/api/api";
 import { useGetMeQuery } from "../../app/api/userApi";
 import logo from "../../assets/logo.png";
 import { roleID } from "../../utils/helper";
+import AIAssistantDock from "../../modules/aiassistant/AIAssistantDock";
 
 const { useBreakpoint } = Grid;
 const { Header, Sider, Content } = Layout;
@@ -137,7 +138,9 @@ const professionalStyles = {
 };
 
 export const AppLayout = () => {
-  const { data: profile } = useGetMeQuery();
+  const { data: profile,isLoading } = useGetMeQuery();
+  const { token } = useSelector((state: RootState) => state.userSlice);
+  const isValidUser = !!token && !!profile?.data;
   const [collapsed, setCollapsed] = useState(false);
   const [currentSelection, setCurrentSelection] = useState<string>("");
   const [sidebarWidth, setSidebarWidth] = useState(240);
@@ -816,6 +819,7 @@ export const AppLayout = () => {
           }
         }
       `}</style>
+       {!isLoading && isValidUser && <AIAssistantDock />}
     </Layout>
   );
 };
