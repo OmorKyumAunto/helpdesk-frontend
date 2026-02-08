@@ -50,6 +50,7 @@ export default function AIAssistantDock() {
   const [unread, setUnread] = useState(true);
   const [openBox, setOpenBox] = useState<BoxType>(null);
   const [minimized, setMinimized] = useState(false);
+  const [maximized, setMaximized] = useState(false);
 
   const spring: Transition = { type: "spring", stiffness: 520, damping: 34 };
 
@@ -85,7 +86,8 @@ export default function AIAssistantDock() {
     return () => clearInterval(t);
   }, [openBox, minimized, hideDock, suggestions.length]);
 
-  const dockVisible = !hideDock && !openBox && !minimized;
+  const dockVisible = !hideDock && !openBox && !minimized && !maximized;
+
 
   const activeMinLabel = openBox === "ticket" ? "Ticket Assistant" : "AI Assistant";
   const activeMinIcon =
@@ -278,6 +280,7 @@ export default function AIAssistantDock() {
                           setUnread(false);
                           setOpenBox("ticket");
                           setMinimized(false);
+                          setMaximized(false);
                         }}
                       >
                         <Lifebuoy size={21} weight="fill" />
@@ -293,6 +296,7 @@ export default function AIAssistantDock() {
                         setUnread(false);
                         setOpenBox("ai");
                         setMinimized(false);
+                        setMaximized(true);
                       }}
                     >
                       <ChatCircleDots size={21} weight="fill" />
@@ -312,11 +316,14 @@ export default function AIAssistantDock() {
         <AIChatBox
           open={openBox === "ai"}
           minimized={minimized}
+          maximized={maximized}
           onMinimize={() => setMinimized(true)}
-          onRestore={() => setMinimized(false)}
+          onMaximize={() => { setMaximized(true); setMinimized(false); }}
+          onRestore={() => setMaximized(false)}
           onClose={() => {
             setOpenBox(null);
             setMinimized(false);
+            setMaximized(false);
           }}
           userId={userId} // ✅ employee_id
         />
@@ -341,7 +348,7 @@ export default function AIAssistantDock() {
 
       {/* MINIMIZED PILL */}
       <AnimatePresence>
-        {openBox && minimized && !hideByRoute && (
+        {openBox && minimized && !maximized && !hideByRoute && (
           <motion.button
             className="dbl-min-pill"
             type="button"

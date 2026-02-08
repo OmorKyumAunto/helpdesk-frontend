@@ -1,3 +1,4 @@
+import { TOKEN } from "../../../helper/constant";
 export type FuncMsg = { role: "user" | "model"; content: string };
 
 type StreamArgs = {
@@ -6,31 +7,31 @@ type StreamArgs = {
   userId: string;
   conversationHistory: FuncMsg[];
   systemPrompt?: string;
-  files?: File[];
+
+  // ✅ NEW (for asset mode)
+  mode?: "assets" | "sop";
+  category?: string | null;
+  isAdmin?: boolean;
+
+  // ✅ NEW (forward auth to backend -> backend forwards to asset API)
+  authToken?: string; // e.g. "Bearer <idToken>"
+
+  // NOTE: backend currently expects JSON only, so we won't send FormData
+  files?: File[]; // kept for future; ignored unless you upgrade backend
   signal?: AbortSignal;
+
   onText: (chunk: string) => void;
   onDone: () => void;
   onError: (e: Error) => void;
 };
 
-/**
- * Parses SSE frames that look like:
- *   data: {"text":"Hello","done":false}
- *
- *   data: {"done":true}
- *
- * Frames are separated by a blank line (\n\n).
- */
 function parseSseFrames(buffer: string): { events: string[]; rest: string } {
-  // SSE events are separated by blank lines
   const parts = buffer.split(/\n\n/);
   const rest = parts.pop() ?? "";
   return { events: parts, rest };
 }
 
 function extractDataLines(eventBlock: string): string[] {
-  // An SSE event can have multiple `data:` lines.
-  // We collect them and join with \n (SSE spec).
   const lines = eventBlock.split(/\n/);
   const dataLines: string[] = [];
   for (const line of lines) {
@@ -50,6 +51,12 @@ export async function streamChatWithGemini(args: StreamArgs) {
     userId,
     conversationHistory,
     systemPrompt,
+
+    mode,
+    category,
+    isAdmin,
+    authToken,
+
     files = [],
     signal,
     onText,
@@ -58,27 +65,33 @@ export async function streamChatWithGemini(args: StreamArgs) {
   } = args;
 
   try {
-    const hasFiles = files.length > 0;
+    const token = localStorage.getItem(TOKEN);
+
+    const bearer = authToken || (token ? `Bearer ${token}` : undefined);
 
     const res = await fetch(url, {
       method: "POST",
-      headers: hasFiles ? undefined : { "Content-Type": "application/json" },
-      body: hasFiles
-        ? (() => {
-            const fd = new FormData();
-            fd.append("message", message);
-            fd.append("userId", userId);
-            fd.append("conversationHistory", JSON.stringify(conversationHistory || []));
-            if (systemPrompt) fd.append("systemPrompt", systemPrompt);
-            files.forEach((f) => fd.append("files", f, f.name));
-            return fd;
-          })()
-        : JSON.stringify({
-            message,
-            userId,
-            conversationHistory: conversationHistory || [],
-            systemPrompt,
-          }),
+      headers: {
+        "Content-Type": "application/json",
+        ...(token
+          ? {
+              Authorization: token, // ✅ raw
+              token: token, // ✅ many backends use this
+              "x-access-token": token, // ✅ common
+            }
+          : {}),
+      },
+      body: JSON.stringify({
+        message,
+        userId,
+        conversationHistory: conversationHistory || [],
+        systemPrompt,
+        mode,
+        category,
+        isAdmin: !!isAdmin,
+        hasFiles: files.length > 0,
+        fileNames: files.map((f) => f.name),
+      }),
       signal,
     });
 
@@ -110,24 +123,24 @@ export async function streamChatWithGemini(args: StreamArgs) {
 
           const dataStr = dataLines.join("\n");
 
-          // Your server sends JSON in the data payload
           try {
-            const payload = JSON.parse(dataStr) as { text?: string; done?: boolean };
+            const payload = JSON.parse(dataStr) as {
+              text?: string;
+              done?: boolean;
+            };
 
             if (payload.text) onText(payload.text);
             if (payload.done) {
               onDone();
-              return; // stop reading
+              return;
             }
           } catch {
-            // If a non-JSON message slips in, just ignore or append raw:
-            // onText(dataStr);
+            // ignore non-JSON frames
           }
         }
       }
     }
 
-    // If stream ends without explicit done:true
     onDone();
   } catch (err: any) {
     if (err?.name === "AbortError") {

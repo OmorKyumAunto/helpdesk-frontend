@@ -21,7 +21,11 @@ function MyApp() {
             themeApp.theme === theme.defaultAlgorithm ? "#ffffff" : "#ffffff", //#0b1120cc, #0d1117,#121212
         },
       }}
-      getPopupContainer={() => modalContainerRef.current as HTMLElement}
+      getPopupContainer={(triggerNode) =>
+        (triggerNode?.parentElement as HTMLElement) ||
+        (modalContainerRef.current as HTMLElement) ||
+        document.body
+      }
     >
       <App>
         <div ref={modalContainerRef}>
