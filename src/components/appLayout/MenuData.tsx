@@ -9,7 +9,7 @@ import {
   MdOutlineLocationOn,
   MdWebAsset,
 } from "react-icons/md";
-import { TbLicense, TbUserHexagon } from "react-icons/tb";
+import { TbLicense, TbUserHexagon, TbMessage } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { IMenuData } from "../../../Types/MenuData";
 import { BsTicketDetailed } from "react-icons/bs";
@@ -209,7 +209,6 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
         },
       ]
       : []),
-
     {
       label: <Link to="/about">About</Link>,
       key: "/about",

@@ -158,12 +158,15 @@ export interface ITaskReportQueryData {
   user_name: string | null;
   unit_id: number | null;
   overdue: string | null;
+  employee_name: string | null;
+  employee_id : string | null;
   report_generate_employee_name: string;
   report_generate_employee_id: string;
   report_generate_department: string;
   report_generate_designation: string;
   category_name: string[];
   total_count: number;
+
 }
 
 export interface ITaskReportResponse {

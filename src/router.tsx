@@ -1,4 +1,6 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
+import { useEffect } from "react";
+import { useGetChatInboxQuery } from "./modules/chat/api/chatEndPoints";
 import ForgotPassword from "./auth/pages/ForgotPassword";
 import { Login } from "./auth/pages/Login";
 import Register from "./auth/pages/Register";
@@ -38,147 +40,88 @@ import ComplexConfig from "./modules/complex/pages/ComplexConfig";
 import Announcements from "./modules/announcements/pages/announcements";
 import CreateAnnouncement from "./modules/announcements/components/CreateAnnouncements";
 import CombineReportModal from "./modules/reports/components/CombineReportModal";
+import ChatPage from "./modules/chat/pages/ChatPage";
+
+// Standalone wrapper — full screen, no AppLayout (no sidebar/header)
+function ChatStandalone() {
+  const { data: inboxRes } = useGetChatInboxQuery();
+
+  useEffect(() => {
+    const inbox = inboxRes?.data || [];
+    const totalUnread = inbox.reduce(
+      (sum: number, c: any) => sum + Number(c.unread_count || 0),
+      0
+    );
+    document.title = totalUnread > 0
+      ? `(${totalUnread}) 🔵 Messenger By DBL`
+      : "Messenger By DBL";
+  }, [inboxRes]);
+
+  // restore title on unmount
+  useEffect(() => {
+    return () => { document.title = "DBL IT Connect"; };
+  }, []);
+
+  return (
+    <div style={{ width: "100vw", height: "100dvh", overflow: "hidden" }}>
+      <ChatPage />
+    </div>
+  );
+}
 
 export const routers = createBrowserRouter([
   { path: "*", element: <NotFound /> },
-  {
-    path: "/login",
-    element: <ProtectedRoute children={<Login />} />,
-  },
-  {
-    path: "/register",
-    element: <ProtectedRoute children={<Register />} />,
-  },
-  {
-    path: "/unauthorized",
-    element: <UnauthorizePage />,
-  },
-  {
-    path: "/forget-password",
-    element: <ProtectedRoute children={<ForgotPassword />} />,
-  },
-  {
-    path: "forget-password/otp",
-    element: <ProtectedRoute children={<SendOtp />} />,
-  },
-  {
-    path: "/reset-password",
 
-    element: <ProtectedRoute children={<ResetPassword />} />,
-  },
+  // ── Auth routes ────────────────────────────────────────────────────────────
+  { path: "/login",            element: <ProtectedRoute children={<Login />} /> },
+  { path: "/register",         element: <ProtectedRoute children={<Register />} /> },
+  { path: "/unauthorized",     element: <UnauthorizePage /> },
+  { path: "/forget-password",  element: <ProtectedRoute children={<ForgotPassword />} /> },
+  { path: "forget-password/otp", element: <ProtectedRoute children={<SendOtp />} /> },
+  { path: "/reset-password",   element: <ProtectedRoute children={<ResetPassword />} /> },
+  { path: "/dashboard",        element: <Navigate to="/" replace /> },
+
+  // ── Standalone chat — NO AppLayout, opens full screen in new tab ───────────
+  // Reached via: window.open("/chat-standalone", "_blank")
+  // Protected by RequireUser so unauthenticated users are redirected to login
   {
-    path: "/dashboard",
-    element: <Navigate to="/" replace />,
+    path: "/chat-standalone",
+    element: <RequireUser children={<ChatStandalone />} />,
   },
+
+  // ── Main app — wrapped with AppLayout (sidebar + header) ──────────────────
   {
     path: "/",
-    // element: <AppLayout />,
     element: <RequireUser children={<AppLayout />} />,
     children: [
-      {
-        path: "/",
-        // element: <RequireUser children={<DashboardDemo />} />,
-        element: <DashboardCards />,
-      },
-      {
-        path: "/setting/profile",
-        element: <ProfileSection />,
-      },
-      {
-        path: "/assets/list",
-        element: <AssetsList />,
-      },
-      {
-        path: "/assets/distributed",
-        element: <DistributedAsset />,
-      },
-      {
-        path: "/employee/distributed",
-        element: <EmployeeDistributedAsset />,
-      },
-      {
-        path: "/employee/list",
-        element: <EmployeeList />,
-      },
-      {
-        path: "/employee/employee-list",
-        element: <EmployeeListForEmployeePanel />,
-      },
-      {
-        path: "/admin/list",
-        element: <AdminPanel />,
-      },
-      {
-        path: "/tickets/list",
-        element: <TicketMain />,
-      },
-      {
-        path: "/task/list",
-        element: <TaskMain />,
-      },
-      {
-        path: "/ctc/list",
-        element: <CTCList />,
-      },
-      {
-        path: "/forms",
-        element: <Forms />,
-      },
-      {
-        path: "/about",
-        element: <About />,
-      },
-      {
-        path: "/reports",
-        element: <Reports />,
-      },
-      {
-        path: "/combine-report",
-        element: <CombineReportModal />,
-      },
-      {
-        path: "/announcements",
-        element: <Announcements />,
-      },
-      {
-        path: "/announcements/create",
-        element: <CreateAnnouncement />,
-      },
-      {
-        path: "/sop/list",
-        element: <ITSop />,
-      },
+      { path: "/",                      element: <DashboardCards /> },
+      { path: "/setting/profile",       element: <ProfileSection /> },
+      { path: "/assets/list",           element: <AssetsList /> },
+      { path: "/assets/distributed",    element: <DistributedAsset /> },
+      { path: "/employee/distributed",  element: <EmployeeDistributedAsset /> },
+      { path: "/employee/list",         element: <EmployeeList /> },
+      { path: "/employee/employee-list",element: <EmployeeListForEmployeePanel /> },
+      { path: "/admin/list",            element: <AdminPanel /> },
+      { path: "/tickets/list",          element: <TicketMain /> },
+      { path: "/task/list",             element: <TaskMain /> },
+      { path: "/ctc/list",              element: <CTCList /> },
+      { path: "/forms",                 element: <Forms /> },
+      { path: "/about",                 element: <About /> },
+      { path: "/reports",               element: <Reports /> },
+      { path: "/combine-report",        element: <CombineReportModal /> },
+      { path: "/announcements",         element: <Announcements /> },
+      { path: "/announcements/create",  element: <CreateAnnouncement /> },
+      { path: "/sop/list",              element: <ITSop /> },
       {
         path: "settings",
         children: [
-          {
-            path: "unit",
-            element: <UnitList />,
-          },
-          {
-            path: "location",
-            element: <LocationList />,
-          },
-          {
-            path: "license",
-            element: <LicenseList />,
-          },
-          {
-            path: "complex-config",
-            element: <ComplexConfig />,
-          },
-          {
-            path: "tickets-config",
-            element: <TicketConfig />,
-          },
-          {
-            path: "task-config",
-            element: <TaskCategoryList />,
-          },
-          {
-            path: "zing-hr-sync",
-            element: <EmpDatabase />,
-          },
+          { path: "unit",            element: <UnitList /> },
+          { path: "location",        element: <LocationList /> },
+          { path: "license",         element: <LicenseList /> },
+          { path: "complex-config",  element: <ComplexConfig /> },
+          { path: "tickets-config",  element: <TicketConfig /> },
+          { path: "task-config",     element: <TaskCategoryList /> },
+          { path: "zing-hr-sync",    element: <EmpDatabase /> },
         ],
       },
     ],

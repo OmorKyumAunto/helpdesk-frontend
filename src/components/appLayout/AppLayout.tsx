@@ -4,6 +4,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 import { BiSolidFilePdf } from "react-icons/bi";
 import { PiYoutubeLogoFill } from "react-icons/pi";
@@ -38,12 +39,13 @@ import { useGetMeQuery } from "../../app/api/userApi";
 import logo from "../../assets/logo.png";
 import { roleID } from "../../utils/helper";
 import AIAssistantDock from "../../modules/aiassistant/AIAssistantDock";
+// ── CHANGE 1: import chat inbox hook ──────────────────────────────────────────
+import { useGetChatInboxQuery } from "../../modules/chat/api/chatEndPoints";
 
 const { useBreakpoint } = Grid;
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
 
-// Professional light theme with hover animations and softer design
 const professionalStyles = {
   sidebar: {
     background: "linear-gradient(145deg, #ffffff 0%, #fafbfc 100%)",
@@ -82,7 +84,7 @@ const professionalStyles = {
     background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
     color: "#475569",
     borderRadius: "10px",
-    height: "2.5rem", // Use rem for scalability
+    height: "2.5rem",
     minWidth: "2.5rem",
     display: "flex",
     alignItems: "center",
@@ -135,27 +137,53 @@ const professionalStyles = {
     background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
     boxShadow: "0 4px 12px rgba(16, 185, 129, 0.25)",
   },
+  messengerButton: {
+    background: "linear-gradient(135deg, #4f46e5 0%, #6d28d9 100%)",
+    color: "#ffffff",
+    border: "none",
+    borderRadius: "12px",
+    height: "2rem",
+    padding: "0 0.75rem",
+    fontSize: "0.75rem",
+    fontWeight: 600,
+    boxShadow: "0 4px 12px rgba(79, 70, 229, 0.28)",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    cursor: "pointer",
+    position: "relative" as "relative", // needed for badge positioning
+  },
 };
 
 export const AppLayout = () => {
-  const { data: profile,isLoading } = useGetMeQuery();
+  const { data: profile, isLoading } = useGetMeQuery();
   const { token } = useSelector((state: RootState) => state.userSlice);
   const isValidUser = !!token && !!profile?.data;
   const [collapsed, setCollapsed] = useState(false);
   const [currentSelection, setCurrentSelection] = useState<string>("");
   const [sidebarWidth, setSidebarWidth] = useState(240);
   const [openKeys, setOpenKeys] = useState<Array<string>>([]);
-  const [drawerVisible, setDrawerVisible] = useState(false); // New state for mobile drawer
+  const [drawerVisible, setDrawerVisible] = useState(false);
   const location = useLocation();
   const gridBreak = useBreakpoint();
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const employee_id = profile?.data?.employee_id;
+  const { data: chatInboxRes } = useGetChatInboxQuery(undefined, {
+    pollingInterval: 5000,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
+  const totalUnread = (chatInboxRes?.data || []).reduce(
+    (sum: number, c: any) => sum + Number(c.unread_count || 0),
+    0,
+  );
 
   const memoizedMenuItems = useMemo(
     () => menuItems(profile?.data, roleId as number),
-    [profile?.data, roleId]
+    [profile?.data, roleId],
   );
 
   const helpMenu = (
@@ -178,7 +206,7 @@ export const AppLayout = () => {
       </Menu.Item>
       <Menu.Item key="2" icon={<BiSolidFilePdf color="#E03C31" size={20} />}>
         <a
-          href="https://www.dropbox.com/scl/fi/qohmr0km29jnbdjmbtxrl/Ticket-Raise-Process.pdf?rlkey=qnfg48axugbctmuh24o1qiwse&st=cx5r02qk&raw=1"
+          href="https://www.dropbox.com/scl/fi/qohmr0km29jnbdjmbtxrl/Ticket-Raise-Process.pdf?rlkey=qn4vrnmxq3cy8uhg3y2sh5jqo&st=cx5r02qk&raw=1"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -210,7 +238,7 @@ export const AppLayout = () => {
   useEffect(() => {
     const index = location.pathname.indexOf(
       "/",
-      location.pathname.indexOf("/", location.pathname.indexOf("/") + 1) + 1
+      location.pathname.indexOf("/", location.pathname.indexOf("/") + 1) + 1,
     );
     const result =
       index !== -1 ? location.pathname.substring(0, index) : location.pathname;
@@ -234,7 +262,7 @@ export const AppLayout = () => {
     setCurrentSelection("");
     setTimeout(() => {
       setCurrentSelection(e.key);
-      if (gridBreak.xs) setDrawerVisible(false); // Close drawer on mobile after selection
+      if (gridBreak.xs) setDrawerVisible(false);
     }, 0);
   };
 
@@ -248,7 +276,7 @@ export const AppLayout = () => {
   function findObjectWithKey(
     data: DataObject[],
     path: { pathname: string; state?: string },
-    parentIndices: string[] = []
+    parentIndices: string[] = [],
   ): string[] | null {
     for (let i = 0; i < data.length; i++) {
       if (data[i] === null) continue;
@@ -283,7 +311,10 @@ export const AppLayout = () => {
     const startX = e.clientX;
 
     const handleResizeDrag = (e: any) => {
-      const newWidth = Math.max(200, Math.min(320, sidebarWidth + (e.clientX - startX)));
+      const newWidth = Math.max(
+        200,
+        Math.min(320, sidebarWidth + (e.clientX - startX)),
+      );
       setSidebarWidth(newWidth);
     };
 
@@ -306,11 +337,17 @@ export const AppLayout = () => {
     }
   }, [gridBreak.xs]);
 
+  const openMessenger = () => {
+    window.open("/chat-standalone", "_blank", "noopener,noreferrer");
+  };
+
   const userMenuContent = (
     <div style={{ minWidth: "180px" }}>
       <div style={{ padding: "12px", borderBottom: "1px solid #f3f4f6" }}>
         <Space direction="vertical" size={2}>
-          <Text strong style={{ fontSize: "0.875rem" }}>{profile?.data?.name}</Text>
+          <Text strong style={{ fontSize: "0.875rem" }}>
+            {profile?.data?.name}
+          </Text>
           <Text type="secondary" style={{ fontSize: "0.75rem" }}>
             {profile?.data?.email}
           </Text>
@@ -321,7 +358,12 @@ export const AppLayout = () => {
           <Link to="/setting/profile">Profile Settings</Link>
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item key="logout" icon={<LogoutOutlined />} danger onClick={handleLogout}>
+        <Menu.Item
+          key="logout"
+          icon={<LogoutOutlined />}
+          danger
+          onClick={handleLogout}
+        >
           Logout
         </Menu.Item>
       </Menu>
@@ -339,10 +381,9 @@ export const AppLayout = () => {
       key: "tickets",
       label: "Ticketing System",
       path: "/tickets/list",
-      show: employee_id !== "Assetteam", // example restriction
+      show: employee_id !== "Assetteam",
     },
   ];
-
 
   return (
     <Layout style={{ minHeight: "100vh", background: "#f8fafc" }}>
@@ -395,7 +436,8 @@ export const AppLayout = () => {
               onMouseEnter={(e) => {
                 if (!gridBreak.xs) {
                   e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = "0 8px 25px rgba(0, 0, 0, 0.08)";
+                  e.currentTarget.style.boxShadow =
+                    "0 8px 25px rgba(0, 0, 0, 0.08)";
                   e.currentTarget.style.background =
                     "linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%)";
                 }
@@ -403,7 +445,8 @@ export const AppLayout = () => {
               onMouseLeave={(e) => {
                 if (!gridBreak.xs) {
                   e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.04)";
+                  e.currentTarget.style.boxShadow =
+                    "0 2px 8px rgba(0, 0, 0, 0.04)";
                   e.currentTarget.style.background =
                     "linear-gradient(135deg, #f1f5f9 0%, #f8fafc 100%)";
                 }
@@ -414,9 +457,10 @@ export const AppLayout = () => {
                   size={36}
                   icon={<UserOutlined />}
                   style={{
-                    background: roleId === 3
-                      ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-                      : "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                    background:
+                      roleId === 3
+                        ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
+                        : "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
                     fontSize: "0.875rem",
                     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
                     border: "2px solid rgba(255, 255, 255, 0.8)",
@@ -443,21 +487,25 @@ export const AppLayout = () => {
                   >
                     {roleId === 1 ? (
                       <span>
-                        <span style={{ position: "relative", top: "-1.5px" }}>👑</span> Super Admin
+                        <span style={{ position: "relative", top: "-1.5px" }}>
+                          👑
+                        </span>{" "}
+                        Super Admin
                       </span>
                     ) : roleId === 2 ? (
                       "⚡ Admin"
                     ) : roleId === 3 ? (
                       "👤 User"
-                    ) :
-                      roleId === 4 ? (
-                        <span>
-                          <span style={{ position: "relative", top: "-1.5px" }}>👑</span> Unit Super Admin
-                        </span>
-                      )
-                        : (
-                          "❓ Unknown"
-                        )}
+                    ) : roleId === 4 ? (
+                      <span>
+                        <span style={{ position: "relative", top: "-1.5px" }}>
+                          👑
+                        </span>{" "}
+                        Unit Super Admin
+                      </span>
+                    ) : (
+                      "❓ Unknown"
+                    )}
                   </Text>
                 </div>
               </Space>
@@ -480,7 +528,8 @@ export const AppLayout = () => {
               if (!gridBreak.xs) e.currentTarget.style.background = "#e5e7eb";
             }}
             onMouseLeave={(e) => {
-              if (!gridBreak.xs) e.currentTarget.style.background = "transparent";
+              if (!gridBreak.xs)
+                e.currentTarget.style.background = "transparent";
             }}
           />
 
@@ -528,15 +577,21 @@ export const AppLayout = () => {
           zIndex={1000}
         >
           {profile?.data && (
-            <div style={{ ...professionalStyles.userSection, margin: "0 12px 12px" }}>
+            <div
+              style={{
+                ...professionalStyles.userSection,
+                margin: "0 12px 12px",
+              }}
+            >
               <Space align="center" size={12}>
                 <Avatar
                   size={36}
                   icon={<UserOutlined />}
                   style={{
-                    background: roleId === 3
-                      ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-                      : "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                    background:
+                      roleId === 3
+                        ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
+                        : "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
                     fontSize: "0.875rem",
                     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
                     border: "2px solid rgba(255, 255, 255, 0.8)",
@@ -563,7 +618,10 @@ export const AppLayout = () => {
                   >
                     {roleId === 1 ? (
                       <span>
-                        <span style={{ position: "relative", top: "-1.5px" }}>👑</span> Super Admin
+                        <span style={{ position: "relative", top: "-1.5px" }}>
+                          👑
+                        </span>{" "}
+                        Super Admin
                       </span>
                     ) : roleId === 2 ? (
                       "⚡ Admin"
@@ -609,11 +667,22 @@ export const AppLayout = () => {
             zIndex: 99,
           }}
         >
+          {/* ── Left: collapse toggle ── */}
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <Button
               type="text"
-              icon={gridBreak.xs ? <MenuUnfoldOutlined /> : collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => (gridBreak.xs ? setDrawerVisible(true) : setCollapsed(!collapsed))}
+              icon={
+                gridBreak.xs ? (
+                  <MenuUnfoldOutlined />
+                ) : collapsed ? (
+                  <MenuUnfoldOutlined />
+                ) : (
+                  <MenuFoldOutlined />
+                )
+              }
+              onClick={() =>
+                gridBreak.xs ? setDrawerVisible(true) : setCollapsed(!collapsed)
+              }
               style={{
                 ...professionalStyles.headerButton,
                 fontSize: "0.875rem",
@@ -623,7 +692,8 @@ export const AppLayout = () => {
               onMouseEnter={(e) => {
                 if (!gridBreak.xs) {
                   e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = "0 6px 16px rgba(0, 0, 0, 0.1)";
+                  e.currentTarget.style.boxShadow =
+                    "0 6px 16px rgba(0, 0, 0, 0.1)";
                   e.currentTarget.style.background =
                     "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)";
                 }
@@ -631,7 +701,8 @@ export const AppLayout = () => {
               onMouseLeave={(e) => {
                 if (!gridBreak.xs) {
                   e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.02)";
+                  e.currentTarget.style.boxShadow =
+                    "0 2px 4px rgba(0, 0, 0, 0.02)";
                   e.currentTarget.style.background =
                     "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)";
                 }
@@ -639,14 +710,16 @@ export const AppLayout = () => {
             />
           </div>
 
+          {/* ── Right: action buttons + profile ── */}
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <Space size={8}>
-              {quickActions.filter(action => action.show).map((action) =>
-                action.show && (
+              {/* Quick action links */}
+              {quickActions
+                .filter((a) => a.show)
+                .map((action) => (
                   <Link key={action.key} to={action.path}>
                     <Tooltip title={action.label}>
                       <Button
-                        className="hover:scale-[1.05] hover:shadow-lg transition-transform duration-300 ease-in-out"
                         style={{
                           ...professionalStyles.quickActionButton,
                           height: "2rem",
@@ -659,47 +732,81 @@ export const AppLayout = () => {
                       </Button>
                     </Tooltip>
                   </Link>
-                )
-              )}
+                ))}
+
+              
             </Space>
 
             <Space size={4} align="center">
-              <Dropdown overlay={helpMenu} trigger={["click"]} placement="bottomRight">
+              {/* Help dropdown */}
+              <Dropdown
+                overlay={helpMenu}
+                trigger={["click"]}
+                placement="bottomRight"
+              >
                 <Tooltip title="Help & Documentation">
                   <Button
-                    icon={<FaBookOpen color="#2a3b4f" size={20} style={{ marginTop: "3px" }} />}
-                    style={{ ...professionalStyles.headerButton, height: "2rem", minWidth: "2rem" }}
+                    icon={
+                      <FaBookOpen
+                        color="#2a3b4f"
+                        size={20}
+                        style={{ marginTop: "3px" }}
+                      />
+                    }
+                    style={{
+                      ...professionalStyles.headerButton,
+                      height: "2rem",
+                      minWidth: "2rem",
+                    }}
                     size="large"
                     onMouseEnter={(e) => {
-                      if (!gridBreak.xs) e.currentTarget.style.transform = professionalStyles.headerButtonHover.transform;
+                      if (!gridBreak.xs)
+                        e.currentTarget.style.transform =
+                          professionalStyles.headerButtonHover.transform;
                     }}
                     onMouseLeave={(e) => {
-                      if (!gridBreak.xs) e.currentTarget.style.transform = "scale(1)";
+                      if (!gridBreak.xs)
+                        e.currentTarget.style.transform = "scale(1)";
                     }}
                   />
                 </Tooltip>
               </Dropdown>
 
+              {/* YouTube */}
               <Tooltip title="Video Tutorials">
                 <Button
-                  icon={<PiYoutubeLogoFill color="#FF0000" size={25} style={{ marginTop: "3px" }} />}
-                  style={{ ...professionalStyles.headerButton, height: "2rem", minWidth: "2rem" }}
+                  icon={
+                    <PiYoutubeLogoFill
+                      color="#FF0000"
+                      size={25}
+                      style={{ marginTop: "3px" }}
+                    />
+                  }
+                  style={{
+                    ...professionalStyles.headerButton,
+                    height: "2rem",
+                    minWidth: "2rem",
+                  }}
                   size="large"
                   onClick={() =>
                     window.open(
                       "https://www.youtube.com/playlist?list=PL1I5_y65vLeHbVZMV3EmR_hLkKms_AWTD",
-                      "_blank"
+                      "_blank",
                     )
                   }
                   onMouseEnter={(e) => {
-                    if (!gridBreak.xs) e.currentTarget.style.transform = professionalStyles.headerButtonHover.transform;
+                    if (!gridBreak.xs)
+                      e.currentTarget.style.transform =
+                        professionalStyles.headerButtonHover.transform;
                   }}
                   onMouseLeave={(e) => {
-                    if (!gridBreak.xs) e.currentTarget.style.transform = "scale(1)";
+                    if (!gridBreak.xs)
+                      e.currentTarget.style.transform = "scale(1)";
                   }}
                 />
               </Tooltip>
 
+              {/* Profile popover */}
               <Popover
                 content={userMenuContent}
                 trigger="click"
@@ -718,10 +825,18 @@ export const AppLayout = () => {
                     fontSize: "0.75rem",
                   }}
                   onMouseEnter={(e) => {
-                    if (!gridBreak.xs) Object.assign(e.currentTarget.style, professionalStyles.profileButtonHover);
+                    if (!gridBreak.xs)
+                      Object.assign(
+                        e.currentTarget.style,
+                        professionalStyles.profileButtonHover,
+                      );
                   }}
                   onMouseLeave={(e) => {
-                    if (!gridBreak.xs) Object.assign(e.currentTarget.style, professionalStyles.profileButton);
+                    if (!gridBreak.xs)
+                      Object.assign(
+                        e.currentTarget.style,
+                        professionalStyles.profileButton,
+                      );
                   }}
                 >
                   <Avatar
@@ -732,10 +847,9 @@ export const AppLayout = () => {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: "0.625rem", // 10px fallback if needed
+                      fontSize: "0.625rem",
                     }}
                   />
-
                 </Button>
               </Popover>
             </Space>
@@ -744,7 +858,12 @@ export const AppLayout = () => {
 
         <Content
           style={{
-            padding: location.pathname === "/about" ? "0rem" : gridBreak.xs ? "0.5rem" : "1rem",
+            padding:
+              location.pathname === "/about"
+                ? "0rem"
+                : gridBreak.xs
+                  ? "0.5rem"
+                  : "1rem",
             minHeight: 280,
             boxShadow: "0 1px 4px rgba(0, 0, 0, 0.04)",
             border: "1px solid #e5e7eb",
@@ -763,7 +882,10 @@ export const AppLayout = () => {
             background: "#ffffff",
           }}
         >
-          <Text type="secondary" style={{ fontSize: gridBreak.xs ? "0.625rem" : "0.75rem" }}>
+          <Text
+            type="secondary"
+            style={{ fontSize: gridBreak.xs ? "0.625rem" : "0.75rem" }}
+          >
             © {new Date().getFullYear()} DBL Group. All Rights Reserved.
           </Text>
         </Footer>
@@ -776,50 +898,38 @@ export const AppLayout = () => {
           margin: 3px 12px !important;
           font-size: ${gridBreak.xs ? "0.75rem" : "0.875rem"} !important;
         }
-
         .custom-menu .ant-menu-item:hover {
           background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
           transform: ${gridBreak.xs ? "none" : "translateX(4px)"} !important;
           box-shadow: ${gridBreak.xs ? "none" : "0 4px 12px rgba(0, 0, 0, 0.08)"} !important;
         }
-
         .custom-menu .ant-menu-item-selected {
           background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
           border-right: 3px solid #3b82f6 !important;
           transform: ${gridBreak.xs ? "none" : "translateX(6px)"} !important;
           box-shadow: ${gridBreak.xs ? "none" : "0 4px 16px rgba(59, 130, 246, 0.2)"} !important;
         }
-
         .custom-menu .ant-menu-submenu-title:hover {
           background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
           transform: ${gridBreak.xs ? "none" : "translateX(2px)"} !important;
         }
-
         @media (max-width: 576px) {
-          .ant-menu-item, .ant-menu-submenu-title {
-            padding: 0.5rem !important;
-          }
-          .ant-menu-item-icon {
-            font-size: 1rem !important;
-          }
-          .ant-menu-title-content {
-            font-size: 0.75rem !important;
-          }
+          .ant-menu-item, .ant-menu-submenu-title { padding: 0.5rem !important; }
+          .ant-menu-item-icon { font-size: 1rem !important; }
+          .ant-menu-title-content { font-size: 0.75rem !important; }
         }
-
         @media (max-width: 360px) {
-          .ant-menu-item, .ant-menu-submenu-title {
-            padding: 0.4rem !important;
-          }
-          .ant-menu-item-icon {
-            font-size: 0.875rem !important;
-          }
-          .ant-menu-title-content {
-            font-size: 0.6875rem !important;
-          }
+          .ant-menu-item, .ant-menu-submenu-title { padding: 0.4rem !important; }
+          .ant-menu-item-icon { font-size: 0.875rem !important; }
+          .ant-menu-title-content { font-size: 0.6875rem !important; }
+        }
+        @keyframes unreadPulse {
+          0%, 100% { box-shadow: 0 2px 6px rgba(239,68,68,.5); }
+          50%       { box-shadow: 0 2px 12px rgba(239,68,68,.8); }
         }
       `}</style>
-       {!isLoading && isValidUser && <AIAssistantDock />}
+
+      {!isLoading && isValidUser && <AIAssistantDock />}
     </Layout>
   );
 };

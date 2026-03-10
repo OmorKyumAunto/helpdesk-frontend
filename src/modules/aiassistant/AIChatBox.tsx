@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import ChatShell, { ChatMessage } from "./ChatShell";
 import { ChatCircleDots } from "@phosphor-icons/react";
@@ -13,28 +14,118 @@ Be concise, helpful, and practical.
 When asked to draft a ticket, format it with: Title, Description, Steps to Reproduce, Expected, Actual, Impact, Priority.
 `.trim();
 
+/** 🔐 CHANGE THIS to your actual login key */
+const TOKEN_KEY = "token"; // e.g. "TOKEN" or "access_token" etc.
+
+type Mode = "chat" | "assets" | "sop";
+
 function defaultWelcome(): ChatMessage[] {
-  return [{ id: uid(), role: "assistant", content: "Hi! I’m DBL AI Assistant 👋", ts: Date.now() }];
+  return [
+    {
+      id: uid(),
+      role: "assistant",
+      content: "Hi! I’m DBL AI Assistant 👋",
+      ts: Date.now(),
+    },
+  ];
 }
 
 function storageKey(userId: string) {
   return `dbl_ai_chat_${userId}`;
 }
-function isSopCommand(text: string) {
-      return text.trim().toLowerCase().startsWith("/sop");
-    }
+
+/** ==================== MODE DETECTION ==================== */
+
+function getForcedMode(text: string): Mode | null {
+  const t = text.trim().toLowerCase();
+  if (t.startsWith("/chat")) return "chat";
+  if (t.startsWith("/assets")) return "assets";
+  if (t.startsWith("/sop")) return "sop";
+  if (t.startsWith("/employee")) return "assets";
+  return null;
+}
+
+function stripModePrefix(text: string) {
+  return text.replace(/^\/(chat|assets|sop|employee)\s*/i, "").trim();
+}
+
+function parseSopCategoryAndQuery(text: string) {
+  // supports: /sop [Email] reset password
+  const m = text.trim().match(/^\/sop\s*(?:\[(.+?)\])?\s*(.*)$/i);
+  if (!m)
+    return { category: null as string | null, query: stripModePrefix(text) };
+  return { category: m[1]?.trim() || null, query: (m[2] || "").trim() };
+}
+
+/** ==================== INTENTS ==================== */
+
+function isMyAssetsIntent(text = "") {
+  const s = text.toLowerCase();
+  return (
+    s.includes("my asset") ||
+    s.includes("my assets") ||
+    s.includes("my laptop") ||
+    s.includes("my device") ||
+    s.includes("assigned to me") ||
+    s.includes("given to me") ||
+    s.includes("what assets do i have") ||
+    // Banglish
+    s.includes("amar asset") ||
+    s.includes("amar assets") ||
+    s.includes("amar kache ki ache") ||
+    s.includes("amar ki ki asset") ||
+    // Bangla
+    s.includes("আমার অ্যাসেট") ||
+    s.includes("আমার কাছে কি") ||
+    s.includes("আমাকে দেয়া")
+  );
+}
 
 function isAssetQuery(text: string) {
   const t = text.toLowerCase();
-  return (
+
+  const hasAssetWords =
     t.includes("asset") ||
     t.includes("serial") ||
+    t.includes("laptop") ||
+    t.includes("desktop") ||
+    t.includes("monitor") ||
+    t.includes("po ") ||
+    t.includes("purchase order") ||
     t.includes("employee id") ||
     t.includes("emp id") ||
     t.includes("eid") ||
-    /\b\d{3,10}\b/.test(t)
-  );
+    t.includes("@");
+
+  const hasEmpIdLike = /\b\d{5,12}\b/.test(t);
+
+  // serial-like token must contain both letters+digits
+  const hasSerialLike =
+    /\b[a-z0-9]{4,}\b/i.test(text) && /[a-z]/i.test(text) && /\d/.test(text);
+
+  return hasAssetWords || hasEmpIdLike || hasSerialLike;
 }
+
+function isEmployeeQuery(text: string) {
+  const t = text.toLowerCase().trim();
+
+  // direct employee indicators only
+  const hasExplicitEmployeeWords =
+    t.startsWith("who is ") ||
+    t.includes("employee id") ||
+    t.includes("emp id") ||
+    t.includes("profile of") ||
+    t.includes("designation of") ||
+    t.includes("department of") ||
+    t.includes("line manager of");
+
+  const hasEmail = /\S+@\S+\.\S+/.test(t);
+  const hasEmpId = /\b\d{5,12}\b/.test(t);
+
+  return hasExplicitEmployeeWords || hasEmail || hasEmpId;
+}
+
+/** ==================== CLIENT TOOLS ==================== */
 
 type ToolResult =
   | { handled: false }
@@ -50,12 +141,20 @@ function runClientTool(text: string): ToolResult {
         `**Commands**\n` +
         `- \`/help\` show commands\n` +
         `- \`/clear\` clear chat\n` +
-        `- \`/ticket\` generate a ticket template\n`,
+        `- \`/ticket\` generate a ticket template\n` +
+        `- \`/chat <msg>\` force chat\n` +
+        `- \`/assets <msg>\` force assets\n` +
+        `- \`/employee <msg>\` (alias) employee/profile lookup\n` +
+        `- \`/sop [Category] <msg>\` SOP search\n`,
     };
   }
 
   if (t === "/clear") {
-    return { handled: true, assistantText: "✅ Cleared. How can I help?", alsoClear: true };
+    return {
+      handled: true,
+      assistantText: "✅ Cleared. How can I help?",
+      alsoClear: true,
+    };
   }
 
   if (t.startsWith("/ticket")) {
@@ -76,7 +175,8 @@ function runClientTool(text: string): ToolResult {
   return { handled: false };
 }
 
-/** --- Web Speech API types (no extra deps) --- */
+/** ==================== VOICE TYPES ==================== */
+
 type SpeechRecognitionLike = {
   lang: string;
   continuous: boolean;
@@ -100,6 +200,13 @@ function toPlainText(text: string) {
   return (text || "").replace(/\s+/g, " ").trim();
 }
 
+function getAuthHeader() {
+  const token = localStorage.getItem(TOKEN_KEY);
+  return token ? `Bearer ${token}` : undefined;
+}
+
+/** ==================== COMPONENT ==================== */
+
 export default function AIChatBox({
   open,
   minimized,
@@ -109,6 +216,7 @@ export default function AIChatBox({
   onRestore,
   onClose,
   userId,
+  roleId,
 }: {
   open: boolean;
   minimized: boolean;
@@ -118,6 +226,7 @@ export default function AIChatBox({
   onRestore: () => void;
   onClose: () => void;
   userId: string;
+  roleId?: string | number;
 }) {
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
@@ -126,9 +235,9 @@ export default function AIChatBox({
   const [isAdmin] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
-  // -------------------- ✅ Voice Input (TicketChatBox style) --------------------
+  // -------------------- Voice Input --------------------
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
-  const voiceBaseTextRef = useRef<string>(""); // text before current listen session
+  const voiceBaseTextRef = useRef<string>("");
   const suppressVoiceEndToastRef = useRef(false);
 
   const [voiceSupported, setVoiceSupported] = useState(false);
@@ -137,7 +246,7 @@ export default function AIChatBox({
   const stopVoice = () => {
     try {
       recognitionRef.current?.stop();
-    } catch { }
+    } catch {}
   };
 
   useEffect(() => {
@@ -146,7 +255,7 @@ export default function AIChatBox({
     if (!Ctor) return;
 
     const rec: SpeechRecognitionLike = new Ctor();
-    rec.lang = "en-US"; // change if you want: "bn-BD"
+    rec.lang = "en-US";
     rec.continuous = true;
     rec.interimResults = true;
     rec.maxAlternatives = 1;
@@ -155,14 +264,10 @@ export default function AIChatBox({
 
     rec.onend = () => {
       setListening(false);
-
       if (suppressVoiceEndToastRef.current) {
         suppressVoiceEndToastRef.current = false;
         return;
       }
-
-      // Keep silent (or enable if you want)
-      // antdMsg.info("Voice input stopped.");
     };
 
     rec.onerror = (e: any) => {
@@ -170,11 +275,13 @@ export default function AIChatBox({
       const code = e?.error || "unknown";
 
       if (code === "not-allowed" || code === "service-not-allowed") {
-        antdMsg.error("Microphone permission denied. Please allow mic access in the browser.");
+        antdMsg.error(
+          "Microphone permission denied. Please allow mic access in the browser."
+        );
       } else if (code === "no-speech") {
         antdMsg.info("No speech detected.");
       } else if (code === "aborted") {
-        // ignore (common on stop/abort)
+        // ignore
       } else {
         antdMsg.error(`Voice input error: ${code}`);
       }
@@ -205,21 +312,21 @@ export default function AIChatBox({
         rec.onerror = null;
         rec.onresult = null;
         rec.abort();
-      } catch { }
+      } catch {}
       recognitionRef.current = null;
     };
   }, []);
 
   const startVoice = () => {
-    if (!voiceSupported) return antdMsg.warning("Voice input is not supported in this browser.");
+    if (!voiceSupported)
+      return antdMsg.warning("Voice input is not supported in this browser.");
     if (listening) return;
 
     voiceBaseTextRef.current = input.trim();
 
     try {
       recognitionRef.current?.start();
-    } catch (e: any) {
-      // Some browsers throw if already started; abort then retry once
+    } catch {
       try {
         recognitionRef.current?.abort();
         recognitionRef.current?.start();
@@ -234,15 +341,12 @@ export default function AIChatBox({
     else startVoice();
   };
 
-  // Silent stop mic when chat closes/minimized
   useEffect(() => {
     if (!open || minimized) {
       suppressVoiceEndToastRef.current = true;
       stopVoice();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, minimized]);
-  // ---------------------------------------------------------------------------
 
   // Load persisted chat per user
   useEffect(() => {
@@ -251,21 +355,25 @@ export default function AIChatBox({
       if (!raw) return;
       const parsed = JSON.parse(raw) as ChatMessage[];
       if (Array.isArray(parsed) && parsed.length) setMsgs(parsed);
-    } catch { }
+    } catch {}
   }, [userId]);
 
-  // Persist on change
+  // Persist
   useEffect(() => {
     try {
       localStorage.setItem(storageKey(userId), JSON.stringify(msgs));
-    } catch { }
+    } catch {}
   }, [msgs, userId]);
 
-  // Convert UI messages -> model history format
+  // Convert UI messages -> model history format (skip "…")
   const historyForFn = useMemo<FuncMsg[]>(
     () =>
       msgs
-        .filter((m) => m.role === "user" || m.role === "assistant")
+        .filter(
+          (m) =>
+            (m.role === "user" || m.role === "assistant") &&
+            (m.content || "").trim() !== "…"
+        )
         .map((m) => ({
           role: m.role === "assistant" ? "model" : "user",
           content: m.content,
@@ -284,80 +392,149 @@ export default function AIChatBox({
     setInput("");
     try {
       localStorage.removeItem(storageKey(userId));
-    } catch { }
+    } catch {}
   };
 
   const send = async () => {
-    const text = input.trim();
-    if (!text || typing) return;
+    const rawText = input.trim();
+    if (!rawText || typing) return;
 
-    // ✅ stop mic on send (silent)
+    // stop mic silently
     if (listening) {
       suppressVoiceEndToastRef.current = true;
       stopVoice();
     }
 
-    // client-side tools
-    const tool = runClientTool(text);
+    // tools
+    const tool = runClientTool(rawText);
     if (tool.handled) {
       if (tool.alsoClear) {
         clearChat();
-        setMsgs((p) => [...p, { id: uid(), role: "assistant", content: tool.assistantText, ts: Date.now() }]);
+        setMsgs((p) => [
+          ...p,
+          {
+            id: uid(),
+            role: "assistant",
+            content: tool.assistantText,
+            ts: Date.now(),
+          },
+        ]);
       } else {
         setMsgs((p) => [
           ...p,
-          { id: uid(), role: "user", content: text, ts: Date.now() },
-          { id: uid(), role: "assistant", content: tool.assistantText, ts: Date.now() },
+          { id: uid(), role: "user", content: rawText, ts: Date.now() },
+          {
+            id: uid(),
+            role: "assistant",
+            content: tool.assistantText,
+            ts: Date.now(),
+          },
         ]);
       }
       setInput("");
       return;
     }
 
-    setMsgs((p) => [...p, { id: uid(), role: "user", content: text, ts: Date.now() }]);
+    setMsgs((p) => [
+      ...p,
+      { id: uid(), role: "user", content: rawText, ts: Date.now() },
+    ]);
     setInput("");
 
     const assistantId = uid();
-    setMsgs((p) => [...p, { id: assistantId, role: "assistant", content: "…", ts: Date.now() }]);
+    setMsgs((p) => [
+      ...p,
+      { id: assistantId, role: "assistant", content: "…", ts: Date.now() },
+    ]);
 
     stopStreaming();
     abortRef.current = new AbortController();
-
     setTyping(true);
+
+    // ✅ AUTH header for all modes
+    const authToken = getAuthHeader();
+
+    // ✅ Decide mode/message/category
+    const forcedMode = getForcedMode(rawText);
+
+    let mode: Mode = "chat";
+    let category: string | null = null;
+    let finalMessage = rawText;
+
+    if (forcedMode) {
+      mode = forcedMode;
+
+      if (mode === "sop") {
+        const sopParsed = parseSopCategoryAndQuery(rawText);
+        category = sopParsed.category;
+        finalMessage = sopParsed.query;
+      } else {
+        finalMessage = stripModePrefix(rawText);
+      }
+    } else {
+      if (rawText.toLowerCase().startsWith("/sop")) {
+        mode = "sop";
+        const sopParsed = parseSopCategoryAndQuery(rawText);
+        category = sopParsed.category;
+        finalMessage = sopParsed.query;
+      } else if (isEmployeeQuery(rawText)) {
+        mode = "assets";
+      } else if (isAssetQuery(rawText)) {
+        mode = "assets";
+      } else {
+        mode = "chat";
+      }
+    }
+
+    const roleIdStr = roleId != null ? String(roleId) : "";
+
+    // ✅ Role 3 (Employee): Chat + My Assets only
+    if (roleIdStr === "3") {
+      const msg = stripModePrefix(rawText);
+
+      if (isMyAssetsIntent(msg)) {
+        mode = "assets";
+        category = null;
+        finalMessage = msg;
+      } else {
+        mode = "chat";
+        category = null;
+        finalMessage = msg;
+      }
+    }
+
     let full = "";
-    const isSop = isSopCommand(text);
-
-// remove "/sop" from message before sending
-const finalMessage = isSop ? text.replace(/^\/sop\s*/i, "").trim() : text;
-
-const assetMode = !isSop && isAssetQuery(text) ? "assets" : undefined;
-const mode = isSop ? "sop" : assetMode;
-
-
-
-    
 
     await streamChatWithGemini({
       url: STREAM_URL,
       message: finalMessage,
       userId,
+      roleId,
       conversationHistory: historyForFn.slice(-10),
       systemPrompt: SYSTEM_PROMPT,
       mode,
+      category,
       isAdmin,
-      files: [], // keep empty
+      authToken,
+      files: [],
       signal: abortRef.current.signal,
       onText: (chunk) => {
         full += chunk;
-        setMsgs((p) => p.map((m) => (m.id === assistantId ? { ...m, content: full || "…" } : m)));
+        setMsgs((p) =>
+          p.map((m) =>
+            m.id === assistantId ? { ...m, content: full || "…" } : m
+          )
+        );
       },
-      onDone: () => {
-        setTyping(false);
-      },
+      onDone: () => setTyping(false),
       onError: (e) => {
         setTyping(false);
         setMsgs((p) =>
-          p.map((m) => (m.id === assistantId ? { ...m, content: `⚠️ ${e?.message || "Stream error"}` } : m))
+          p.map((m) =>
+            m.id === assistantId
+              ? { ...m, content: `⚠️ ${e?.message || "Stream error"}` }
+              : m
+          )
         );
       },
     });
@@ -380,10 +557,8 @@ const mode = isSop ? "sop" : assetMode;
             size="small"
             className="dbl-control"
             onClick={() => {
-              // silent stop mic
               suppressVoiceEndToastRef.current = true;
               stopVoice();
-
               stopStreaming();
               clearChat();
             }}
@@ -417,3 +592,4 @@ const mode = isSop ? "sop" : assetMode;
     />
   );
 }
+

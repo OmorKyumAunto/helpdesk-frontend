@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useState } from "react";
 import { Badge, Grid, Tooltip } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
@@ -8,10 +9,7 @@ import AIChatBox from "./AIChatBox";
 import TicketChatBox from "./TicketChatBox";
 import { useGetMeQuery } from "../../app/api/userApi";
 
-
-
 const { useBreakpoint } = Grid;
-
 
 const HIDE_ON = [
   "/login",
@@ -33,15 +31,15 @@ export default function AIAssistantDock() {
   const { data: meRes } = useGetMeQuery();
 
   const employeeIdFromApi = meRes?.data?.employee_id;
-  const userId: string | null = employeeIdFromApi ?? localStorage.getItem("dbl_employee_id");
+  const userId: string | null =
+    employeeIdFromApi ?? localStorage.getItem("dbl_employee_id");
   const roleId = meRes?.data?.role_id;
-  const canUseTicketAI = roleId === 3;
-
-
+  const roleIdStr = roleId != null ? String(roleId) : "";
+  const canUseTicketAI = roleIdStr === "3";
 
   const hideByRoute = useMemo(
     () => HIDE_ON.some((p) => location.pathname.startsWith(p)),
-    [location.pathname]
+    [location.pathname],
   );
 
   const hideDock = xs || hideByRoute;
@@ -61,11 +59,12 @@ export default function AIAssistantDock() {
       "Get ideas for Reports",
       "Get help for troubleshooting",
     ],
-    []
+    [],
   );
   const [sIdx, setSIdx] = useState(0);
   useEffect(() => {
-    if (employeeIdFromApi) localStorage.setItem("dbl_employee_id", employeeIdFromApi);
+    if (employeeIdFromApi)
+      localStorage.setItem("dbl_employee_id", employeeIdFromApi);
   }, [employeeIdFromApi]);
 
   useEffect(() => {
@@ -76,20 +75,21 @@ export default function AIAssistantDock() {
   }, [canUseTicketAI, openBox]);
   const actionsCount = canUseTicketAI ? 2 : 1;
   const hoveredWidth = actionsCount === 2 ? 340 : 300; // tweak if you want
-  const idleWidth = actionsCount === 2 ? 260 : 240;    // tweak if you want
-
-
+  const idleWidth = actionsCount === 2 ? 260 : 240; // tweak if you want
 
   useEffect(() => {
     if (openBox || minimized || hideDock) return;
-    const t = setInterval(() => setSIdx((p) => (p + 1) % suggestions.length), 2600);
+    const t = setInterval(
+      () => setSIdx((p) => (p + 1) % suggestions.length),
+      2600,
+    );
     return () => clearInterval(t);
   }, [openBox, minimized, hideDock, suggestions.length]);
 
   const dockVisible = !hideDock && !openBox && !minimized && !maximized;
 
-
-  const activeMinLabel = openBox === "ticket" ? "Ticket Assistant" : "AI Assistant";
+  const activeMinLabel =
+    openBox === "ticket" ? "Ticket Assistant" : "AI Assistant";
   const activeMinIcon =
     openBox === "ticket" ? (
       <Lifebuoy size={22} weight="fill" />
@@ -206,7 +206,7 @@ export default function AIAssistantDock() {
       {/* DOCK */}
       <AnimatePresence>
         {dockVisible && (
-          <motion.div
+          <motion.div   
             className="dbl-dock"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -222,7 +222,6 @@ export default function AIAssistantDock() {
                 y: hovered ? -1 : 0,
                 scale: hovered ? 1.01 : 1,
               }}
-
               transition={spring}
               // ✅ idle breathing when not hovered
               whileHover={{}}
@@ -230,9 +229,17 @@ export default function AIAssistantDock() {
               {/* idle float effect */}
               {!hovered && (
                 <motion.div
-                  style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    pointerEvents: "none",
+                  }}
                   animate={{ y: [0, -2, 0] }}
-                  transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 2.8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 />
               )}
 
@@ -242,7 +249,11 @@ export default function AIAssistantDock() {
                     className="dbl-brand-icon"
                     // ✅ sparkle pulse
                     animate={hovered ? { scale: 1 } : { scale: [1, 1.06, 1] }}
-                    transition={hovered ? spring : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                    transition={
+                      hovered
+                        ? spring
+                        : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }
+                    }
                   >
                     <Sparkle size={22} weight="fill" />
                   </motion.div>
@@ -302,8 +313,6 @@ export default function AIAssistantDock() {
                       <ChatCircleDots size={21} weight="fill" />
                     </button>
                   </Tooltip>
-
-
                 </div>
               )}
             </motion.div>
@@ -318,17 +327,20 @@ export default function AIAssistantDock() {
           minimized={minimized}
           maximized={maximized}
           onMinimize={() => setMinimized(true)}
-          onMaximize={() => { setMaximized(true); setMinimized(false); }}
+          onMaximize={() => {
+            setMaximized(true);
+            setMinimized(false);
+          }}
           onRestore={() => setMaximized(false)}
           onClose={() => {
             setOpenBox(null);
             setMinimized(false);
             setMaximized(false);
           }}
-          userId={userId} // ✅ employee_id
+          userId={userId}
+          roleId={roleId}
         />
       )}
-
 
       {canUseTicketAI && (
         <TicketChatBox
@@ -343,8 +355,6 @@ export default function AIAssistantDock() {
           onOpenTickets={() => navigate(OPEN_TICKETS_PATH)}
         />
       )}
-
-
 
       {/* MINIMIZED PILL */}
       <AnimatePresence>

@@ -1,3 +1,4 @@
+
 import { TOKEN } from "../../../helper/constant";
 export type FuncMsg = { role: "user" | "model"; content: string };
 
@@ -5,25 +6,43 @@ type StreamArgs = {
   url: string;
   message: string;
   userId: string;
+  roleId?: number | string;
   conversationHistory: FuncMsg[];
   systemPrompt?: string;
-
-  // ✅ NEW (for asset mode)
-  mode?: "assets" | "sop";
+  mode?: "chat" | "assets" | "sop" | "employee";
   category?: string | null;
   isAdmin?: boolean;
 
-  // ✅ NEW (forward auth to backend -> backend forwards to asset API)
-  authToken?: string; // e.g. "Bearer <idToken>"
-
-  // NOTE: backend currently expects JSON only, so we won't send FormData
-  files?: File[]; // kept for future; ignored unless you upgrade backend
+  authToken?: string; // "Bearer <token>"
+  files?: File[];
   signal?: AbortSignal;
 
   onText: (chunk: string) => void;
   onDone: () => void;
   onError: (e: Error) => void;
 };
+
+function isMyAssetsIntent(text = "") {
+  const s = text.toLowerCase();
+  return (
+    s.includes("my asset") ||
+    s.includes("my assets") ||
+    s.includes("my laptop") ||
+    s.includes("my device") ||
+    s.includes("assigned to me") ||
+    s.includes("given to me") ||
+    s.includes("what assets do i have") ||
+    // Banglish
+    s.includes("amar asset") ||
+    s.includes("amar assets") ||
+    s.includes("amar kache ki ache") ||
+    s.includes("amar ki ki asset") ||
+    // Bangla
+    s.includes("আমার অ্যাসেট") ||
+    s.includes("আমার কাছে কি") ||
+    s.includes("আমাকে দেয়া")
+  );
+}
 
 function parseSseFrames(buffer: string): { events: string[]; rest: string } {
   const parts = buffer.split(/\n\n/);
@@ -49,14 +68,13 @@ export async function streamChatWithGemini(args: StreamArgs) {
     url,
     message,
     userId,
+    roleId,
     conversationHistory,
     systemPrompt,
-
     mode,
     category,
     isAdmin,
     authToken,
-
     files = [],
     signal,
     onText,
@@ -64,30 +82,47 @@ export async function streamChatWithGemini(args: StreamArgs) {
     onError,
   } = args;
 
+  const roleIdStr = roleId != null ? String(roleId) : "";
+  const effectiveMode = mode ?? "chat";
+
+  // ✅ Role 3 (Employee): only Chat + My Assets
+  if (roleIdStr === "3") {
+    if (effectiveMode === "assets") {
+      if (!isMyAssetsIntent(message)) {
+        onError(
+          new Error(
+            'Employees can only access "My Assets". Try: "my assets" / "amar asset".'
+          )
+        );
+        onDone();
+        return;
+      }
+    } else if (effectiveMode !== "chat") {
+      onError(new Error("Employees can use only Chat and My Assets."));
+      onDone();
+      return;
+    }
+  }
+
   try {
     const token = localStorage.getItem(TOKEN);
-
-    const bearer = authToken || (token ? `Bearer ${token}` : undefined);
+    const authHeader = authToken ?? (token ? `Bearer ${token}` : undefined);
 
     const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(token
-          ? {
-              Authorization: token, // ✅ raw
-              token: token, // ✅ many backends use this
-              "x-access-token": token, // ✅ common
-            }
-          : {}),
+        Accept: "text/event-stream",
+        ...(authHeader ? { Authorization: authHeader } : {}),
       },
       body: JSON.stringify({
         message,
         userId,
+        roleId: roleIdStr || null,
         conversationHistory: conversationHistory || [],
         systemPrompt,
-        mode,
-        category,
+        mode: effectiveMode,
+        category: category ?? null,
         isAdmin: !!isAdmin,
         hasFiles: files.length > 0,
         fileNames: files.map((f) => f.name),
@@ -124,10 +159,7 @@ export async function streamChatWithGemini(args: StreamArgs) {
           const dataStr = dataLines.join("\n");
 
           try {
-            const payload = JSON.parse(dataStr) as {
-              text?: string;
-              done?: boolean;
-            };
+            const payload = JSON.parse(dataStr) as { text?: string; done?: boolean };
 
             if (payload.text) onText(payload.text);
             if (payload.done) {

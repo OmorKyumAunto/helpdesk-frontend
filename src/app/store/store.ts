@@ -5,9 +5,11 @@ import modalSlice from "../slice/modalSlice";
 import themeSlice from "../slice/themeSlice";
 import { userApi } from "../api/userApi";
 import userSlice from "../features/userSlice";
+import chatReducer from "../../modules/chat/store/chatSlice"; // adjust path
 
 export const store = configureStore({
   reducer: {
+    chat: chatReducer, 
     [api.reducerPath]: api.reducer,
     [userApi.reducerPath]: userApi.reducer,
     themeSlice: themeSlice,

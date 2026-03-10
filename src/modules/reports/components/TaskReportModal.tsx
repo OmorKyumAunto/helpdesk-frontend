@@ -1,11 +1,25 @@
-import { SearchOutlined, FilterOutlined, ClearOutlined } from "@ant-design/icons";
-import { Col, DatePicker, Input, Row, Select, Card, Space, Button, Statistic, Badge } from "antd";
-import { useState, useEffect } from "react";
+import {
+  FilterOutlined,
+  ClearOutlined,
+  BarChartOutlined,
+} from "@ant-design/icons";
+import {
+  Col,
+  DatePicker,
+  Row,
+  Select,
+  Card,
+  Space,
+  Button,
+  Statistic,
+  Badge,
+  Typography,
+  Tag,
+} from "antd";
+import { useState, useEffect, useMemo } from "react";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { rangePreset } from "../../../common/rangePreset";
-import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
-import { useGetTicketReportQuery } from "../../ticket/api/ticketEndpoint";
 import {
   useGetAdminWiseUnitsQuery,
   useGetUnitsQuery,
@@ -14,15 +28,15 @@ import { UserList } from "../../Unit/types/unitTypes";
 import { useGetTaskReportQuery } from "../api/reportsEndPoints";
 import dayjs from "dayjs";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
-import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import Lottie from "lottie-react";
 import blueLoader from "../../../assets/blueloader.json";
+import TaskReportPDFDownload from "./TaskReportPDFDownload";
 
-const { Option } = Select;
+const { Text } = Typography;
 
 const TaskReportModal = () => {
   const [filter, setFilter] = useState<any>({});
-  const [listIds, setListIds] = useState([]);
+  const [listIds, setListIds] = useState<number[]>([]);
   const [isFilterExpanded, setIsFilterExpanded] = useState(true);
 
   useEffect(() => {
@@ -34,12 +48,27 @@ const TaskReportModal = () => {
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
+
   const { data: categoryData, isLoading: categoryLoading } =
     useGetTaskCategoryQuery();
+
+  const unitOption = useMemo(() => {
+    const unitOptionForAdmin = unitData?.data?.filter((unit: any) =>
+      profile?.data?.searchAccess?.some(
+        (item: any) => item?.unit_id === unit?.id
+      )
+    );
+
+    return profile?.data?.role_id === 2 || profile?.data?.role_id === 4
+      ? unitOptionForAdmin
+      : unitData?.data;
+  }, [unitData?.data, profile?.data?.searchAccess, profile?.data?.role_id]);
+
   const { data: allAdmin, isLoading: adminLoading } = useGetAdminWiseUnitsQuery(
     filter.unit_id || 0,
     { skip: !filter.unit_id }
   );
+
   const { data, isLoading, isFetching } = useGetTaskReportQuery({
     ...filter,
     category: listIds,
@@ -50,9 +79,112 @@ const TaskReportModal = () => {
     setListIds([]);
   };
 
-  const activeFilterCount = Object.keys(filter).filter(
-    key => filter[key] !== undefined && filter[key] !== null && filter[key] !== ''
-  ).length + (listIds.length > 0 ? 1 : 0);
+  const activeFilterCount =
+    Object.keys(filter).filter(
+      (key) =>
+        filter[key] !== undefined &&
+        filter[key] !== null &&
+        filter[key] !== ""
+    ).length + (listIds.length > 0 ? 1 : 0);
+
+  const taskList = data?.data || [];
+
+  const convertToMinutes = (value: number | string, format?: string) => {
+    const num = Number(value || 0);
+    if (format === "hours") return num * 60;
+    return num;
+  };
+
+  const formatMinutesToText = (totalMinutes: number) => {
+    if (!totalMinutes || totalMinutes <= 0) return "0 min";
+
+    const days = Math.floor(totalMinutes / (24 * 60));
+    const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+    const minutes = totalMinutes % 60;
+
+    const parts: string[] = [];
+    if (days > 0) parts.push(`${days} d`);
+    if (hours > 0) parts.push(`${hours} hr`);
+    if (minutes > 0) parts.push(`${minutes} min`);
+
+    return parts.join(" ");
+  };
+
+  const getDateTime = (date?: string | null, time?: string | null) => {
+    if (!date || !time) return null;
+    const datePart = dayjs(date).format("YYYY-MM-DD");
+    return dayjs(`${datePart} ${time}`, "YYYY-MM-DD HH:mm:ss");
+  };
+
+  const getTaskRequiredMinutes = (task: any) => {
+    const start = getDateTime(task.task_start_date, task.task_start_time);
+    const end = getDateTime(task.task_end_date, task.task_end_time);
+
+    if (!start || !end || !start.isValid() || !end.isValid()) return 0;
+
+    const diff = end.diff(start, "minute");
+    return diff > 0 ? diff : 0;
+  };
+
+  const getTaskOverdueMinutes = (task: any) => {
+    const start = getDateTime(task.task_start_date, task.task_start_time);
+    const end = getDateTime(task.task_end_date, task.task_end_time);
+
+    if (!start || !end || !start.isValid() || !end.isValid()) return null;
+
+    const completedMinutes = end.diff(start, "minute");
+    const slaMinutes = convertToMinutes(task.total_set_time, task.format);
+    const overdueMinutes = completedMinutes - slaMinutes;
+
+    return overdueMinutes > 0 ? overdueMinutes : 0;
+  };
+
+  const totalTasks = data?.count || data?.query_data?.total_count || 0;
+
+  const completedTaskList = taskList.filter(
+    (item: any) => item.task_status === "complete"
+  );
+
+  const completedTasks = completedTaskList.length;
+  const inProgressTasks = taskList.filter(
+    (item: any) => item.task_status === "inprogress"
+  ).length;
+  const incompleteTasks = taskList.filter(
+    (item: any) => item.task_status === "incomplete"
+  ).length;
+  const overdueTasks = taskList.filter((item: any) => item.overdue === 1).length;
+  const completedOnTimeTasks = completedTaskList.filter(
+    (item: any) => item.overdue === 0
+  ).length;
+
+  const totalSLAMinutes = completedTaskList.reduce((sum: number, task: any) => {
+    return sum + convertToMinutes(task.total_set_time, task.format);
+  }, 0);
+
+  const totalRequiredMinutes = completedTaskList.reduce(
+    (sum: number, task: any) => {
+      return sum + getTaskRequiredMinutes(task);
+    },
+    0
+  );
+
+  const totalSLABreakMinutes = Math.max(
+    totalRequiredMinutes - totalSLAMinutes,
+    0
+  );
+
+  const avgSLAMinutes =
+    completedTasks > 0 ? Math.floor(totalSLAMinutes / completedTasks) : 0;
+
+  const avgRequiredMinutes =
+    completedTasks > 0 ? Math.floor(totalRequiredMinutes / completedTasks) : 0;
+
+  const completionRate =
+    totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  const overdueRate =
+    totalTasks > 0 ? Math.round((overdueTasks / totalTasks) * 100) : 0;
+
   if (isLoading) {
     return (
       <div
@@ -74,64 +206,162 @@ const TaskReportModal = () => {
   }
 
   return (
-    <div style={{ padding: '8px' }}>
-      {/* Header Section with Stats */}
-      <Card 
-        bordered={false} 
-        style={{ 
-          marginBottom: 16,
-          background: 'linear-gradient(135deg, #01315bff 0%, #06afb8ff 100%)',
-          color: 'white'
+    <div
+      style={{
+        padding: "clamp(8px, 2vw, 16px)",
+        background: "#f5f5f5",
+      }}
+    >
+      {/* Header */}
+      <Card
+        bordered={false}
+        size="small"
+        style={{
+          marginBottom: 12,
+          borderRadius: 6,
+          boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
         }}
+        bodyStyle={{ padding: "clamp(12px, 2vw, 16px)" }}
       >
-        <Row gutter={[16, 16]} align="middle">
-          <Col xs={12} sm={12} md={8}>
-            <Statistic
-              title={<span style={{  color: 'rgba(255,255,255,0.85)', fontSize: '12px' }}>Total Tasks</span>}
-              value={data?.query_data?.total_count || 0}
-              valueStyle={{color: 'white', fontSize: 'clamp(20px, 5vw, 32px)', fontWeight: 600 }}
-            />
+        <Row gutter={[12, 12]} align="middle">
+          <Col xs={24} sm={24} md={16} lg={17} xl={18}>
+            <Row gutter={[12, 12]}>
+              <Col xs={8}>
+                <Statistic
+                  title={
+                    <span
+                      style={{
+                        fontSize: "clamp(10px, 1.5vw, 12px)",
+                        color: "#666",
+                      }}
+                    >
+                      Total Tasks
+                    </span>
+                  }
+                  value={totalTasks}
+                  valueStyle={{
+                    fontSize: "clamp(18px, 3vw, 24px)",
+                    fontWeight: 600,
+                    color: "#1890ff",
+                  }}
+                />
+              </Col>
+
+              <Col xs={8}>
+                <Statistic
+                  title={
+                    <span
+                      style={{
+                        fontSize: "clamp(10px, 1.5vw, 12px)",
+                        color: "#666",
+                      }}
+                    >
+                      Completed
+                    </span>
+                  }
+                  value={completedTasks}
+                  valueStyle={{
+                    fontSize: "clamp(18px, 3vw, 24px)",
+                    fontWeight: 600,
+                    color: "#52c41a",
+                  }}
+                />
+              </Col>
+
+              <Col xs={8}>
+                <Statistic
+                  title={
+                    <span
+                      style={{
+                        fontSize: "clamp(10px, 1.5vw, 12px)",
+                        color: "#666",
+                      }}
+                    >
+                      Completion Rate
+                    </span>
+                  }
+                  value={completionRate}
+                  suffix="%"
+                  valueStyle={{
+                    fontSize: "clamp(18px, 3vw, 24px)",
+                    fontWeight: 600,
+                    color: "#722ed1",
+                  }}
+                />
+              </Col>
+            </Row>
           </Col>
-          <Col xs={12} sm={12} md={8}>
-            <Statistic
-              title={<span style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px'}}>Active Filters</span>}
-              value={activeFilterCount}
-              valueStyle={{ color: 'white', fontSize: 'clamp(20px, 5vw, 32px)', fontWeight: 600}}
-              prefix={<FilterOutlined />}
-            />
-          </Col>
-          <Col xs={24} sm={24} md={8}>
-            <Space direction="vertical" size="small" style={{ width: '100%' }}>
-              <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: '14px' }}>Quick Actions</span>
-              <Space wrap>
-                <ExcelDownload
-                  isLoading={isLoading || isFetching}
-                  excelName={"Task Report"}
-                  excelTableHead={[
-                    "Category Title",
-                    "Description",
-                    "Set Time",
-                    "Total Set Time",
-                    "Format",
-                    "Start Date",
-                    "Start Time",
-                    "Task Code",
-                    "Task Status",
-                    "Starred",
-                    "Task Start Date",
-                    "Task End Date",
-                    "Task Start Time",
-                    "Task End Time",
-                    "Quantity",
-                    "User Name",
-                    "User Employee ID",
-                    "Created At",
-                    "Overdue",
-                  ]}
-                  excelData={
-                    data?.data?.length
-                      ? data?.data?.map(
-                          ({
+
+          <Col
+            xs={24}
+            sm={24}
+            md={8}
+            lg={7}
+            xl={6}
+            style={{
+              textAlign: typeof window !== "undefined" && window.innerWidth > 768 ? "right" : "center",
+            }}
+          >
+            <Space
+              wrap
+              size={[8, 8]}
+              style={{
+                width: "100%",
+                justifyContent:
+                  typeof window !== "undefined" && window.innerWidth > 768
+                    ? "flex-end"
+                    : "center",
+              }}
+            >
+              <ExcelDownload
+                isLoading={isLoading || isFetching}
+                excelName={"Task Report"}
+                excelTableHead={[
+                  "Category Title",
+                  "Description",
+                  "Set Time",
+                  "Total Set Time",
+                  "Format",
+                  "Start Date",
+                  "Start Time",
+                  "Task Code",
+                  "Task Status",
+                  "Task Start Date",
+                  "Task End Date",
+                  "Task Start Time",
+                  "Task End Time",
+                  "Quantity",
+                  "User Name",
+                  "User Employee ID",
+                  "Created At",
+                  "Overdue",
+                  "Overdue Time",
+                ]}
+                excelData={
+                  taskList.length
+                    ? taskList.map(
+                        ({
+                          category_title,
+                          description,
+                          set_time,
+                          total_set_time,
+                          format,
+                          start_date,
+                          start_time,
+                          task_code,
+                          task_status,
+                          task_start_date,
+                          task_end_date,
+                          task_start_time,
+                          task_end_time,
+                          quantity,
+                          user_name,
+                          user_employee_id,
+                          created_at,
+                          overdue,
+                          ...rest
+                        }: any) => {
+                          const task = {
                             category_title,
                             description,
                             set_time,
@@ -141,7 +371,6 @@ const TaskReportModal = () => {
                             start_time,
                             task_code,
                             task_status,
-                            starred,
                             task_start_date,
                             task_end_date,
                             task_start_time,
@@ -151,188 +380,485 @@ const TaskReportModal = () => {
                             user_employee_id,
                             created_at,
                             overdue,
-                          }: any) => {
-                            return {
-                              "Category Title": category_title,
-                              Description: description,
-                              "Set Time": set_time,
-                              "Total Set Time": total_set_time,
-                              Format: format,
-                              "Start Date": dayjs(start_date).format("DD-MM-YYYY"),
-                              "Start Time": start_time,
-                              "Task Code": task_code,
-                              "Task Status": task_status,
-                              Starred: starred,
-                              "Task Start Date":
-                                dayjs(task_start_date).format("DD-MM-YYYY"),
-                              "Task End Date":
-                                dayjs(task_end_date).format("DD-MM-YYYY"),
-                              "Task Start Time": task_start_time,
-                              "Task End Time": task_end_time,
-                              Quantity: quantity,
-                              "User Name": user_name,
-                              "User Employee ID": user_employee_id,
-                              "Created At": created_at,
-                              Overdue: overdue === 1 ? "Yes" : "No",
-                            };
-                          }
-                        )
-                      : []
-                  }
-                />
-                <PDFDownload
-                  PDFFileName="task_report_query_data"
-                  fileHeader="Task Report Query Data"
-                  PDFHeader={[
-                    "Searching Keyword",
-                    "Start Date",
-                    "End Date",
-                    "User Name",
-                    "Task Status",
-                    "Unit Name",
-                    "Overdue",
-                    "Total Count",
-                  ]}
-                  PDFData={{
-                    Key: data?.query_data?.key || "Not Applied",
-                    "Start Date": data?.query_data?.start_date
-                      ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
-                      : "Not Applied",
-                    "End Date": data?.query_data?.end_date
-                      ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
-                      : "not Applied",
-                    "User Name": data?.query_data?.user_name || "All",
-                    "Task Status": data?.query_data?.task_status || "All",
-                    "Unit Name": data?.query_data?.unit_name || "All",
-                    Overdue: data?.query_data?.overdue || "All",
-                    "Total Count": data?.query_data?.total_count || 0,
-                  }}
-                />
-              </Space>
+                            ...rest,
+                          };
+
+                          const overdueMinutes = getTaskOverdueMinutes(task);
+
+                          return {
+                            "Category Title": category_title,
+                            Description: description,
+                            "Set Time": set_time,
+                            "Total Set Time": total_set_time,
+                            Format: format,
+                            "Start Date": start_date
+                              ? dayjs(start_date).format("DD-MM-YYYY")
+                              : "N/A",
+                            "Start Time": start_time,
+                            "Task Code": task_code,
+                            "Task Status": task_status,
+                            "Task Start Date": task_start_date
+                              ? dayjs(task_start_date).format("DD-MM-YYYY")
+                              : "N/A",
+                            "Task End Date": task_end_date
+                              ? dayjs(task_end_date).format("DD-MM-YYYY")
+                              : "N/A",
+                            "Task Start Time": task_start_time,
+                            "Task End Time": task_end_time,
+                            Quantity: quantity,
+                            "User Name": user_name,
+                            "User Employee ID": user_employee_id,
+                            "Created At": created_at,
+                            Overdue: overdue === 1 ? "Yes" : "No",
+                            "Overdue Time":
+                              overdue === 1 && overdueMinutes !== null
+                                ? formatMinutesToText(overdueMinutes)
+                                : "N/A",
+                          };
+                        }
+                      )
+                    : []
+                }
+              />
+
+              <TaskReportPDFDownload
+                PDFFileName="task_report_query_data"
+                fileHeader="Task Report"
+                queryData={data?.query_data}
+                taskList={taskList}
+                PDFHeader={[
+                  "Start Date",
+                  "End Date",
+                  "User Name",
+                  "Task Status",
+                  "Unit Name",
+                  "Overdue",
+                  "Total Count",
+                ]}
+                PDFData={{
+                  "Start Date": data?.query_data?.start_date
+                    ? dayjs(data?.query_data?.start_date).format("DD-MM-YYYY")
+                    : "Not Applied",
+                  "End Date": data?.query_data?.end_date
+                    ? dayjs(data?.query_data?.end_date).format("DD-MM-YYYY")
+                    : "Not Applied",
+                  "User Name":
+                    data?.query_data?.employee_name ||
+                    data?.query_data?.user_name ||
+                    "All",
+                  "Task Status": data?.query_data?.task_status || "All",
+                  "Unit Name": data?.query_data?.unit_name || "All",
+                  Overdue:
+                    data?.query_data?.overdue === "1"
+                      ? "Yes"
+                      : data?.query_data?.overdue === "0"
+                      ? "No"
+                      : "All",
+                  "Total Count": totalTasks,
+                }}
+              />
             </Space>
           </Col>
         </Row>
       </Card>
 
-      {/* Filters Section */}
-      <Card 
+      {/* Status Cards */}
+      <Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
+        <Col xs={12} sm={12} md={12} lg={6}>
+          <Card
+            size="small"
+            bordered={false}
+            style={{
+              borderRadius: 6,
+              borderLeft: "3px solid #ff4d4f",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+              height: "100%",
+            }}
+            bodyStyle={{ padding: "clamp(10px, 2vw, 12px)" }}
+          >
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              <Text
+                type="secondary"
+                style={{
+                  fontSize: "clamp(10px, 1.5vw, 11px)",
+                  lineHeight: 1.3,
+                }}
+              >
+                Overdue Tasks
+              </Text>
+              <Text
+                strong
+                style={{
+                  fontSize: "clamp(16px, 3vw, 20px)",
+                  color: "#ff4d4f",
+                  lineHeight: 1.2,
+                }}
+              >
+                {overdueTasks}
+              </Text>
+            </Space>
+          </Card>
+        </Col>
+
+        <Col xs={12} sm={12} md={12} lg={6}>
+          <Card
+            size="small"
+            bordered={false}
+            style={{
+              borderRadius: 6,
+              borderLeft: "3px solid #faad14",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+              height: "100%",
+            }}
+            bodyStyle={{ padding: "clamp(10px, 2vw, 12px)" }}
+          >
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              <Text
+                type="secondary"
+                style={{
+                  fontSize: "clamp(10px, 1.5vw, 11px)",
+                  lineHeight: 1.3,
+                }}
+              >
+                In Progress
+              </Text>
+              <Text
+                strong
+                style={{
+                  fontSize: "clamp(16px, 3vw, 20px)",
+                  color: "#faad14",
+                  lineHeight: 1.2,
+                }}
+              >
+                {inProgressTasks}
+              </Text>
+            </Space>
+          </Card>
+        </Col>
+
+        <Col xs={12} sm={12} md={12} lg={6}>
+          <Card
+            size="small"
+            bordered={false}
+            style={{
+              borderRadius: 6,
+              borderLeft: "3px solid #1890ff",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+              height: "100%",
+            }}
+            bodyStyle={{ padding: "clamp(10px, 2vw, 12px)" }}
+          >
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              <Text
+                type="secondary"
+                style={{
+                  fontSize: "clamp(10px, 1.5vw, 11px)",
+                  lineHeight: 1.3,
+                }}
+              >
+                Incomplete
+              </Text>
+              <Text
+                strong
+                style={{
+                  fontSize: "clamp(16px, 3vw, 20px)",
+                  color: "#1890ff",
+                  lineHeight: 1.2,
+                }}
+              >
+                {incompleteTasks}
+              </Text>
+            </Space>
+          </Card>
+        </Col>
+
+        <Col xs={12} sm={12} md={12} lg={6}>
+          <Card
+            size="small"
+            bordered={false}
+            style={{
+              borderRadius: 6,
+              borderLeft: "3px solid #52c41a",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+              height: "100%",
+            }}
+            bodyStyle={{ padding: "clamp(10px, 2vw, 12px)" }}
+          >
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              <Text
+                type="secondary"
+                style={{
+                  fontSize: "clamp(10px, 1.5vw, 11px)",
+                  lineHeight: 1.3,
+                }}
+              >
+                Completed On Time
+              </Text>
+              <Text
+                strong
+                style={{
+                  fontSize: "clamp(16px, 3vw, 20px)",
+                  color: "#52c41a",
+                  lineHeight: 1.2,
+                }}
+              >
+                {completedOnTimeTasks}
+              </Text>
+            </Space>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Performance Metrics */}
+      <Card
+        size="small"
+        bordered={false}
         title={
-          <Space>
-            <FilterOutlined />
-            <span>Filters</span>
+          <Space size="small">
+            <BarChartOutlined style={{ fontSize: 14 }} />
+            <span
+              style={{
+                fontSize: "clamp(12px, 2vw, 14px)",
+                fontWeight: 600,
+              }}
+            >
+              Performance Metrics
+            </span>
+          </Space>
+        }
+        style={{
+          marginBottom: 12,
+          borderRadius: 6,
+          boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+        }}
+        bodyStyle={{ padding: "clamp(12px, 2vw, 16px)" }}
+      >
+        <Row gutter={[12, 12]}>
+          {[
+            {
+              title: "Total SLA Time",
+              value: formatMinutesToText(totalSLAMinutes),
+            },
+            {
+              title: "Required Total Time",
+              value: formatMinutesToText(totalRequiredMinutes),
+            },
+            {
+              title: "SLA Break Time",
+              value: formatMinutesToText(totalSLABreakMinutes),
+            },
+            {
+              title: "Avg SLA Per Task",
+              value: formatMinutesToText(avgSLAMinutes),
+            },
+            {
+              title: "Avg Required Time",
+              value: formatMinutesToText(avgRequiredMinutes),
+            },
+            {
+              title: "Overdue Rate",
+              value: `${overdueRate}%`,
+            },
+          ].map((item, idx) => (
+            <Col xs={12} sm={8} md={8} lg={8} xl={8} key={idx}>
+              <div
+                style={{
+                  background: "#fafafa",
+                  border: "1px solid #e8e8e8",
+                  borderRadius: 4,
+                  padding: "clamp(8px, 2vw, 12px)",
+                  textAlign: "center",
+                  minHeight: 72,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  wordBreak: "break-word",
+                }}
+              >
+                <Text
+                  type="secondary"
+                  style={{
+                    fontSize: "clamp(9px, 1.5vw, 11px)",
+                    display: "block",
+                    marginBottom: 4,
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {item.title}
+                </Text>
+                <Text
+                  strong
+                  style={{
+                    fontSize: "clamp(12px, 2vw, 14px)",
+                    color: "#262626",
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {item.value}
+                </Text>
+              </div>
+            </Col>
+          ))}
+        </Row>
+      </Card>
+
+      {/* Filters */}
+      <Card
+        size="small"
+        title={
+          <Space size="small">
+            <FilterOutlined style={{ fontSize: 14 }} />
+            <span
+              style={{
+                fontSize: "clamp(12px, 2vw, 14px)",
+                fontWeight: 600,
+              }}
+            >
+              Filters
+            </span>
             {activeFilterCount > 0 && (
-              <Badge count={activeFilterCount} style={{ backgroundColor: '#52c41a' }} />
+              <Badge
+                count={activeFilterCount}
+                style={{ backgroundColor: "#1890ff" }}
+              />
             )}
           </Space>
         }
         bordered={false}
         extra={
-          <Space>
+          <Space size={4} wrap>
             {activeFilterCount > 0 && (
-              <Button 
-                type="link" 
-                icon={<ClearOutlined />} 
+              <Button
+                type="text"
+                size="small"
+                icon={<ClearOutlined />}
                 onClick={clearAllFilters}
                 danger
+                style={{ fontSize: "clamp(11px, 1.5vw, 12px)" }}
               >
-                Clear All
+                <span
+                  style={{
+                    display:
+                      typeof window !== "undefined" && window.innerWidth > 480
+                        ? "inline"
+                        : "none",
+                  }}
+                >
+                  Clear
+                </span>
               </Button>
             )}
-            <Button 
-              type="text" 
+            <Button
+              type="text"
+              size="small"
               onClick={() => setIsFilterExpanded(!isFilterExpanded)}
+              style={{ fontSize: "clamp(11px, 1.5vw, 12px)" }}
             >
-              {isFilterExpanded ? 'Collapse' : 'Expand'}
+              {isFilterExpanded ? "Hide" : "Show"}
             </Button>
           </Space>
         }
-        style={{ marginBottom: 16 }}
+        style={{
+          marginBottom: 12,
+          borderRadius: 6,
+          boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+        }}
+        bodyStyle={{
+          padding: isFilterExpanded ? "clamp(12px, 2vw, 16px)" : 0,
+          display: isFilterExpanded ? "block" : "none",
+        }}
       >
-        {isFilterExpanded && (
-          <Row gutter={[16, 16]}>
-            {/* Search */}
-            <Col xs={24}>
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ fontWeight: 500, fontSize: '13px', color: '#666', display: 'block' }}>
-                  Search Tasks
-                </label>
-              </div>
-              <Input
-                size="large"
-                prefix={<SearchOutlined style={{ color: '#bfbfbf', fontSize: '16px' }} />}
-                onChange={(e) => setFilter({ ...filter, key: e.target.value })}
-                placeholder="Search tasks..."
-                allowClear
-                value={filter.key}
+        <Row gutter={[12, 12]}>
+          <Col xs={24} sm={12} md={8}>
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              <Text
                 style={{
-                  borderRadius: '8px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                  fontSize: "clamp(11px, 1.5vw, 12px)",
+                  fontWeight: 500,
+                  color: "#595959",
                 }}
-              />
-            </Col>
-
-            {/* Unit Selection */}
-            <Col xs={24} sm={12} lg={8}>
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ fontWeight: 500, fontSize: '13px', color: '#666', display: 'block' }}>
-                  Unit Name
-                </label>
-              </div>
+              >
+                Unit Name
+              </Text>
               <Select
-                size="large"
                 loading={unitIsLoading}
                 style={{ width: "100%" }}
-                placeholder="Select Unit Name"
+                placeholder="Select Unit"
                 showSearch
                 optionFilterProp="children"
-                onChange={(e) => setFilter({ ...filter, unit_id: e })}
-                options={unitData?.data?.map((unit: any) => ({
+                onChange={(e) => {
+                  setFilter({ ...filter, unit_id: e, user_id: undefined });
+                }}
+                options={unitOption?.map((unit: any) => ({
                   value: unit.id,
                   label: unit.title,
                 }))}
                 allowClear
                 value={filter.unit_id}
-                popupMatchSelectWidth={false}
               />
-            </Col>
+            </Space>
+          </Col>
 
-            {/* Admin Selection */}
-            <Col xs={24} sm={12} lg={8}>
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ fontWeight: 500, fontSize: '13px', color: '#666', display: 'block' }}>
-                  Admin
-                </label>
-              </div>
+          <Col xs={24} sm={12} md={8}>
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              <Text
+                style={{
+                  fontSize: "clamp(11px, 1.5vw, 12px)",
+                  fontWeight: 500,
+                  color: "#595959",
+                }}
+              >
+                Admin
+                {filter.unit_id && (
+                  <span style={{ color: "#ff4d4f", marginLeft: 4 }}>*</span>
+                )}
+              </Text>
               <Select
-                size="large"
                 loading={adminLoading}
-                placeholder="Search Admin"
+                placeholder={
+                  filter.unit_id ? "Select Admin (Required)" : "Select Admin"
+                }
                 showSearch
                 optionFilterProp="children"
                 filterOption={(input, option) =>
-                  (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                  String(option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
                 }
                 options={allAdmin?.data?.user_list?.map((item: UserList) => ({
                   value: item.user_id,
                   label: `[${item.employee_id}] ${item.name}`,
                 }))}
                 onChange={(e) => setFilter({ ...filter, user_id: e })}
-                allowClear
+                allowClear={!filter.unit_id}
                 style={{ width: "100%" }}
+                status={filter.unit_id && !filter.user_id ? "error" : undefined}
                 value={filter.user_id}
-                popupMatchSelectWidth={false}
+                disabled={!filter.unit_id}
               />
-            </Col>
+              {filter.unit_id && !filter.user_id && (
+                <Text
+                  type="danger"
+                  style={{ fontSize: "clamp(10px, 1.5vw, 11px)" }}
+                >
+                  Please select an admin
+                </Text>
+              )}
+            </Space>
+          </Col>
 
-            {/* Category - Multiple Select */}
-            <Col xs={24} sm={12} lg={8}>
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ fontWeight: 500, fontSize: '13px', color: '#666', display: 'block' }}>
-                  Category
-                </label>
-              </div>
+          <Col xs={24} sm={12} md={8}>
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              <Text
+                style={{
+                  fontSize: "clamp(11px, 1.5vw, 12px)",
+                  fontWeight: 500,
+                  color: "#595959",
+                }}
+              >
+                Category
+              </Text>
               <Select
-                size="large"
                 style={{ width: "100%" }}
                 mode="multiple"
                 loading={categoryLoading}
@@ -346,20 +872,23 @@ const TaskReportModal = () => {
                 }))}
                 allowClear
                 value={listIds}
-                popupMatchSelectWidth={false}
                 maxTagCount="responsive"
               />
-            </Col>
+            </Space>
+          </Col>
 
-            {/* Task Status */}
-            <Col xs={24} sm={12} lg={6}>
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ fontWeight: 500, fontSize: '13px', color: '#666', display: 'block' }}>
-                  Task Status
-                </label>
-              </div>
+          <Col xs={24} sm={12} md={8}>
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              <Text
+                style={{
+                  fontSize: "clamp(11px, 1.5vw, 12px)",
+                  fontWeight: 500,
+                  color: "#595959",
+                }}
+              >
+                Task Status
+              </Text>
               <Select
-                size="large"
                 allowClear
                 placeholder="Select Status"
                 style={{ width: "100%" }}
@@ -371,17 +900,21 @@ const TaskReportModal = () => {
                 ]}
                 value={filter.task_status}
               />
-            </Col>
+            </Space>
+          </Col>
 
-            {/* Overdue */}
-            <Col xs={24} sm={12} lg={6}>
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ fontWeight: 500, fontSize: '13px', color: '#666', display: 'block' }}>
-                  Overdue
-                </label>
-              </div>
+          <Col xs={24} sm={12} md={8}>
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              <Text
+                style={{
+                  fontSize: "clamp(11px, 1.5vw, 12px)",
+                  fontWeight: 500,
+                  color: "#595959",
+                }}
+              >
+                Overdue
+              </Text>
               <Select
-                size="large"
                 allowClear
                 placeholder="Select Overdue"
                 style={{ width: "100%" }}
@@ -393,20 +926,24 @@ const TaskReportModal = () => {
                 ]}
                 value={filter.overdue}
               />
-            </Col>
+            </Space>
+          </Col>
 
-            {/* Date Range */}
-           <Col xs={24} lg={12}>
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ fontWeight: 500, fontSize: '13px', color: '#666', display: 'block' }}>
-                  Date Range
-                </label>
-              </div>
+          <Col xs={24} sm={24} md={8}>
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              <Text
+                style={{
+                  fontSize: "clamp(11px, 1.5vw, 12px)",
+                  fontWeight: 500,
+                  color: "#595959",
+                }}
+              >
+                Date Range
+              </Text>
               <DatePicker.RangePicker
-                size="large"
                 presets={rangePreset}
                 style={{ width: "100%" }}
-                placeholder={['Start Date', 'End Date']}
+                placeholder={["Start Date", "End Date"]}
                 onChange={(_, e) =>
                   setFilter({
                     ...filter,
@@ -414,34 +951,158 @@ const TaskReportModal = () => {
                     end_date: e[1],
                   })
                 }
-                disabledDate={(current) => current && current > dayjs().endOf("day")}
+                value={
+                  filter.start_date && filter.end_date
+                    ? [dayjs(filter.start_date), dayjs(filter.end_date)]
+                    : undefined
+                }
+                disabledDate={(current) =>
+                  current && current > dayjs().endOf("day")
+                }
               />
-            </Col>
-          </Row>
-        )}
+            </Space>
+          </Col>
+        </Row>
       </Card>
 
-      {/* Applied Filters Summary */}
+      {/* Active Filters */}
       {activeFilterCount > 0 && (
-        <Card 
-          size="small" 
+        <Card
+          size="small"
           bordered={false}
-          style={{ 
-            marginBottom: 16, 
-            background: '#f0f9ff',
-            borderLeft: '3px solid #a8edea'
+          style={{
+            marginBottom: 12,
+            background: "#e6f7ff",
+            borderLeft: "3px solid #1890ff",
+            borderRadius: 6,
           }}
+          bodyStyle={{ padding: "clamp(8px, 2vw, 10px)" }}
         >
-          <Space wrap size="small">
-            <span style={{ fontWeight: 500, color: '#0891b2' }}>Active Filters:</span>
-            {filter.key && <Badge status="processing" text={`Search: "${filter.key}"`} />}
-            {filter.unit_id && <Badge status="processing" text="Unit Selected" />}
-            {filter.user_id && <Badge status="processing" text="Admin Selected" />}
-            {filter.start_date && <Badge status="processing" text="Date Range Applied" />}
-            {listIds.length > 0 && <Badge status="processing" text={`${listIds.length} Categories Selected`} />}
-            {filter.task_status && <Badge status="processing" text={`Status: ${filter.task_status}`} />}
-            {filter.overdue && <Badge status="processing" text={`Overdue: ${filter.overdue === '1' ? 'Yes' : 'No'}`} />}
+          <Space wrap size={[8, 4]}>
+            <Text
+              strong
+              style={{
+                fontSize: "clamp(11px, 1.5vw, 12px)",
+                color: "#0050b3",
+              }}
+            >
+              Active:
+            </Text>
+
+            {filter.unit_id && (
+              <Tag
+                color="blue"
+                style={{ fontSize: "clamp(10px, 1.5vw, 11px)", margin: 0 }}
+              >
+                Unit
+              </Tag>
+            )}
+
+            {filter.user_id && (
+              <Tag
+                color="blue"
+                style={{ fontSize: "clamp(10px, 1.5vw, 11px)", margin: 0 }}
+              >
+                Admin
+              </Tag>
+            )}
+
+            {listIds.length > 0 && (
+              <Tag
+                color="blue"
+                style={{ fontSize: "clamp(10px, 1.5vw, 11px)", margin: 0 }}
+              >
+                Category
+              </Tag>
+            )}
+
+            {filter.task_status && (
+              <Tag
+                color="blue"
+                style={{ fontSize: "clamp(10px, 1.5vw, 11px)", margin: 0 }}
+              >
+                Task Status
+              </Tag>
+            )}
+
+            {filter.overdue !== undefined && filter.overdue !== "" && (
+              <Tag
+                color="blue"
+                style={{ fontSize: "clamp(10px, 1.5vw, 11px)", margin: 0 }}
+              >
+                Overdue
+              </Tag>
+            )}
+
+            {filter.start_date && (
+              <Tag
+                color="blue"
+                style={{ fontSize: "clamp(10px, 1.5vw, 11px)", margin: 0 }}
+              >
+                Date Range
+              </Tag>
+            )}
           </Space>
+        </Card>
+      )}
+
+      {/* Report Info Footer */}
+      {data?.query_data && (
+        <Card
+          size="small"
+          bordered={false}
+          style={{
+            borderRadius: 6,
+            boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+          }}
+          bodyStyle={{ padding: "clamp(12px, 2vw, 16px)" }}
+        >
+          <Row gutter={[12, 8]}>
+            <Col xs={24} sm={8}>
+              <Space direction="vertical" size={2}>
+                <Text
+                  type="secondary"
+                  style={{ fontSize: "clamp(10px, 1.5vw, 11px)" }}
+                >
+                  Report For
+                </Text>
+                <Text
+                  strong
+                  style={{
+                    fontSize: "clamp(12px, 2vw, 13px)",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {data.query_data.unit_name || "N/A"}
+                </Text>
+              </Space>
+            </Col>
+
+            <Col xs={24} sm={8}>
+              <Space direction="vertical" size={2}>
+                <Text
+                  type="secondary"
+                  style={{ fontSize: "clamp(10px, 1.5vw, 11px)" }}
+                >
+                  Employee
+                </Text>
+                <Text
+                  strong
+                  style={{
+                    fontSize: "clamp(12px, 2vw, 13px)",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {data.query_data.employee_name
+                    ? `${data.query_data.employee_name} (${
+                        data.query_data.employee_id || ""
+                      })`
+                    : "N/A"}
+                </Text>
+              </Space>
+            </Col>
+
+          </Row>
         </Card>
       )}
     </div>
