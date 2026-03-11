@@ -39,8 +39,6 @@ import { useGetMeQuery } from "../../app/api/userApi";
 import logo from "../../assets/logo.png";
 import { roleID } from "../../utils/helper";
 import AIAssistantDock from "../../modules/aiassistant/AIAssistantDock";
-// ── CHANGE 1: import chat inbox hook ──────────────────────────────────────────
-import { useGetChatInboxQuery } from "../../modules/chat/api/chatEndPoints";
 
 const { useBreakpoint } = Grid;
 const { Header, Sider, Content } = Layout;
@@ -171,15 +169,7 @@ export const AppLayout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const employee_id = profile?.data?.employee_id;
-  const { data: chatInboxRes } = useGetChatInboxQuery(undefined, {
-    pollingInterval: 5000,
-    refetchOnFocus: true,
-    refetchOnReconnect: true,
-  });
-  const totalUnread = (chatInboxRes?.data || []).reduce(
-    (sum: number, c: any) => sum + Number(c.unread_count || 0),
-    0,
-  );
+ 
 
   const memoizedMenuItems = useMemo(
     () => menuItems(profile?.data, roleId as number),
