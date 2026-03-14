@@ -39,6 +39,8 @@ import { useGetMeQuery } from "../../app/api/userApi";
 import logo from "../../assets/logo.png";
 import { roleID } from "../../utils/helper";
 import AIAssistantDock from "../../modules/aiassistant/AIAssistantDock";
+// ── CHANGE 1: import chat inbox hook ──────────────────────────────────────────
+import { useGetChatInboxQuery } from "../../modules/chat/api/chatEndPoints";
 
 const { useBreakpoint } = Grid;
 const { Header, Sider, Content } = Layout;
@@ -169,7 +171,15 @@ export const AppLayout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const employee_id = profile?.data?.employee_id;
- 
+  // const { data: chatInboxRes } = useGetChatInboxQuery(undefined, {
+  //   pollingInterval: 5000,
+  //   refetchOnFocus: true,
+  //   refetchOnReconnect: true,
+  // });
+  // const totalUnread = (chatInboxRes?.data || []).reduce(
+  //   (sum: number, c: any) => sum + Number(c.unread_count || 0),
+  //   0,
+  // );
 
   const memoizedMenuItems = useMemo(
     () => menuItems(profile?.data, roleId as number),
@@ -724,7 +734,62 @@ export const AppLayout = () => {
                   </Link>
                 ))}
 
-              
+              {/* <Tooltip
+                title={
+                  totalUnread > 0
+                    ? `${totalUnread} unread message${totalUnread > 1 ? "s" : ""}`
+                    : "Open Messenger"
+                }
+              >
+                <button
+                  onClick={openMessenger}
+                  style={professionalStyles.messengerButton}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-1px)";
+                    e.currentTarget.style.boxShadow =
+                      "0 6px 18px rgba(79, 70, 229, 0.38)";
+                    e.currentTarget.style.opacity = "0.92";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 12px rgba(79, 70, 229, 0.28)";
+                    e.currentTarget.style.opacity = "1";
+                  }}
+                >
+                  <MessageOutlined style={{ fontSize: 14 }} />
+                  <span style={{ display: gridBreak.xs ? "none" : "inline" }}>
+                    Messenger
+                  </span>
+
+                  {totalUnread > 0 && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: -6,
+                        right: -6,
+                        minWidth: 17,
+                        height: 17,
+                        borderRadius: "99px",
+                        background: "#ef4444",
+                        color: "#fff",
+                        fontSize: 9,
+                        fontWeight: 700,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "0 3px",
+                        border: "2px solid #fff",
+                        boxShadow: "0 2px 6px rgba(239,68,68,.5)",
+                        lineHeight: 1,
+                        animation: "unreadPulse 2s ease-in-out infinite",
+                      }}
+                    >
+                      {totalUnread > 99 ? "99+" : totalUnread}
+                    </span>
+                  )}
+                </button>
+              </Tooltip> */}
             </Space>
 
             <Space size={4} align="center">
