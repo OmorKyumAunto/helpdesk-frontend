@@ -1064,26 +1064,6 @@ const TicketReportModal = () => {
                 </Text>
               </Space>
             </Col>
-
-            <Col xs={24} sm={8}>
-              <Space direction="vertical" size={2}>
-                <Text
-                  type="secondary"
-                  style={{ fontSize: "clamp(10px, 1.5vw, 11px)" }}
-                >
-                  Department
-                </Text>
-                <Text
-                  strong
-                  style={{
-                    fontSize: "clamp(12px, 2vw, 13px)",
-                    wordBreak: "break-word",
-                  }}
-                >
-                  {data.query_data.report_generate_department || "N/A"}
-                </Text>
-              </Space>
-            </Col>
           </Row>
         </Card>
       )}

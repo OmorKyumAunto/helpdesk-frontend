@@ -479,16 +479,7 @@ const TicketReportPDFDownload: React.FC<Props> = ({
       15,
       infoY
     );
-    doc.text(
-      `Designation: ${report_generate_designation || "N/A"}`,
-      15,
-      infoY + 4.5
-    );
-    doc.text(
-      `Department: ${report_generate_department || "N/A"}`,
-      15,
-      infoY + 9
-    );
+    
     doc.text(`Unit: ${unit_name || "All Units"}`, pageWidth / 2 + 10, infoY);
     doc.text(
       `Date Range: ${PDFData["Start Date"] || "N/A"} to ${
