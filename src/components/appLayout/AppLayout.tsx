@@ -195,7 +195,16 @@ export const AppLayout = () => {
         fontSize: "0.875rem",
       }}
     >
-      <Menu.Item key="1" icon={<BiSolidFilePdf color="#E03C31" size={20} />}>
+    <Menu.Item key="1" icon={<BiSolidFilePdf color="#E03C31" size={20} />}>
+        <a
+          href="https://www.dropbox.com/scl/fi/bni3wa8k2qttj85ol2cx3/Helpdesk-AI_overview.pdf?rlkey=y4431vrnuurcpwfxyk2qkmiub&st=vx4pjuhb&raw=1"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Helpdesk AI Overview
+        </a>
+      </Menu.Item>
+      <Menu.Item key="2" icon={<BiSolidFilePdf color="#E03C31" size={20} />}>
         <a
           href="https://www.dropbox.com/scl/fi/xezlzy76ejnszoj7zah9a/System-Overview.pdf?rlkey=j16ellbggvjv4g6hpdhz63ksb&st=5weqe9nj&raw=1"
           target="_blank"
@@ -204,7 +213,7 @@ export const AppLayout = () => {
           System Overview
         </a>
       </Menu.Item>
-      <Menu.Item key="2" icon={<BiSolidFilePdf color="#E03C31" size={20} />}>
+      <Menu.Item key="3" icon={<BiSolidFilePdf color="#E03C31" size={20} />}>
         <a
           href="https://www.dropbox.com/scl/fi/qohmr0km29jnbdjmbtxrl/Ticket-Raise-Process.pdf?rlkey=qn4vrnmxq3cy8uhg3y2sh5jqo&st=cx5r02qk&raw=1"
           target="_blank"
@@ -213,7 +222,7 @@ export const AppLayout = () => {
           Ticketing Guide
         </a>
       </Menu.Item>
-      <Menu.Item key="3" icon={<BiSolidFilePdf color="#E03C31" size={20} />}>
+      <Menu.Item key="4" icon={<BiSolidFilePdf color="#E03C31" size={20} />}>
         <a
           href="https://www.dropbox.com/scl/fi/2oqld6escz4faz61e363n/Profile-Update.pdf?rlkey=qn4vrnmxq3cy8uhg3y2sh5jqo&st=l8rjrhe1&raw=1"
           target="_blank"
