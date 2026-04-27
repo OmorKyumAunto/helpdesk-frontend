@@ -23,21 +23,22 @@ import {
   X,
   Microphone,
   Stop,
+  Translate,
 } from "@phosphor-icons/react";
 import { httpsCallable, getFunctions } from "firebase/functions";
 import Lottie from "lottie-react";
 import { AnimatePresence, motion, useReducedMotion, useAnimationControls } from "framer-motion";
 
 import aiListenerAnim from "../../assets/ailistener.json";
-import SadAnimation from "../../assets/sadloader.json"; // adjust path if needed
+import SadAnimation from "../../assets/sadloader.json";
 import { app } from "../../firebase";
 import { useGetCategoryActiveListQuery } from "../Category/api/categoryEndPoint";
 import { useCreateRaiseTicketMutation } from "../ticket/api/ticketEndpoint";
 
-import { useAppDispatch } from "../../app/store/store"; // adjust path if needed
-import { setCommonModal } from "../../app/slice/modalSlice"; // adjust path if needed
-import { useGetMeQuery } from "../../app/api/userApi"; // adjust path if needed
-import SeatingLocationModal from "../employee/components/SeatingLocationModal"; // adjust path if needed
+import { useAppDispatch } from "../../app/store/store";
+import { setCommonModal } from "../../app/slice/modalSlice";
+import { useGetMeQuery } from "../../app/api/userApi";
+import SeatingLocationModal from "../employee/components/SeatingLocationModal";
 
 import {
   loadCategoryCache,
@@ -57,8 +58,39 @@ type AnalyzeResult = {
   description: string;
 };
 
+type VoiceLang = "en-US" | "bn-BD";
+
+const LANG_CONFIG: Record<VoiceLang, { label: string; placeholder: string }> = {
+  "en-US": {
+    label: "EN",
+    placeholder: "Example: VPN not connecting since morning. Error: Authentication failed...",
+  },
+  "bn-BD": {
+    label: "বাং",
+    placeholder: "বাংলায় বলুন বা লিখুন। পরে Translate to English চাপুন।",
+  },
+};
+
 function toPlainText(text: string) {
   return (text || "").replace(/\s+/g, " ").trim();
+}
+
+async function googleTranslate(text: string, sl = "bn", tl = "en"): Promise<string> {
+  const url =
+    `https://translate.googleapis.com/translate_a/single` +
+    `?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`;
+
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+  const data: any = await res.json();
+  const translated: string = (data[0] as any[])
+    .map((chunk: any) => chunk?.[0] ?? "")
+    .join("")
+    .trim();
+
+  if (!translated) throw new Error("Empty response");
+  return translated;
 }
 
 const PRIORITY_OPTIONS = ["low", "medium", "high", "urgent"] as const;
@@ -80,7 +112,6 @@ const UNDO_SECONDS = 5;
 const SPRING = { type: "spring", stiffness: 420, damping: 34, mass: 0.9 } as const;
 const SPRING_SOFT = { type: "spring", stiffness: 320, damping: 32, mass: 1 } as const;
 
-/** --- Web Speech API types (no extra deps) --- */
 type SpeechRecognitionLike = {
   lang: string;
   continuous: boolean;
@@ -117,9 +148,9 @@ export default function TicketChatBox({
 }) {
   const reduceMotion = useReducedMotion();
 
-  // ✅ Seating location modal integration
   const dispatch = useAppDispatch();
   const { data: { data: profile } = {} } = useGetMeQuery();
+
   const [seatErrorVisible, setSeatErrorVisible] = useState(false);
   const [seatCountdown, setSeatCountdown] = useState(3);
   const seatTimerRef = useRef<number | null>(null);
@@ -127,7 +158,6 @@ export default function TicketChatBox({
   const [issue, setIssue] = useState("");
   const [analysis, setAnalysis] = useState<AnalyzeResult | null>(null);
 
-  // review fields (editable)
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [priority, setPriority] = useState<Priority>("medium");
   const [subject, setSubject] = useState("");
@@ -136,7 +166,6 @@ export default function TicketChatBox({
   const [analyzing, setAnalyzing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // undo timer
   const [undoSec, setUndoSec] = useState<number | null>(null);
   const [undoProgress, setUndoProgress] = useState<number>(0);
   const undoEndAtRef = useRef<number | null>(null);
@@ -147,8 +176,8 @@ export default function TicketChatBox({
 
   const [createTicket] = useCreateRaiseTicketMutation();
 
-  // ✅ zoom in/out controls for cards
   const cardsControls = useAnimationControls();
+
   const pulseCards = async () => {
     if (reduceMotion) return;
     await cardsControls.start({
@@ -157,7 +186,6 @@ export default function TicketChatBox({
     });
   };
 
-  // ---------- categories dynamic (with cache) ----------
   const cached = useMemo(() => loadCategoryCache(), []);
   const hasCached = !!cached?.length;
   const { data: categoryData } = useGetCategoryActiveListQuery({}, { skip: hasCached });
@@ -169,19 +197,14 @@ export default function TicketChatBox({
 
   useEffect(() => {
     if (!hasCached && categories.length) saveCategoryCache(categories);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryData]);
 
   const categoryTitlesForAI = useMemo(() => categories.map((c) => c.title), [categories]);
-
-  // ✅ Smart: suppress voice "stopped" toast when we intentionally stop it (Analyze/Close/Clear/etc.)
-  const suppressVoiceEndToastRef = useRef(false);
 
   const clearTimers = () => {
     if (submitTimeoutRef.current) window.clearTimeout(submitTimeoutRef.current);
     if (countdownRef.current) window.clearInterval(countdownRef.current);
     if (progressRef.current) window.clearInterval(progressRef.current);
-
     if (seatTimerRef.current) window.clearTimeout(seatTimerRef.current);
 
     submitTimeoutRef.current = null;
@@ -194,20 +217,29 @@ export default function TicketChatBox({
     setUndoProgress(0);
   };
 
-  // ✅ cleanup on unmount (prevents zombie submit)
   useEffect(() => {
     return () => clearTimers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // -------------------- ✅ Voice Input --------------------
+  // -------------------- Voice + Bangla Translate --------------------
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
-  const voiceBaseTextRef = useRef<string>(""); // text that existed before current listen session
+  const voiceBaseTextRef = useRef("");
+  const suppressVoiceEndToastRef = useRef(false);
+  const listeningRef = useRef(false);
+
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [listening, setListening] = useState(false);
+  const [voiceLang, setVoiceLang] = useState<VoiceLang>("en-US");
+
+  const [translating, setTranslating] = useState(false);
+  const [lastTranslated, setLastTranslated] = useState<string | null>(null);
+
+  const setLive = (v: boolean) => {
+    listeningRef.current = v;
+    setListening(v);
+  };
 
   const stopVoice = () => {
-    // we might call stopVoice even when listening state is stale
     try {
       recognitionRef.current?.stop();
     } catch {}
@@ -220,16 +252,42 @@ export default function TicketChatBox({
     if (!Ctor) return;
 
     const rec: SpeechRecognitionLike = new Ctor();
-    rec.lang = "en-US"; // change if you want (e.g. "bn-BD")
+    rec.lang = voiceLang;
     rec.continuous = true;
     rec.interimResults = true;
     rec.maxAlternatives = 1;
 
-    rec.onstart = () => setListening(true);
+    rec.onstart = () => setLive(true);
 
-    // ✅ Smart feedback: toast only when it stops automatically, not when we intentionally stop it
+    rec.onresult = (event: any) => {
+      let finalText = "";
+      let interimText = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const res = event.results[i];
+        const txt = res?.[0]?.transcript ?? "";
+
+        if (res.isFinal) finalText += txt;
+        else interimText += txt;
+      }
+
+      if (finalText) {
+        voiceBaseTextRef.current = toPlainText(`${voiceBaseTextRef.current} ${finalText}`);
+      }
+
+      const combined = toPlainText(`${voiceBaseTextRef.current} ${interimText}`);
+      setIssue(combined);
+    };
+
     rec.onend = () => {
-      setListening(false);
+      if (listeningRef.current && !suppressVoiceEndToastRef.current) {
+        try {
+          rec.start();
+        } catch {}
+        return;
+      }
+
+      setLive(false);
 
       if (suppressVoiceEndToastRef.current) {
         suppressVoiceEndToastRef.current = false;
@@ -240,80 +298,114 @@ export default function TicketChatBox({
     };
 
     rec.onerror = (e: any) => {
-      setListening(false);
       const code = e?.error || "unknown";
+
+      if (code === "no-speech") return;
+
+      setLive(false);
+
       if (code === "not-allowed" || code === "service-not-allowed") {
         antdMsg.error("Microphone permission denied. Please allow mic access in the browser.");
-      } else if (code === "no-speech") {
-        antdMsg.info("No speech detected.");
       } else {
         antdMsg.error(`Voice input error: ${code}`);
       }
     };
 
-    rec.onresult = (event: any) => {
-      let finalText = "";
-      let interimText = "";
-
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const res = event.results[i];
-        const txt = res?.[0]?.transcript ?? "";
-        if (res.isFinal) finalText += txt;
-        else interimText += txt;
-      }
-
-      const base = voiceBaseTextRef.current || "";
-      const combined = toPlainText(`${base} ${finalText} ${interimText}`);
-      setIssue(combined);
-    };
-
     recognitionRef.current = rec;
 
     return () => {
+      suppressVoiceEndToastRef.current = true;
+
       try {
-        rec.onstart = null;
-        rec.onend = null;
-        rec.onerror = null;
-        rec.onresult = null;
         rec.abort();
       } catch {}
+
+      rec.onstart = null;
+      rec.onend = null;
+      rec.onerror = null;
+      rec.onresult = null;
+
       recognitionRef.current = null;
     };
-  }, []);
+  }, [voiceLang]);
 
   const startVoice = () => {
     if (!voiceSupported) return antdMsg.warning("Voice input is not supported in this browser.");
-    if (listening) return;
+    if (listeningRef.current) return;
 
     voiceBaseTextRef.current = issue.trim();
 
+    if (recognitionRef.current) recognitionRef.current.lang = voiceLang;
+
     try {
       recognitionRef.current?.start();
+      antdMsg.info(`Voice started — speak in ${voiceLang === "bn-BD" ? "বাংলা" : "English"}`);
     } catch {
       antdMsg.error("Could not start microphone. Try again.");
     }
   };
 
   const toggleVoice = () => {
-    if (listening) stopVoice();
-    else startVoice();
+    if (listeningRef.current) {
+      suppressVoiceEndToastRef.current = true;
+      setLive(false);
+      stopVoice();
+    } else {
+      startVoice();
+    }
   };
 
-  // Stop mic when modal closes/minimized (silent)
+  const handleLangChange = (lang: VoiceLang) => {
+    if (listeningRef.current) return;
+    setVoiceLang(lang);
+    if (lang === "bn-BD") setLastTranslated(null);
+  };
+
+  const handleTranslateToEnglish = async () => {
+    const text = issue.trim();
+    if (text.length < 3) return antdMsg.warning("Write or speak some Bangla text first.");
+
+    setTranslating(true);
+
+    try {
+      if (listeningRef.current) {
+        suppressVoiceEndToastRef.current = true;
+        setLive(false);
+        stopVoice();
+      }
+
+      const translated = await googleTranslate(text, "bn", "en");
+
+      setIssue(translated);
+      setDescriptionText((prev) => (prev.trim() ? prev : translated));
+      voiceBaseTextRef.current = translated;
+      setVoiceLang("en-US");
+      setLastTranslated(new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }));
+
+      antdMsg.success("Translated to English.");
+    } catch (e: any) {
+      antdMsg.error(`Translation failed: ${e?.message || "network error"}`);
+    } finally {
+      setTranslating(false);
+    }
+  };
+
   useEffect(() => {
     if (!open || minimized) {
       suppressVoiceEndToastRef.current = true;
+      setLive(false);
       stopVoice();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, minimized]);
+
+  const showTranslateBar = voiceLang === "bn-BD" && issue.trim().length >= 3;
   // --------------------------------------------------------
 
   const resetAll = async () => {
     clearTimers();
 
-    // silent stop
     suppressVoiceEndToastRef.current = true;
+    setLive(false);
     stopVoice();
 
     setIssue("");
@@ -322,6 +414,10 @@ export default function TicketChatBox({
     setPriority("medium");
     setSubject("");
     setDescriptionText("");
+    setVoiceLang("en-US");
+    setLastTranslated(null);
+    voiceBaseTextRef.current = "";
+
     await pulseCards();
   };
 
@@ -330,7 +426,6 @@ export default function TicketChatBox({
     antdMsg.info("Submission canceled.");
   };
 
-  // ✅ Seating error countdown → open seating location modal
   useEffect(() => {
     if (!seatErrorVisible) return;
 
@@ -358,9 +453,9 @@ export default function TicketChatBox({
   }, [seatErrorVisible, seatCountdown, dispatch, profile]);
 
   const runAnalyze = async () => {
-    // ✅ stop voice automatically when analyzing (silent)
-    if (listening) {
+    if (listeningRef.current) {
       suppressVoiceEndToastRef.current = true;
+      setLive(false);
       stopVoice();
     }
 
@@ -368,6 +463,7 @@ export default function TicketChatBox({
     if (!categoryTitlesForAI.length) return antdMsg.warning("Categories not loaded yet.");
 
     setAnalyzing(true);
+
     try {
       const fn = httpsCallable(getFunctions(app), "analyzeTicketWithGemini");
       const res = await fn({ transcript: issue, categories: categoryTitlesForAI });
@@ -419,6 +515,7 @@ export default function TicketChatBox({
     submitTimeoutRef.current = window.setTimeout(async () => {
       clearTimers();
       setSubmitting(true);
+
       try {
         const fd = new FormData();
         fd.append("category_id", String(categoryId));
@@ -432,10 +529,7 @@ export default function TicketChatBox({
       } catch (e: any) {
         const msg = e?.data?.message || e?.message || "Submit failed";
 
-        if (
-          msg ===
-          "Your seating location has not been updated. Please update your current seating location."
-        ) {
+        if (msg === "Your seating location has not been updated. Please update your current seating location.") {
           setSeatErrorVisible(true);
           setSeatCountdown(3);
           return;
@@ -461,8 +555,8 @@ export default function TicketChatBox({
   const closeAll = () => {
     clearTimers();
 
-    // silent stop
     suppressVoiceEndToastRef.current = true;
+    setLive(false);
     stopVoice();
 
     onClose();
@@ -479,9 +573,13 @@ export default function TicketChatBox({
     descriptionText.trim().length > 0 ||
     categoryId !== null;
 
+  const langCfg = LANG_CONFIG[voiceLang];
+
   return (
     <>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700;800&display=swap');
+
         .dblTicketModal .ant-modal-content,
         .dblTicketModal .ant-modal-header,
         .dblTicketModal .ant-modal-body,
@@ -577,12 +675,6 @@ export default function TicketChatBox({
           align-items:center;
           gap: 8px;
           box-shadow: 0 10px 28px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.65);
-          transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
-        }
-        .dblTicketPillBtn.ant-btn:hover{
-          transform: translateY(-1px);
-          background: rgba(255,255,255,0.78) !important;
-          box-shadow: 0 16px 36px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.70);
         }
 
         .dblTicketIconBtn.ant-btn{
@@ -596,26 +688,54 @@ export default function TicketChatBox({
           display:flex;
           align-items:center;
           justify-content:center;
-          transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
-        }
-        .dblTicketIconBtn.ant-btn:hover{
-          transform: translateY(-1px);
-          background: rgba(255,255,255,0.78) !important;
-          box-shadow: 0 16px 36px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.70);
         }
 
-        /* ✅ STOP state = RED */
-        .dblTicketIconBtnStop.ant-btn{
-          background: rgba(239,68,68,0.18) !important;
-          border-color: rgba(239,68,68,0.40) !important;
-          color: rgba(185,28,28,0.95) !important;
-          box-shadow: 0 10px 28px rgba(239,68,68,0.14), inset 0 1px 0 rgba(255,255,255,0.55);
+        .dblLangToggle{
+          display:inline-flex;
+          border-radius:999px;
+          overflow:hidden;
+          border:1px solid rgba(16,185,129,0.36);
+          background:rgba(255,255,255,0.68);
+          height:38px;
         }
-        .dblTicketIconBtnStop.ant-btn:hover{
-          background: rgba(239,68,68,0.26) !important;
-          border-color: rgba(239,68,68,0.55) !important;
-          transform: translateY(-1px);
-          box-shadow: 0 16px 36px rgba(239,68,68,0.18), inset 0 1px 0 rgba(255,255,255,0.60);
+
+        .dblLangBtn{
+          border:0;
+          padding:0 12px;
+          font-weight:950;
+          font-size:12px;
+          cursor:pointer;
+          background:transparent;
+          color:#059669;
+        }
+
+        .dblLangBtnActive{
+          background:linear-gradient(135deg,#10b981,#059669);
+          color:#fff;
+        }
+
+        .dblVoiceBtn.ant-btn{
+          height:38px;
+          border-radius:999px !important;
+          font-weight:950;
+          border:1px solid rgba(16,185,129,0.35) !important;
+          background:rgba(16,185,129,0.12) !important;
+          color:#047857 !important;
+          display:flex;
+          align-items:center;
+          gap:7px;
+        }
+
+        .dblVoiceBtnStop.ant-btn{
+          height:38px;
+          border-radius:999px !important;
+          font-weight:950;
+          border:1px solid rgba(239,68,68,0.45) !important;
+          background:rgba(239,68,68,0.14) !important;
+          color:#b91c1c !important;
+          display:flex;
+          align-items:center;
+          gap:7px;
         }
 
         .dblTicketBody{
@@ -660,13 +780,6 @@ export default function TicketChatBox({
           justify-content:center;
           gap: 10px;
           padding: 0 16px;
-          transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease, background 180ms ease;
-        }
-        .dblPrimaryBtn.ant-btn:hover{
-          transform: translateY(-2px);
-          filter: saturate(1.03) brightness(1.03);
-          background: linear-gradient(135deg,#2563eb,#1d4ed8);
-          box-shadow: 0 22px 56px rgba(59,130,246,0.32), inset 0 1px 0 rgba(255,255,255,0.38);
         }
 
         .dblSoftBtn.ant-btn{
@@ -688,6 +801,25 @@ export default function TicketChatBox({
           border-radius: 14px !important;
         }
 
+        .dblBnTextArea textarea{
+          font-family: 'Noto Sans Bengali', sans-serif !important;
+          font-size: 14px !important;
+          line-height: 1.9 !important;
+        }
+
+        .dblTranslateBar{
+          margin-top:10px;
+          border-radius:14px;
+          border:1px solid rgba(67,56,202,0.18);
+          background:linear-gradient(135deg,#EEF2FF,#F8FAFC);
+          padding:10px 12px;
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:10px;
+          flex-wrap:wrap;
+        }
+
         .dblAnalyzeOverlay{
           position: absolute;
           inset: 0;
@@ -699,6 +831,7 @@ export default function TicketChatBox({
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
         }
+
         .dblAnalyzePanel{
           width: min(420px, 92vw);
           border-radius: 22px;
@@ -708,12 +841,14 @@ export default function TicketChatBox({
           box-shadow: 0 32px 90px rgba(0,0,0,0.36), inset 0 1px 0 rgba(255,255,255,0.35);
           text-align: center;
         }
+
         .dblAnalyzeTitle{
           margin-top: 8px;
           font-weight: 950;
           color: rgba(255,255,255,0.95);
           font-size: 14px;
         }
+
         .dblAnalyzeSub{
           margin-top: 4px;
           font-weight: 800;
@@ -724,6 +859,7 @@ export default function TicketChatBox({
         @media (max-width: 860px){
           .dblGrid{ grid-template-columns: 1fr; }
         }
+
         @media (max-width: 520px){
           .dblBtnText{ display:none; }
           .dblTicketSub{ max-width: 220px; }
@@ -743,7 +879,6 @@ export default function TicketChatBox({
         destroyOnClose
       >
         <div className="dblTicketFrame">
-          {/* analyzing overlay */}
           <AnimatePresence>
             {analyzing && (
               <motion.div
@@ -775,7 +910,6 @@ export default function TicketChatBox({
             )}
           </AnimatePresence>
 
-          {/* header */}
           <div className="dblTicketHeader">
             <div className="dblTicketBrand">
               <div className="dblTicketIcon">
@@ -818,17 +952,6 @@ export default function TicketChatBox({
                 </Tooltip>
               )}
 
-              <Tooltip title={voiceSupported ? (listening ? "Stop voice" : "Voice input") : "Not supported"}>
-                <Button
-                  className={`dblTicketIconBtn ${listening ? "dblTicketIconBtnStop" : ""}`}
-                  onClick={toggleVoice}
-                  disabled={!voiceSupported || analyzing}
-                  aria-label={listening ? "Stop voice" : "Start voice"}
-                >
-                  {listening ? <Stop size={18} weight="bold" /> : <Microphone size={18} weight="bold" />}
-                </Button>
-              </Tooltip>
-
               <Tooltip title="Minimize">
                 <Button className="dblTicketIconBtn" onClick={onMinimize} aria-label="Minimize">
                   <Minus size={18} weight="bold" />
@@ -843,20 +966,27 @@ export default function TicketChatBox({
             </div>
           </div>
 
-          {/* body */}
           <div className="dblTicketBody">
             <motion.div animate={cardsControls} transition={reduceMotion ? { duration: 0 } : SPRING} className="dblGrid">
-              {/* left */}
               <motion.div
                 transition={reduceMotion ? { duration: 0 } : SPRING}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <motion.div transition={reduceMotion ? { duration: 0 } : SPRING_SOFT} animate={{ scale: 1 }}>
-                  <Card className="dblCard">
-                    <div className="dblCardTopLine" />
-                    <div style={{ paddingTop: 10 }}>
-                      <Space direction="vertical" style={{ width: "100%" }} size={10}>
+                <Card className="dblCard">
+                  <div className="dblCardTopLine" />
+
+                  <div style={{ paddingTop: 10 }}>
+                    <Space direction="vertical" style={{ width: "100%" }} size={10}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          gap: 10,
+                          alignItems: "flex-start",
+                          flexWrap: "wrap",
+                        }}
+                      >
                         <div>
                           <Title level={5} style={{ margin: 0 }}>
                             Describe your issue
@@ -866,85 +996,149 @@ export default function TicketChatBox({
                           </Text>
                         </div>
 
-                        <Input.TextArea
-                          rows={7}
-                          value={issue}
-                          onChange={(e) => setIssue(e.target.value)}
-                          placeholder="Example: VPN not connecting since morning. Error: Authentication failed..."
-                        />
-
-                        <Space wrap style={{ width: "100%", justifyContent: "space-between" }}>
-                          <Space wrap>
-                            <Button
-                              className="dblPrimaryBtn"
-                              type="primary"
-                              onClick={runAnalyze}
-                              disabled={!categoryTitlesForAI.length || analyzing}
-                              icon={<MagnifyingGlass size={18} weight="bold" />}
-                            >
-                              Analyze
-                            </Button>
-                          </Space>
-
-                          {!categoryTitlesForAI.length && (
-                            <Tag className="dblPillTag" color="gold">
-                              Loading categories…
-                            </Tag>
-                          )}
-
+                        <Space wrap size={8}>
                           {listening && (
-                            <Tag className="dblPillTag" color="green">
-                              Listening…
+                            <Tag className="dblPillTag" color="red">
+                              REC • {voiceLang === "bn-BD" ? "Bangla" : "English"}
                             </Tag>
                           )}
+
+                          <div className="dblLangToggle">
+                            {(["en-US", "bn-BD"] as VoiceLang[]).map((lang) => (
+                              <button
+                                key={lang}
+                                type="button"
+                                disabled={listening}
+                                onClick={() => handleLangChange(lang)}
+                                className={`dblLangBtn ${voiceLang === lang ? "dblLangBtnActive" : ""}`}
+                                style={{
+                                  fontFamily: lang === "bn-BD" ? "'Noto Sans Bengali', sans-serif" : undefined,
+                                  opacity: listening && voiceLang !== lang ? 0.45 : 1,
+                                }}
+                              >
+                                {LANG_CONFIG[lang].label}
+                              </button>
+                            ))}
+                          </div>
+
+                          <Button
+                            className={listening ? "dblVoiceBtnStop" : "dblVoiceBtn"}
+                            onClick={toggleVoice}
+                            disabled={!voiceSupported || analyzing}
+                            icon={listening ? <Stop size={17} weight="bold" /> : <Microphone size={17} weight="bold" />}
+                          >
+                            {listening ? "Stop" : "Voice"}
+                          </Button>
                         </Space>
+                      </div>
 
-                        {analysis && (
-                          <div style={{ marginTop: 14 }}>
-                            <div
-                              style={{
-                                borderRadius: 18,
-                                border: "1px solid rgba(15,23,42,0.10)",
-                                background: "rgba(255,255,255,0.75)",
-                                padding: 12,
-                                boxShadow: "0 10px 26px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.65)",
-                              }}
-                            >
-                              <Space style={{ width: "100%", justifyContent: "space-between" }} wrap>
-                                <div style={{ minWidth: 160 }}>
-                                  <Text type="secondary" style={{ fontSize: 12 }}>
-                                    AI Category
-                                  </Text>
-                                  <div style={{ fontWeight: 950 }}>{analysis.category}</div>
-                                </div>
+                      <Input.TextArea
+                        className={voiceLang === "bn-BD" ? "dblBnTextArea" : ""}
+                        rows={7}
+                        value={issue}
+                        onChange={(e) => {
+                          setIssue(e.target.value);
+                          voiceBaseTextRef.current = e.target.value.trim();
+                        }}
+                        placeholder={langCfg.placeholder}
+                      />
 
-                                <div style={{ minWidth: 130 }}>
-                                  <Text type="secondary" style={{ fontSize: 12 }}>
-                                    AI Priority
-                                  </Text>
-                                  <div style={{ fontWeight: 950 }}>{analysis.priority}</div>
-                                </div>
-
-                                <Tag
-                                  className="dblPillTag"
-                                  color={analysis.isTicket ? "green" : "red"}
-                                  style={{ marginInlineStart: "auto" }}
-                                >
-                                  {analysis.isTicket
-                                    ? `Ticket • ${Math.round(analysis.confidence * 100)}%`
-                                    : `Not ticket • ${Math.round(analysis.confidence * 100)}%`}
-                                </Tag>
-                              </Space>
+                      {showTranslateBar && (
+                        <div className="dblTranslateBar">
+                          <div>
+                            <div style={{ fontWeight: 950, color: "#4338ca", fontSize: 12 }}>
+                              Google Translate <Tag color="blue">বাং → EN</Tag>
+                            </div>
+                            <div style={{ fontSize: 12, color: "rgba(15,23,42,0.62)", marginTop: 2 }}>
+                              {translating
+                                ? "অনুবাদ হচ্ছে…"
+                                : lastTranslated
+                                ? `Translated at ${lastTranslated}`
+                                : "বাংলা লেখা এক ক্লিকে ইংরেজিতে অনুবাদ করুন"}
                             </div>
                           </div>
+
+                          <Button
+                            type="primary"
+                            icon={<Translate size={17} weight="bold" />}
+                            loading={translating}
+                            onClick={handleTranslateToEnglish}
+                            disabled={issue.trim().length < 3}
+                            style={{
+                              borderRadius: 12,
+                              fontWeight: 900,
+                              background: "linear-gradient(135deg,#4338ca,#6366f1)",
+                            }}
+                          >
+                            Translate to English
+                          </Button>
+                        </div>
+                      )}
+
+                      <Space wrap style={{ width: "100%", justifyContent: "space-between" }}>
+                        <Space wrap>
+                          <Button
+                            className="dblPrimaryBtn"
+                            type="primary"
+                            onClick={runAnalyze}
+                            disabled={!categoryTitlesForAI.length || analyzing}
+                            icon={<MagnifyingGlass size={18} weight="bold" />}
+                          >
+                            Analyze
+                          </Button>
+                        </Space>
+
+                        {!categoryTitlesForAI.length && (
+                          <Tag className="dblPillTag" color="gold">
+                            Loading categories…
+                          </Tag>
                         )}
                       </Space>
-                    </div>
-                  </Card>
-                </motion.div>
+
+                      {analysis && (
+                        <div style={{ marginTop: 14 }}>
+                          <div
+                            style={{
+                              borderRadius: 18,
+                              border: "1px solid rgba(15,23,42,0.10)",
+                              background: "rgba(255,255,255,0.75)",
+                              padding: 12,
+                              boxShadow: "0 10px 26px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.65)",
+                            }}
+                          >
+                            <Space style={{ width: "100%", justifyContent: "space-between" }} wrap>
+                              <div style={{ minWidth: 160 }}>
+                                <Text type="secondary" style={{ fontSize: 12 }}>
+                                  AI Category
+                                </Text>
+                                <div style={{ fontWeight: 950 }}>{analysis.category}</div>
+                              </div>
+
+                              <div style={{ minWidth: 130 }}>
+                                <Text type="secondary" style={{ fontSize: 12 }}>
+                                  AI Priority
+                                </Text>
+                                <div style={{ fontWeight: 950 }}>{analysis.priority}</div>
+                              </div>
+
+                              <Tag
+                                className="dblPillTag"
+                                color={analysis.isTicket ? "green" : "red"}
+                                style={{ marginInlineStart: "auto" }}
+                              >
+                                {analysis.isTicket
+                                  ? `Ticket • ${Math.round(analysis.confidence * 100)}%`
+                                  : `Not ticket • ${Math.round(analysis.confidence * 100)}%`}
+                              </Tag>
+                            </Space>
+                          </div>
+                        </div>
+                      )}
+                    </Space>
+                  </div>
+                </Card>
               </motion.div>
 
-              {/* right */}
               <AnimatePresence>
                 {showReview && (
                   <motion.div
@@ -956,13 +1150,12 @@ export default function TicketChatBox({
                   >
                     <Card className="dblCard">
                       <div className="dblCardTopLine" />
+
                       <div style={{ paddingTop: 10 }}>
                         <Space direction="vertical" style={{ width: "100%" }} size={10}>
-                          <Space style={{ width: "100%", justifyContent: "space-between" }}>
-                            <Title level={5} style={{ margin: 0 }}>
-                              Review & edit
-                            </Title>
-                          </Space>
+                          <Title level={5} style={{ margin: 0 }}>
+                            Review & edit
+                          </Title>
 
                           <div>
                             <Text strong>Category</Text>
@@ -1052,7 +1245,6 @@ export default function TicketChatBox({
         </div>
       </Modal>
 
-      {/* Seating Location Error Modal */}
       <Modal
         open={seatErrorVisible}
         centered

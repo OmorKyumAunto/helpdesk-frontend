@@ -3,7 +3,6 @@ import {
   Badge,
   Button,
   Card,
-  Checkbox,
   Col,
   DatePicker,
   Dropdown,
@@ -12,12 +11,12 @@ import {
   Pagination,
   Row,
   Select,
-  Space,
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { sanitizeFormValue } from "react-form-sanitization";
 import { useDispatch } from "react-redux";
+import styled from "styled-components";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { rangePreset } from "../../../common/rangePreset";
 import { useGetTaskCategoryQuery } from "../../taskConfiguration/api/taskCategoryEndPoint";
@@ -31,308 +30,228 @@ import CountdownTask from "../components/CountdownTask";
 import { ITaskParams } from "../types/taskTypes";
 import SingleTask from "./SingleTask";
 
+/* ── Header ─────────────────────────────────────────────────────── */
+const HeaderWrapper = styled.header`
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 16px;
+`;
+const HeaderInner = styled.div`display:flex;flex-direction:column;gap:10px;`;
+const BrandRow = styled.div`
+  display:flex;align-items:center;gap:10px;
+  svg{flex-shrink:0;}
+  h1{margin:0;font-size:18px;font-weight:700;color:#111827;white-space:nowrap;}
+`;
+const FilterBar = styled.div`
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  &>*{flex:1 1 140px;min-width:0;max-width:100%;}
+  &>button,&>.ant-btn{flex:0 0 auto;}
+  @media(max-width:480px){
+    &>*{flex:1 1 100%;}
+    .ant-picker-range{width:100%!important;}
+  }
+`;
+const SearchWrap = styled.div`.ant-input-affix-wrapper{width:100%;}`;
+const DateWrap   = styled.div`.ant-picker{width:100%;}`;
+const SelectWrap = styled.div`.ant-select{width:100%;}.ant-select-selector{width:100%!important;}`;
+
+/* ── Sidebar ─────────────────────────────────────────────────────── */
+const Sidebar = styled.div`
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+`;
+
+const SidebarSection = styled.div`
+  padding: 12px 14px;
+  &:not(:last-child) { border-bottom: 1px solid #f0f0f0; }
+`;
+
+const SectionLabel = styled.div`
+  font-size: 10px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 10px;
+`;
+
+const ChipGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+`;
+
+const Chip = styled.button<{ active: boolean }>`
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid ${({ active }) => (active ? "#2563eb" : "#e2e8f0")};
+  background: ${({ active }) => (active ? "#2563eb" : "#f8fafc")};
+  color: ${({ active }) => (active ? "#fff" : "#475569")};
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  &:hover {
+    border-color: #2563eb;
+    background: ${({ active }) => (active ? "#1d4ed8" : "#eff6ff")};
+    color: ${({ active }) => (active ? "#fff" : "#1d4ed8")};
+  }
+`;
+
+/* ── Component ─────────────────────────────────────────────────── */
 const SuperAdminTaskList = ({ taskStatus }: { taskStatus: string }) => {
   const { data } = useGetTaskCategoryQuery();
   const listCategory = data?.data || [];
   const dispatch = useDispatch();
-  const [listIds, setListIds] = useState([]);
+  const [listIds, setListIds] = useState<number[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
-  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
-    status: "active",
-  });
+
+  const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({ status: "active" });
   const skipValue = (Number(page) - 1) * Number(pageSize);
 
   const [filter, setFilter] = useState<ITaskParams>({
     limit: Number(pageSize),
     offset: skipValue,
   });
+
   const { data: allAdmin, isLoading: adminLoading } = useGetAdminWiseUnitsQuery(
     filter.unit_id || 0,
     { skip: !filter.unit_id }
   );
 
   useEffect(() => {
-    setFilter({
-      ...filter,
-      limit: Number(pageSize),
-      offset: skipValue,
-    });
+    setFilter((p) => ({ ...p, limit: Number(pageSize), offset: skipValue }));
   }, [page, pageSize, skipValue]);
 
   const sanitizeData = sanitizeFormValue(filter);
-
-  const {
-    data: taskItems,
-    isLoading: taskLoader,
-    isFetching,
-  } = useGetTaskItemsQuery({
-    ...sanitizeData,
-    category: listIds,
-  });
+  const { data: taskItems, isLoading: taskLoader, isFetching } =
+    useGetTaskItemsQuery({ ...sanitizeData, category: listIds });
 
   const handlePaginationChange = (current: number, size: number) => {
     setPage(current);
     setPageSize(size);
     setFilter({ ...filter, offset: (current - 1) * size, limit: size });
   };
+
   useEffect(() => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      task_status: taskStatus || prevFilter.task_status,
-      offset: 0,
-    }));
+    setFilter((p) => ({ ...p, task_status: taskStatus || p.task_status, offset: 0 }));
   }, [taskStatus]);
+
+  const toggleCat = (id: number) =>
+    setListIds((prev) =>
+      prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
+    );
+
   return (
     <div>
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="mx-auto ">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-blue-600"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z" />
-              </svg>
-              <h1 className="ml-3 text-xl font-bold text-gray-900">
-                Task Manager
-              </h1>
-            </div>
-            <Space>
-              <div>
-                <Input
-                  type="text"
-                  placeholder="Search tasks..."
-                  prefix={<SearchOutlined />}
-                  onChange={(e) =>
-                    setFilter({ ...filter, key: e.target.value, offset: 0 })
-                  }
-                />
-              </div>
-              <Select
-                allowClear
-                placeholder="Select Status"
-                style={{ width: "160px" }}
-                onChange={(e) =>
-                  setFilter({ ...filter, task_status: e, offset: 0 })
-                }
+      {/* ── Header ── */}
+      <HeaderWrapper>
+        <HeaderInner>
+          <BrandRow>
+            <svg xmlns="http://www.w3.org/2000/svg"
+              style={{ width: 28, height: 28, color: "#2563eb" }}
+              viewBox="0 0 20 20" fill="currentColor">
+              <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z" />
+            </svg>
+            <h1>Task Manager</h1>
+          </BrandRow>
+
+          <FilterBar>
+            <SearchWrap>
+              <Input placeholder="Search tasks..." prefix={<SearchOutlined />}
+                onChange={(e) => setFilter({ ...filter, key: e.target.value, offset: 0 })} />
+            </SearchWrap>
+
+            <SelectWrap>
+              <Select allowClear placeholder="Select Status" style={{ width: "100%" }}
+                onChange={(e) => setFilter({ ...filter, task_status: e, offset: 0 })}
                 defaultValue={taskStatus || null}
                 options={[
                   { label: "Incomplete", value: "incomplete" },
-                  { label: "Complete", value: "complete" },
+                  { label: "Complete",   value: "complete"   },
                   { label: "Inprogress", value: "inprogress" },
-                  // {label:'Overdue',value:'overdue'},
-                ]}
-              />
+                ]} />
+            </SelectWrap>
 
-              <div>
-                <DatePicker.RangePicker
-                  style={{ width: "250px" }}
-                  presets={rangePreset}
-                  onChange={(_, e) =>
-                    setFilter({
-                      ...filter,
-                      start_date: e[0],
-                      end_date: e[1],
-                      offset: 0,
-                    })
-                  }
-                />
+            <DateWrap>
+              <DatePicker.RangePicker style={{ width: "100%" }} presets={rangePreset}
+                onChange={(_, e) => setFilter({ ...filter, start_date: e[0], end_date: e[1], offset: 0 })} />
+            </DateWrap>
+
+            <Dropdown trigger={["click"]} dropdownRender={() => (
+              <div style={{ padding: 16, background: "#fff", borderRadius: 8, width: 220, border: "1px solid #f2f2f2", display: "flex", flexDirection: "column", gap: 10, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+                <Select loading={unitIsLoading} placeholder="Select Unit Name" showSearch
+                  optionFilterProp="children" style={{ width: "100%" }}
+                  filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())}
+                  options={unitData?.data?.map((unit: any) => ({ value: unit.id, label: unit.title }))}
+                  onChange={(e) => setFilter({ ...filter, unit_id: e, offset: 0 })}
+                  allowClear />
+                <Select loading={adminLoading} placeholder="Search Admin" showSearch
+                  optionFilterProp="children"
+                  filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())}
+                  options={allAdmin?.data?.user_list?.map((item: UserList) => ({ value: item.user_id, label: `[${item.employee_id}] ${item.name}` }))}
+                  onChange={(e) => setFilter({ ...filter, user_id: e, offset: 0 })}
+                  allowClear style={{ width: "100%" }} />
               </div>
-              <Dropdown
-                trigger={["hover"]}
-                dropdownRender={() => (
-                  <div
-                    style={{
-                      padding: 16,
-                      background: "#fff",
-                      borderRadius: 8,
-                      width: "160px",
-                      border: "1px solid #f2f2f2",
-                    }}
-                  >
-                    <Select
-                      loading={unitIsLoading}
-                      placeholder="Select Unit Name"
-                      showSearch
-                      optionFilterProp="children"
-                      style={{ width: "180px" }}
-                      filterOption={(input, option) =>
-                        (option?.label ?? "")
-                          .toLowerCase()
-                          .includes(input.toLowerCase())
-                      }
-                      options={unitData?.data?.map((unit: any) => ({
-                        value: unit.id,
-                        label: unit.title,
-                      }))}
-                      onChange={(e) =>
-                        setFilter({ ...filter, unit_id: e, offset: 0 })
-                      }
-                      allowClear
-                    />
-                    <Select
-                      loading={adminLoading}
-                      placeholder="Search Admin"
-                      showSearch
-                      optionFilterProp="children"
-                      filterOption={(input, option) =>
-                        (option?.label ?? "")
-                          .toLowerCase()
-                          .includes(input.toLowerCase())
-                      }
-                      options={allAdmin?.data?.user_list?.map(
-                        (item: UserList) => ({
-                          value: item.user_id,
-                          label: `[${item.employee_id}] ${item.name}`,
-                        })
-                      )}
-                      onChange={(e) =>
-                        setFilter({ ...filter, user_id: e, offset: 0 })
-                      }
-                      allowClear
-                      style={{ width: "180px" }}
-                    />
-                  </div>
-                )}
-              >
-                <Button icon={<FilterOutlined />}>Filters</Button>
-              </Dropdown>
-            </Space>
-          </div>
-        </div>
-      </header>
+            )}>
+              <Button icon={<FilterOutlined />} style={{ flexShrink: 0 }}>Filters</Button>
+            </Dropdown>
+          </FilterBar>
+        </HeaderInner>
+      </HeaderWrapper>
 
-      {/* Main Content */}
-
+      {/* ── Main Content ── */}
       <Row gutter={[16, 16]} style={{ padding: 12 }}>
-        {/* Main Task View */}
+
+        {/* Task Cards */}
         <Col xs={24} sm={24} md={24} lg={18}>
           <Row gutter={[14, 14]}>
             {taskItems?.data?.map((item) => (
               <Col key={item.id} xs={24} sm={24} md={12}>
-                <Card
-                  bordered={false}
-                  loading={taskLoader || isFetching}
-                  onClick={() => {
-                    dispatch(
-                      setCommonModal({
-                        content: (
-                          <SingleTask
-                            id={item.id}
-                            user_name={item.user_name}
-                            user_employee_id={item.user_employee_id}
-                          />
-                        ),
-                        title: "Task Details",
-                        width: "72%",
-                        show: true,
-                      })
-                    );
-                  }}
-                  style={{
-                    backgroundColor: "#f7f9fc", // Light background for a modern look
-                    borderRadius: "16px", // Softer rounded corners
-                    boxShadow: "0 12px 24px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                    transition:
-                      "transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease", // Smooth transitions on hover
-                    cursor: "pointer",
-                    height: "100%",
-                    position: "relative", // For absolute positioning of the badge
-                  }}
+                <Card bordered={false} loading={taskLoader || isFetching}
+                  onClick={() => dispatch(setCommonModal({
+                    content: <SingleTask id={item.id} user_name={item.user_name} user_employee_id={item.user_employee_id} />,
+                    title: "Task Details", width: "72%", show: true,
+                  }))}
+                  style={{ backgroundColor: "#f7f9fc", borderRadius: "16px", boxShadow: "0 12px 24px rgba(0,0,0,0.1)", transition: "transform 0.3s ease", cursor: "pointer", height: "100%", position: "relative" }}
                   className="sla-card"
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.transform = "scale(1.02)")
-                  } // Hover effect: scale up
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.transform = "scale(1)")
-                  } // Reset hover effect
-                >
-                  {/* Status Badge - Positioned outside and slightly down */}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
+
                   <Badge.Ribbon
-                    text={
-                      item.task_status === "complete"
-                        ? "Complete"
-                        : item.task_status === "incomplete"
-                          ? "Incomplete"
-                          : "In Progress"
-                    }
-                    color={
-                      item.task_status === "complete"
-                        ? "green"
-                        : item.task_status === "incomplete"
-                          ? "red"
-                          : "blue"
-                    }
-                    style={{
-                      position: "absolute",
-                      top: "40px", // Slightly lower than the default
-                      right: "-30px", // Move the badge slightly outside the card
-                      fontSize: "12px", // Smaller font size for the badge
-                      fontWeight: "600", // Bold text for better visibility
-                      padding: "5px 12px", // More padding to enhance the badge shape
-                      zIndex: 10, // Ensure badge floats above the content
-                    }}
-                  />
+                    text={item.task_status === "complete" ? "Complete" : item.task_status === "incomplete" ? "Incomplete" : "In Progress"}
+                    color={item.task_status === "complete" ? "green" : item.task_status === "incomplete" ? "red" : "blue"}
+                    style={{ position: "absolute", top: "40px", right: "-30px", fontSize: "12px", fontWeight: "600", padding: "5px 12px", zIndex: 10 }} />
 
                   <div>
-                    {/* Task ID and Header */}
                     <div className="flex justify-between items-center">
-                      <div>
-                        <h1 className="text-lg font-semibold text-gray-800">
-                          Task ID #{item.task_code}
-                        </h1>
-                      </div>
+                      <h1 className="text-lg font-semibold text-gray-800">Task ID #{item.task_code}</h1>
                     </div>
 
-                    {/* Task Category and Description */}
-
                     <div>
-                      <div>
-                        <div>
-                          <span className="text-xl font-semibold text-indigo-700">
-                            {item.category_title}{' '}
-                            <span className="text-sm font-bold text-indigo-500">x{item.quantity}</span>
-                          </span>
-                        </div>
-                      </div>
+                      <span className="text-xl font-semibold text-indigo-700">
+                        {item.category_title}{" "}
+                        <span className="text-sm font-bold text-indigo-500">x{item.quantity}</span>
+                      </span>
                       <p className="text-sm font-medium text-blue-600">
                         Owner: {`${item.user_name} (${item.user_employee_id})`}
                       </p>
-
                     </div>
 
-                    {/* Task Start Time */}
                     <div className="mt-2 flex items-center text-sm text-gray-600">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1 text-gray-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                       {item.task_start_time
-                        ? `Starts In: ${dayjs(item.task_start_date).format(
-                          "DD MMM YYYY"
-                        )} ${item.task_start_time}`
-                        : `Will Start In: ${dayjs(item.start_date).format(
-                          "DD MMM YYYY"
-                        )} ${item.start_time}`}
+                        ? `Starts In: ${dayjs(item.task_start_date).format("DD MMM YYYY")} ${item.task_start_time}`
+                        : `Will Start In: ${dayjs(item.start_date).format("DD MMM YYYY")} ${item.start_time}`}
                     </div>
 
                     <Flex justify="space-between" align="center">
-                      {/* Countdown */}
                       <div className="flex items-center gap-2 mt-3">
                         <CountdownTask item={item} />
                       </div>
@@ -342,81 +261,33 @@ const SuperAdminTaskList = ({ taskStatus }: { taskStatus: string }) => {
               </Col>
             ))}
           </Row>
-          {(taskItems?.count || 0) > 6 ? (
-            <Pagination
-              className="mt-8"
-              size="small"
-              align="end"
-              pageSizeOptions={["10", "20", "30", "50", "100"]}
-              current={page}
-              pageSize={pageSize}
-              total={taskItems?.count || 0}
+
+          {(taskItems?.count || 0) > 6 && (
+            <Pagination className="mt-8" size="small" align="end"
+              pageSizeOptions={["10","20","30","50","100"]}
+              current={page} pageSize={pageSize} total={taskItems?.count || 0}
               showTotal={(total) => `Total ${total}`}
-              onChange={handlePaginationChange}
-              showSizeChanger
-            />
-          ) : null}
+              onChange={handlePaginationChange} showSizeChanger />
+          )}
         </Col>
 
-        {/* Right Sidebar */}
+        {/* ── Compact Sidebar ── */}
         <Col xs={24} sm={24} md={24} lg={6}>
-          <div className="w-full h-[84vh] bg-white border-r border-gray-200 rounded-lg flex flex-col">
-            <div className="p-4">
-              <div className="mt-5">
-                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
-                  Lists
-                </h2>
-                <Checkbox.Group
-                  style={{ width: "100%" }}
-                  options={
-                    listCategory?.map((item) => {
-                      return {
-                        label: item.title,
-                        value: item.id,
-                      };
-                    }) || []
-                  }
-                  onChange={(checkedValues: any) => {
-                    // Corrected type here
-                    setListIds(checkedValues);
-                  }}
-                >
-                  {listCategory?.map((item) => (
-                    <div
-                      key={item.id}
-                      style={{
-                        border: "1px solid #d9d9d9", // Add border
-                        padding: "8px", // Add padding for spacing
-                        marginBottom: "8px", // Add margin between checkboxes
-                        width: "100%", // Ensure each checkbox takes full width
-                        boxSizing: "border-box", // Include padding and border in width calculation
-                      }}
-                    >
-                      <Checkbox value={String(item.id)}>{item.title}</Checkbox>
-                    </div>
-                  ))}
-                </Checkbox.Group>
-                {/* {listCategory.map((list) => (
-                  <Button
-                    key={list.id}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left mb-1 ${
-                      activeList === list.title
-                        ? "bg-blue-50 text-blue-700"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                    onClick={() => setActiveList(list.title)}
-                  >
-                    <div className="flex items-center">
-                      <span className="w-6 text-xs text-gray-500">
-                        <Checkbox />
-                      </span>
-                      <span className="font-medium">{list.title}</span>
-                    </div>
-                  </Button>
-                ))} */}
-              </div>
-            </div>
-          </div>
+          <Sidebar>
+            <SidebarSection>
+              <SectionLabel>Categories</SectionLabel>
+              <ChipGrid>
+                {listCategory.map((item) => {
+                  const active = listIds.includes(item.id);
+                  return (
+                    <Chip key={item.id} active={active} onClick={() => toggleCat(item.id)}>
+                      {item.title}
+                    </Chip>
+                  );
+                })}
+              </ChipGrid>
+            </SidebarSection>
+          </Sidebar>
         </Col>
       </Row>
     </div>
