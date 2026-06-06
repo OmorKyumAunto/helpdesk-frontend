@@ -1,26 +1,164 @@
-import { Button, Card, Col, Popconfirm, Row, Tabs, Tag, Typography, Select, Space, message } from "antd";
+import {
+  ApartmentOutlined,
+  BankOutlined,
+  CalendarOutlined,
+  ContactsOutlined,
+  CrownOutlined,
+  EnvironmentOutlined,
+  IdcardOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  PushpinOutlined,
+  SafetyCertificateOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Empty,
+  Form,
+  Popconfirm,
+  Select,
+  Space,
+  Tabs,
+  Tag,
+  Typography,
+  message,
+} from "antd";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { ReactNode, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { skipToken } from "@reduxjs/toolkit/query";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { RootState } from "../../../app/store/store";
-import { useEmployeeAssignToAdminMutation } from "../api/employeeEndPoint";
-import { IEmployee } from "../types/employeeTypes";
-import { skipToken } from "@reduxjs/toolkit/query";
-import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
-import { useGetBuildingWiseLocationQuery } from "../../complex/api/complexlocationEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
-import { useUpdateEmployeeSeatingLocationMutation } from "../api/employeeEndPoint";
-import { Form } from "antd";
+import { useGetBuildingWiseLocationQuery } from "../../complex/api/complexlocationEndPoint";
+import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import {
+  useEmployeeAssignToAdminMutation,
+  useUpdateEmployeeSeatingLocationMutation,
+} from "../api/employeeEndPoint";
+import { IEmployee } from "../types/employeeTypes";
+import { avatarGradient, BRAND, getAvatarColor, getInitials, LINE, LINE_SOFT } from "../utils/avatar";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
-const FieldItem = ({ label, value }: { label: string; value?: string | React.ReactNode }) => (
-  <div style={{ marginBottom: 12 }}>
-    <Text strong>{label}: </Text>
-    <Text>{value || "N/A"}</Text>
+const roleLabel = (roleId: number): string | null => {
+  if (roleId === 1) return "Super Admin";
+  if (roleId === 2) return "Admin";
+  if (roleId === 3) return "Employee";
+  return null;
+};
+
+/* ---------- field + section primitives ---------- */
+
+const DetailField = ({
+  icon,
+  label,
+  value,
+}: {
+  icon: ReactNode;
+  label: string;
+  value?: ReactNode;
+}) => (
+  <div style={{ display: "flex", gap: 11, alignItems: "flex-start" }}>
+    <span
+      style={{
+        width: 34,
+        height: 34,
+        borderRadius: 9,
+        background: LINE_SOFT,
+        color: "#98A2B3",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+        fontSize: 15,
+      }}
+    >
+      {icon}
+    </span>
+    <div style={{ minWidth: 0 }}>
+      <div
+        style={{
+          fontSize: 11,
+          fontWeight: 600,
+          letterSpacing: 0.5,
+          textTransform: "uppercase",
+          color: "#98A2B3",
+          marginBottom: 2,
+        }}
+      >
+        {label}
+      </div>
+      <div style={{ fontSize: 14, color: "#101828", fontWeight: 500, wordBreak: "break-word" }}>
+        {value || <span style={{ color: "#98A2B3", fontWeight: 400 }}>N/A</span>}
+      </div>
+    </div>
   </div>
 );
+
+const Section = ({ title, children }: { title?: string; children: ReactNode }) => (
+  <div style={{ border: `1px solid ${LINE}`, borderRadius: 12, background: "#fff", padding: 20 }}>
+    {title && (
+      <div
+        style={{
+          fontSize: 12,
+          fontWeight: 700,
+          letterSpacing: 0.6,
+          textTransform: "uppercase",
+          color: "#98A2B3",
+          marginBottom: 16,
+        }}
+      >
+        {title}
+      </div>
+    )}
+    {children}
+  </div>
+);
+
+const FieldGrid = ({ children }: { children: ReactNode }) => (
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+      gap: "20px 28px",
+    }}
+  >
+    {children}
+  </div>
+);
+
+const fmtDate = (d?: string) => (d ? dayjs(d).format("DD MMM YYYY") : undefined);
+
+const metaChip: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 6,
+  padding: "4px 11px",
+  borderRadius: 8,
+  background: "#fff",
+  border: `1px solid ${LINE}`,
+  fontSize: 12.5,
+  color: "#475467",
+  fontWeight: 500,
+};
+
+const quickAction: React.CSSProperties = {
+  width: 40,
+  height: 40,
+  borderRadius: 10,
+  background: "#fff",
+  border: `1px solid ${LINE}`,
+  color: BRAND,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: 16,
+};
+
+/* ---------- Main ---------- */
 
 const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
@@ -32,7 +170,7 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
   const [isEditingLocation, setIsEditingLocation] = useState(false);
 
   // Queries
-  const { data: { data: profile } = {} } = useGetMeQuery();
+  useGetMeQuery();
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({ status: "active" });
   const { data: locationData, isLoading: locationLoading } =
     useGetBuildingWiseLocationQuery(buildingId);
@@ -41,26 +179,19 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
   const [updateSeatingLocation, { isLoading: updateLoading, isSuccess: updateSuccess }] =
     useUpdateEmployeeSeatingLocationMutation();
 
-  // Populate buildings on unit change
   const handleUnitChange = (unitId: number) => {
     const selectedUnit = unitData?.data?.find((u: any) => u.id === unitId);
-
     if (selectedUnit) {
       setBuildings(
-        selectedUnit.building?.map((b: any) => ({
-          value: b.id,
-          label: b.name,
-        })) || []
+        selectedUnit.building?.map((b: any) => ({ value: b.id, label: b.name })) || []
       );
     } else {
       setBuildings([]);
     }
-
     setBuildingId(skipToken);
     form.setFieldsValue({ building_id: undefined, seating_location: undefined });
   };
 
-  // Handle building change
   const handleBuildingChange = (id: number) => {
     setBuildingId(id ? [id] : skipToken);
     form.setFieldsValue({ seating_location: undefined });
@@ -88,258 +219,364 @@ const EmployeeDetails = ({ employee }: { employee: IEmployee }) => {
     line_of_business,
     business_type,
     pabx,
-    seating_location,
     seating_location_name,
-    building_id,
-    building_name
+    building_name,
   } = employee || {};
 
-  // Close modal when assign to admin is successful
   useEffect(() => {
-    if (isSuccess) {
-      dispatch(setCommonModal());
-    }
+    if (isSuccess) dispatch(setCommonModal());
   }, [isSuccess, dispatch]);
 
-  // Close modal when seating location update is successful
   useEffect(() => {
-    if (updateSuccess) {
-
-      dispatch(setCommonModal());
-    }
+    if (updateSuccess) dispatch(setCommonModal());
   }, [updateSuccess, dispatch]);
 
-  // Reset form state when modal opens/closes
   useEffect(() => {
     setIsEditingLocation(false);
     form.resetFields();
     setBuildings([]);
     setBuildingId(skipToken);
-  }, [employee?.id]); // Reset when employee changes (modal reopens)
+  }, [employee?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const isActive = status === 1;
+  const role = roleLabel(role_id);
+  const color = getAvatarColor(name || employee_id);
 
   const items = [
     {
       key: "1",
-      label: "Basic Info",
+      label: "Overview",
       children: (
-        <Row gutter={[16, 16]}>
-          <Col xs={24} md={12}>
-            <Card>
-              <FieldItem label="Employee Name" value={name} />
-              <FieldItem label="Employee ID" value={employee_id} />
-              <FieldItem label="Email" value={email} />
-              <FieldItem label="Contact No" value={contact_no} />
-              <FieldItem
-                label="Status"
-                value={status === 1 ? <Tag color="green">Active</Tag> : <Tag color="red">Inactive</Tag>}
-              />
-            </Card>
-          </Col>
-          <Col xs={24} md={12}>
-            <Card>
-              <FieldItem label="Blood Group" value={blood_group} />
-              <FieldItem label="Date of Birth" value={date_of_birth ? dayjs(date_of_birth).format("DD-MM-YYYY") : "N/A"} />
-              <FieldItem label="Grade" value={grade} />
-            </Card>
-          </Col>
-        </Row>
+        <Section title="Personal Information">
+          <FieldGrid>
+            <DetailField icon={<ContactsOutlined />} label="Full Name" value={name} />
+            <DetailField icon={<IdcardOutlined />} label="Employee ID" value={employee_id} />
+            <DetailField
+              icon={<MailOutlined />}
+              label="Email"
+              value={email ? <a href={`mailto:${email}`}>{email}</a> : undefined}
+            />
+            <DetailField
+              icon={<PhoneOutlined />}
+              label="Contact No"
+              value={contact_no ? <a href={`tel:${contact_no}`}>{contact_no}</a> : undefined}
+            />
+            <DetailField
+              icon={<SafetyCertificateOutlined />}
+              label="Blood Group"
+              value={blood_group ? <Tag color="red">{blood_group}</Tag> : undefined}
+            />
+            <DetailField icon={<CalendarOutlined />} label="Date of Birth" value={fmtDate(date_of_birth)} />
+            <DetailField icon={<CrownOutlined />} label="Grade" value={grade} />
+            <DetailField
+              icon={<SafetyCertificateOutlined />}
+              label="Status"
+              value={isActive ? <Tag color="green">Active</Tag> : <Tag color="red">Inactive</Tag>}
+            />
+          </FieldGrid>
+        </Section>
       ),
     },
     {
       key: "2",
-      label: "Work Info",
+      label: "Work",
       children: (
-        <Row gutter={[16, 16]}>
-          <Col xs={24} md={12}>
-            <Card>
-              <FieldItem label="Designation" value={designation} />
-              <FieldItem label="Department" value={department} />
-              <FieldItem label="Payroll Unit" value={unit_name} />
-              <FieldItem label="Location" value={location} />
-              <FieldItem label="Joining Date" value={joining_date ? dayjs(joining_date).format("DD-MM-YYYY") : "N/A"} />
-            </Card>
-          </Col>
-          <Col xs={24} md={12}>
-            <Card>
-              <FieldItem label="Business Type" value={business_type} />
-              <FieldItem label="Line of Business" value={line_of_business} />
-              <FieldItem label="PABX" value={pabx} />
-              <FieldItem label="Line Manager" value={line_manager_name} />
-              <FieldItem label="Line Manager Emp. ID" value={line_manager_id} />
-            </Card>
-          </Col>
-        </Row>
+        <Section title="Employment Details">
+          <FieldGrid>
+            <DetailField icon={<CrownOutlined />} label="Designation" value={designation} />
+            <DetailField icon={<ApartmentOutlined />} label="Department" value={department} />
+            <DetailField icon={<BankOutlined />} label="Payroll Unit" value={unit_name} />
+            <DetailField icon={<EnvironmentOutlined />} label="Location" value={location} />
+            <DetailField icon={<CalendarOutlined />} label="Joining Date" value={fmtDate(joining_date)} />
+            <DetailField icon={<ApartmentOutlined />} label="Business Type" value={business_type} />
+            <DetailField icon={<ApartmentOutlined />} label="Line of Business" value={line_of_business} />
+            <DetailField icon={<PushpinOutlined />} label="PABX" value={pabx} />
+            <DetailField icon={<TeamOutlined />} label="Line Manager" value={line_manager_name} />
+            <DetailField icon={<IdcardOutlined />} label="Line Manager Emp. ID" value={line_manager_id} />
+          </FieldGrid>
+        </Section>
       ),
     },
     ...(roleId !== 3
       ? [
-        {
-          key: "5",
-          label: "Seating Location",
-          children: (
-            <Row gutter={[16, 16]}>
-              <Col xs={24} md={24}>
-                <Card>
-                  <FieldItem
-                    label="Seating Location"
+          {
+            key: "5",
+            label: "Seating",
+            children: (
+              <Section title="Seating Location">
+                <div style={{ marginBottom: 16 }}>
+                  <DetailField
+                    icon={<EnvironmentOutlined />}
+                    label="Current Seat"
                     value={
                       seating_location_name
                         ? `${seating_location_name} (${building_name || "N/A"})`
-                        : "N/A"
+                        : undefined
                     }
                   />
+                </div>
 
-                  {!isEditingLocation ? (
-                    <Button type="primary" onClick={() => setIsEditingLocation(true)}>
-                      Update Location
-                    </Button>
-                  ) : (
-                    <Form
-                      form={form}
-                      layout="vertical"
-                      onFinish={async (values) => {
-                        try {
-                          await updateSeatingLocation({
-                            id,
-                            data: { seating_location: values.seating_location },
-                          }).unwrap();
-                          // Success message and modal close handled by useEffect
-                        } catch (err: any) {
-                          message.error(err?.data?.message || "Failed to update seating location");
-                        }
-                      }}
-                    >
-                      <Space direction="vertical" style={{ width: "100%", marginTop: 12 }}>
-                        <Form.Item
-                          label="Unit"
-                          name="unit_id"
-                          rules={[{ required: true, message: "Please select a unit!" }]}
+                {!isEditingLocation ? (
+                  <Button type="primary" onClick={() => setIsEditingLocation(true)}>
+                    Update Location
+                  </Button>
+                ) : (
+                  <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={async (values) => {
+                      try {
+                        await updateSeatingLocation({
+                          id,
+                          data: { seating_location: values.seating_location },
+                        }).unwrap();
+                      } catch (err: any) {
+                        message.error(err?.data?.message || "Failed to update seating location");
+                      }
+                    }}
+                  >
+                    <Space direction="vertical" style={{ width: "100%", marginTop: 4 }}>
+                      <Form.Item
+                        label="Unit"
+                        name="unit_id"
+                        rules={[{ required: true, message: "Please select a unit!" }]}
+                      >
+                        <Select
+                          loading={unitIsLoading}
+                          placeholder="Select Unit"
+                          showSearch
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                          }
+                          options={unitData?.data?.map((unit: any) => ({
+                            value: unit.id,
+                            label: unit.title,
+                          }))}
+                          onChange={handleUnitChange}
+                          allowClear
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        label="Building"
+                        name="building_id"
+                        rules={[{ required: true, message: "Please select a complex!" }]}
+                      >
+                        <Select
+                          placeholder="Select Complex"
+                          options={buildings}
+                          disabled={buildings.length === 0}
+                          onChange={handleBuildingChange}
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        label="Seating Location"
+                        name="seating_location"
+                        rules={[{ required: true, message: "Please select seating location!" }]}
+                      >
+                        <Select
+                          placeholder="Select Location"
+                          options={
+                            locationData?.data?.map((loc: any) => ({
+                              value: loc.id,
+                              label: loc.name || loc.location,
+                            })) || []
+                          }
+                          loading={locationLoading}
+                          disabled={buildingId === skipToken}
+                        />
+                      </Form.Item>
+
+                      <Space>
+                        <Button type="primary" htmlType="submit" loading={updateLoading}>
+                          Save Changes
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setIsEditingLocation(false);
+                            form.resetFields();
+                            setBuildings([]);
+                            setBuildingId(skipToken);
+                          }}
                         >
-                          <Select
-                            loading={unitIsLoading}
-                            placeholder="Select Unit"
-                            showSearch
-                            optionFilterProp="children"
-                            filterOption={(input, option) =>
-                              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                            }
-                            options={unitData?.data?.map((unit: any) => ({
-                              value: unit.id,
-                              label: unit.title,
-                            }))}
-                            onChange={handleUnitChange}
-                            allowClear
-                          />
-                        </Form.Item>
-
-                        <Form.Item
-                          label="Building"
-                          name="building_id"
-                          rules={[{ required: true, message: "Please select a complex!" }]}
-                        >
-                          <Select
-                            placeholder="Select Complex"
-                            options={buildings}
-                            disabled={buildings.length === 0}
-                            onChange={handleBuildingChange}
-                          />
-                        </Form.Item>
-
-                        <Form.Item
-                          label="Seating Location"
-                          name="seating_location"
-                          rules={[{ required: true, message: "Please select seating location!" }]}
-                        >
-                          <Select
-                            placeholder="Select Location"
-                            options={
-                              locationData?.data?.map((loc: any) => ({
-                                value: loc.id,
-                                label: loc.name || loc.location,
-                              })) || []
-                            }
-                            loading={locationLoading}
-                            disabled={buildingId === skipToken}
-                          />
-                        </Form.Item>
-
-                        <Space>
-                          <Button
-                            type="primary"
-                            htmlType="submit"
-                            loading={updateLoading}
-                            style={{
-                              borderRadius: 8,
-                              padding: "6px 20px",
-                              background: "linear-gradient(90deg, #1677ff 0%, #4096ff 100%)",
-                              border: "none",
-                            }}
-                          >
-                            Save Changes
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              setIsEditingLocation(false);
-                              form.resetFields();
-                              setBuildings([]);
-                              setBuildingId(skipToken);
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                        </Space>
+                          Cancel
+                        </Button>
                       </Space>
-                    </Form>
-                  )}
-                </Card>
-              </Col>
-            </Row>
-          ),
-        }
-      ]
+                    </Space>
+                  </Form>
+                )}
+              </Section>
+            ),
+          },
+        ]
       : []),
     ...(roleId !== 3
       ? [
-        {
-          key: "3",
-          label: "Licenses",
-          children: (
-            <Card>
-              <Text>
-                {licenses?.length
-                  ? licenses.map((item) => item?.title).join(", ")
-                  : "No Licenses Assigned"}
-              </Text>
-            </Card>
-          ),
-        },
-      ]
+          {
+            key: "3",
+            label: "Licenses",
+            children: (
+              <Section title="Assigned Licenses">
+                {licenses?.length ? (
+                  <Space size={[8, 8]} wrap>
+                    {licenses.map((item) => (
+                      <Tag
+                        key={item.id}
+                        color="blue"
+                        style={{ borderRadius: 999, padding: "4px 12px", fontSize: 13 }}
+                      >
+                        {item?.title}
+                      </Tag>
+                    ))}
+                  </Space>
+                ) : (
+                  <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No Licenses Assigned" />
+                )}
+              </Section>
+            ),
+          },
+        ]
       : []),
     ...(role_id === 3 && roleId === 1
       ? [
-        {
-          key: "4",
-          label: "Admin Control",
-          children: (
-            <Card>
-              <Popconfirm
-                title="Assign to admin"
-                description="Are you sure to assign this employee as an admin?"
-                onConfirm={() => assignToAdmin(id)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button type="primary">Confirm Admin</Button>
-              </Popconfirm>
-            </Card>
-          ),
-        },
-      ]
+          {
+            key: "4",
+            label: "Admin Control",
+            children: (
+              <Section title="Admin Control">
+                <Text type="secondary" style={{ display: "block", marginBottom: 16 }}>
+                  Promote this employee to an administrator. This grants elevated access across the
+                  system.
+                </Text>
+                <Popconfirm
+                  title="Assign to admin"
+                  description="Are you sure to assign this employee as an admin?"
+                  onConfirm={() => assignToAdmin(id)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button type="primary" icon={<CrownOutlined />}>
+                    Confirm Admin
+                  </Button>
+                </Popconfirm>
+              </Section>
+            ),
+          },
+        ]
       : []),
   ];
 
   return (
-    <div style={{ padding: 16 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      {/* HEADER BAND */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          position: "relative",
+          borderRadius: 12,
+          overflow: "hidden",
+          background: color.bg,
+          border: `1px solid ${LINE}`,
+          padding: 22,
+        }}
+      >
+        <div style={{ position: "absolute", top: 0, left: 0, height: 3, width: "100%", background: color.fg }} />
+        <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
+          {/* Avatar tile */}
+          <motion.div
+            initial={{ scale: 0.85, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.05 }}
+            style={{
+              width: 66,
+              height: 66,
+              borderRadius: 16,
+              background: avatarGradient(color),
+              border: "3px solid #fff",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 680,
+              fontSize: 22,
+              flexShrink: 0,
+              boxShadow: `0 6px 16px ${color.fg}45`,
+            }}
+          >
+            {getInitials(name)}
+          </motion.div>
+
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 20, fontWeight: 680, color: "#101828" }}>{name || "—"}</span>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "3px 10px",
+                  borderRadius: 999,
+                  background: "#fff",
+                  border: `1px solid ${isActive ? "#BBF7D0" : LINE}`,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: isActive ? "#16A34A" : "#667085",
+                }}
+              >
+                <span
+                  style={{
+                    width: 7,
+                    height: 7,
+                    borderRadius: "50%",
+                    background: isActive ? "#16A34A" : "#98A2B3",
+                  }}
+                />
+                {isActive ? "Active" : "Inactive"}
+              </span>
+            </div>
+            <div style={{ fontSize: 14, color: "#475467", marginTop: 3 }}>
+              {designation || "—"}
+              {department ? ` · ${department}` : ""}
+            </div>
+
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
+              <span style={metaChip}>
+                <IdcardOutlined /> {employee_id || "—"}
+              </span>
+              {unit_name && (
+                <span style={metaChip}>
+                  <BankOutlined /> {unit_name}
+                </span>
+              )}
+              {role && (
+                <span style={metaChip}>
+                  <CrownOutlined /> {role}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Quick actions */}
+          <div style={{ display: "flex", gap: 8 }}>
+            {contact_no && (
+              <a href={`tel:${contact_no}`} style={quickAction} title="Call">
+                <PhoneOutlined />
+              </a>
+            )}
+            {email && (
+              <a href={`mailto:${email}`} style={quickAction} title="Email">
+                <MailOutlined />
+              </a>
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* TABS */}
       <Tabs defaultActiveKey="1" type="line" items={items} />
     </div>
   );

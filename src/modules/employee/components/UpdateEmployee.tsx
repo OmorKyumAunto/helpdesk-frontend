@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SendOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from "antd";
+import { CloseOutlined, SendOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, InputNumber, Row, Select, Tabs } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -11,12 +11,12 @@ import { validateMobileNumber } from "../../../common/phoneNumberValidator";
 import { useGetLicensesQuery } from "../../Licenses/api/licenseEndPoint";
 import { useUpdateEmployeeMutation } from "../api/employeeEndPoint";
 import { IEmployee, IFromData } from "../types/employeeTypes";
+import { avatarGradient, getAvatarColor, getInitials, LINE } from "../utils/avatar";
 const { Option } = Select;
 
 const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
   const { data: profile } = useGetMeQuery();
   const employeeID = profile?.data?.employee_id;
-  console.log(profile?.data?.role_id);
   const {
     id,
     role_id,
@@ -40,6 +40,38 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [activeTab, setActiveTab] = useState("basic");
+
+  // Fields that live on each tab — used to jump to the right tab on a
+  // validation error that's on a hidden tab.
+  const TAB_FIELDS: Record<string, string[]> = {
+    basic: [
+      "employee_id",
+      "name",
+      "designation",
+      "contact_no",
+      "email",
+      "department",
+      "date_of_birth",
+      "blood_group",
+    ],
+    work: [
+      "joining_date",
+      "unit_name",
+      "business_type",
+      "line_of_business",
+      "grade",
+      "pabx",
+      "licenses",
+    ],
+  };
+
+  const onFinishFailed = ({ errorFields }: any) => {
+    const firstField = errorFields?.[0]?.name?.[0];
+    if (firstField && !TAB_FIELDS[activeTab].includes(firstField)) {
+      setActiveTab(TAB_FIELDS.basic.includes(firstField) ? "basic" : "work");
+    }
+  };
   const [UpdateEmployee, { isLoading, isSuccess }] =
     useUpdateEmployeeMutation();
   const { data } = useGetLicensesQuery({ status: "active" });
@@ -118,105 +150,157 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
     }
   }, [isSuccess]);
   
-  return (
-    <>
-      <Row justify="center" align="middle" style={{ maxWidth: "auto" }}>
-        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-          <Form layout="vertical" form={form} onFinish={onFinish}>
-            <Card
-              className="border"
-              style={{
-                marginBottom: "1rem",
-                marginTop: "1rem",
-              }}
-            >
-              <Row align={"middle"} gutter={[5, 16]}>
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    name="employee_id"
-                    rules={[{ required: true }]}
-                    label="Employee ID"
-                    required
-                  >
-                    <Input
-                      placeholder="Enter Employee ID"
-                      type="text"
-                      disabled={employeeID === "Assetteam" || employeeID === "Laxfo"}
-                    />
-                  </Form.Item>
-                </Col>
+  const headerColor = getAvatarColor(name || employee_id);
 
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    name="name"
-                    rules={[{ required: true }]}
-                    label="Employee Name"
-                    required
-                  >
-                    <Input placeholder="Enter Employee Name" type="text" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    name="designation"
-                    label="Employee Designation"
-                    rules={[{ required: true }]}
-                  >
-                    <Input
-                      placeholder="Enter Employee Designation"
-                      type="text"
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    name="contact_no"
-                    label="Contact No"
-                    rules={[
-                      { required: true, validator: validateMobileNumber },
-                    ]}
-                  >
-                    <Input
-                      addonBefore="+88"
-                      placeholder="Enter Contact No"
-                      type="number"
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    label="Employee Email"
-                    name="email"
-                    rules={[{ required: true }]}
-                  >
-                    <Input placeholder="Enter employee email" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    label="Employee Department"
-                    name="department"
-                    rules={[{ required: true }]}
-                  >
-                    <Input placeholder="Enter employee department" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <DateInput
-                    label="Date of Joining"
-                    name="joining_date"
-                    placeholder="Select Joining Date"
-                    rules={[{ required: true }]}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <DateInput
-                    label="Date of Birth"
-                    name="date_of_birth"
-                    placeholder="Select Date of Birth"
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12}>
+  return (
+    <Form layout="vertical" form={form} onFinish={onFinish} onFinishFailed={onFinishFailed}>
+      {/* Header band */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
+          padding: 18,
+          borderRadius: 12,
+          background: headerColor.bg,
+          border: `1px solid ${LINE}`,
+          marginBottom: 18,
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            width: 54,
+            height: 54,
+            borderRadius: 14,
+            background: avatarGradient(headerColor),
+            color: "#fff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontWeight: 680,
+            fontSize: 19,
+            flexShrink: 0,
+            boxShadow: `0 6px 14px ${headerColor.fg}45`,
+          }}
+        >
+          {getInitials(name)}
+        </div>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontSize: 17, fontWeight: 680, color: "#101828" }}>{name || "Edit Employee"}</div>
+          <div style={{ fontSize: 13, color: "#667085" }}>
+            {designation || "—"}
+            {employee_id ? ` · ${employee_id}` : ""}
+          </div>
+        </div>
+      </div>
+
+      <Tabs
+        activeKey={activeTab}
+        onChange={setActiveTab}
+        items={[
+          {
+            key: "basic",
+            label: "Basic Info",
+            forceRender: true,
+            children: (
+              <Row gutter={[16, 4]}>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              name="employee_id"
+              rules={[{ required: true }]}
+              label="Employee ID"
+              required
+            >
+              <Input
+                placeholder="Enter Employee ID"
+                type="text"
+                disabled={employeeID === "Assetteam" || employeeID === "Laxfo"}
+              />
+            </Form.Item>
+          </Col>
+
+          <Col xs={24} sm={12}>
+            <Form.Item
+              name="name"
+              rules={[{ required: true }]}
+              label="Employee Name"
+              required
+            >
+              <Input placeholder="Enter Employee Name" type="text" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              name="designation"
+              label="Employee Designation"
+              rules={[{ required: true }]}
+            >
+              <Input placeholder="Enter Employee Designation" type="text" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              name="contact_no"
+              label="Contact No"
+              rules={[{ required: true, validator: validateMobileNumber }]}
+            >
+              <Input addonBefore="+88" placeholder="Enter Contact No" type="number" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item label="Employee Email" name="email" rules={[{ required: true }]}>
+              <Input placeholder="Enter employee email" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label="Employee Department"
+              name="department"
+              rules={[{ required: true }]}
+            >
+              <Input placeholder="Enter employee department" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <DateInput
+              label="Date of Birth"
+              name="date_of_birth"
+              placeholder="Select Date of Birth"
+            />
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item label="Blood Group" name="blood_group">
+              <Select showSearch placeholder="Select Blood Group">
+                <Option value="A+">A+</Option>
+                <Option value="A-">A-</Option>
+                <Option value="B+">B+</Option>
+                <Option value="B-">B-</Option>
+                <Option value="AB+">AB+</Option>
+                <Option value="AB-">AB-</Option>
+                <Option value="O+">O+</Option>
+                <Option value="O-">O-</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+              </Row>
+            ),
+          },
+          {
+            key: "work",
+            label: "Employment Details",
+            forceRender: true,
+            children: (
+              <Row gutter={[16, 4]}>
+          <Col xs={24} sm={12}>
+            <DateInput
+              label="Date of Joining"
+              name="joining_date"
+              placeholder="Select Joining Date"
+              rules={[{ required: true }]}
+            />
+          </Col>
+          <Col xs={24} sm={12}>
                   <Form.Item
                     label="Payroll Unit"
                     name="unit_name"
@@ -298,7 +382,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                   </Form.Item>
                 </Col>
 
-                <Col xs={24} sm={24} md={12}>
+                <Col xs={24} sm={12}>
                   <Form.Item
                     label="Business Type"
                     name="business_type"
@@ -307,7 +391,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                     <Input placeholder="Enter business type" />
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={24} md={12}>
+                <Col xs={24} sm={12}>
                   <Form.Item
                     label="Line of Business"
                     name="line_of_business"
@@ -316,7 +400,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                     <Input placeholder="Enter line of business" />
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={24} md={12}>
+                <Col xs={24} sm={12}>
                   <Form.Item
                     label="Grade"
                     name="grade"
@@ -325,32 +409,12 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                     <Input placeholder="Enter grade" />
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={24} md={12}>
-                  <Form.Item
-                    label="Blood Group"
-                    name="blood_group"
-                  // rules={[
-                  //   { required: true, message: "Please select blood group" },
-                  // ]}
-                  >
-                    <Select showSearch placeholder="Select Blood Group">
-                      <Option value="A+">A+</Option>
-                      <Option value="A-">A-</Option>
-                      <Option value="B+">B+</Option>
-                      <Option value="B-">B-</Option>
-                      <Option value="AB+">AB+</Option>
-                      <Option value="AB-">AB-</Option>
-                      <Option value="O+">O+</Option>
-                      <Option value="O-">O-</Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={12}>
+                <Col xs={24} sm={12}>
                   <Form.Item label="PABX" name="pabx">
-                    <InputNumber className="w-full" placeholder="Enter pabx" />
+                    <InputNumber style={{ width: "100%" }} placeholder="Enter pabx" />
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={24} md={12}>
+                <Col xs={24} sm={12}>
                   <Form.Item
                     label="Licenses"
                     name="licenses"
@@ -385,24 +449,27 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                   </Form.Item>
                 </Col>
               </Row>
-            </Card>
+            ),
+          },
+        ]}
+      />
 
-            <Form.Item style={{ marginTop: "1rem" }}>
-              <div style={{ textAlign: "end" }}>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  icon={<SendOutlined />}
-                  loading={isLoading}
-                >
-                  Update
-                </Button>
-              </div>
-            </Form.Item>
-          </Form>
-        </Col>
-      </Row>
-    </>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          gap: 10,
+          marginTop: 4,
+        }}
+      >
+        <Button icon={<CloseOutlined />} onClick={() => dispatch(setCommonModal())}>
+          Cancel
+        </Button>
+        <Button htmlType="submit" type="primary" icon={<SendOutlined />} loading={isLoading}>
+          Update Employee
+        </Button>
+      </div>
+    </Form>
   );
 };
 

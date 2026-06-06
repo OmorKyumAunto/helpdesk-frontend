@@ -1,18 +1,33 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Card, Input, Select, Table } from "antd";
+import {
+  AppstoreOutlined,
+  EyeOutlined,
+  SearchOutlined,
+  TableOutlined,
+} from "@ant-design/icons";
+import { Button, Card, Input, Segmented, Select, Tag, Typography } from "antd";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { generatePagination } from "../../../common/TablePagination copy";
+import { LuUsers2 } from "react-icons/lu";
+import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useGetEmployeesQuery } from "../api/employeeEndPoint";
-import { IEmployeeParams } from "../types/employeeTypes";
-import { EmployeeTableColumnsForEmployeePanel } from "../utils/EmployeeTableColumnsForEmployeePanel";
+import ActionIconButton from "../components/ActionIconButton";
+import AddressBookGrid from "../components/AddressBookGrid";
+import AddressBookList from "../components/AddressBookList";
+import EmployeeDetails from "./EmployeeDetails";
+import { IEmployee, IEmployeeParams } from "../types/employeeTypes";
+import { BRAND_GRADIENT } from "../utils/avatar";
+import { BLOOD_GROUPS, UNIT_NAMES } from "../utils/units";
+
 const { Option } = Select;
+const { Text } = Typography;
+
+const PAGE_SIZE_OPTIONS = ["50", "100", "200", "300", "500"];
 
 const EmployeeListForEmployeePanel = () => {
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 50,
-  });
+  const dispatch = useDispatch();
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const [searchParams, setSearchParams] = useSearchParams({
     page: "1",
@@ -28,272 +43,238 @@ const EmployeeListForEmployeePanel = () => {
   });
 
   useEffect(() => {
-    setFilter({
-      ...filter,
+    setFilter((prev) => ({
+      ...prev,
       limit: Number(pageSize),
       offset: skipValue,
-    });
+    }));
   }, [page, pageSize, skipValue]);
 
-  const { data, isLoading, isFetching } = useGetEmployeesQuery({
-    ...filter,
-  });
+  const { data, isLoading, isFetching } = useGetEmployeesQuery({ ...filter });
+
+  const total = data ? Number(data?.total) : 0;
+  const employees: IEmployee[] = data?.data?.length ? data.data : [];
+
+  const handlePageChange = (current: number, size: number) => {
+    setSearchParams({ page: String(current), pageSize: String(size) });
+    setFilter((prev) => ({
+      ...prev,
+      offset: (current - 1) * size,
+      limit: size,
+    }));
+  };
+
+  const showDetails = (record: IEmployee) => {
+    dispatch(
+      setCommonModal({
+        title: "Employee Details",
+        content: <EmployeeDetails employee={record} />,
+        show: true,
+        width: 740,
+      })
+    );
+  };
+
+  const renderCardActions = (record: IEmployee) => (
+    <ActionIconButton
+      title="View details"
+      tone="blue"
+      icon={<EyeOutlined />}
+      onClick={() => showDetails(record)}
+    />
+  );
 
   return (
-    <>
-      <div>
-        <Card
-          title={`Employee List`}
-          style={{
-            boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
-            marginBottom: "1rem",
-          }}
-        >
+    <Card
+      style={{
+        boxShadow: "0 1px 2px rgba(16,24,40,.06)",
+        borderRadius: 14,
+        marginBottom: "1rem",
+      }}
+      styles={{ body: { paddingTop: 16 } }}
+      title={
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 11,
+              background: BRAND_GRADIENT,
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 10px rgba(23,117,187,.3)",
+            }}
+          >
+            <LuUsers2 size={20} />
+          </span>
+          <span style={{ display: "flex", flexDirection: "column", lineHeight: 1.2 }}>
+            <span style={{ fontSize: 16, fontWeight: 600 }}>Address Book</span>
+            <Text type="secondary" style={{ fontSize: 12, fontWeight: 400 }}>
+              {total} {total === 1 ? "contact" : "contacts"}
+            </Text>
+          </span>
+        </div>
+      }
+    >
+      {/* Toolbar */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <Segmented
+            size="large"
+            value={viewMode}
+            onChange={(v) => setViewMode(v as "grid" | "list")}
+            options={[
+              { value: "grid", label: "Grid", icon: <AppstoreOutlined /> },
+              { value: "list", label: "List", icon: <TableOutlined /> },
+            ]}
+          />
+          <Input
+            allowClear
+            size="large"
+            value={filter.key}
+            prefix={<SearchOutlined style={{ color: "#98A2B3" }} />}
+            onChange={(e) => setFilter({ ...filter, key: e.target.value, offset: 0 })}
+            placeholder="Search by name, ID, phone or email…"
+            style={{
+              flex: 1,
+              minWidth: 240,
+              maxWidth: 420,
+              borderRadius: 11,
+              background: "#F9FAFB",
+            }}
+          />
+          <Select
+            allowClear
+            showSearch
+            size="large"
+            value={filter.unit_name || undefined}
+            style={{ minWidth: 190 }}
+            onChange={(e) => setFilter({ ...filter, unit_name: e, offset: 0 })}
+            placeholder="All Units"
+            optionFilterProp="children"
+          >
+            {UNIT_NAMES.map((unit) => (
+              <Option key={unit} value={unit}>
+                {unit}
+              </Option>
+            ))}
+          </Select>
+          <Select
+            allowClear
+            size="large"
+            value={filter.blood_group || undefined}
+            style={{ minWidth: 170 }}
+            onChange={(e) => setFilter({ ...filter, blood_group: e, offset: 0 })}
+            placeholder="Blood Group"
+          >
+            {BLOOD_GROUPS.map((bg) => (
+              <Option key={bg} value={bg}>
+                {bg}
+              </Option>
+            ))}
+          </Select>
+        </div>
+
+        {(filter.unit_name || filter.blood_group) && (
           <div
             style={{
               display: "flex",
-              justifyContent: "right",
-              flexWrap: "wrap",
+              alignItems: "center",
               gap: 8,
-              marginBottom: "12px",
+              flexWrap: "wrap",
+              marginTop: 14,
+              paddingTop: 14,
+              borderTop: "1px solid #F2F4F7",
             }}
           >
-            <div>
-              <Input
-                prefix={<SearchOutlined />}
-                onChange={(e) =>
-                  setFilter({ ...filter, key: e.target.value, offset: 0 })
-                }
-                placeholder="Search..."
-              />
-            </div>
-            <Select
-              style={{ width: "160px", marginBottom: 8 }}
-              onChange={(e) => setFilter({ ...filter, unit_name: e, offset: 0 })}
-              placeholder="Select Unit Name"
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: 0.4,
+                textTransform: "uppercase",
+                color: "#98A2B3",
+              }}
             >
-              <Option value="">All</Option>
-              {[
-                'Sylhet EZ',
-                'Corporate Office',
-                'Jinnat Apparels Ltd',
-                'Jinnat Knitwears Ltd',
-                'Jinnat Fashions Ltd',
-                'Matin Spinning Mills PLC',
-                'Thanbee Print World Ltd',
-                'Hamza Textiles Ltd',
-                'Flamingo Fashions Ltd',
-                'DB Tex Ltd',
-                'Dulal Brothers Ltd',
-                'Color City Ltd',
-                'DBL Digital Ltd',
-                'Parkway Packaging and Printing Ltd',
-                'Mymun Textiles Ltd',
-                'DBL Pharmaceuticals Ltd',
-                'DBL Ceramics Ltd',
-                'DBL Telecom Ltd',
-                'DBL Distributions Ltd',
-                'DBL Lifestyles Ltd',
-                'Digital Corporate',
-                'ECO Thread Plant',
-                'DBL Dredging Ltd.',
-                'Farmgate Office',
-                'Mawna Fashions Ltd.',
-                'Ceramics Plant',
-                'DB TRIMS Ltd.',
-                'Jinnat Complex',
-                'Mymun Complex',
-                'Glory Textile and Apparels Limited',
-                'DBL Industrial Park Ltd',
-                'Knitting',
-                'Thanbee Complex',
-                'DBL Textile Recycling Ltd',
-                'Matin Complex',
-                'Jinnat Textile Mills Ltd',
-                'Textile Testing Services Ltd',
-                'Atelier Sourcing Ltd',
-                'Mawna Fashions Ltd',
-                'DBL Tours and Travels Limited',
-                'Chittagong C and F Office',
-                'Ceramics Field',
-                'Flamingo2',
-                'Dredging Office',
-                'JKL2',
-                'Pharma Field',
-                'Pharma Plant',
-                'Lifestyle Corporate',
-                'Pharma Corporate',
-                'ECO Thread Corporate',
-                'DBTrims Plant',
-                'Ceramics Corporate',
-                'PPPL Corporate',
-                'EUDB Accessories Limited',
-                'PPPL Plant',
-                'DBL Healthcare Ltd',
-                'EUDB',
-                'DBLCL',
-                'Jinnat Knitting Ltd',
-                'DBL Pharma',
-                'FFL2',
-                'eco Plant',
-                'MSML Complex',
-                'DTRL (Matin Complex)',
-              ].map((unit) => (
-                <Option key={unit} value={unit}>
-                  {unit}
-                </Option>
-              ))}
-            </Select>
-            <Select
-              style={{ width: "180px" }}
-              onChange={(e) =>
-                setFilter({ ...filter, blood_group: e, offset: 0 })
-              }
-              placeholder="Select Blood Group"
-            >
-              <Option value="">All</Option>
-              <Option value="A+">A+</Option>
-              <Option value="A-">A-</Option>
-              <Option value="B+">B+</Option>
-              <Option value="B-">B-</Option>
-              <Option value="AB+">AB+</Option>
-              <Option value="AB-">AB-</Option>
-              <Option value="O+">O+</Option>
-              <Option value="O-">O-</Option>
-            </Select>
-            {/* <>
-              <PDFDownload
-                PDFFileName="employee_list"
-                fileHeader="EMPLOYEE LIST"
-                PDFHeader={[
-                  "Employee ID",
-                  "Employee Name",
-                  "Department",
-                  "Designation",
-                  "Email",
-                  "Contact No",
-                  "Date of Joining",
-                  "Unit Name",
-                ]}
-                PDFData={
-                  data?.data?.length
-                    ? data?.data?.map(
-                        ({
-                          employee_id,
-                          name,
-                          department,
-                          designation,
-                          email,
-                          contact_no,
-                          joining_date,
-                          unit_name,
-                        }: any) => {
-                          const data = {
-                            "Employee ID": employee_id,
-                            "Employee Name": name,
-                            Department: department,
-                            Designation: designation,
-                            Email: email,
-                            "Contact No": contact_no,
-                            "Date of Joining":
-                              dayjs(joining_date).format("DD-MM-YYYY"),
-                            "Unit Name": unit_name,
-                          };
-                          return data;
-                        }
-                      )
-                    : []
-                }
-              />
-            </> */}
-            {/* <Space>
-              <ExcelDownload
-                excelName={"employee_list"}
-                excelTableHead={[
-                  "Employee ID",
-                  "Employee Name",
-                  "Department",
-                  "Designation",
-                  "Email",
-                  "Contact No",
-                  "Date of Joining",
-                  "Unit Name",
-                  "Licenses",
-                ]}
-                excelData={
-                  data?.data?.length
-                    ? data?.data?.map(
-                        ({
-                          employee_id,
-                          name,
-                          department,
-                          designation,
-                          email,
-                          contact_no,
-                          joining_date,
-                          unit_name,
-                          licenses,
-                        }: any) => {
-                          const data = {
-                            "Employee ID": employee_id,
-                            "Employee Name": name,
-                            Department: department,
-                            Designation: designation,
-                            Email: email,
-                            "Contact No": contact_no,
-                            "Date of Joining":
-                              dayjs(joining_date).format("DD-MM-YYYY"),
-                            "Unit Name": unit_name,
-                            Licenses: licenses,
-                          };
-                          return data;
-                        }
-                      )
-                    : []
-                }
-              />
-            </Space> */}
-          </div>
-          <div>
-            <Table
-              rowKey={"id"}
+              Active
+            </span>
+            {filter.unit_name && (
+              <Tag
+                closable
+                color="blue"
+                onClose={(e) => {
+                  e.preventDefault();
+                  setFilter({ ...filter, unit_name: undefined, offset: 0 });
+                }}
+                style={{ borderRadius: 8, padding: "3px 8px", margin: 0 }}
+              >
+                Unit: {filter.unit_name}
+              </Tag>
+            )}
+            {filter.blood_group && (
+              <Tag
+                closable
+                color="volcano"
+                onClose={(e) => {
+                  e.preventDefault();
+                  setFilter({ ...filter, blood_group: undefined, offset: 0 });
+                }}
+                style={{ borderRadius: 8, padding: "3px 8px", margin: 0 }}
+              >
+                Blood: {filter.blood_group}
+              </Tag>
+            )}
+            <Button
+              type="link"
               size="small"
-              bordered
-              loading={isLoading || isFetching}
-              dataSource={data?.data?.length ? data.data : []}
-              columns={EmployeeTableColumnsForEmployeePanel()}
-              scroll={{ x: true }}
-              pagination={{
-                ...generatePagination(
-                  Number(data?.total),
-                  setPagination,
-                  pagination
-                ),
-                current: Number(page),
-                showSizeChanger: true,
-                defaultPageSize: 50,
-                pageSizeOptions: ["50", "100", "200", "300", "500"],
-                total: data ? Number(data?.total) : 0,
-                showTotal: (total) => `Total ${total} `,
-              }}
-              onChange={(pagination) => {
-                setSearchParams({
-                  page: String(pagination.current),
-                  pageSize: String(pagination.pageSize),
-                });
-                setFilter({
-                  ...filter,
-                  offset:
-                    ((pagination.current || 1) - 1) *
-                    (pagination.pageSize || 50),
-                  limit: pagination.pageSize!,
-                });
-              }}
-            />
+              onClick={() => setFilter({ limit: filter.limit, offset: 0 })}
+              style={{ padding: 0 }}
+            >
+              Clear all
+            </Button>
           </div>
-        </Card>
+        )}
       </div>
-    </>
+
+      {/* Content */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={viewMode}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+        >
+          {viewMode === "grid" ? (
+            <AddressBookGrid
+              data={employees}
+              loading={isLoading || isFetching}
+              page={Number(page)}
+              pageSize={Number(pageSize)}
+              total={total}
+              pageSizeOptions={PAGE_SIZE_OPTIONS}
+              onPageChange={handlePageChange}
+              onView={showDetails}
+              renderActions={renderCardActions}
+            />
+          ) : (
+            <AddressBookList
+              data={employees}
+              loading={isLoading || isFetching}
+              page={Number(page)}
+              pageSize={Number(pageSize)}
+              total={total}
+              pageSizeOptions={PAGE_SIZE_OPTIONS}
+              onPageChange={handlePageChange}
+              onView={showDetails}
+              renderActions={renderCardActions}
+            />
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </Card>
   );
 };
 
