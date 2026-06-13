@@ -1,6 +1,8 @@
 import { Navigate, useLocation } from "react-router-dom";
 import GlobalLoader from "../components/loader/GlobalLoader";
+import ServerUnreachable from "../components/serverError/ServerUnreachable";
 import { userApi } from "../app/api/userApi";
+import { isNetworkError } from "../app/slice/baseQuery";
 import { IUser } from "../auth/types/loginTypes";
 import { TOKEN } from "../helper/constant";
 
@@ -13,10 +15,13 @@ const RequireUser = ({
 }): any => {
   const location = useLocation();
 
-  const { isLoading } = userApi.endpoints.getMe.useQuery(undefined, {
-    skip: false,
-    refetchOnMountOrArgChange: true,
-  });
+  const { isLoading, error, refetch } = userApi.endpoints.getMe.useQuery(
+    undefined,
+    {
+      skip: false,
+      refetchOnMountOrArgChange: true,
+    }
+  );
   const storedUser = localStorage?.getItem(TOKEN);
   const token = storedUser ? storedUser : null;
 
@@ -35,6 +40,12 @@ const RequireUser = ({
 
   if (isLoading) {
     return <GlobalLoader />;
+  }
+
+  // Server down / offline: still logged in (token present) but the request
+  // never reached the server. Show a retry page instead of bouncing to /login.
+  if (token && isNetworkError(error as any)) {
+    return <ServerUnreachable onRetry={() => refetch()} />;
   }
 
   return token && profileData?.id ? (

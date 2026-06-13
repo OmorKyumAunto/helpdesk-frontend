@@ -36,7 +36,7 @@ export const api = createApi({
     }),
   }),
   tagTypes: [
-    "chat_inbox", 
+    "chat_inbox",
     "chat_messages",
     "slaConfig",
     "User",

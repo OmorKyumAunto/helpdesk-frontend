@@ -41,6 +41,7 @@ import Announcements from "./modules/announcements/pages/announcements";
 import CreateAnnouncement from "./modules/announcements/components/CreateAnnouncements";
 import CombineReportModal from "./modules/reports/components/CombineReportModal";
 import ChatPage from "./modules/chat/pages/ChatPage";
+import DatabaseBackup from "./modules/settings/pages/DatabaseBackup";
 
 // Standalone wrapper — full screen, no AppLayout (no sidebar/header)
 function ChatStandalone() {
@@ -122,6 +123,7 @@ export const routers = createBrowserRouter([
           { path: "tickets-config",  element: <TicketConfig /> },
           { path: "task-config",     element: <TaskCategoryList /> },
           { path: "zing-hr-sync",    element: <EmpDatabase /> },
+          { path: "backup",          element: <DatabaseBackup /> },
         ],
       },
     ],

@@ -8,10 +8,14 @@ import {
 import { setLogout } from "../features/userSlice";
 import { RootState } from "../store/store";
 
-const baseURL = "https://helpdesk.dbl-group.com:3003/api/v1";
+const baseURL = "http://localhost:3003/api/v1";
 
-export const socket_url = "https://helpdesk.dbl-group.com:3003";
-export const imageURLNew = "https://helpdesk.dbl-group.com:3003";
+export const socket_url = "http://localhost:3003";
+export const imageURLNew = "http://localhost:3003";
+
+// Backend AI endpoints (replaces the Firebase Gemini functions).
+export const aiChatUrl = `${baseURL}/ai/chat`;
+export const aiAnalyzeUrl = `${baseURL}/ai/analyze-ticket`;
 
 export const baseQuery = fetchBaseQuery({
   baseUrl: baseURL,
@@ -50,6 +54,13 @@ const isSessionExpired = (error?: FetchBaseQueryError): boolean => {
   }
 
   return false;
+};
+
+// True when the request never reached the server (server down / unreachable /
+// timed out / network offline) — as opposed to an HTTP error from the server.
+export const isNetworkError = (error?: FetchBaseQueryError): boolean => {
+  if (!error) return false;
+  return error.status === "FETCH_ERROR" || error.status === "TIMEOUT_ERROR";
 };
 
 export const baseQueryWithReAuth: BaseQueryFn<

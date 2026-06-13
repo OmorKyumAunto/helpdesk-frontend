@@ -3,10 +3,12 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import ChatShell, { ChatMessage } from "./ChatShell";
 import { ChatCircleDots } from "@phosphor-icons/react";
 import { streamChatWithGemini, type FuncMsg } from "./api/geminiStream";
+import { aiChatUrl } from "../../app/slice/baseQuery";
 import { Button, Tooltip, message as antdMsg } from "antd";
 
 const uid = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-const STREAM_URL = import.meta.env.VITE_GEMINI_STREAM_URL as string;
+// Backend Gemini chat endpoint (replaces the Firebase Cloud Function stream).
+const STREAM_URL = aiChatUrl;
 
 const SYSTEM_PROMPT = `
 You are DBL AI Assistant for DBL Group IT.

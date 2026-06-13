@@ -105,8 +105,10 @@ export async function streamChatWithGemini(args: StreamArgs) {
   }
 
   try {
+    // Backend verifyToken expects the raw JWT (no "Bearer " prefix), matching
+    // the rest of the app's RTK Query baseQuery convention.
     const token = localStorage.getItem(TOKEN);
-    const authHeader = authToken ?? (token ? `Bearer ${token}` : undefined);
+    const authHeader = authToken ?? (token ?? undefined);
 
     const res = await fetch(url, {
       method: "POST",

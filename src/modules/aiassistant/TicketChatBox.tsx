@@ -38,6 +38,8 @@ import { useCreateRaiseTicketMutation } from "../ticket/api/ticketEndpoint";
 import { useAppDispatch } from "../../app/store/store";
 import { setCommonModal } from "../../app/slice/modalSlice";
 import { useGetMeQuery } from "../../app/api/userApi";
+import { aiAnalyzeUrl } from "../../app/slice/baseQuery";
+import { TOKEN } from "../../helper/constant";
 import SeatingLocationModal from "../employee/components/SeatingLocationModal";
 
 import {
@@ -465,10 +467,18 @@ export default function TicketChatBox({
     setAnalyzing(true);
 
     try {
-      const fn = httpsCallable(getFunctions(app), "analyzeTicketWithGemini");
-      const res = await fn({ transcript: issue, categories: categoryTitlesForAI });
+      const token = localStorage.getItem(TOKEN);
+      const res = await fetch(aiAnalyzeUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { authorization: token } : {}),
+        },
+        body: JSON.stringify({ transcript: issue, categories: categoryTitlesForAI }),
+      });
+      if (!res.ok) throw new Error((await res.json().catch(() => ({})))?.message || "Analyze failed");
 
-      const ai = (res.data as any)?.data as AnalyzeResult | undefined;
+      const ai = (await res.json())?.data as AnalyzeResult | undefined;
       if (!ai) throw new Error("Analyze returned empty");
 
       setAnalysis(ai);

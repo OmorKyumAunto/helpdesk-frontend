@@ -203,6 +203,17 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
                   key: "/settings/zing-hr-sync",
                   icon: <MdOutlineSync size={16} />,
                 },
+                ...(roleId === 1
+                  ? [
+                      {
+                        label: (
+                          <Link to="/settings/backup">Database Backup</Link>
+                        ),
+                        key: "/settings/backup",
+                        icon: <MdOutlineSync size={16} />,
+                      },
+                    ]
+                  : []),
               ]
               : []),
           ],
