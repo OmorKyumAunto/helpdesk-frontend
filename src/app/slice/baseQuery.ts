@@ -46,6 +46,9 @@ const isSessionExpired = (error?: FetchBaseQueryError): boolean => {
     if (
       message.includes("timeout login first") ||
       message.includes("login first") ||
+      message.includes("login again") ||
+      message.includes("user not found") ||
+      message.includes("unauthorize") ||
       message.includes("token expired") ||
       message.includes("jwt expired")
     ) {
