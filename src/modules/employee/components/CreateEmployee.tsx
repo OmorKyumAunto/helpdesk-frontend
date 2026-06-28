@@ -157,6 +157,7 @@ const CreateEmployee = () => {
                       'Parkway Packaging and Printing Ltd',
                       'Mymun Textiles Ltd',
                       'DBL Pharmaceuticals Ltd',
+                      'Neural Semiconductor',
                       'DBL Ceramics Ltd',
                       'DBL Telecom Ltd',
                       'DBL Distributions Ltd',

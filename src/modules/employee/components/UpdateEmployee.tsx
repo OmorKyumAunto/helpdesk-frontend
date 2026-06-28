@@ -76,11 +76,11 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
     useUpdateEmployeeMutation();
   const { data } = useGetLicensesQuery({ status: "active" });
   const { refetch } = useGetMeQuery();
-  
+
   useEffect(() => {
     // FIX: Handle licenses being either array or empty string
     const licenseIds = Array.isArray(licenses) ? licenses?.map((item) => item?.id) : [];
-    
+
     form.setFieldsValue({
       employee_id,
       name,
@@ -142,14 +142,14 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
 
     UpdateEmployee({ data: formattedData, id });
   };
-  
+
   useEffect(() => {
     if (isSuccess) {
       refetch();
       dispatch(setCommonModal());
     }
   }, [isSuccess]);
-  
+
   const headerColor = getAvatarColor(name || employee_id);
 
   return (
@@ -205,84 +205,84 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
             forceRender: true,
             children: (
               <Row gutter={[16, 4]}>
-          <Col xs={24} sm={12}>
-            <Form.Item
-              name="employee_id"
-              rules={[{ required: true }]}
-              label="Employee ID"
-              required
-            >
-              <Input
-                placeholder="Enter Employee ID"
-                type="text"
-                disabled={employeeID === "Assetteam" || employeeID === "Laxfo"}
-              />
-            </Form.Item>
-          </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="employee_id"
+                    rules={[{ required: true }]}
+                    label="Employee ID"
+                    required
+                  >
+                    <Input
+                      placeholder="Enter Employee ID"
+                      type="text"
+                      disabled={employeeID === "Assetteam" || employeeID === "Laxfo"}
+                    />
+                  </Form.Item>
+                </Col>
 
-          <Col xs={24} sm={12}>
-            <Form.Item
-              name="name"
-              rules={[{ required: true }]}
-              label="Employee Name"
-              required
-            >
-              <Input placeholder="Enter Employee Name" type="text" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12}>
-            <Form.Item
-              name="designation"
-              label="Employee Designation"
-              rules={[{ required: true }]}
-            >
-              <Input placeholder="Enter Employee Designation" type="text" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12}>
-            <Form.Item
-              name="contact_no"
-              label="Contact No"
-              rules={[{ required: true, validator: validateMobileNumber }]}
-            >
-              <Input addonBefore="+88" placeholder="Enter Contact No" type="number" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12}>
-            <Form.Item label="Employee Email" name="email" rules={[{ required: true }]}>
-              <Input placeholder="Enter employee email" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12}>
-            <Form.Item
-              label="Employee Department"
-              name="department"
-              rules={[{ required: true }]}
-            >
-              <Input placeholder="Enter employee department" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12}>
-            <DateInput
-              label="Date of Birth"
-              name="date_of_birth"
-              placeholder="Select Date of Birth"
-            />
-          </Col>
-          <Col xs={24} sm={12}>
-            <Form.Item label="Blood Group" name="blood_group">
-              <Select showSearch placeholder="Select Blood Group">
-                <Option value="A+">A+</Option>
-                <Option value="A-">A-</Option>
-                <Option value="B+">B+</Option>
-                <Option value="B-">B-</Option>
-                <Option value="AB+">AB+</Option>
-                <Option value="AB-">AB-</Option>
-                <Option value="O+">O+</Option>
-                <Option value="O-">O-</Option>
-              </Select>
-            </Form.Item>
-          </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="name"
+                    rules={[{ required: true }]}
+                    label="Employee Name"
+                    required
+                  >
+                    <Input placeholder="Enter Employee Name" type="text" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="designation"
+                    label="Employee Designation"
+                    rules={[{ required: true }]}
+                  >
+                    <Input placeholder="Enter Employee Designation" type="text" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    name="contact_no"
+                    label="Contact No"
+                    rules={[{ required: true, validator: validateMobileNumber }]}
+                  >
+                    <Input addonBefore="+88" placeholder="Enter Contact No" type="number" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Employee Email" name="email" rules={[{ required: true }]}>
+                    <Input placeholder="Enter employee email" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item
+                    label="Employee Department"
+                    name="department"
+                    rules={[{ required: true }]}
+                  >
+                    <Input placeholder="Enter employee department" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <DateInput
+                    label="Date of Birth"
+                    name="date_of_birth"
+                    placeholder="Select Date of Birth"
+                  />
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Form.Item label="Blood Group" name="blood_group">
+                    <Select showSearch placeholder="Select Blood Group">
+                      <Option value="A+">A+</Option>
+                      <Option value="A-">A-</Option>
+                      <Option value="B+">B+</Option>
+                      <Option value="B-">B-</Option>
+                      <Option value="AB+">AB+</Option>
+                      <Option value="AB-">AB-</Option>
+                      <Option value="O+">O+</Option>
+                      <Option value="O-">O-</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
               </Row>
             ),
           },
@@ -292,15 +292,15 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
             forceRender: true,
             children: (
               <Row gutter={[16, 4]}>
-          <Col xs={24} sm={12}>
-            <DateInput
-              label="Date of Joining"
-              name="joining_date"
-              placeholder="Select Joining Date"
-              rules={[{ required: true }]}
-            />
-          </Col>
-          <Col xs={24} sm={12}>
+                <Col xs={24} sm={12}>
+                  <DateInput
+                    label="Date of Joining"
+                    name="joining_date"
+                    placeholder="Select Joining Date"
+                    rules={[{ required: true }]}
+                  />
+                </Col>
+                <Col xs={24} sm={12}>
                   <Form.Item
                     label="Payroll Unit"
                     name="unit_name"
@@ -325,6 +325,7 @@ const UpdateEmployee = ({ employee }: { employee: IEmployee }) => {
                         'Parkway Packaging and Printing Ltd',
                         'Mymun Textiles Ltd',
                         'DBL Pharmaceuticals Ltd',
+                        'Neural Semiconductor',
                         'DBL Ceramics Ltd',
                         'DBL Telecom Ltd',
                         'DBL Distributions Ltd',
