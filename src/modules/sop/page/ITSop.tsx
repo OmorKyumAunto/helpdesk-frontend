@@ -17,21 +17,21 @@ const pdf10 = "https://www.dropbox.com/scl/fi/ei9ulf5wt2s7nxnrzov0u/HR-LAPTOP-DE
 const pdf11 = "https://www.dropbox.com/scl/fi/0gcdfhm4hq4pod8nlq0lr/SOP-1.0.3-EMAIL-USER-CREATION-AND-DEACTIVATION.pdf?rlkey=8ad5ov4lqh89cfzekjunr0d0m&st=2fxhk23f&raw=1";
 const pdf12 = "https://www.dropbox.com/scl/fi/57wrgrr21nworg8iuand8/SOP-1.0.4_EMAIL-ARCHIVING.pdf?rlkey=bvx3zokb41zbv94llj5b8lfii&st=2eyhjf4h&raw=1";
 const pdf13 = "https://www.dropbox.com/scl/fi/2lteqd3aszap5aczi90n6/SOP-1.0.5-Network-and-Infrastructure-Management.pdf?rlkey=ndxjk1jqjqfm48p5el5xvfw0b&st=vqxkx9pr&raw=1";
-const pdf14 = "https://www.dropbox.com/scl/fi/24klw27g9p95l8yx6zgp4/SOP-1.0.6-FIREWALL-CONFIGURATION.pdf?rlkey=7h9wu7wh70dfpugr08d05dhw1&st=0gxeqavg&raw=1";
+const pdf14 = "https://www.dropbox.com/scl/fi/1vrfk26whuwumu4lnrktm/Firewall-Configuration_Approved.pdf?rlkey=6zml5f2j8ysluwt9wfvjffumr&st=fvgwledz&raw=1";
 const pdf15 = "https://www.dropbox.com/scl/fi/bq3gu8cn3n445ri99czsx/Appendix-A-Switch-Configuration.pdf?rlkey=w7d9nkgxmxs560wvus4746c0u&st=zxguxl7m&raw=1";
 const pdf16 = "https://www.dropbox.com/scl/fi/hlgkzx07013i1h11ablcb/SOP-1.0.7_Network-Configuration.pdf?rlkey=xy5hf7e16amc5j85ybn9mc83k&st=3pqhi1bs&raw=1";
 const pdf17 = "https://www.dropbox.com/scl/fi/jnwyyyv8te7lmuuk4tlb3/APPENDIX0-A-INCIDENT-RESPONSE-TEAM.pdf?rlkey=8493nuewr06dsosndin5j5hit&st=swhvkykd&raw=1";
 const pdf18 = "https://www.dropbox.com/scl/fi/jen90i4b1s1tnx2lihy3b/APPENDIX0-B-IT-DRIVEN-BUSINESS-APPLICATION-LIST.pdf?rlkey=hdipuq9dhhg2tvpym14b511e5&st=1fpa6aab&raw=1";
-const pdf19 = "https://www.dropbox.com/scl/fi/03rjt4jxlskysyqeemra1/SOP-1.0.9_INCIDENT-RESPONSE.pdf?rlkey=2zoqzjar26l5h4oiymo6xfm92&st=p1ejuj6y&raw=1";
+const pdf19 = "https://www.dropbox.com/scl/fi/wk51lgib8io26mmcu3j0j/Incident-Response_Approved.pdf?rlkey=s4svxdieo0tm1lscou72w7m5y&st=30beml8q&raw=1";
 const pdf20 = "https://www.dropbox.com/scl/fi/zw6hxzmyo0qvpkar32axf/APPENDIX-A-LIST-OF-STANDALONE-SYSTEM.pdf?rlkey=kixx946chqgxa2zf2rjgux6iu&st=dtt5i690&raw=1";
 const pdf21 = "https://www.dropbox.com/scl/fi/rqvwiliosj5yy0isrxdbh/APPENDIX-B-DATA-BACKUP-REQUEST-FORM.pdf?rlkey=jsss15t41fd8wkuujsnogcxfd&st=515g7c4r&raw=1";
 const pdf22 = "https://www.dropbox.com/scl/fi/7zt6ojizc24thhdw1mgsd/APPENDIX-C-DATA-RESTORE-FORM.pdf?rlkey=2dgsvdql2k1w9iha1feyhnslu&st=f543s39i&raw=1";
 const pdf23 = "https://www.dropbox.com/scl/fi/i5aqks5td0q4sh3u3e6q5/APPENDIX-D-QUARTERLY-HALF-YEARLY-YEARLY-DATA-BACKUP-RECORD.pdf?rlkey=rrzitebqpesi4aiorclmm80p6&st=uat48120&raw=1";
 const pdf24 = "https://www.dropbox.com/scl/fi/z01qsyk0mhmftdxd17shl/APPENDIX-E-LOGBOOK-FOR-STANDALONE-SYSTEMUSER-DATA-RETENTION.pdf?rlkey=42tnokxwcfy0ozzsmvnf8e11a&st=ds35x0vy&raw=1";
-const pdf25 = "https://www.dropbox.com/scl/fi/svoyd4jtdl8zxbrszkt5x/SOP-1.0.10_DATA-BACKUP-AND-RECOVERY.pdf?rlkey=h43s8crvmg8656vdeymnx56hu&st=lx5kviah&raw=1";
+const pdf25 = "https://www.dropbox.com/scl/fi/5dk6vsg2a0o0e3rly64n5/Data-Backup-Recovery_Approved.pdf?rlkey=ta98uf1m820lv3oivqqd5zglu&st=39bdtotl&raw=1";
 const pdf26 = "https://www.dropbox.com/scl/fi/67w9lf4yua83fpkn2lf9s/APPENDIX-A_USER-ACCESS-AUTHORIZATION-FORM.pdf?rlkey=bv6kw11pnp3dh6gr1rsvt8nlm&st=ewgcwc9x&raw=1";
 const pdf27 = "https://www.dropbox.com/scl/fi/v5vbtildvybssn4bdd4jb/IT-ACCESS-CONTROL-POLICY.pdf?rlkey=9eeoeba0ts8g5u12p1c8w0kcv&st=8doasit8&raw=1";
-const pdf28 = "https://www.dropbox.com/scl/fi/00qh69urnfcqu1rnso8de/SOP-1.0.11_IT-ACCESS-CONTROL.pdf?rlkey=f05lgpmwgrvkq2owf5oaz56xm&st=qyx3gove&raw=1";
+const pdf28 = "https://www.dropbox.com/scl/fi/5z310738pnzwzqk9ezve3/IT-Access-Control_Approved.pdf?rlkey=v7tzxgdmy8q8eczmwmg2htgny&st=b5yvlwua&raw=1";
 const pdf29 = "https://www.dropbox.com/scl/fi/501w8kje8y1r9q9yyhia8/APPENDIX-A_Fixed-Asset-Policy.pdf?rlkey=ld2i2fhw0hvkwtzi199nnvrtb&st=4055e0y0&raw=1";
 const pdf30 = "https://www.dropbox.com/scl/fi/surr6ud83lkpw6el1md6z/APPENDIX-B_IT-Policy-Device-and-Reimbursement.pdf?rlkey=pnog5jttd7lubo72bn8eitxxk&st=sj8j7g36&raw=1";
 const pdf31 = "https://www.dropbox.com/scl/fi/u4o0pg1bf868t335famiw/APPENDIX-C-Vendor-RFP-Template.pdf?rlkey=erjlwevnljsasz70nwl3qsj7n&st=oz89pepo&raw=1";
@@ -50,6 +50,7 @@ const pdf43 = "https://www.dropbox.com/scl/fi/xjcpyjams1m0wdkd5n0cw/APPENDIX-C-C
 const pdf44 = "https://www.dropbox.com/scl/fi/ahe7n6sfof14sshrquguq/APPENDIX-D-Change-Request-Submission-Form.pdf?rlkey=wfi7w6hfjxryuf6hp7hrwpse1&st=kwpgq3wo&raw=1";
 const pdf45 = "https://www.dropbox.com/scl/fi/evb080islv1mhxuh7cf46/SOP-1.0.8_CHANGE-MANAGEMENT.pdf?rlkey=ng8swloilbav9cmva1uir40yl&st=iv1pmz3a&raw=1";
 const pdf46 = "https://www.dropbox.com/scl/fi/meaf30i8xd4rjjc7ya1vu/SOP-1.0.1_ROLES-AND-RESPONSIBILITIES.pdf?rlkey=0r66we45sj1pjyxustz7qrqr8&st=8np5db15&raw=1";
+const pdf47 = "https://www.dropbox.com/scl/fi/zljj0xuyowjd1h0wl5w56/IT-Policy_Approved.pdf?rlkey=y3t146lkpz0f6umuzdpfp9efn&st=w4ggznnd&raw=1";
 
 interface Folder {
   name: string;
@@ -69,6 +70,13 @@ const ITSop: React.FC = () => {
       name: "Roles and Responsibilities",
       pdfs: [
         { name: "SOP 1.0.1_ROLES AND RESPONSIBILITIES", file: pdf46 },
+      ],
+    },
+    { name: "Group IT Policy", pdfs: [{ name: "Group IT Policy", file: pdf47 }] },
+    {
+      name: "Group IT Policy",
+      pdfs: [
+        { name: "Approved Group IT Policy", file: pdf47 },
       ],
     },
     {
@@ -281,94 +289,46 @@ const ITSop: React.FC = () => {
 
       {/* Right-side view for files in selected folder */}
       <section
-  style={{
-    flex: 1,
-    padding: "20px",
-    backgroundColor: "#f8f9fa",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    borderRadius: "12px",
-    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-  }}
->
-  <h3 style={{ color: "#212529", marginBottom: "20px", fontSize: "20px", fontWeight: "600" }}>
-    Foundational SOP- {selectedFolder?.name || "..."}
-  </h3>
+        style={{
+          flex: 1,
+          padding: "20px",
+          backgroundColor: "#f8f9fa",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          borderRadius: "12px",
+          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <h3 style={{ color: "#212529", marginBottom: "20px", fontSize: "20px", fontWeight: "600" }}>
+          Foundational SOP- {selectedFolder?.name || "..."}
+        </h3>
 
-  {selectedFolder?.pdfs?.length ? (
-    <>
-      {/* First PDF */}
-      <div style={{ display: "flex", gap: "15px", flexWrap: "wrap", marginBottom: "20px" }}>
-        <button
-          onClick={() => openPopup(selectedFolder.pdfs[0].file)}
-          className="pdf-card"
-          style={{
-            width: "160px",
-            padding: "15px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-between",
-            backgroundColor: "#ffffff",
-            border: "1px solid #e0e0e0",
-            borderRadius: "12px",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-            cursor: "pointer",
-            transition: "transform 0.2s, box-shadow 0.2s",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-        >
-          <FaFilePdf size={28} color="#e63946" style={{ marginBottom: "12px" }} />
-          <span
-            style={{
-              color: "#495057",
-              fontSize: "14px",
-              textAlign: "center",
-              fontWeight: "500",
-              whiteSpace: "normal",
-              maxHeight: "40px",
-              overflow: "hidden",
-            }}
-            title={selectedFolder.pdfs[0].name}
-          >
-            {selectedFolder.pdfs[0].name}
-          </span>
-        </button>
-      </div>
-
-      {/* Show Related Documents only if more than one PDF */}
-      {selectedFolder.pdfs.length > 1 && (
-        <>
-          <h3 style={{ color: "#212529", marginBottom: "15px", fontSize: "18px", fontWeight: "800" }}>
-            Related Documents
-          </h3>
-          <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
-            {selectedFolder.pdfs.slice(1).map((pdf) => (
-              <div key={pdf.name} style={{ width: "160px" }}>
-                <button
-                  onClick={() => openPopup(pdf.file)}
-                  className="pdf-card"
-                  style={{
-                    width: "100%",
-                    padding: "15px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    backgroundColor: "#ffffff",
-                    border: "1px solid #e0e0e0",
-                    borderRadius: "12px",
-                    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                    cursor: "pointer",
-                    transition: "transform 0.2s, box-shadow 0.2s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                >
-                  <FaFilePdf size={28} color="#e63946" style={{ marginBottom: "12px" }} />
-                </button>
+        {selectedFolder?.pdfs?.length ? (
+          <>
+            {/* First PDF */}
+            <div style={{ display: "flex", gap: "15px", flexWrap: "wrap", marginBottom: "20px" }}>
+              <button
+                onClick={() => openPopup(selectedFolder.pdfs[0].file)}
+                className="pdf-card"
+                style={{
+                  width: "160px",
+                  padding: "15px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  backgroundColor: "#ffffff",
+                  border: "1px solid #e0e0e0",
+                  borderRadius: "12px",
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                  cursor: "pointer",
+                  transition: "transform 0.2s, box-shadow 0.2s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              >
+                <FaFilePdf size={28} color="#e63946" style={{ marginBottom: "12px" }} />
                 <span
                   style={{
                     color: "#495057",
@@ -379,20 +339,68 @@ const ITSop: React.FC = () => {
                     maxHeight: "40px",
                     overflow: "hidden",
                   }}
-                  title={pdf.name}
+                  title={selectedFolder.pdfs[0].name}
                 >
-                  {pdf.name}
+                  {selectedFolder.pdfs[0].name}
                 </span>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-    </>
-  ) : (
-    <p style={{ color: "#6c757d", fontSize: "14px" }}>No files available in this folder.</p>
-  )}
-</section>
+              </button>
+            </div>
+
+            {/* Show Related Documents only if more than one PDF */}
+            {selectedFolder.pdfs.length > 1 && (
+              <>
+                <h3 style={{ color: "#212529", marginBottom: "15px", fontSize: "18px", fontWeight: "800" }}>
+                  Related Documents
+                </h3>
+                <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
+                  {selectedFolder.pdfs.slice(1).map((pdf) => (
+                    <div key={pdf.name} style={{ width: "160px" }}>
+                      <button
+                        onClick={() => openPopup(pdf.file)}
+                        className="pdf-card"
+                        style={{
+                          width: "100%",
+                          padding: "15px",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          backgroundColor: "#ffffff",
+                          border: "1px solid #e0e0e0",
+                          borderRadius: "12px",
+                          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                          cursor: "pointer",
+                          transition: "transform 0.2s, box-shadow 0.2s",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      >
+                        <FaFilePdf size={28} color="#e63946" style={{ marginBottom: "12px" }} />
+                      </button>
+                      <span
+                        style={{
+                          color: "#495057",
+                          fontSize: "14px",
+                          textAlign: "center",
+                          fontWeight: "500",
+                          whiteSpace: "normal",
+                          maxHeight: "40px",
+                          overflow: "hidden",
+                        }}
+                        title={pdf.name}
+                      >
+                        {pdf.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          <p style={{ color: "#6c757d", fontSize: "14px" }}>No files available in this folder.</p>
+        )}
+      </section>
 
 
 
