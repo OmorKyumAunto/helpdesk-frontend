@@ -27,7 +27,7 @@ const PAGE_SIZE_OPTIONS = ["50", "100", "200", "300", "500"];
 
 const EmployeeListForEmployeePanel = () => {
   const dispatch = useDispatch();
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const [searchParams, setSearchParams] = useSearchParams({
     page: "1",

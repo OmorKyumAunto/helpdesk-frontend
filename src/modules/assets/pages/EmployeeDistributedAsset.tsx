@@ -6,6 +6,10 @@ import { useGetMeQuery } from "../../../app/api/userApi";
 import { generatePagination } from "../../../common/TablePagination copy";
 import { useGetEmployeeAllDistributedAssetQuery } from "../api/assetsEndPoint";
 import { EmployeeDistributedAssetsTableColumns } from "../utils/EmployeeDistributedTableColumns";
+import EmployeeDistributedAssetDetails from "../components/EmployeeDistributedAssetDetails";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { useDispatch } from "react-redux";
+import "../assets-ui.css";
 const { Option } = Select;
 const EmployeeDistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -38,8 +42,25 @@ const EmployeeDistributedAsset = () => {
     useGetEmployeeAllDistributedAssetQuery({
       ...filter,
     });
+  const dispatch = useDispatch();
+
+  const openDetails = (record: any) =>
+    dispatch(
+      setCommonModal({
+        title: roleID === 3 ? "Distributed Asset Details" : "My Stock Details",
+        content: <EmployeeDistributedAssetDetails record={record} />,
+        show: true,
+        width: 740,
+      })
+    );
+
+  const isInteractive = (target: HTMLElement | null) =>
+    !!target?.closest(
+      "button, a, input, .asset-actions, .ant-select, .ant-dropdown, .ant-popover, .ant-tooltip"
+    );
+
   return (
-    <div>
+    <div className="asset-ui">
       <Card
         title={roleID === 3 ? `Distributed Asset List ` : "My Stock List"}
         style={{
@@ -61,10 +82,19 @@ const EmployeeDistributedAsset = () => {
             rowKey={"id"}
             size="small"
             bordered
+            className="asset-table"
+            sticky
+            rowClassName={() => "asset-row"}
+            onRow={(record: any) => ({
+              onClick: (event: any) => {
+                if (isInteractive(event.target as HTMLElement)) return;
+                openDetails(record);
+              },
+            })}
             loading={isLoading || isFetching}
             dataSource={data?.data?.length ? data.data : []}
             columns={EmployeeDistributedAssetsTableColumns()}
-            scroll={{ x: true }}
+            scroll={{ x: "max-content" }}
             pagination={{
               ...generatePagination(
                 Number(data?.total),

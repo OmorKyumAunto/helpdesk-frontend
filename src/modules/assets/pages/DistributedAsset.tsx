@@ -12,6 +12,10 @@ import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
 import { rangePreset } from "../../../common/rangePreset";
+import DistributeAssetDetails from "../components/DistributedAssetDetails";
+import { setCommonModal } from "../../../app/slice/modalSlice";
+import { useDispatch } from "react-redux";
+import "../assets-ui.css";
 import { ASSET_CATEGORIES } from "../utils/assetCategories";
 const { Option } = Select;
 const DistributedAsset = () => {
@@ -68,8 +72,25 @@ const DistributedAsset = () => {
     console.log("Is Loading:", isLoading);
     console.log("Is Fetching:", isFetching);
   }, [data, isLoading, isFetching]);
+  const dispatch = useDispatch();
+
+  const openDetails = (id: number) =>
+    dispatch(
+      setCommonModal({
+        title: "Distributed Asset Details",
+        content: <DistributeAssetDetails id={id} />,
+        show: true,
+        width: 740,
+      })
+    );
+
+  const isInteractive = (target: HTMLElement | null) =>
+    !!target?.closest(
+      "button, a, input, .asset-actions, .ant-select, .ant-dropdown, .ant-popover, .ant-tooltip"
+    );
+
   return (
-    <div>
+    <div className="asset-ui">
       <Card
         title="Distributed Asset List"
         style={{
@@ -77,16 +98,7 @@ const DistributedAsset = () => {
           marginBottom: "1rem",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "end",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 12,
-            marginBottom: "12px",
-          }}
-        >
+        <div className="asset-toolbar">
           <div style={{ width: "160px" }}>
             <Input
               prefix={<SearchOutlined />}
@@ -229,6 +241,15 @@ const DistributedAsset = () => {
             rowKey="id"
             size="small"
             bordered
+            className="asset-table"
+            sticky
+            rowClassName={() => "asset-row"}
+            onRow={(record: any) => ({
+              onClick: (event: any) => {
+                if (isInteractive(event.target as HTMLElement)) return;
+                openDetails(record.id);
+              },
+            })}
             loading={isLoading || isFetching}
             dataSource={
               isLoading || isFetching
@@ -236,7 +257,7 @@ const DistributedAsset = () => {
                 : (data?.data?.length ? data.data : [])
             }
             columns={DistributedAssetsTableColumns()}
-            scroll={{ x: true }}
+            scroll={{ x: "max-content" }}
             pagination={{
               ...generatePagination(
                 Number(data?.total),

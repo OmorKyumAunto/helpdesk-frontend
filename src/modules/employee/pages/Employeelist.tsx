@@ -63,7 +63,7 @@ const EmployeeList = () => {
   const [deleteEmployee] = useDeleteEmployeeMutation();
   const [updateStatus] = useUpdateEmployeeStatusMutation();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const [searchParams, setSearchParams] = useSearchParams({
     page: "1",

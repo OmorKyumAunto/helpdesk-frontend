@@ -335,3 +335,11 @@ code {
 .ql-editor {
   min-height: 100px;
 }
+
+/* Subtle zebra striping for dense data tables (Stock / Assets list). */
+.table-row-striped > td {
+  background-color: #fafafa;
+}
+.ant-table-tbody > tr.table-row-striped:hover > td {
+  background-color: #f0f7ff;
+}

@@ -1,0 +1,316 @@
+/* ==========================================================================
+   Templates / Forms — polished card gallery
+   ========================================================================== */
+
+.tpl-ui {
+  --t-accent: #1775bb;
+  --t-accent-600: #14669f;
+  --t-text: #0b1524;
+  --t-text-2: #4b5565;
+  --t-text-3: #98a2b3;
+  --t-line: #eaecf0;
+  --t-surface: #ffffff;
+  --t-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------- Hero ---------------- */
+.tpl-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 22px 24px;
+  margin-bottom: 20px;
+  border-radius: 14px;
+  border: 1px solid #e6eef6;
+  background: linear-gradient(135deg, #f5faff 0%, #eef6fc 45%, #ffffff 100%);
+}
+/* Subtle dot-grid texture */
+.tpl-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#1775bb1f 1px, transparent 1px);
+  background-size: 18px 18px;
+  mask-image: linear-gradient(to right, #000, transparent 70%);
+  -webkit-mask-image: linear-gradient(to right, #000, transparent 70%);
+  pointer-events: none;
+}
+/* Slow-drifting glow */
+.tpl-hero::after {
+  content: "";
+  position: absolute;
+  right: -70px;
+  top: -80px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(23, 117, 187, 0.18),
+    rgba(23, 117, 187, 0)
+  );
+  animation: tplDrift 14s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes tplDrift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-26px, 22px, 0) scale(1.12); }
+}
+.tpl-hero__title {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--t-text);
+}
+.tpl-hero__sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--t-text-2);
+  max-width: 60ch;
+}
+
+/* ---------------- Filter chips ---------------- */
+.tpl-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.tpl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--t-line);
+  background: var(--t-surface);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t-text-2);
+  cursor: pointer;
+  transition: all 180ms var(--t-ease);
+}
+.tpl-chip:hover {
+  border-color: #b2ddff;
+  color: var(--t-accent);
+  transform: translateY(-1px);
+}
+.tpl-chip {
+  position: relative;
+  isolation: isolate;
+}
+.tpl-chip--on {
+  border-color: transparent;
+  color: #fff;
+}
+/* Must out-rank `.tpl-chip:hover`, otherwise the active chip's label turns
+   blue-on-blue and disappears. */
+.tpl-chip--on:hover,
+.tpl-chip--on:focus-visible {
+  color: #fff;
+  border-color: transparent;
+}
+/* framer-motion slides this pill between chips */
+.tpl-chip__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1f8ad4, #1775bb);
+  box-shadow: 0 6px 16px -5px rgba(23, 117, 187, 0.6);
+}
+.tpl-chip__count {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+}
+.tpl-chip--on .tpl-chip__count {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* ---------------- Grid + cards ---------------- */
+.tpl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+  gap: 16px;
+}
+
+.tpl-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  padding: 18px;
+  background: var(--t-surface);
+  border: 1px solid var(--t-line);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 240ms var(--t-ease), box-shadow 240ms var(--t-ease);
+}
+/* Top sheen */
+.tpl-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #ffffffcc, transparent);
+  opacity: 0;
+  transition: opacity 240ms var(--t-ease);
+  pointer-events: none;
+}
+/* Pointer-tracked spotlight */
+.tpl-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(23, 117, 187, 0.11),
+    transparent 62%
+  );
+  transition: opacity 260ms var(--t-ease);
+  pointer-events: none;
+}
+.tpl-card:hover::after { opacity: 1; }
+/* Keep content above the effect layers */
+.tpl-card > * {
+  position: relative;
+  z-index: 1;
+}
+.tpl-card:hover {
+  border-color: #cfe3f5;
+  box-shadow: 0 16px 32px -18px rgba(16, 24, 40, 0.3);
+}
+.tpl-card:hover::before {
+  opacity: 1;
+}
+.tpl-card:focus-within {
+  border-color: var(--t-accent);
+  box-shadow: 0 0 0 3px rgba(23, 117, 187, 0.14);
+}
+
+.tpl-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+/* Gradient file-type tile */
+.tpl-icon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  font-size: 21px;
+  color: #fff;
+  transition: transform 240ms var(--t-ease), box-shadow 240ms var(--t-ease);
+}
+.tpl-card:hover .tpl-icon {
+  transform: translateY(-2px) rotate(-3deg) scale(1.04);
+}
+.tpl-icon--pdf {
+  background: linear-gradient(135deg, #f97066, #d92d20);
+  box-shadow: 0 6px 16px -6px rgba(217, 45, 32, 0.6);
+}
+.tpl-icon--xls {
+  background: linear-gradient(135deg, #32d583, #039855);
+  box-shadow: 0 6px 16px -6px rgba(3, 152, 85, 0.6);
+}
+.tpl-icon--ppt {
+  background: linear-gradient(135deg, #fdb022, #dc6803);
+  box-shadow: 0 6px 16px -6px rgba(220, 104, 3, 0.6);
+}
+.tpl-icon--other {
+  background: linear-gradient(135deg, #98a2b3, #475467);
+  box-shadow: 0 6px 16px -6px rgba(71, 84, 103, 0.6);
+}
+
+.tpl-title {
+  font-size: 14.5px;
+  font-weight: 650;
+  color: var(--t-text);
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+.tpl-format {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tpl-format--pdf { color: #b42318; background: #fef3f2; }
+.tpl-format--xls { color: #067647; background: #ecfdf3; }
+.tpl-format--ppt { color: #b54708; background: #fffaeb; }
+.tpl-format--other { color: #475467; background: #f2f4f7; }
+
+.tpl-desc {
+  font-size: 12.5px;
+  color: var(--t-text-2);
+  line-height: 1.55;
+  flex: 1;
+}
+
+/* ---------------- Download button ---------------- */
+.tpl-card__foot {
+  position: relative;
+  padding-top: 14px;
+  border-top: 1px dashed var(--t-line);
+}
+.tpl-download {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  border-radius: 9px;
+  border: 1px solid #d7e7f5;
+  background: #f5faff;
+  color: var(--t-accent);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 200ms var(--t-ease);
+}
+.tpl-download:hover {
+  background: var(--t-accent);
+  border-color: var(--t-accent);
+  color: #fff;
+  box-shadow: 0 8px 18px -8px rgba(23, 117, 187, 0.7);
+}
+.tpl-download__icon {
+  transition: transform 200ms var(--t-ease);
+}
+.tpl-download:hover .tpl-download__icon {
+  transform: translateY(2px);
+}
+
+.tpl-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+  font-size: 12.5px;
+  color: var(--t-text-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tpl-ui *,
+  .tpl-ui *::before {
+    transition-duration: 1ms !important;
+    animation: none !important;
+  }
+}

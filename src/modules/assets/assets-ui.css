@@ -1,0 +1,492 @@
+/* ==========================================================================
+   Asset module — minimal enterprise UI
+   Monochrome base, one accent (#1775BB), hairline borders, restrained motion.
+   ========================================================================== */
+
+.asset-ui {
+  --a-accent: #1775bb;
+  --a-accent-weak: #eef6fc;
+
+  --a-text: #101828;
+  --a-text-2: #475467;
+  --a-text-3: #98a2b3;
+
+  --a-line: #eaecf0;
+  --a-line-soft: #f2f4f7;
+  --a-surface: #ffffff;
+  --a-hover: #fafafa;
+
+  --a-green: #067647;
+  --a-amber: #b54708;
+  --a-red: #b42318;
+
+  --a-ease: cubic-bezier(0.2, 0, 0.2, 1);
+  --a-fast: 120ms;
+  --a-base: 160ms;
+}
+
+/* ============================ Toolbar ============================ */
+.asset-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.asset-toolbar .ant-input-affix-wrapper,
+.asset-toolbar .ant-select .ant-select-selector,
+.asset-toolbar .ant-btn {
+  border-radius: 6px;
+}
+
+/* Keep every control on one baseline — no stray margins, uniform height. */
+.asset-toolbar > *,
+.asset-toolbar .ant-select,
+.asset-toolbar .ant-input-affix-wrapper,
+.asset-toolbar .ant-btn {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  vertical-align: middle;
+}
+.asset-toolbar > div {
+  display: flex;
+  align-items: center;
+}
+.asset-toolbar .ant-select-single .ant-select-selector,
+.asset-toolbar .ant-input-affix-wrapper,
+.asset-toolbar .ant-btn {
+  height: 32px;
+}
+@media (max-width: 640px) {
+  .asset-toolbar {
+    justify-content: stretch;
+  }
+  .asset-toolbar > *,
+  .asset-toolbar .ant-select,
+  .asset-toolbar .ant-input-affix-wrapper {
+    width: 100% !important;
+    flex: 1 1 100%;
+  }
+}
+
+/* ============================ Table ============================ */
+.asset-table .ant-table {
+  background: var(--a-surface);
+}
+
+/* Bordered grid: crisp hairlines on every cell */
+.asset-table .ant-table-container,
+.asset-table .ant-table-container table > thead > tr > th,
+.asset-table .ant-table-container table > tbody > tr > td,
+.asset-table .ant-table-cell-fix-right,
+.asset-table .ant-table-cell-fix-left {
+  border-color: var(--a-line) !important;
+}
+
+/* Header: light fill so the grid reads, quiet uppercase labels */
+.asset-table .ant-table-thead > tr > th {
+  background: #f9fafb !important;
+  color: var(--a-text-2);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 10px 12px !important;
+  white-space: nowrap;
+}
+.asset-table .ant-table-thead > tr > th::before {
+  display: none !important;
+}
+
+/* Rows are clickable (opens details) */
+.asset-table .ant-table-tbody > tr.asset-row {
+  cursor: pointer;
+}
+
+/* Rows: tight cells, faint grey hover */
+.asset-table .ant-table-tbody > tr > td {
+  padding: 9px 12px !important;
+  color: var(--a-text-2);
+  transition: background-color var(--a-fast) var(--a-ease);
+}
+.asset-table .ant-table-tbody > tr:hover > td {
+  background: var(--a-hover) !important;
+}
+
+/* ============================ Cell type ============================ */
+.asset-cell-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--a-text);
+  line-height: 1.35;
+}
+.asset-cell-sub {
+  font-size: 12px;
+  color: var(--a-text-3);
+  line-height: 1.35;
+}
+.asset-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  color: var(--a-text-2);
+}
+.asset-empty {
+  color: #d0d5dd;
+}
+
+/* Remarks: prominent bordered badge */
+.asset-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.asset-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 6px;
+}
+.asset-badge--assigned {
+  color: #067647;
+  background: #ecfdf3;
+  border-color: #abefc6;
+}
+.asset-badge--stock {
+  color: #175cd3;
+  background: #eff8ff;
+  border-color: #b2ddff;
+}
+.asset-badge--disposed {
+  color: #b42318;
+  background: #fef3f2;
+  border-color: #fecdca;
+}
+
+/* ============================ Status badge + dropdown ============================ */
+/* Editable status: looks unmistakably like a control — border, fill, chevron */
+.asset-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 116px;
+  padding: 4px 9px;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  background: var(--a-surface);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--a-text);
+  cursor: pointer;
+  transition: background-color var(--a-fast) var(--a-ease),
+    border-color var(--a-fast) var(--a-ease);
+}
+.asset-status:hover {
+  background: #f9fafb;
+  border-color: #98a2b3;
+}
+.ant-dropdown-open .asset-status {
+  border-color: var(--a-accent);
+  box-shadow: 0 0 0 3px var(--a-accent-weak);
+}
+.asset-status__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: 0 0 8px;
+}
+/* Chevron is always visible so the control reads as changeable */
+.asset-status__chev {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--a-text-3);
+  transition: transform var(--a-fast) var(--a-ease);
+}
+.ant-dropdown-open .asset-status__chev {
+  transform: rotate(180deg);
+}
+
+/* Locked status: plainly NOT a control — no border, no chevron, muted */
+.asset-status--static {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 0;
+  font-size: 13px;
+  color: var(--a-text-2);
+  cursor: default;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  min-width: 0;
+}
+
+.asset-dot--active { background: #17b26a; }
+.asset-dot--inactive { background: #f79009; }
+.asset-dot--disposed { background: #f04438; }
+
+.asset-status-menu .ant-dropdown-menu {
+  padding: 4px;
+  border-radius: 8px;
+  min-width: 168px;
+}
+.asset-status-menu .ant-dropdown-menu-item {
+  border-radius: 6px;
+  font-size: 13px;
+  padding: 6px 10px !important;
+}
+.asset-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.asset-menu-item__check {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--a-accent);
+}
+
+/* ============================ Actions ============================ */
+.asset-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.asset-iconbtn.ant-btn {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: var(--a-text-3);
+  transition: background-color var(--a-fast) var(--a-ease),
+    color var(--a-fast) var(--a-ease);
+}
+.asset-iconbtn.ant-btn:hover {
+  background: #f2f4f7 !important;
+  color: var(--a-text) !important;
+}
+.asset-iconbtn--danger.ant-btn:hover {
+  background: #fef3f2 !important;
+  color: var(--a-red) !important;
+}
+.asset-assign-btn.ant-btn {
+  height: 28px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  box-shadow: none;
+}
+
+/* ============================ Mobile cards ============================ */
+.asset-card {
+  background: var(--a-surface);
+  border: 1px solid var(--a-line);
+  border-radius: 8px;
+  padding: 14px;
+  transition: border-color var(--a-base) var(--a-ease);
+}
+.asset-card:hover {
+  border-color: #d0d5dd;
+}
+.asset-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--a-line-soft);
+}
+.asset-card__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px 0;
+}
+.asset-card__label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--a-text-3);
+  margin-bottom: 3px;
+}
+.asset-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--a-line-soft);
+}
+
+/* ============================ Modal form ============================ */
+
+/* Context header: which asset am I editing? */
+.asset-form__summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  background: #f9fafb;
+  border: 1px solid var(--a-line);
+  border-radius: 8px;
+}
+.asset-form__summary-main {
+  min-width: 0;
+  flex: 1;
+}
+.asset-form__summary-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--a-text);
+  line-height: 1.3;
+}
+.asset-form__summary-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--a-text-3);
+}
+.asset-form__summary-sep {
+  color: #d0d5dd;
+}
+
+/* ---- Edit drawer ---- */
+.asset-drawer .ant-drawer-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--a-line);
+  background: #f9fafb;
+}
+.asset-drawer .ant-drawer-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--a-text);
+}
+.asset-drawer .ant-drawer-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.asset-drawer-sub {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--a-text-3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Single-column form inside the drawer */
+.asset-form--drawer .ant-form-item {
+  margin-bottom: 16px;
+}
+.asset-form__group + .asset-form__group {
+  margin-top: 26px;
+}
+
+/* Bordered section panels — matches the bordered table language */
+.asset-form__panel {
+  border: 1px solid var(--a-line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.asset-form__panel + .asset-form__panel {
+  margin-top: 14px;
+}
+.asset-form__panel-head {
+  padding: 9px 14px;
+  background: #f9fafb;
+  border-bottom: 1px solid var(--a-line);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--a-text-2);
+}
+.asset-form__panel-body {
+  padding: 14px 14px 0;
+}
+.asset-form__panel-body .ant-form-item {
+  margin-bottom: 14px;
+}
+
+.asset-form__legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--a-text-3);
+}
+.asset-form__legend::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--a-line);
+}
+.asset-form__section + .asset-form__section {
+  margin-top: 22px;
+}
+.asset-form .ant-form-item-label > label {
+  font-size: 12.5px;
+  color: var(--a-text-2);
+}
+.asset-form .ant-input,
+.asset-form .ant-input-number,
+.asset-form .ant-picker,
+.asset-form .ant-select-selector {
+  border-radius: 6px !important;
+}
+.asset-form__footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 0 2px;
+  margin-top: 22px;
+  border-top: 1px solid var(--a-line);
+  background: var(--a-surface);
+}
+@media (max-width: 640px) {
+  .asset-form__footer .ant-btn {
+    flex: 1;
+  }
+}
+
+/* ============================ A11y ============================ */
+.asset-status:focus-visible,
+.asset-iconbtn.ant-btn:focus-visible,
+.asset-assign-btn.ant-btn:focus-visible {
+  outline: 2px solid var(--a-accent);
+  outline-offset: 1px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .asset-ui * {
+    transition-duration: 1ms !important;
+    animation: none !important;
+  }
+}

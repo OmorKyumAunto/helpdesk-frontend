@@ -7,6 +7,7 @@ export interface IAsset {
   serial_number: string;
   po_number: string;
   asset_no: string;
+  model: string;
   specification: string;
   asset_history: string;
   is_assign: number;

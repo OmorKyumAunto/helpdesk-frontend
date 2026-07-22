@@ -80,6 +80,7 @@ const AddressBookList = ({
   pageSizeOptions = ["50", "100", "200", "300", "500"],
   onPageChange,
   renderActions,
+  onView,
 }: TProps) => {
   if (loading) {
     return (
@@ -138,6 +139,34 @@ const AddressBookList = ({
                   key={emp.id}
                   className="ab-list-row"
                   variants={rowVariants}
+                  role={onView ? "button" : undefined}
+                  tabIndex={onView ? 0 : undefined}
+                  // Clicking a row opens the details view, unless the click
+                  // landed on an action control inside the row.
+                  onClick={
+                    onView
+                      ? (e) => {
+                          const target = e.target as HTMLElement;
+                          if (
+                            target.closest(
+                              "button, a, input, .ant-switch, .ant-popover, .ant-tooltip"
+                            )
+                          )
+                            return;
+                          onView(emp);
+                        }
+                      : undefined
+                  }
+                  onKeyDown={
+                    onView
+                      ? (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            onView(emp);
+                          }
+                        }
+                      : undefined
+                  }
                   style={{
                     display: "grid",
                     gridTemplateColumns: COLS,
@@ -146,6 +175,7 @@ const AddressBookList = ({
                     alignItems: "center",
                     borderBottom: `1px solid ${LINE_SOFT}`,
                     fontSize: 13.5,
+                    cursor: onView ? "pointer" : undefined,
                   }}
                 >
                   {/* Employee */}

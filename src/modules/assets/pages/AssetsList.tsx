@@ -1,5 +1,20 @@
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
-import { Card, Button, Dropdown, Input, Select, Table, DatePicker } from "antd";
+import {
+  Card,
+  Button,
+  Dropdown,
+  Input,
+  Select,
+  Table,
+  DatePicker,
+  Grid,
+  Pagination,
+  Skeleton,
+  Empty,
+} from "antd";
+import AssetMobileCard from "../components/AssetMobileCard";
+import AssetDetails from "../components/AssetDetails";
+import "../assets-ui.css";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -78,6 +93,30 @@ const AssetsList = () => {
     ? adminData
     : data;
 
+  // Below the `md` breakpoint the wide table is unusable — switch to cards.
+  const screens = Grid.useBreakpoint();
+  const isMobile = !screens.md;
+  const rows = assetsTableData?.data?.length ? assetsTableData.data : [];
+
+  const openAssetDetails = (id: number) => {
+    dispatch(
+      setCommonModal({
+        title: "Assets Details",
+        content: <AssetDetails id={id} />,
+        show: true,
+        width: 740,
+      })
+    );
+  };
+
+  // A row click opens the details view, but must not fire when the user is
+  // actually interacting with a control inside the row (status dropdown,
+  // action buttons, delete confirm, etc.).
+  const isInteractive = (target: HTMLElement | null) =>
+    !!target?.closest(
+      "button, a, input, .asset-actions, .asset-status, .ant-select, .ant-dropdown, .ant-popover, .ant-popconfirm"
+    );
+
   // console.log(assetsTableData?.data);
   const showModal = () => {
     dispatch(
@@ -92,25 +131,18 @@ const AssetsList = () => {
 
   return (
     <>
-      <div>
+      <div className="asset-ui">
         <Card
           title={`Assets List `}
           style={{
             boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
+            borderRadius: 14,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "right",
-              flexWrap: "wrap",
-              gap: 8,
-              marginBottom: "12px",
-            }}
-          >
+          <div className="asset-toolbar">
             <div>
               <Input
-                style={{ width: "160px" }}
+                style={{ width: 160 }}
                 prefix={<SearchOutlined />}
                 onChange={(e) =>
                   setFilter({ ...filter, key: e.target.value, offset: 0 })
@@ -119,7 +151,7 @@ const AssetsList = () => {
               />
             </div>
             <Select
-              style={{ width: "160px", marginBottom: 8 }}
+              style={{ width: 160 }}
               onChange={(e) => setFilter({ ...filter, status: e, offset: 0 })}
               placeholder="Select Status"
               allowClear
@@ -129,7 +161,7 @@ const AssetsList = () => {
               <Option value={3}>Disposed</Option>
             </Select>
             <Select
-              style={{ width: "160px", marginBottom: 8 }}
+              style={{ width: 160 }}
               loading={unitIsLoading}
               placeholder="Select Unit Name"
               showSearch
@@ -152,7 +184,7 @@ const AssetsList = () => {
               allowClear
             />
             <Select
-              style={{ width: "180px", marginBottom: 8 }}
+              style={{ width: 180 }}
               placeholder="Select Category"
               showSearch
               optionFilterProp="children"
@@ -316,16 +348,66 @@ const AssetsList = () => {
 
           </div>
           <div>
+            {isMobile ? (
+              /* --- Card layout for phones/small tablets --- */
+              <div style={{ display: "grid", gap: 12 }}>
+                {isLoading || isFetching ? (
+                  [1, 2, 3].map((i) => (
+                    <div className="asset-card" key={i}>
+                      <Skeleton active paragraph={{ rows: 3 }} />
+                    </div>
+                  ))
+                ) : rows.length ? (
+                  rows.map((record: any) => (
+                    <AssetMobileCard key={record.id} record={record} />
+                  ))
+                ) : (
+                  <Empty description="No assets found" />
+                )}
+
+                <Pagination
+                  style={{ marginTop: 8, textAlign: "center" }}
+                  align="center"
+                  size="small"
+                  current={Number(page)}
+                  pageSize={Number(pageSize)}
+                  total={Number(assetsTableData?.total) || 0}
+                  showSizeChanger
+                  pageSizeOptions={["25", "50", "100", "200"]}
+                  showTotal={(total) => `Total ${total}`}
+                  onChange={(current, size) => {
+                    setSearchParams({
+                      page: String(current),
+                      pageSize: String(size),
+                    });
+                    setFilter({
+                      ...filter,
+                      offset: (current - 1) * size,
+                      limit: size,
+                    });
+                  }}
+                />
+              </div>
+            ) : (
             <Table
               rowKey={"id"}
               size="small"
               bordered
+              className="asset-table"
               loading={isLoading || isFetching}
               dataSource={
                 assetsTableData?.data?.length ? assetsTableData?.data : []
               }
               columns={AssetsTableColumns()}
-              scroll={{ x: true }}
+              scroll={{ x: "max-content" }}
+              sticky
+              rowClassName={() => "asset-row"}
+              onRow={(record) => ({
+                onClick: (event) => {
+                  if (isInteractive(event.target as HTMLElement)) return;
+                  openAssetDetails(record.id);
+                },
+              })}
               pagination={{
                 ...generatePagination(
                   Number(data?.total),
@@ -361,6 +443,7 @@ const AssetsList = () => {
                 });
               }}
             />
+            )}
           </div>
         </Card>
       </div>
