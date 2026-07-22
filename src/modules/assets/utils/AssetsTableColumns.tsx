@@ -1,4 +1,4 @@
-import { Button, Popconfirm, Space, Tag, Tooltip, Switch } from "antd";
+import { Button, Popconfirm, Space, Tag, Tooltip, Select } from "antd";
 import { TableProps } from "antd/lib";
 import { IAsset } from "../types/assetsTypes";
 import {
@@ -13,6 +13,7 @@ import AssignEmployee from "../components/AssignEmployee";
 import AssetDetails from "../components/AssetDetails";
 import { RootState } from "../../../app/store/store";
 import { useGetMeQuery } from "../../../app/api/userApi";
+import { ASSET_STATUS, ASSET_STATUS_OPTIONS } from "./assetStatus";
 
 export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
   const dispatch = useDispatch();
@@ -65,6 +66,8 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
       render: ({ remarks }) =>
         remarks === "assigned" ? (
           <Tag color="success">Assigned</Tag>
+        ) : remarks === "disposed" ? (
+          <Tag color="error">Disposed</Tag>
         ) : (
           <Tag color="processing">In Stock</Tag>
         ),
@@ -114,13 +117,19 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
                 <EditOutlined />
               </Button>
 
-              <Switch
-                checked={record.status === 1}
-                style={{
-                  background: record.status === 1 ? "green" : "red",
-                }}
-                onChange={() => updateStatus(record.id)}
-              />
+              {/* Status can only be changed while the asset is NOT assigned —
+                  the backend rejects it otherwise, so hide it for assigned ones. */}
+              {record.remarks !== "assigned" && (
+                <Select
+                  size="small"
+                  style={{ width: 110 }}
+                  value={record.status}
+                  options={ASSET_STATUS_OPTIONS}
+                  onChange={(status: number) =>
+                    updateStatus({ id: record.id, status })
+                  }
+                />
+              )}
             </>
           )}
 
@@ -138,7 +147,11 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
               </Button>
             </Popconfirm>
           )}
-          {employeeID !== "Assetteam" && record?.is_assign === 0 && (
+          {/* Only ACTIVE (status 1) assets can be assigned — inactive (2) and
+              disposed (3) are rejected by the backend, so hide the button. */}
+          {employeeID !== "Assetteam" &&
+            record?.is_assign === 0 &&
+            record?.status === ASSET_STATUS.ACTIVE && (
             <Button
               size="small"
               type="primary"

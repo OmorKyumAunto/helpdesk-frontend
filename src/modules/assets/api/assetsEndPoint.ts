@@ -165,11 +165,12 @@ export const assetsEndPoint = api.injectEndpoints({
         { type: "dashboardTypes", id: "dashboard" },
       ],
     }),
-    UpdateAssetStatus: build.mutation<unknown, { id: number }>({
-      query: (id) => {
+    UpdateAssetStatus: build.mutation<unknown, { id: number; status: number }>({
+      query: ({ id, status }) => {
         return {
           url: `/asset/changeStatus/${id}`,
           method: "PUT",
+          body: { status },
         };
       },
       onQueryStarted: async (_arg, { queryFulfilled }) => {

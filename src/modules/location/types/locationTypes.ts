@@ -13,5 +13,7 @@ export interface ILocationParams {
   limit?: number;
   offset?: number;
   key?: string;
-  unit?: number;
+  // number = a single unit; string = comma-separated unit ids (used to scope
+  // a Unit Super Admin to only the units in their searchAccess).
+  unit?: number | string;
 }

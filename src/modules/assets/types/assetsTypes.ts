@@ -65,6 +65,7 @@ export interface IAssetParams {
   location?: number;
   type?: string;
   status?: number;
+  category?: string;
   from_date?: string;
   to_date?: string;
 }

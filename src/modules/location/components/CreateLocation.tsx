@@ -6,6 +6,7 @@ import { useCreateLocationMutation } from "../api/locationEndPoint";
 import { useEffect } from "react";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
+import { useGetMeQuery } from "../../../app/api/userApi";
 
 const CreateLocation = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,16 @@ const CreateLocation = () => {
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
+
+  const { data: profile } = useGetMeQuery();
+  // Unit Super Admin (role 4) can only create sub units under the units
+  // granted in their searchAccess.
+  const isUnitSuperAdmin = profile?.data?.role_id === 4;
+  const accessUnitIds: number[] =
+    profile?.data?.searchAccess?.map((item: any) => item?.unit_id) ?? [];
+  const unitOption = isUnitSuperAdmin
+    ? unitData?.data?.filter((unit: any) => accessUnitIds.includes(unit?.id))
+    : unitData?.data;
   const [create, { isLoading, isSuccess }] = useCreateLocationMutation();
 
   const onFinish = (value: any) => {
@@ -59,7 +70,7 @@ const CreateLocation = () => {
                         .toLowerCase()
                         .includes(input.toLowerCase())
                     }
-                    options={unitData?.data?.map((unit: any) => ({
+                    options={unitOption?.map((unit: any) => ({
                       value: unit.id,
                       label: unit.title,
                     }))}

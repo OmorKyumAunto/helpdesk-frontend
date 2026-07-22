@@ -11,6 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import { ILocationParams } from "../types/locationTypes";
 import { SearchOutlined } from "@ant-design/icons";
 import { generatePagination } from "../../../common/TablePagination copy";
+import { useGetMeQuery } from "../../../app/api/userApi";
 
 const LocationList = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,28 @@ const LocationList = () => {
   const { data: unitData, isLoading: unitIsLoading } = useGetUnitsQuery({
     status: "active",
   });
-  const { data, isLoading, isFetching } = useGetLocationsQuery({ ...filter });
+
+  const { data: profile } = useGetMeQuery();
+  // Unit Super Admin (role 4) may only see the units granted in searchAccess.
+  const isUnitSuperAdmin = profile?.data?.role_id === 4;
+  const accessUnitIds: number[] =
+    profile?.data?.searchAccess?.map((item: any) => item?.unit_id) ?? [];
+
+  // Restrict the unit dropdown to the units they can access.
+  const unitOption = isUnitSuperAdmin
+    ? unitData?.data?.filter((unit: any) => accessUnitIds.includes(unit?.id))
+    : unitData?.data;
+
+  // Scope the list itself: when no specific unit is picked, fall back to ALL
+  // of their accessible units. "-1" guarantees an empty result if they have none.
+  const scopedUnit = isUnitSuperAdmin
+    ? filter.unit ?? (accessUnitIds.length ? accessUnitIds.join(",") : "-1")
+    : filter.unit;
+
+  const { data, isLoading, isFetching } = useGetLocationsQuery({
+    ...filter,
+    unit: scopedUnit,
+  });
 
   return (
     <>
@@ -91,7 +113,7 @@ const LocationList = () => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={unitData?.data?.map((unit: any) => ({
+              options={unitOption?.map((unit: any) => ({
                 value: unit.id,
                 label: unit.title,
               }))}

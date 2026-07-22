@@ -20,6 +20,7 @@ import { IAssetParams } from "../types/assetsTypes";
 import { AssetsTableColumns } from "../utils/AssetsTableColumns";
 import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
 import { rangePreset } from "../../../common/rangePreset";
+import { ASSET_CATEGORIES } from "../utils/assetCategories";
 
 const AssetsList = () => {
   const { Option } = Select;
@@ -125,6 +126,7 @@ const AssetsList = () => {
             >
               <Option value={1}>Active</Option>
               <Option value={2}>Inactive</Option>
+              <Option value={3}>Disposed</Option>
             </Select>
             <Select
               style={{ width: "160px", marginBottom: 8 }}
@@ -149,6 +151,25 @@ const AssetsList = () => {
               }))}
               allowClear
             />
+            <Select
+              style={{ width: "180px", marginBottom: 8 }}
+              placeholder="Select Category"
+              showSearch
+              optionFilterProp="children"
+              onChange={(e) => setFilter({ ...filter, category: e, offset: 0 })}
+              filterOption={(input: string, option?: { children?: any }) =>
+                String(option?.children ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              allowClear
+            >
+              {ASSET_CATEGORIES.map((c) => (
+                <Option key={c} value={c}>
+                  {c}
+                </Option>
+              ))}
+            </Select>
             <Dropdown
               trigger={["hover"]}
               dropdownRender={() => (
@@ -196,6 +217,7 @@ const AssetsList = () => {
                     <Option value="">All</Option>
                     <Option value="assigned">Assigned</Option>
                     <Option value="in_stock">In Stock</Option>
+                    <Option value="disposed">Disposed</Option>
                   </Select>
                   <DatePicker.RangePicker
                     presets={rangePreset}

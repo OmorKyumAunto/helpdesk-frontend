@@ -76,7 +76,7 @@ const AssetDetails = ({ id }: { id: any }) => {
               <FieldItem label="Warranty" value={warranty} />
               <FieldItem
                 label="Status"
-                value={remarks === "assigned" ? <Tag color="green">Assigned</Tag> : <Tag color="blue">In Stock</Tag>}
+                value={remarks === "assigned" ? <Tag color="green">Assigned</Tag> : remarks === "disposed" ? <Tag color="red">Disposed</Tag> : <Tag color="blue">In Stock</Tag>}
               />
             </Card>
           </Col>

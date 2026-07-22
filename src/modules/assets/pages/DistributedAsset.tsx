@@ -12,6 +12,7 @@ import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
 import { rangePreset } from "../../../common/rangePreset";
+import { ASSET_CATEGORIES } from "../utils/assetCategories";
 const { Option } = Select;
 const DistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -96,6 +97,20 @@ const DistributedAsset = () => {
             />
           </div>
           <Select
+            placeholder="Select Category"
+            style={{ width: "160px"}}
+            showSearch
+            optionFilterProp="children"
+            onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
+            allowClear
+          >
+            {ASSET_CATEGORIES.map((c) => (
+              <Option key={c} value={c}>
+                {c}
+              </Option>
+            ))}
+          </Select>
+          <Select
             style={{ width: "160px" }}
             loading={unitIsLoading}
             placeholder="Select Unit Name"
@@ -148,20 +163,7 @@ const DistributedAsset = () => {
                   }))}
                   allowClear
                 />
-                <Select
-                  placeholder="Select Asset Type"
-                  style={{ width: "100%", marginBottom: 8 }}
-                  onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
-                  allowClear
-                >
-                  <Option value="Laptop">Laptop</Option>
-                  <Option value="Desktop">Desktop</Option>
-                  <Option value="Monitor">Monitor</Option>
-                  <Option value="Printer">Printer</Option>
-                  <Option value="Mouse">Mouse</Option>
-                  <Option value="Keyboard">Keyboard</Option>
-                  <Option value="Accessories">Accessories</Option>
-                </Select>
+
                 <DatePicker.RangePicker
                   presets={rangePreset}
                   onChange={(_, e) =>

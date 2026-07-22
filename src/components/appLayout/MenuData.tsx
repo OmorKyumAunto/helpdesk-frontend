@@ -144,7 +144,8 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
                 },
               ]
               : []),
-            ...(roleId === 1
+            // Sub Unit: Super Admin (1) and Unit Super Admin (4)
+            ...(roleId === 1 || roleId === 4
               ? [
                 {
                   label: <Link to="/settings/location">Sub Unit</Link>,
