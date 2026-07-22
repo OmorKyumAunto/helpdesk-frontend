@@ -66,19 +66,15 @@ const ITSop: React.FC = () => {
 
   const folders: Folder[] = [
     { name: "Index", pdfs: [{ name: "SOP Index", file: pdf39 }] },
+    { name: "Group IT Policy", pdfs: [{ name: "Group IT Policy", file: pdf47 }] },
+    
     {
       name: "Roles and Responsibilities",
       pdfs: [
         { name: "SOP 1.0.1_ROLES AND RESPONSIBILITIES", file: pdf46 },
       ],
     },
-    { name: "Group IT Policy", pdfs: [{ name: "Group IT Policy", file: pdf47 }] },
-    {
-      name: "Group IT Policy",
-      pdfs: [
-        { name: "Approved Group IT Policy", file: pdf47 },
-      ],
-    },
+    
     {
       name: "IT Support",
       pdfs: [
