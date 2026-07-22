@@ -1,4 +1,3 @@
-import { Tooltip } from "antd";
 import { TableProps } from "antd/lib";
 import { IAsset } from "../types/assetsTypes";
 import {
@@ -21,30 +20,6 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
           <div className="asset-cell-sub">{record.category}</div>
         </div>
       ),
-    },
-    {
-      title: "Specification",
-      dataIndex: "specification",
-      key: "specification",
-      width: 210,
-      render: (specification: string) =>
-        specification ? (
-          <Tooltip title={specification}>
-            <div
-              className="asset-cell-sub"
-              style={{
-                maxWidth: 190,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {specification}
-            </div>
-          </Tooltip>
-        ) : (
-          emptyCell
-        ),
     },
     {
       title: "Serial No",

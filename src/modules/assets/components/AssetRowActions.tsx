@@ -1,4 +1,4 @@
-import { Button, Dropdown, Modal, Popconfirm, Tooltip } from "antd";
+import { Button, Dropdown, Grid, Modal, Popconfirm, Tooltip } from "antd";
 import type { MenuProps } from "antd";
 import {
   CheckOutlined,
@@ -131,6 +131,7 @@ export const AssetRowActions = ({ record }: { record: IAsset }) => {
   const { data: profile } = useGetMeQuery();
   const employeeID = profile?.data?.employee_id;
   const [deleteAsset] = useDeleteAssetsMutation();
+  const screens = Grid.useBreakpoint();
 
   const canAssign =
     employeeID !== "Assetteam" &&
@@ -191,7 +192,8 @@ export const AssetRowActions = ({ record }: { record: IAsset }) => {
                 title: "Assign Employee",
                 content: <AssignEmployee id={record.id} />,
                 show: true,
-                width: 500,
+                // Fixed 640 on desktop, near-full-bleed on phones.
+                width: screens.sm ? 640 : "94vw",
               })
             )
           }

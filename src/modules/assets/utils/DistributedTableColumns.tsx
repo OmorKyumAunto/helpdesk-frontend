@@ -63,12 +63,6 @@ export const DistributedAssetsTableColumns =
         ),
       },
       {
-        title: "Department",
-        dataIndex: "department",
-        key: "department",
-        render: (value: string) => value || emptyCell,
-      },
-      {
         title: "Emp Unit",
         dataIndex: "employee_unit_name",
         key: "employee_unit_name",

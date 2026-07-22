@@ -165,6 +165,44 @@ export const assetsEndPoint = api.injectEndpoints({
         { type: "dashboardTypes", id: "dashboard" },
       ],
     }),
+    // ---- On-Support (temporary loan) ----
+    getSupportLoans: build.query<any, { state?: string; unit?: number } | void>({
+      query: (params) => ({
+        url: `/asset/support-loans`,
+        params: (params as any) || undefined,
+      }),
+      providesTags: () => ["asset"],
+    }),
+    extendSupportLoan: build.mutation<
+      unknown,
+      { assignId: number; support_days?: number; expected_return?: string }
+    >({
+      query: ({ assignId, ...body }) => ({
+        url: `/asset/support-loans/extend/${assignId}`,
+        method: "PUT",
+        body,
+      }),
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Support period extended");
+        });
+      },
+      invalidatesTags: () => ["asset"],
+    }),
+    returnSupportLoan: build.mutation<unknown, { assignId: number }>({
+      query: ({ assignId }) => ({
+        url: `/asset/support-loans/return/${assignId}`,
+        method: "PUT",
+      }),
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Asset moved back to stock");
+        });
+      },
+      invalidatesTags: () => ["asset", { type: "dashboardTypes", id: "dashboard" }],
+    }),
     UpdateAssetStatus: build.mutation<unknown, { id: number; status: number }>({
       query: ({ id, status }) => {
         return {
@@ -238,4 +276,7 @@ export const {
   useUpdateAssetsMutation,
   useDeleteAssetsMutation,
   useUpdateAssetStatusMutation,
+  useGetSupportLoansQuery,
+  useExtendSupportLoanMutation,
+  useReturnSupportLoanMutation,
 } = assetsEndPoint;

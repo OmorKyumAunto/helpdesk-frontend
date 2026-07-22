@@ -37,7 +37,7 @@ const AssetDetails = ({ id }: { id: any }) => {
       <p>
         <span>{item?.history}</span>
         <span className="ml-2">
-          (Assigned on:
+          (on
           <span className="px-2 rounded font-bold">
             {dayjs(item?.asset_assign_date).format("DD-MM-YYYY")}
           </span>

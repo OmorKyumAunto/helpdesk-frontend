@@ -11,6 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import { ILocationParams } from "../types/locationTypes";
 import { SearchOutlined } from "@ant-design/icons";
 import { generatePagination } from "../../../common/TablePagination copy";
+import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { useGetMeQuery } from "../../../app/api/userApi";
 
 const LocationList = () => {
@@ -118,6 +119,20 @@ const LocationList = () => {
                 label: unit.title,
               }))}
               allowClear
+            />
+            <ExcelDownload
+              excelName={"sub_unit_list"}
+              excelTableHead={["SL", "Sub Unit", "Unit", "Status"]}
+              excelData={
+                data?.data?.length
+                  ? data.data.map((item: any, index: number) => ({
+                      SL: index + 1,
+                      "Sub Unit": item?.location || "",
+                      Unit: item?.unit_name || "",
+                      Status: item?.status === 1 ? "Active" : "Inactive",
+                    }))
+                  : []
+              }
             />
             <CreateButton
               name="Create Sub Unit"
