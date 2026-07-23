@@ -8,7 +8,18 @@ import {
   LaptopOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Empty, Grid, Input, Popconfirm, Select, Table, Tooltip } from "antd";
+import {
+  Button,
+  Card,
+  Empty,
+  Grid,
+  Input,
+  Popconfirm,
+  Select,
+  Skeleton,
+  Table,
+  Tooltip,
+} from "antd";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -21,6 +32,9 @@ import {
 import ExtendSupportModal from "../components/ExtendSupportModal";
 import AssetDetails from "../components/AssetDetails";
 import HolderDetails from "../components/HolderDetails";
+import SupportLoanMobileCard from "../components/SupportLoanMobileCard";
+import CategoryFilterBar from "../components/CategoryFilterBar";
+import { TOP_STOCK_CATEGORIES } from "../utils/assetCategories";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
@@ -57,6 +71,7 @@ const SupportLoans = () => {
   const [state, setState] = useState("");
   const [unit, setUnit] = useState<number | undefined>();
   const [search, setSearch] = useState("");
+  const [category, setCategory] = useState<string | undefined>();
 
   // Unit list restricted to what this user actually has access to. Super Admin
   // (role 1) sees every unit; admins see only their searchAccess units.
@@ -82,27 +97,46 @@ const SupportLoans = () => {
 
   const allRows = data?.data?.length ? data.data : [];
 
-  // Searches asset + holder fields. Done client-side because the endpoint
-  // returns the full (scoped) list rather than a server-paginated page.
-  const hasFilters = Boolean(search.trim() || unit || state);
+  // Searches asset + holder fields, and filters by category. Both are done
+  // client-side because the endpoint returns the full (scoped) list rather
+  // than a server-paginated page.
+  const hasFilters = Boolean(search.trim() || unit || state || category);
   const q = search.trim().toLowerCase();
-  const rows = !q
-    ? allRows
-    : allRows.filter((r: any) =>
-        [
-          r.serial_number,
-          r.asset_no,
-          r.po_number,
-          r.asset_name,
-          r.model,
-          r.category,
-          r.user_name,
-          r.user_id_no,
-          r.department,
-        ]
-          .filter(Boolean)
-          .some((v: any) => String(v).toLowerCase().includes(q))
-      );
+  const cat = category?.toLowerCase();
+
+  const matchesSearch = (r: any) =>
+    !q ||
+    [
+      r.serial_number,
+      r.asset_no,
+      r.po_number,
+      r.asset_name,
+      r.model,
+      r.category,
+      r.user_name,
+      r.user_id_no,
+      r.department,
+    ]
+      .filter(Boolean)
+      .some((v: any) => String(v).toLowerCase().includes(q));
+
+  const rows = allRows.filter((r: any) => {
+    // Substring match mirrors the backend's LIKE semantics elsewhere, so a
+    // "Camera" chip also catches CAMERA / IP Camera.
+    if (cat && !String(r.category ?? "").toLowerCase().includes(cat))
+      return false;
+    return matchesSearch(r);
+  });
+  // Names whichever filter emptied the list, so an empty page never reads as
+  // "nothing is on support" when it is really "nothing matches Printer".
+  const emptyText = q
+    ? `No results for "${search}"`
+    : category
+    ? `No ${category} assets are on support`
+    : state
+    ? "Nothing in this category"
+    : "No assets are currently on support";
+
   const summary = data?.summary || { total: 0, expiring: 0, overdue: 0 };
   const active = Math.max(summary.total - summary.expiring - summary.overdue, 0);
 
@@ -404,12 +438,53 @@ const SupportLoans = () => {
               setSearch("");
               setUnit(undefined);
               setState("");
+              setCategory(undefined);
             }}>
               Clear
             </Button>
           )}
         </div>
 
+        {/* Support assets are issued out of stock, so the stock shortlist is
+            the right set here. The long tail stays reachable via the search
+            box, which already matches on category. */}
+        <CategoryFilterBar
+          value={category}
+          categories={TOP_STOCK_CATEGORIES}
+          onChange={setCategory}
+        />
+
+        {!screens.md ? (
+          /* --- Card layout for phones/small tablets --- */
+          <div style={{ display: "grid", gap: 12 }}>
+            {isLoading || isFetching ? (
+              [1, 2, 3].map((i) => (
+                <div className="asset-card" key={i}>
+                  <Skeleton active paragraph={{ rows: 3 }} />
+                </div>
+              ))
+            ) : rows.length ? (
+              rows.map((r: any) => (
+                <SupportLoanMobileCard
+                  key={r.assign_id}
+                  loan={r}
+                  pct={elapsedPct(r.assign_date, r.expected_return)}
+                  badge={<StateBadge state={r.support_state} />}
+                  returning={returning}
+                  onOpenAsset={() => openAssetDetails(r.asset_id)}
+                  onOpenHolder={() => openHolder(r)}
+                  onExtend={() => openExtend(r)}
+                  onReturn={() => returnLoan({ assignId: r.assign_id })}
+                />
+              ))
+            ) : (
+              <Empty
+                description={emptyText}
+                style={{ padding: "34px 0" }}
+              />
+            )}
+          </div>
+        ) : (
         <Table
           rowKey="assign_id"
           size="small"
@@ -432,19 +507,14 @@ const SupportLoans = () => {
           locale={{
             emptyText: (
               <Empty
-                description={
-                  q
-                    ? `No results for "${search}"`
-                    : state
-                    ? "Nothing in this category"
-                    : "No assets are currently on support"
-                }
+                description={emptyText}
                 style={{ padding: "34px 0" }}
               />
             ),
           }}
           pagination={{ pageSize: 50, showSizeChanger: true, showTotal: (t) => `Total ${t}` }}
         />
+        )}
       </Card>
     </div>
   );

@@ -1,8 +1,19 @@
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Card, DatePicker, Dropdown, Input, Select } from "antd";
+import {
+  Button,
+  Card,
+  DatePicker,
+  Dropdown,
+  Empty,
+  Grid,
+  Input,
+  Pagination,
+  Select,
+  Skeleton,
+} from "antd";
 import { Table } from "antd/lib";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import { generatePagination } from "../../../common/TablePagination copy";
@@ -16,7 +27,12 @@ import DistributeAssetDetails from "../components/DistributedAssetDetails";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import { useDispatch } from "react-redux";
 import "../assets-ui.css";
-import { ASSET_CATEGORIES } from "../utils/assetCategories";
+import CategoryFilterBar from "../components/CategoryFilterBar";
+import DistributedMobileCard from "../components/DistributedMobileCard";
+import {
+  ASSET_CATEGORIES,
+  TOP_DISBURSEMENT_CATEGORIES,
+} from "../utils/assetCategories";
 const { Option } = Select;
 const DistributedAsset = () => {
   const [pagination, setPagination] = useState({
@@ -84,6 +100,27 @@ const DistributedAsset = () => {
       })
     );
 
+  // Single entry point for both the chip rail and the dropdown, so whichever
+  // one the user touches leaves the other showing the same thing.
+  // MUST be called unconditionally: this builder calls hooks internally
+  // (useDispatch / useGetMeQuery / useReturnAssetToStockMutation). Calling it
+  // inline inside the table branch below would change the hook count whenever
+  // the viewport crosses `md` and the card layout takes over.
+  const columns = DistributedAssetsTableColumns();
+
+  // Below `md` the 6-column table is unusable on a phone — switch to cards.
+  const screens = Grid.useBreakpoint();
+  const isMobile = !screens.md;
+  const rows = isLoading || isFetching ? [] : data?.data?.length ? data.data : [];
+
+  // Marked as a transition — see the matching note in AssetsList.
+  const applyCategory = (category?: string) => {
+    startTransition(() => {
+      setFilter({ ...filter, type: category, offset: 0 });
+      setSearchParams({ page: "1", pageSize: String(pageSize) });
+    });
+  };
+
   const isInteractive = (target: HTMLElement | null) =>
     !!target?.closest(
       "button, a, input, .asset-actions, .ant-select, .ant-dropdown, .ant-popover, .ant-tooltip"
@@ -108,12 +145,20 @@ const DistributedAsset = () => {
               placeholder="Search..."
             />
           </div>
+          {/* Full category list — the chip rail below only carries the
+              high-volume ones. Controlled so the two stay in sync. */}
           <Select
-            placeholder="Select Category"
-            style={{ width: "160px"}}
+            placeholder="All Categories"
+            style={{ width: "170px" }}
             showSearch
             optionFilterProp="children"
-            onChange={(e) => setFilter({ ...filter, type: e, offset: 0 })}
+            value={filter.type}
+            onChange={(e) => applyCategory(e)}
+            filterOption={(input: string, option?: { children?: any }) =>
+              String(option?.children ?? "")
+                .toLowerCase()
+                .includes(input.toLowerCase())
+            }
             allowClear
           >
             {ASSET_CATEGORIES.map((c) => (
@@ -236,7 +281,55 @@ const DistributedAsset = () => {
             />
           </div>
         </div>
+
+        <CategoryFilterBar
+          value={filter.type}
+          categories={TOP_DISBURSEMENT_CATEGORIES}
+          onChange={applyCategory}
+        />
+
         <div>
+          {isMobile ? (
+            /* --- Card layout for phones/small tablets --- */
+            <div style={{ display: "grid", gap: 12 }}>
+              {isLoading || isFetching ? (
+                [1, 2, 3].map((i) => (
+                  <div className="asset-card" key={i}>
+                    <Skeleton active paragraph={{ rows: 3 }} />
+                  </div>
+                ))
+              ) : rows.length ? (
+                rows.map((record: any) => (
+                  <DistributedMobileCard key={record.id} record={record} />
+                ))
+              ) : (
+                <Empty description="No distributed assets found" />
+              )}
+
+              <Pagination
+                style={{ marginTop: 8 }}
+                align="center"
+                size="small"
+                current={Number(page)}
+                pageSize={Number(pageSize)}
+                total={Number(data?.total) || 0}
+                showSizeChanger
+                pageSizeOptions={["25", "50", "100", "200"]}
+                showTotal={(total) => `Total ${total}`}
+                onChange={(current, size) => {
+                  setSearchParams({
+                    page: String(current),
+                    pageSize: String(size),
+                  });
+                  setFilter({
+                    ...filter,
+                    offset: (current - 1) * size,
+                    limit: size,
+                  });
+                }}
+              />
+            </div>
+          ) : (
           <Table
             rowKey="id"
             size="small"
@@ -256,7 +349,7 @@ const DistributedAsset = () => {
                 ? [] // Show empty while loading
                 : (data?.data?.length ? data.data : [])
             }
-            columns={DistributedAssetsTableColumns()}
+            columns={columns}
             scroll={{ x: "max-content" }}
             pagination={{
               ...generatePagination(
@@ -284,6 +377,7 @@ const DistributedAsset = () => {
               });
             }}
           />
+          )}
         </div>
       </Card>
     </div>

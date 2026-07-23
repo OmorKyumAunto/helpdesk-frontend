@@ -1,5 +1,6 @@
 import { Card, Col, Row, Tabs, Tag, Typography, Timeline, Divider, Spin, Alert } from "antd";
 import dayjs from "dayjs";
+import { Remark } from "../utils/assetVisuals";
 import { useGetSingleDistributedAssetQuery } from "../api/assetsEndPoint";
 
 const { Text } = Typography;
@@ -73,7 +74,7 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
               <FieldItem label="Purchase Date" value={purchase_date ? dayjs(purchase_date).format("DD-MM-YYYY") : "N/A"} />
               <FieldItem
                 label="Status"
-                value={remarks === "assigned" ? <Tag color="green">Assigned</Tag> : <Tag color="blue">In Stock</Tag>}
+                value={<Remark remarks={remarks} />}
               />
             </Card>
           </Col>

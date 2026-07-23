@@ -27,8 +27,24 @@ export const userApi = createApi({
           console.log(error);
         }
       },
+      providesTags: ["User"],
+    }),
+
+    // Self-service email notification switch. The backend takes the user id
+    // from the token, so there is nothing to pass but the new value.
+    updateNotificationPreference: builder.mutation<
+      { success: boolean; message: string; data: { email_notification: number } },
+      boolean
+    >({
+      query: (enabled) => ({
+        url: "/profile/notification-preference",
+        method: "PUT",
+        body: { email_notification: enabled },
+      }),
+      invalidatesTags: ["User"],
     }),
   }),
 });
 
-export const { useGetMeQuery } = userApi;
+export const { useGetMeQuery, useUpdateNotificationPreferenceMutation } =
+  userApi;

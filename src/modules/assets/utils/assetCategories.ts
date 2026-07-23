@@ -26,3 +26,29 @@ export const ASSET_CATEGORIES: string[] = [
   "48 Port Switch Managable",
   "Non Managable Switch",
 ];
+
+/**
+ * Categories promoted to one-click chips above the table. Chosen from the live
+ * volume per bucket — everything else stays reachable through the toolbar's
+ * "Select Category" dropdown.
+ *
+ * Filtering is a LIKE match, so "Camera" also covers CAMERA / IP Camera /
+ * PC Camera, which are separate rows in the data.
+ */
+export const TOP_STOCK_CATEGORIES: string[] = [
+  "Laptop",
+  "Desktop",
+  "Monitor",
+  "Accessories",
+  "Camera",
+  "Printer",
+];
+
+export const TOP_DISBURSEMENT_CATEGORIES: string[] = [
+  "Desktop",
+  "Monitor",
+  "Laptop",
+  "Accessories",
+  "Printer",
+  "Attendence Machine",
+];

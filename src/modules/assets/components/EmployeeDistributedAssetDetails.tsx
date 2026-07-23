@@ -1,4 +1,5 @@
 import { Card, Col, Row, Tabs, Tag, Typography } from "antd";
+import { Remark } from "../utils/assetVisuals";
 import dayjs from "dayjs";
 import React from "react";
 
@@ -53,13 +54,7 @@ const EmployeeDistributedAssetDetails = ({ record }: { record: any }) => {
               />
               <FieldItem
                 label="Status"
-                value={
-                  remarks === "assigned" ? (
-                    <Tag color="green">Assigned</Tag>
-                  ) : (
-                    <Tag color="blue">In Stock</Tag>
-                  )
-                }
+                value={<Remark remarks={remarks} />}
               />
             </Card>
           </Col>

@@ -161,7 +161,6 @@ export const AppLayout = () => {
   const { token } = useSelector((state: RootState) => state.userSlice);
   const isValidUser = !!token && !!profile?.data;
   const [collapsed, setCollapsed] = useState(false);
-  const [currentSelection, setCurrentSelection] = useState<string>("");
   const [sidebarWidth, setSidebarWidth] = useState(240);
   const [openKeys, setOpenKeys] = useState<Array<string>>([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -188,6 +187,8 @@ export const AppLayout = () => {
 
   const helpMenu = (
     <Menu
+      // Same reasoning as the user dropdown — these are links, not nav state.
+      selectable={false}
       style={{
         borderRadius: "8px",
         boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08)",
@@ -245,13 +246,6 @@ export const AppLayout = () => {
   } = theme.useToken();
 
   useEffect(() => {
-    const index = location.pathname.indexOf(
-      "/",
-      location.pathname.indexOf("/", location.pathname.indexOf("/") + 1) + 1,
-    );
-    const result =
-      index !== -1 ? location.pathname.substring(0, index) : location.pathname;
-    setCurrentSelection(result);
     const modulePath = location.pathname.split("/")[1];
     setOpenKeys([modulePath]);
   }, [location]);
@@ -267,12 +261,11 @@ export const AppLayout = () => {
     }
   };
 
-  const handleClick: MenuProps["onClick"] = (e) => {
-    setCurrentSelection("");
-    setTimeout(() => {
-      setCurrentSelection(e.key);
-      if (gridBreak.xs) setDrawerVisible(false);
-    }, 0);
+  // Selection is derived from the URL (see below), so a click only has to
+  // close the mobile drawer. Setting it here as well is what let the highlight
+  // go stale: the click-set value survived navigations that produced no match.
+  const handleClick: MenuProps["onClick"] = () => {
+    if (gridBreak.xs) setDrawerVisible(false);
   };
 
   interface DataObject {
@@ -304,16 +297,31 @@ export const AppLayout = () => {
     return null;
   }
 
+  // The menu chain for the current URL, or null when the page has no menu
+  // entry at all (e.g. /setting/profile, reached from the header).
+  const activeMenuPath = useMemo(
+    () =>
+      findObjectWithKey(memoizedMenuItems as DataObject[], {
+        pathname: location.pathname,
+        state: location.state,
+      }),
+    [memoizedMenuItems, location.pathname, location.state],
+  );
+
+  /**
+   * Derived, never stored. Previously this lived in state and was written from
+   * three places — a click handler, a path-prefix effect, and this lookup —
+   * and the lookup only ever SET a value, never cleared it. Landing on a page
+   * with no menu entry therefore left the last item highlighted forever.
+   * Deriving it means an unmatched route resolves to "" and nothing is marked.
+   */
+  const currentSelection = activeMenuPath
+    ? activeMenuPath[activeMenuPath.length - 1]
+    : "";
+
   useEffect(() => {
-    const indices = findObjectWithKey(memoizedMenuItems as DataObject[], {
-      pathname: location.pathname,
-      state: location.state,
-    });
-    if (indices) {
-      setOpenKeys(indices);
-      setCurrentSelection(indices[indices.length - 1]);
-    }
-  }, [location.pathname, memoizedMenuItems]);
+    if (activeMenuPath) setOpenKeys(activeMenuPath);
+  }, [activeMenuPath]);
 
   const handleResizeStart = (e: any) => {
     e.preventDefault();
@@ -362,7 +370,10 @@ export const AppLayout = () => {
           </Text>
         </Space>
       </div>
-      <Menu style={{ border: "none", fontSize: "0.875rem" }}>
+      {/* selectable={false}: this is a dropdown of actions, not a nav state.
+          Without it AntD keeps "profile" highlighted in its OWN internal state
+          after the first click, and nothing clears it short of a page reload. */}
+      <Menu selectable={false} style={{ border: "none", fontSize: "0.875rem" }}>
         <Menu.Item key="profile" icon={<UserOutlined />}>
           <Link to="/setting/profile">Profile Settings</Link>
         </Menu.Item>

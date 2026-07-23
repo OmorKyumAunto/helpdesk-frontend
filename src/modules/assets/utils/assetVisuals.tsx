@@ -6,6 +6,8 @@ export const statusDotClass = (status: number) =>
     ? "asset-dot--active"
     : status === ASSET_STATUS.DISPOSED
     ? "asset-dot--disposed"
+    : status === ASSET_STATUS.WRITE_OFF
+    ? "asset-dot--writeoff"
     : "asset-dot--inactive";
 
 /** Small coloured dot used in the status badge and its menu. */
@@ -41,6 +43,13 @@ export const Remark = ({ remarks }: { remarks?: string }) => {
       <span className="asset-badge asset-badge--disposed">
         <span className="asset-badge__dot" />
         Disposed
+      </span>
+    );
+  if (remarks === "write_off")
+    return (
+      <span className="asset-badge asset-badge--writeoff">
+        <span className="asset-badge__dot" />
+        Write Off
       </span>
     );
   return (

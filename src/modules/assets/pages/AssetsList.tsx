@@ -16,7 +16,7 @@ import AssetMobileCard from "../components/AssetMobileCard";
 import AssetDetails from "../components/AssetDetails";
 import "../assets-ui.css";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { useGetMeQuery } from "../../../app/api/userApi";
@@ -35,9 +35,30 @@ import { IAssetParams } from "../types/assetsTypes";
 import { AssetsTableColumns } from "../utils/AssetsTableColumns";
 import { useGetActiveLocationsQuery } from "../../location/api/locationEndPoint";
 import { rangePreset } from "../../../common/rangePreset";
-import { ASSET_CATEGORIES } from "../utils/assetCategories";
+import CategoryFilterBar from "../components/CategoryFilterBar";
+import {
+  ASSET_CATEGORIES,
+  TOP_STOCK_CATEGORIES,
+} from "../utils/assetCategories";
 
-const AssetsList = () => {
+type TProps = {
+  /** Locks the list to one remark bucket: "in_stock" (Stock) or "disposed". */
+  assetType?: "in_stock" | "disposed" | "write_off";
+  /** Rendered inside the card, above the toolbar (used for the Dispose tabs). */
+  headerNode?: React.ReactNode;
+  title?: string;
+  excelName?: string;
+  /** Create / Upload only belong on the Stock page. */
+  allowCreate?: boolean;
+};
+
+const AssetsList = ({
+  assetType = "in_stock",
+  title = "Stock List",
+  excelName = "stock-list",
+  allowCreate = true,
+  headerNode,
+}: TProps) => {
   const { Option } = Select;
   const dispatch = useDispatch();
   const [pagination, setPagination] = useState({
@@ -68,7 +89,14 @@ const AssetsList = () => {
   const [filter, setFilter] = useState<IAssetParams>({
     limit: Number(pageSize),
     offset: skipValue,
+    type: assetType,
   });
+
+  // Keep the bucket locked when navigating between Stock and Dispose (the
+  // component instance is reused, so the filter must follow the prop).
+  useEffect(() => {
+    setFilter((f) => ({ ...f, type: assetType, offset: 0 }));
+  }, [assetType]);
 
   const locationOption = locationData?.data?.filter(
     (item) => item.unit_id === filter.unit
@@ -97,6 +125,19 @@ const AssetsList = () => {
   const screens = Grid.useBreakpoint();
   const isMobile = !screens.md;
   const rows = assetsTableData?.data?.length ? assetsTableData.data : [];
+
+  // Single entry point for both the chip rail and the dropdown, so whichever
+  // one the user touches leaves the other showing the same thing.
+  //
+  // Marked as a transition: changing the category refetches and re-renders the
+  // whole table (up to 3000 rows). As an urgent update that work blocks the
+  // frame the chip animation needs; as a transition React can interrupt it.
+  const applyCategory = (category?: string) => {
+    startTransition(() => {
+      setFilter({ ...filter, category, offset: 0 });
+      setSearchParams({ page: "1", pageSize: String(pageSize) });
+    });
+  };
 
   const openAssetDetails = (id: number) => {
     dispatch(
@@ -133,12 +174,19 @@ const AssetsList = () => {
     <>
       <div className="asset-ui">
         <Card
-          title={`Assets List `}
+          title={title}
           style={{
             boxShadow: "0 0 0 1px rgba(0,0,0,.05)",
             borderRadius: 14,
           }}
         >
+          {headerNode}
+
+          {/* Everything below the tabs animates in on mount. On the Dispose
+              page this component is keyed by bucket, so switching tabs
+              remounts it and replays the transition — matching the ticket
+              module's ContentArea. */}
+          <div className="asset-content">
           <div className="asset-toolbar">
             <div>
               <Input
@@ -183,12 +231,15 @@ const AssetsList = () => {
               }))}
               allowClear
             />
+            {/* Full category list — the chip rail below only carries the
+                high-volume ones. Controlled so the two stay in sync. */}
             <Select
               style={{ width: 180 }}
-              placeholder="Select Category"
+              placeholder="All Categories"
               showSearch
               optionFilterProp="children"
-              onChange={(e) => setFilter({ ...filter, category: e, offset: 0 })}
+              value={filter.category}
+              onChange={(e) => applyCategory(e)}
               filterOption={(input: string, option?: { children?: any }) =>
                 String(option?.children ?? "")
                   .toLowerCase()
@@ -238,19 +289,6 @@ const AssetsList = () => {
                     allowClear
                   />
 
-                  <Select
-                    allowClear
-                    style={{ width: "100%", marginBottom: 8 }}
-                    onChange={(e) =>
-                      setFilter({ ...filter, type: e, offset: 0 })
-                    }
-                    placeholder="Select Remark Type"
-                  >
-                    <Option value="">All</Option>
-                    <Option value="assigned">Assigned</Option>
-                    <Option value="in_stock">In Stock</Option>
-                    <Option value="disposed">Disposed</Option>
-                  </Select>
                   <DatePicker.RangePicker
                     presets={rangePreset}
                     onChange={(_, e) =>
@@ -268,7 +306,7 @@ const AssetsList = () => {
               <Button icon={<FilterOutlined />}>Filters</Button>
             </Dropdown>
             <ExcelDownload
-              excelName={"asset-list"}
+              excelName={excelName}
               excelTableHead={[
                 "Asset Name",
                 "Category",
@@ -327,7 +365,7 @@ const AssetsList = () => {
                   : []
               }
             />
-            {employeeID !== "Assetteam" && (
+            {allowCreate && employeeID !== "Assetteam" && (
               <>
                 <CreateButton
                   name="Upload Asset"
@@ -347,6 +385,13 @@ const AssetsList = () => {
             )}
 
           </div>
+
+          <CategoryFilterBar
+            value={filter.category}
+            categories={TOP_STOCK_CATEGORIES}
+            onChange={applyCategory}
+          />
+
           <div>
             {isMobile ? (
               /* --- Card layout for phones/small tablets --- */
@@ -444,6 +489,7 @@ const AssetsList = () => {
               }}
             />
             )}
+          </div>
           </div>
         </Card>
       </div>

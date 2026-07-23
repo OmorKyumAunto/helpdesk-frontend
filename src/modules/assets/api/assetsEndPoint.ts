@@ -99,6 +99,26 @@ export const assetsEndPoint = api.injectEndpoints({
       },
       providesTags: () => ["asset"],
     }),
+    // Raw per-category totals for the quick-filter chips. Returned unaggregated
+    // (the DB holds case variants like LAPTOP / Laptop) so the bar can sum them
+    // with the same substring rule the category filter itself uses.
+    getCategoryCounts: build.query<
+      HTTPResponse<{ category: string; total: number }[]>,
+      Record<string, any>
+    >({
+      query: (params) => ({ url: `/asset/category-counts`, params }),
+      providesTags: () => ["asset"],
+    }),
+    getDistributedCategoryCounts: build.query<
+      HTTPResponse<{ category: string; total: number }[]>,
+      Record<string, any>
+    >({
+      query: (params) => ({
+        url: `/asset/distributed-category-counts`,
+        params,
+      }),
+      providesTags: () => ["asset"],
+    }),
     getSingleAssets: build.query<HTTPResponse<IAssetDetails>, number>({
       query: (id) => {
         return {
@@ -203,6 +223,19 @@ export const assetsEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["asset", { type: "dashboardTypes", id: "dashboard" }],
     }),
+    returnAssetToStock: build.mutation<unknown, { assetId: number }>({
+      query: ({ assetId }) => ({
+        url: `/asset/return-to-stock/${assetId}`,
+        method: "PUT",
+      }),
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Asset moved back to stock");
+        });
+      },
+      invalidatesTags: () => ["asset", "CTC", { type: "dashboardTypes", id: "dashboard" }],
+    }),
     UpdateAssetStatus: build.mutation<unknown, { id: number; status: number }>({
       query: ({ id, status }) => {
         return {
@@ -271,6 +304,8 @@ export const {
   useGetEmployeeAllDistributedAssetQuery,
   useGetEmployeeAssetQuery,
   useGetSingleAssetsQuery,
+  useGetCategoryCountsQuery,
+  useGetDistributedCategoryCountsQuery,
   useCreateAssetsMutation,
   useAssignEmployeeMutation,
   useUpdateAssetsMutation,
@@ -279,4 +314,5 @@ export const {
   useGetSupportLoansQuery,
   useExtendSupportLoanMutation,
   useReturnSupportLoanMutation,
+  useReturnAssetToStockMutation,
 } = assetsEndPoint;

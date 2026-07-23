@@ -37,23 +37,31 @@ export const AssetStatusControl = ({ record }: { record: IAsset }) => {
   const employeeID = profile?.data?.employee_id;
   const [updateStatus] = useUpdateAssetStatusMutation();
 
-  // A disposed asset is terminal — the backend rejects any further change.
-  // An assigned asset must be unassigned first.
+  // Write Off is fully terminal. A disposed asset may only progress to Write
+  // Off. An assigned asset must be unassigned first.
+  const isWriteOff = record.status === ASSET_STATUS.WRITE_OFF;
   const isDisposed = record.status === ASSET_STATUS.DISPOSED;
   const isAssigned = record.remarks === "assigned";
   const canChange =
-    employeeID !== "Assetteam" && !isAssigned && !isDisposed;
+    employeeID !== "Assetteam" && !isAssigned && !isWriteOff;
 
   if (!canChange) {
-    const reason = isDisposed
-      ? "This asset is disposed — its status can no longer be changed."
+    const reason = isWriteOff
+      ? "This asset is written off — its status can no longer be changed."
       : isAssigned
       ? "Unassign this asset before changing its status."
       : undefined;
     return <StaticStatus status={record.status} reason={reason} />;
   }
 
-  const items: MenuProps["items"] = ASSET_STATUS_OPTIONS.map((option) => ({
+  // Write Off is only ever reachable FROM Disposed — an asset must be disposed
+  // before it can be written off, so the option is hidden everywhere else
+  // (notably on the Stock page). From Disposed it is the only move left.
+  const options = isDisposed
+    ? ASSET_STATUS_OPTIONS.filter((o) => o.value === ASSET_STATUS.WRITE_OFF)
+    : ASSET_STATUS_OPTIONS.filter((o) => o.value !== ASSET_STATUS.WRITE_OFF);
+
+  const items: MenuProps["items"] = options.map((option) => ({
     key: String(option.value),
     label: (
       <span className="asset-menu-item">
@@ -77,10 +85,16 @@ export const AssetStatusControl = ({ record }: { record: IAsset }) => {
           const next = Number(key);
           if (next === record.status) return;
 
-          // Disposing is irreversible — confirm before committing.
-          if (next === ASSET_STATUS.DISPOSED) {
+          // Disposing / writing off is irreversible — confirm before committing.
+          if (
+            next === ASSET_STATUS.DISPOSED ||
+            next === ASSET_STATUS.WRITE_OFF
+          ) {
+            const writingOff = next === ASSET_STATUS.WRITE_OFF;
             Modal.confirm({
-              title: "Dispose this asset?",
+              title: writingOff
+                ? "Write off this asset?"
+                : "Dispose this asset?",
               centered: true,
               icon: <ExclamationCircleFilled style={{ color: "#b42318" }} />,
               content: (
@@ -90,13 +104,13 @@ export const AssetStatusControl = ({ record }: { record: IAsset }) => {
                     {record.serial_number ? ` · ${record.serial_number}` : ""}
                   </div>
                   <div>
-                    This cannot be undone. A disposed asset can no longer be
-                    set back to Active or Inactive, and cannot be assigned to
-                    anyone.
+                    {writingOff
+                      ? "This cannot be undone. A written-off asset leaves your stock permanently and can no longer be changed or assigned."
+                      : "This cannot be undone. A disposed asset can only be moved to Write Off afterwards, and cannot be assigned to anyone."}
                   </div>
                 </div>
               ),
-              okText: "Yes, dispose",
+              okText: writingOff ? "Yes, write off" : "Yes, dispose",
               okButtonProps: { danger: true },
               cancelText: "Cancel",
               onOk: () => updateStatus({ id: record.id, status: next }),

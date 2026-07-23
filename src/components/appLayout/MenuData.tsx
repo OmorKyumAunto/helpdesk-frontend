@@ -19,7 +19,7 @@ import { GoTasklist } from "react-icons/go";
 import { PiTicket } from "react-icons/pi";
 import { IoTicketOutline } from "react-icons/io5";
 import { TbReport } from "react-icons/tb";
-import { MdOutlineSync, MdOutlineTimer } from "react-icons/md";
+import { MdOutlineSync, MdOutlineTimer, MdOutlineDeleteSweep } from "react-icons/md";
 import { HiBuildingLibrary } from "react-icons/hi2";
 
 export const sideBarItems = (employee_id: string, roleId: number) => {
@@ -40,6 +40,11 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
           label: <Link to="/assets/distributed">Disbursements</Link>,
           key: "/assets/distributed",
           icon: <MdListAlt size={20} />,
+        },
+        {
+          label: <Link to="/assets/disposed">Dispose</Link>,
+          key: "/assets/disposed",
+          icon: <MdOutlineDeleteSweep size={20} />,
         },
         {
           label: <Link to="/assets/support">On Support</Link>,

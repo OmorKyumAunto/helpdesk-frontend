@@ -182,6 +182,11 @@
   background: #fef3f2;
   border-color: #fecdca;
 }
+.asset-badge--writeoff {
+  color: #5925dc;
+  background: #f4f3ff;
+  border-color: #d9d6fe;
+}
 
 /* ============================ Status badge + dropdown ============================ */
 /* Editable status: looks unmistakably like a control — border, fill, chevron */
@@ -247,6 +252,7 @@
 .asset-dot--active { background: #17b26a; }
 .asset-dot--inactive { background: #f79009; }
 .asset-dot--disposed { background: #f04438; }
+.asset-dot--writeoff { background: #7f56d9; }
 
 .asset-status-menu .ant-dropdown-menu {
   padding: 4px;
@@ -1143,3 +1149,468 @@
   background: linear-gradient(135deg, #1f8ad4, #1775bb);
   box-shadow: 0 6px 14px -5px rgba(23, 117, 187, 0.65);
 }
+
+/* ==================== Dispose page bucket tabs ==================== */
+/* ==================== Dispose page tabs ====================
+   Mirrors the ticket module's TicketMain tabs so navigation looks identical
+   across the app: a gradient header strip, and a filled #2563eb tab with a
+   3px bottom bar and an upward shadow.
+
+   The strip bleeds to the card's edges via negative margins that cancel the
+   AntD card body padding — the values below must stay in step with the
+   `.asset-ui .ant-card-body` padding set in the responsive section. */
+.dp-tabs {
+  margin: -24px -24px 16px;
+  padding: 16px 24px 0;
+  background: linear-gradient(to bottom, #ffffff, #f9fafb);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dp-tabs__row {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.dp-tabs__row::-webkit-scrollbar { display: none; }
+
+.dp-tab {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px 10px 0 0;
+  background: transparent;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* The 3px seat under the tab, exactly as the ticket tabs do it. */
+.dp-tab::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  border-radius: 3px 3px 0 0;
+  transition: all 0.25s ease;
+}
+
+.dp-tab__icon { display: inline-flex; font-size: 17px; flex-shrink: 0; }
+
+.dp-tab:hover {
+  color: #1f2937;
+  background: #f3f4f6;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.dp-tab:active { transform: translateY(-1px); }
+.dp-tab:focus-visible { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+.dp-tab--on {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 -2px 8px rgba(37, 99, 235, 0.15);
+}
+.dp-tab--on::before { background: #2563eb; }
+.dp-tab--on:hover {
+  color: #ffffff;
+  background: #1d4ed8;
+  box-shadow: 0 -4px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Keep the bleed aligned with the card padding at each breakpoint. */
+@media (max-width: 1024px) {
+  .dp-tab { padding: 10px 16px; font-size: 13px; }
+  .dp-tab__icon { font-size: 15px; }
+}
+@media (max-width: 767px) {
+  .dp-tabs {
+    margin: -14px -14px 14px;
+    padding: 12px 14px 0;
+  }
+  .dp-tabs__row { gap: 4px; }
+  .dp-tab { padding: 10px 14px; gap: 6px; border-radius: 8px 8px 0 0; }
+}
+@media (max-width: 400px) {
+  .dp-tabs { margin: -10px -10px 12px; padding: 10px 10px 0; }
+  /* Labels collapse on the narrowest phones — the active tab keeps its text
+     so you can still tell which bucket you are in. */
+  .dp-tab:not(.dp-tab--on) .dp-tab__label { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-tab, .dp-tab::before { transition: none; }
+  .dp-tab:hover { transform: none; }
+}
+
+/* ==================== Category filter rail (Stock / Disbursement / Support) ====================
+   Palette is lifted verbatim from the task module's Chip
+   (modules/task/page/SuperAdminTaskList.tsx): #2563eb active, #f8fafc /
+   #e2e8f0 / #475569 at rest, #eff6ff / #1d4ed8 on hover. Flat fills and
+   hairlines only — no gradients or shadows anywhere.
+
+   PERFORMANCE: the selection pill is ONE absolutely-positioned element
+   animated purely with `transform` (+ a width tween). No shared-layout
+   library, no per-frame measuring, and because it is out of flow the width
+   change repaints only itself — nothing else in the card reflows. This is what
+   keeps the slide at 60fps while the table underneath re-renders. */
+.cat-bar {
+  display: flex;
+  align-items: center;
+  margin: 0 0 14px;
+  min-width: 0;
+}
+
+/* The track holding the chips. flex: 0 1 auto — it hugs its content instead
+   of stretching a half-empty bar across the card, but still shrinks and
+   scrolls when space runs out. position: relative anchors the pill's offset
+   measurements. */
+.cat-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  padding: 4px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #f8fafc;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-padding-inline: 8px;
+}
+.cat-shell::-webkit-scrollbar { display: none; }
+
+.cat-pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  z-index: 0;
+  border-radius: 999px;
+  background: #2563eb;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, width;
+  /* Slight overshoot gives the spring feel without a physics engine. */
+  transition: transform 340ms cubic-bezier(0.32, 1.42, 0.5, 1),
+    width 340ms cubic-bezier(0.32, 1.42, 0.5, 1), opacity 160ms linear;
+}
+.cat-pill--shown { opacity: 1; }
+/* First paint: jump straight to position, never slide in from the left. */
+.cat-pill--init { transition: none; }
+
+/* Hairline divider between "All" and the category chips */
+.cat-sep {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: 1px;
+  height: 16px;
+  margin: 0 5px;
+  background: #e2e8f0;
+}
+
+.cat-chip {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #475569;
+  /* Weight is deliberately constant across states: bolding the active chip
+     would change its width and shove every neighbour sideways mid-slide. */
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 140ms var(--a-ease), background-color 140ms var(--a-ease),
+    transform 180ms var(--a-ease);
+  /* Staggered entrance. `backwards` (not `both`) on purpose: `both` would
+     keep applying the final keyframe's transform forever and silently kill
+     the hover lift and press states below. --i is set per chip in the TSX. */
+  animation: catChipIn 300ms cubic-bezier(0.32, 1.3, 0.5, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 32ms);
+}
+
+@keyframes catChipIn {
+  from {
+    opacity: 0;
+    transform: translateY(7px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.cat-chip__icon,
+.cat-chip__label {
+  position: relative;
+  z-index: 1;
+}
+
+.cat-chip__icon {
+  display: inline-flex;
+  font-size: 13px;
+  color: #94a3b8;
+  transition: color 120ms var(--a-ease), transform 220ms var(--a-ease);
+}
+
+/* Hover on an INACTIVE chip only — the :not() guard stops the pale hover text
+   from ever landing on the white-on-blue selected chip. */
+.cat-chip:not(.cat-chip--on):hover {
+  color: #1d4ed8;
+  background: #eff6ff;
+  transform: translateY(-1px);
+}
+.cat-chip:not(.cat-chip--on):hover .cat-chip__icon {
+  color: #1d4ed8;
+  transform: translateY(-1px);
+}
+.cat-chip:active { transform: scale(0.95); }
+
+.cat-chip:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Selected: white content riding on the pill. */
+.cat-chip--on,
+.cat-chip--on:hover {
+  color: #fff;
+  background: transparent;
+}
+.cat-chip--on .cat-chip__icon,
+.cat-chip--on:hover .cat-chip__icon {
+  color: #fff;
+  transform: scale(1.12);
+  /* Replays every time a chip becomes active, because the class toggles. */
+  animation: catIconPop 380ms cubic-bezier(0.32, 1.42, 0.5, 1);
+}
+
+@keyframes catIconPop {
+  0%   { transform: scale(1) rotate(-6deg); }
+  55%  { transform: scale(1.34) rotate(3deg); }
+  100% { transform: scale(1.12) rotate(0deg); }
+}
+
+/* The label slides in behind the icon as the pill arrives. */
+.cat-chip--on .cat-chip__label {
+  animation: catLabelIn 380ms cubic-bezier(0.32, 1.3, 0.5, 1);
+}
+@keyframes catLabelIn {
+  from { opacity: 0.35; transform: translateX(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* --- Scroll arrows ---
+   These only exist when the track actually overflows. Fading them with
+   `opacity` alone is NOT enough: a hidden 28px button still occupies its slot
+   in the flex row, which pushed the count circle ~34px away from the track.
+   So the resting state collapses the box entirely — zero width, no border, no
+   margin — and .cat-nav--show restores it. */
+.cat-nav {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0;
+  height: 28px;
+  padding: 0;
+  margin: 0;
+  border: 0 solid #e2e8f0;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 11px;
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--a-base) var(--a-ease),
+    width var(--a-base) var(--a-ease), margin var(--a-base) var(--a-ease),
+    background-color 120ms var(--a-ease), color 120ms var(--a-ease),
+    border-color 120ms var(--a-ease);
+}
+.cat-nav--show {
+  width: 28px;
+  border-width: 1px;
+  opacity: 1;
+  pointer-events: auto;
+}
+.cat-nav--show.cat-nav--left { margin-right: 6px; }
+.cat-nav--show.cat-nav--right { margin-left: 6px; }
+.cat-nav:hover {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #2563eb;
+}
+
+@media (max-width: 767px) {
+  /* Touch devices swipe the rail — the arrows only take up room. */
+  .cat-nav { display: none; }
+  .cat-shell { flex: 1 1 auto; }
+  .cat-chip { height: 28px; padding: 0 11px; font-size: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-pill { transition: opacity 140ms linear; }
+  .cat-chip, .cat-chip__icon, .cat-nav { transition: none; }
+  .cat-chip,
+  .cat-chip--on .cat-chip__icon,
+  .cat-chip--on .cat-chip__label { animation: none; }
+  .cat-chip--on .cat-chip__icon { transform: none; }
+  .cat-chip:hover, .cat-chip:active { transform: none; }
+  .cat-shell { scroll-behavior: auto; }
+}
+
+/* ==================== Responsive pass ====================
+   Targets the four asset pages (Stock, Dispose, Disbursements, On Support).
+   Below `md` each page swaps its table for cards; these rules make the parts
+   AROUND the table behave at every width, down to a 320px phone. */
+
+/* The AntD Card's default 24px body padding eats most of a small screen. */
+@media (max-width: 767px) {
+  .asset-ui .ant-card-body { padding: 14px !important; }
+  .asset-ui .ant-card-head { padding: 0 14px !important; }
+  .asset-ui .ant-card-head-title { font-size: 15px; }
+}
+@media (max-width: 400px) {
+  .asset-ui .ant-card-body { padding: 10px !important; }
+  .asset-ui .ant-card-head { padding: 0 10px !important; }
+}
+
+/* Cards: single-column field grid on the narrowest phones, and footer buttons
+   that stack instead of squashing to unreadable widths. */
+@media (max-width: 360px) {
+  .asset-card__grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+}
+@media (max-width: 767px) {
+  .asset-card__foot {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .asset-card__foot > * { flex: 1 1 auto; min-width: 0; }
+  .asset-card__foot .ant-btn { width: 100%; }
+  /* The status control has a 116px floor that overflows a 320px card. */
+  .asset-card__foot .asset-status { min-width: 0; width: 100%; }
+}
+
+/* Table fallback (md–lg): never let a fixed column push the page sideways. */
+.asset-ui .ant-table-wrapper,
+.asset-ui .ant-table {
+  max-width: 100%;
+}
+.asset-ui .ant-pagination {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
+/* --- On Support --- */
+@media (max-width: 767px) {
+  .sl-hero { padding: 14px 16px; border-radius: 12px; }
+  .sl-hero__title { font-size: 16px; }
+  .sl-hero__sub { font-size: 12.5px; }
+  /* 2-up rather than 1-up: four tiles stacked is a lot of scrolling before
+     the list even starts. */
+  .sl-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+}
+@media (max-width: 340px) {
+  .sl-stats { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* The table cell caps the bar at 96px; inside a card it should span. */
+.asset-card .sl-progress { width: 100%; }
+
+.sl-holder--card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 0 0;
+  border-top: 1px solid var(--a-line-soft);
+}
+.sl-card--overdue { border-color: #fecdca; }
+
+/* --- Category rail --- */
+/* Full-bleed the rail on phones so chips can scroll edge-to-edge instead of
+   ending in a cramped 10px gutter. */
+@media (max-width: 480px) {
+  .cat-bar { margin-bottom: 12px; }
+  .cat-shell { padding: 3px; }
+  .cat-pill { top: 3px; bottom: 3px; }
+  .cat-chip { gap: 5px; }
+}
+
+/* Tab-change transition, lifted from the ticket module's ContentArea
+   (modules/ticket/page/TicketMain.tsx). Wraps everything BELOW the tabs, so
+   the tab strip itself stays put while the list swaps under it. */
+@keyframes assetFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.asset-content {
+  animation: assetFadeInUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .asset-content { animation: none; }
+}
+
+/* Reassignment notice in the assign modal — shown only when the asset already
+   has a holder, so the handover is explicit before it is confirmed. */
+.ae-handover {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid #fedf89;
+  border-radius: 8px;
+  background: #fffaeb;
+  color: #93370d;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.ae-handover__icon {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  font-size: 14px;
+  color: #b54708;
+}
+.ae-handover strong { font-weight: 700; }

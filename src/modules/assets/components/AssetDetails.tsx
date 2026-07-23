@@ -1,5 +1,6 @@
 import { Card, Col, Row, Tabs, Tag, Typography, Timeline, Divider } from "antd";
 import dayjs from "dayjs";
+import { Remark } from "../utils/assetVisuals";
 import { useGetSingleAssetsQuery } from "../api/assetsEndPoint";
 
 const { Text } = Typography;
@@ -76,7 +77,7 @@ const AssetDetails = ({ id }: { id: any }) => {
               <FieldItem label="Warranty" value={warranty} />
               <FieldItem
                 label="Status"
-                value={remarks === "assigned" ? <Tag color="green">Assigned</Tag> : remarks === "disposed" ? <Tag color="red">Disposed</Tag> : <Tag color="blue">In Stock</Tag>}
+                value={<Remark remarks={remarks} />}
               />
             </Card>
           </Col>

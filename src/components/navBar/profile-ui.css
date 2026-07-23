@@ -1,0 +1,270 @@
+/* ==========================================================================
+   Profile + Change Password
+   Palette matches the ticket / task modules (#2563eb accent, slate neutrals).
+   Flat fills and hairline borders only — no gradients, no glow.
+   ========================================================================== */
+
+.pf {
+  --p-accent: #2563eb;
+  --p-accent-dark: #1d4ed8;
+  --p-accent-weak: #eff6ff;
+
+  --p-text: #0f172a;
+  --p-text-2: #475569;
+  --p-text-3: #94a3b8;
+
+  --p-line: #e2e8f0;
+  --p-bg: #f8fafc;
+  --p-surface: #ffffff;
+
+  --p-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+}
+
+.pf-card {
+  background: var(--p-surface);
+  border: 1px solid var(--p-line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pf-card__head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--p-line);
+  background: var(--p-bg);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--p-text-2);
+}
+.pf-card__head .anticon { color: var(--p-text-3); font-size: 15px; }
+.pf-card__body { padding: 18px; }
+
+/* ---------------- Hero ---------------- */
+.pf-hero {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  flex-wrap: wrap;
+}
+
+/* Initials rather than a generic placeholder image — it identifies the person
+   and needs no asset. */
+.pf-avatar {
+  flex: 0 0 auto;
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--p-accent);
+  color: #fff;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+.pf-hero__main { flex: 1 1 260px; min-width: 0; }
+.pf-hero__name {
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--p-text);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.pf-hero__sub {
+  margin-top: 3px;
+  font-size: 13.5px;
+  color: var(--p-text-2);
+}
+.pf-hero__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 11px;
+}
+.pf-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Role / status chips, flat like everything else */
+.pf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid var(--p-line);
+  border-radius: 999px;
+  background: var(--p-bg);
+  color: var(--p-text-2);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.pf-chip--accent {
+  border-color: #bfdbfe;
+  background: var(--p-accent-weak);
+  color: var(--p-accent-dark);
+}
+.pf-chip--ok {
+  border-color: #abefc6;
+  background: #ecfdf3;
+  color: #067647;
+}
+.pf-chip--off {
+  border-color: #fecdca;
+  background: #fef3f2;
+  color: #b42318;
+}
+.pf-chip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 6px;
+}
+
+/* ---------------- Fact grid ---------------- */
+/* Replaces the old fixed 20%-wide <p> rows, which wrapped badly and left long
+   values colliding with their labels. */
+.pf-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1px;
+  background: var(--p-line);
+  border-top: 1px solid var(--p-line);
+}
+.pf-fact {
+  background: var(--p-surface);
+  padding: 14px 18px;
+  min-width: 0;
+}
+.pf-fact__label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--p-text-3);
+  margin-bottom: 5px;
+}
+.pf-fact__value {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--p-text);
+  overflow-wrap: anywhere;
+}
+.pf-fact__value--empty { color: #cbd5e1; font-weight: 500; }
+
+/* ---------------- Notification row ---------------- */
+.pf-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.pf-toggle__title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--p-text);
+}
+.pf-toggle__hint {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--p-text-2);
+  max-width: 62ch;
+}
+.pf-toggle__hint strong { color: var(--p-text); font-weight: 600; }
+
+/* ==================== Change password ==================== */
+.cp { display: grid; gap: 14px; }
+
+.cp-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 11px 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.cp-note .anticon { margin-top: 2px; color: #94a3b8; font-size: 14px; }
+
+/* Live requirement checklist — tells you what is missing before you submit
+   rather than after the server rejects it. */
+.cp-rules {
+  display: grid;
+  gap: 6px;
+  margin: -2px 0 2px;
+}
+.cp-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #94a3b8;
+  transition: color 160ms var(--p-ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.cp-rule__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 9px;
+  color: transparent;
+  transition: all 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cp-rule--met { color: #067647; }
+.cp-rule--met .cp-rule__mark {
+  border-color: #067647;
+  background: #067647;
+  color: #fff;
+}
+
+.cp-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+@media (max-width: 575px) {
+  .pf { padding: 12px; gap: 12px; }
+  .pf-hero { padding: 16px; gap: 14px; }
+  .pf-avatar { width: 60px; height: 60px; font-size: 22px; }
+  .pf-hero__name { font-size: 18px; }
+  .pf-hero__actions { width: 100%; }
+  .pf-hero__actions .ant-btn { flex: 1 1 auto; }
+  .pf-card__body { padding: 14px; }
+  .pf-fact { padding: 12px 14px; }
+  .cp-footer { flex-direction: column-reverse; }
+  .cp-footer .ant-btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-rule, .cp-rule__mark { transition: none; }
+}

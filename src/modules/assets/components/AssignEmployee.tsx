@@ -3,6 +3,7 @@ import {
   CheckCircleFilled,
   ClockCircleOutlined,
   LaptopOutlined,
+  SwapOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
 import { Button, DatePicker, Form, Select } from "antd";
@@ -20,7 +21,22 @@ import "../assets-ui.css";
 
 const TENURES = [7, 15, 30, 60];
 
-const AssignEmployee = ({ id }: any) => {
+/**
+ * Assign an asset to an employee.
+ *
+ * Doubles as the reassign flow from the Disbursement list: the backend's
+ * assign endpoint already deactivates any live assignment before writing the
+ * new one, so handing it an already-assigned asset is a straight handover.
+ * `currentHolder` is passed in that case so the modal can say who is losing
+ * the asset.
+ */
+const AssignEmployee = ({
+  id,
+  currentHolder,
+}: {
+  id: any;
+  currentHolder?: { name?: string; employee_id?: string };
+}) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
@@ -99,6 +115,23 @@ const AssignEmployee = ({ id }: any) => {
           </div>
         </div>
       </motion.div>
+
+      {/* Reassignment — make the handover explicit before they confirm it. */}
+      {currentHolder?.name && (
+        <motion.div
+          className="ae-handover"
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <SwapOutlined className="ae-handover__icon" />
+          <span>
+            Currently with <strong>{currentHolder.name}</strong>
+            {currentHolder.employee_id ? ` (${currentHolder.employee_id})` : ""}
+            . Assigning it to someone else will unassign them.
+          </span>
+        </motion.div>
+      )}
 
       <Form
         layout="vertical"

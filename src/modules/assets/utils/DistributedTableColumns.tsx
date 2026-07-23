@@ -1,12 +1,19 @@
-import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { Tooltip, Button } from "antd";
+import {
+  EditOutlined,
+  EyeOutlined,
+  InboxOutlined,
+  SwapOutlined,
+} from "@ant-design/icons";
+import { Tooltip, Button, Popconfirm } from "antd";
 import { TableProps } from "antd/lib";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
 import DistributeAssetDetails from "../components/DistributedAssetDetails";
 import { IAsset } from "../types/assetsTypes";
 import UpdateAsset from "../components/UpdateAssets";
+import AssignEmployee from "../components/AssignEmployee";
 import { useGetMeQuery } from "../../../app/api/userApi";
+import { useReturnAssetToStockMutation } from "../api/assetsEndPoint";
 
 const emptyCell = <span className="asset-empty">—</span>;
 
@@ -15,6 +22,8 @@ export const DistributedAssetsTableColumns =
     const dispatch = useDispatch();
     const { data: profile } = useGetMeQuery();
     const employeeID = profile?.data?.employee_id;
+    const [returnToStock, { isLoading: returning }] =
+      useReturnAssetToStockMutation();
 
     return [
       {
@@ -74,15 +83,24 @@ export const DistributedAssetsTableColumns =
           ),
       },
       {
-        title: "Asset Type",
-        dataIndex: "category",
-        key: "category",
-        render: (value: string) =>
-          value ? (
-            <span style={{ fontWeight: 500, color: "#101828" }}>{value}</span>
-          ) : (
-            emptyCell
-          ),
+        // Asset name (primary) with the category beneath; the model shows on
+        // hover so the column stays compact.
+        title: "Asset",
+        key: "asset",
+        width: 200,
+        render: (record: any) => (
+          <Tooltip
+            title={record.model ? `Model: ${record.model}` : "No model recorded"}
+            getPopupContainer={() => document.body}
+          >
+            <div style={{ minWidth: 0, cursor: "default" }}>
+              <div className="asset-cell-title">
+                {record.asset_name || record.model || emptyCell}
+              </div>
+              <div className="asset-cell-sub">{record.category}</div>
+            </div>
+          </Tooltip>
+        ),
       },
       {
         title: "Serial No",
@@ -95,7 +113,7 @@ export const DistributedAssetsTableColumns =
         title: "Actions",
         key: "action",
         fixed: "right",
-        width: 100,
+        width: 164,
         render: (record: IAsset) => (
           <div className="asset-actions">
             <Tooltip title="View details" getPopupContainer={() => document.body}>
@@ -116,6 +134,62 @@ export const DistributedAssetsTableColumns =
                 }
               />
             </Tooltip>
+
+            {employeeID !== "Assetteam" && (
+              <Tooltip
+                title="Assign to another employee"
+                getPopupContainer={() => document.body}
+              >
+                <Button
+                  type="text"
+                  className="asset-iconbtn"
+                  aria-label="Assign this asset to another employee"
+                  icon={<SwapOutlined />}
+                  onClick={() =>
+                    dispatch(
+                      setCommonModal({
+                        title: "Assign to Another Employee",
+                        content: (
+                          <AssignEmployee
+                            id={record.id}
+                            currentHolder={{
+                              name: (record as any).user_name,
+                              employee_id: (record as any).user_id_no,
+                            }}
+                          />
+                        ),
+                        show: true,
+                        width: 640,
+                      })
+                    )
+                  }
+                />
+              </Tooltip>
+            )}
+
+            {employeeID !== "Assetteam" && (
+              <Popconfirm
+                title="Move this asset to stock?"
+                description="The employee will be unassigned and the asset returned to stock."
+                okText="Yes, move"
+                cancelText="Cancel"
+                getPopupContainer={() => document.body}
+                onConfirm={() => returnToStock({ assetId: record.id })}
+              >
+                <Tooltip
+                  title="Move back to stock"
+                  getPopupContainer={() => document.body}
+                >
+                  <Button
+                    type="text"
+                    className="asset-iconbtn"
+                    aria-label="Move asset back to stock"
+                    loading={returning}
+                    icon={<InboxOutlined />}
+                  />
+                </Tooltip>
+              </Popconfirm>
+            )}
 
             {employeeID !== "Assetteam" && (
               <Tooltip title="Edit asset" getPopupContainer={() => document.body}>
