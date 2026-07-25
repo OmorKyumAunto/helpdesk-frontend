@@ -112,9 +112,22 @@ const CategoryPieChart = () => {
     );
   }
 
+  // Fill and vertically centre within the card — its height is stretched to
+  // match the taller bar chart beside it, which otherwise left the donut
+  // floating at the top with empty space below.
   return (
-    <div style={{ maxWidth: 280, margin: "0 auto" }}>
-      <ReactApexChart options={options} series={series} type="donut" height={280} />
+    <div
+      style={{
+        height: "100%",
+        minHeight: 300,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: 300 }}>
+        <ReactApexChart options={options} series={series} type="donut" height={300} />
+      </div>
     </div>
   );
 };

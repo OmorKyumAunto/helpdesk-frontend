@@ -12,7 +12,7 @@ const ORDER: (keyof typeof TICKET_COLORS)[] = [
 ];
 
 const TicketDonutChart = () => {
-  const { data } = useGetTicketDashboardCountQuery();
+  const { data, isLoading } = useGetTicketDashboardCountQuery();
   const {
     total_solve = 0,
     total_forward = 0,
@@ -89,9 +89,37 @@ const TicketDonutChart = () => {
     ],
   };
 
+  // Do NOT mount the donut with an all-zero series: ApexCharts fails to update
+  // the centre total from 0 → data, which left the chart stuck at 0 on a fresh
+  // page load (it only worked when RTK's cache was already warm from another
+  // page). Waiting for data means the donut always mounts with real values.
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          height: 280,
+          display: "grid",
+          placeItems: "center",
+          color: CHART_INK.muted,
+          fontSize: 13,
+        }}
+      >
+        Loading…
+      </div>
+    );
+  }
+
   return (
     <div style={{ maxWidth: 280, margin: "0 auto" }}>
-      <ReactApexChart options={options} series={series} type="donut" height={280} />
+      <ReactApexChart
+        // Extra safety net: if the series ever does change identity, this
+        // remounts the chart so it can't get stuck on stale geometry.
+        key={total}
+        options={options}
+        series={series}
+        type="donut"
+        height={280}
+      />
     </div>
   );
 };

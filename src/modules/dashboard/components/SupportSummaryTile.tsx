@@ -30,7 +30,12 @@ const SupportSummaryTile = ({ compact = false }: { compact?: boolean }) => {
   const overdue = Number(summary.overdue) || 0;
   const onTrack = Math.max(total - expiring - overdue, 0);
 
-  if (!isLoading && total === 0) return null;
+  // Always render on the dashboard — including a clean "0 on support" state —
+  // so every admin (roles 1/2/4) has the panel as a consistent entry point.
+  // (Counts are already unit-scoped server-side: role 2/4 see only their own
+  // units, role 1 sees everything. A hidden-when-empty rule made it vanish for
+  // admins whose units simply had nothing on loan, which read as a bug.)
+  void isLoading;
 
   const pct = (n: number) => (total ? (n / total) * 100 : 0);
   const level = overdue > 0 ? "danger" : expiring > 0 ? "warn" : "ok";
