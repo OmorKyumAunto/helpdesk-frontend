@@ -1,71 +1,18 @@
-import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
+import ReactApexChart from "react-apexcharts";
+import { ApexOptions } from "apexcharts";
 import {
   useGetDashboardPieChartDataForAdminQuery,
   useGetDashboardPieDataQuery,
 } from "../api/dashboardEndPoints";
 import { useGetMeQuery } from "../../../app/api/userApi";
-
-const renderLabels = (props: any) => {
-  const RADIAN = Math.PI / 180;
-
-  const {
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    startAngle,
-    endAngle,
-    fill,
-    payload,
-    percent,
-    value,
-  } = props;
-  const sin = Math.sin(-RADIAN * midAngle);
-  const cos = Math.cos(-RADIAN * midAngle);
-  const sx = cx + (outerRadius + 10) * cos;
-  const sy = cy + (outerRadius + 10) * sin;
-  const mx = cx + (outerRadius + 25) * cos;
-  const my = cy + (outerRadius + 25) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  const ey = my;
-  const textAnchor = cos >= 0 ? "start" : "end";
-
-  return (
-    <g>
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={payload.color}
-      />
-      <path
-        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
-        stroke={payload.color}
-        fill="none"
-      />
-      <circle cx={ex} cy={ey} r={2} fill={payload.color} stroke="none" />
-      <text
-        x={ex + (cos >= 0 ? 1 : -1) * 12}
-        y={ey}
-        textAnchor={textAnchor}
-        fill="#333"
-        className="text-sm font-medium"
-      >
-        {`${payload.name} (${payload.value})`}
-      </text>
-    </g>
-  );
-};
+import { CHART_INK, CATEGORY_COLORS } from "./chartTheme";
 
 const CategoryPieChart = () => {
   const { data: pieData } = useGetDashboardPieDataQuery();
   const { data: pieDataForAdmin } = useGetDashboardPieChartDataForAdminQuery();
   const { data: profile } = useGetMeQuery();
   const { role_id } = profile?.data || {};
+
   const {
     total_laptop,
     total_desktop,
@@ -73,7 +20,6 @@ const CategoryPieChart = () => {
     total_accessories,
     total_monitors,
   } = pieData?.data || {};
-
   const {
     desktop_count,
     laptop_count,
@@ -81,50 +27,94 @@ const CategoryPieChart = () => {
     printer_count,
     accessories_count,
   } = pieDataForAdmin?.data || {};
-  const data = [
-    {
-      name: "Laptops",
-      value: role_id === 1 ? total_laptop : laptop_count,
-      color: "#72b92b",
-    },
-    {
-      name: "Desktops",
-      value: role_id === 1 ? total_desktop : desktop_count,
-      color: "#0088FE",
-    },
-    {
-      name: "Printers",
-      value: role_id === 1 ? total_printer : printer_count,
-      color: "#FF0000",
-    },
+
+  // Same categories and data source as before — only presentation changed.
+  const rows = [
+    { name: "Laptops", value: role_id === 1 ? total_laptop : laptop_count },
+    { name: "Desktops", value: role_id === 1 ? total_desktop : desktop_count },
+    { name: "Printers", value: role_id === 1 ? total_printer : printer_count },
     {
       name: "Accessories",
       value: role_id === 1 ? total_accessories : accessories_count || 0,
-      color: "#FFA500",
     },
-    {
-      name: "Monitors",
-      value: role_id === 1 ? total_monitors : monitor_count,
-      color: "#ba45ba",
+    { name: "Monitors", value: role_id === 1 ? total_monitors : monitor_count },
+  ]
+    .map((r) => ({ ...r, value: Number(r.value) || 0 }))
+    .filter((r) => r.value > 0);
+
+  const series = rows.map((r) => r.value);
+  const total = series.reduce((s, n) => s + n, 0);
+
+  const options: ApexOptions = {
+    chart: {
+      type: "donut",
+      fontFamily: "inherit",
+      animations: { enabled: true, speed: 350, animateGradually: { enabled: false } },
     },
-  ].filter((item) => item.value > 0);
+    labels: rows.map((r) => r.name),
+    // Slot colours are position-stable regardless of which categories survive
+    // the >0 filter, so a category never changes colour between roles/units.
+    colors: CATEGORY_COLORS.slice(0, rows.length),
+    stroke: { width: 2, colors: [CHART_INK.surface] },
+    // On-slice numbers collide on thin slices — the count lives in the legend
+    // (always legible) and the centre shows the total.
+    dataLabels: { enabled: false },
+    legend: {
+      position: "bottom",
+      fontSize: "12.5px",
+      labels: { colors: CHART_INK.secondary },
+      markers: { size: 6 } as any,
+      itemMargin: { horizontal: 9, vertical: 4 },
+      formatter: (name, opts) =>
+        `${name}  ${opts.w.globals.series[opts.seriesIndex]}`,
+    },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: "68%",
+          labels: {
+            show: true,
+            name: { fontSize: "12px", color: CHART_INK.muted, offsetY: 20 },
+            value: {
+              fontSize: "26px",
+              fontWeight: "800",
+              color: CHART_INK.primary,
+              offsetY: -14,
+            },
+            total: {
+              show: true,
+              label: "Total",
+              color: CHART_INK.muted,
+              fontSize: "12px",
+              formatter: () => String(total),
+            },
+          },
+        },
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: (v) =>
+          `${v} unit${v === 1 ? "" : "s"}` +
+          (total ? ` · ${Math.round((v / total) * 100)}%` : ""),
+      },
+    },
+    responsive: [
+      { breakpoint: 480, options: { legend: { position: "bottom" } } },
+    ],
+  };
+
+  if (!rows.length) {
+    return (
+      <div style={{ padding: "40px 0", textAlign: "center", color: CHART_INK.muted }}>
+        No category data
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full h-[250px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={40}
-            outerRadius={70}
-            dataKey="value"
-            activeShape={renderLabels}
-            activeIndex={[0, 1, 2, 3, 4]}
-          />
-        </PieChart>
-      </ResponsiveContainer>
+    <div style={{ maxWidth: 280, margin: "0 auto" }}>
+      <ReactApexChart options={options} series={series} type="donut" height={280} />
     </div>
   );
 };

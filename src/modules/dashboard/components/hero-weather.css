@@ -1,0 +1,85 @@
+/* Hero — soft premium entrance.
+   No looping background motion. Instead: the card fades in, its content reveals
+   in a gentle stagger, and a single light sheen sweeps across once. All CSS
+   (compositor-driven), so it stays smooth. */
+
+.dhero {
+  /* Softer, less-saturated blue — calmer and more premium than the punchy
+     brand blue. */
+  background: radial-gradient(120% 150% at 88% -10%, #6f9ad9 0%, #4571b8 46%, #2f4f8f 100%);
+  animation: heroFade 0.6s ease both;
+}
+.dhero--night {
+  background: radial-gradient(120% 150% at 85% -10%, #3a465c 0%, #232f45 46%, #141c30 100%);
+}
+@keyframes heroFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Staggered content reveal — soft ease, each line a beat after the last. */
+.dhero__eyebrow,
+.dhero__title,
+.dhero__sub {
+  animation: heroRise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.dhero__eyebrow { animation-delay: 0.18s; }
+.dhero__title   { animation-delay: 0.30s; text-shadow: 0 1px 10px rgba(6, 10, 30, 0.28); }
+.dhero__sub     { animation-delay: 0.42s; }
+.dhero__weather {
+  animation: heroRiseScale 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.52s both;
+}
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes heroRiseScale {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+/* One-shot light sheen sweeping across, once, after the content lands. */
+.dhero__shine {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+.dhero__shine::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 60%;
+  height: 140%;
+  /* Wider, gentler highlight — softer edges read as more polished than a
+     hard bright band. */
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 38%,
+    rgba(255, 255, 255, 0.13) 50%,
+    rgba(255, 255, 255, 0.05) 62%,
+    transparent 100%
+  );
+  transform: translate3d(-170%, 0, 0) skewX(-12deg);
+  /* Slower, smooth ease-in-out sweep. */
+  animation: heroSheen 2.6s cubic-bezier(0.45, 0.05, 0.2, 1) 0.85s 1 both;
+}
+@keyframes heroSheen {
+  from { transform: translate3d(-170%, 0, 0) skewX(-12deg); }
+  to { transform: translate3d(300%, 0, 0) skewX(-12deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dhero,
+  .dhero__eyebrow,
+  .dhero__title,
+  .dhero__sub,
+  .dhero__weather,
+  .dhero__shine::before {
+    animation: none;
+  }
+}

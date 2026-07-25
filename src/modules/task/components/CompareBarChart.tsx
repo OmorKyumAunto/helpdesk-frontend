@@ -68,43 +68,43 @@ const CompareBarChart: React.FC = () => {
       chart: {
         type: "bar",
         height: 350,
-        toolbar: {
-          show: false,
-        },
+        fontFamily: "inherit",
+        toolbar: { show: false },
+        animations: { enabled: true, speed: 350, animateGradually: { enabled: false } },
       },
+      // Validated categorical palette (Total / Completed / Incomplete).
+      colors: ["#2563eb", "#1baf7a", "#e34948"],
       plotOptions: {
         bar: {
           horizontal: false,
-          columnWidth: "55%",
-          borderRadius: 5,
+          columnWidth: "56%",
+          borderRadius: 4,
           borderRadiusApplication: "end",
         },
       },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ["transparent"],
+      dataLabels: { enabled: false },
+      stroke: { show: true, width: 2, colors: ["transparent"] },
+      grid: { borderColor: "#e8ecf2", strokeDashArray: 0, xaxis: { lines: { show: false } } },
+      legend: {
+        position: "top",
+        horizontalAlign: "left",
+        fontSize: "12.5px",
+        markers: { size: 6 } as any,
+        labels: { colors: "#52514e" },
+        itemMargin: { horizontal: 10 },
       },
       xaxis: {
         categories: monthsArray.slice(6, 12),
+        axisBorder: { color: "#c3c2b7" },
+        axisTicks: { show: false },
+        labels: { style: { colors: "#898781", fontSize: "12px" } },
       },
       yaxis: {
-        title: {
-          text: "Number of Tasks",
-        },
+        labels: { style: { colors: "#898781", fontSize: "12px" } },
       },
-      fill: {
-        opacity: 1,
-      },
+      fill: { opacity: 1 },
       tooltip: {
-        y: {
-          formatter: function (val: number) {
-            return val + " tasks";
-          },
-        },
+        y: { formatter: (val: number) => `${val} tasks` },
       },
     };
 

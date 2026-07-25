@@ -1,10 +1,9 @@
-import { Card, Col, Row, Typography } from "antd";
+import { Card, Col, Row } from "antd";
 import dayjs from "dayjs";
 import { FaComputer } from "react-icons/fa6";
-import { LuUsers2,LuTicket } from "react-icons/lu";
+import { LuUsers2, LuTicket, LuClock } from "react-icons/lu";
 import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { RootState } from "../../../app/store/store";
 import {
@@ -12,30 +11,28 @@ import {
   useGetAllCountEmployeeQuery,
   useGetDashboardAssetDataForAdminQuery,
   useGetDashboardDistributedAssetDataForAdminQuery,
-  useGetDashboardEmployeeDataForEmployeeQuery,
 } from "../api/dashboardEndPoints";
-import GraphChartApex from "../components/ApexChart";
+import { useGetSupportLoansQuery } from "../../assets/api/assetsEndPoint";
 import ApexPieChart from "../components/ApexPieChart";
-import BloodTypeChart from "../components/BloodChart";
-import TopDash from "../components/TopDash";
-import WeatherWidget from "../components/WeatherWidget";
 import GraphChartV2 from "../components/GraphChartV2";
 import CategoryPieChart from "../components/CategoryPieChat";
 import TicketPieChart from "../components/TicketPieChart";
 import AnnouncementSlider from "../components/AnnouncementSlider";
+import SupportSummaryTile from "../components/SupportSummaryTile";
+import KpiStrip, { TKpi } from "../components/KpiStrip";
+import DashboardHero from "../components/DashboardHero";
+import "../components/dashboard-ui.css";
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const { data: asset } = useGetDashboardAssetDataForAdminQuery({});
   const { data: distributedAsset } =
     useGetDashboardDistributedAssetDataForAdminQuery({});
-  const { data: empData } = useGetDashboardEmployeeDataForEmployeeQuery({});
   const { data } = useGetAllDashboardQuery();
   const { data: countData } = useGetAllCountEmployeeQuery();
-  console.log(empData);
   const { data: profile } = useGetMeQuery();
+  const { data: support } = useGetSupportLoansQuery();
   const {
-    total_assign_asset,
     employee_id,
     department,
     designation,
@@ -46,699 +43,203 @@ const DashboardCards = () => {
     status,
     role_id,
   } = profile?.data || {};
+
+  // Data expressions preserved verbatim.
+  const totalAsset =
+    role_id === 2 ? asset?.data?.user_count || 0 : data?.data?.total_asset || 0;
+  const totalDisbursed =
+    role_id === 2
+      ? distributedAsset?.data?.employee_assign_asset_count || 0
+      : data?.data?.total_assign_asset || 0;
+  const supportTotal = Number(support?.summary?.total) || 0;
+
+  const adminKpis: TKpi[] = [
+    {
+      to: "/assets/list",
+      tone: "violet",
+      label: "Total Asset",
+      value: totalAsset,
+      icon: <FaComputer />,
+    },
+    {
+      to: "/employee/list",
+      tone: "amber",
+      label: "Total Employee",
+      value: data?.data?.total_employee || 0,
+      icon: <LuUsers2 />,
+    },
+    {
+      to: "/assets/distributed",
+      tone: "green",
+      label: "Disbursements",
+      value: totalDisbursed,
+      icon: <MdOutlineAssignmentTurnedIn />,
+    },
+    {
+      to: "/assets/support",
+      tone: "blue",
+      label: "On Support",
+      value: supportTotal,
+      icon: <LuClock />,
+    },
+  ];
+
+  const employeeKpis: TKpi[] = [
+    {
+      to: "/tickets/list",
+      tone: "blue",
+      label: "My Tickets",
+      value: countData?.data?.total_ticket || 0,
+      icon: <LuTicket />,
+    },
+    {
+      to: "/employee/distributed",
+      tone: "green",
+      label: "My Assets",
+      value: countData?.data?.total_asset || 0,
+      icon: <MdOutlineAssignmentTurnedIn />,
+    },
+    {
+      to: "/employee/employee-list",
+      tone: "amber",
+      label: "Address Book",
+      value: countData?.data?.total_user || 0,
+      icon: <LuUsers2 />,
+    },
+  ];
+
+  const InfoRow = ({ k, v }: { k: string; v?: React.ReactNode }) => (
+    <div className="dinfo__row">
+      <span className="dinfo__key">{k}</span>
+      <span className="dinfo__val">{v || "—"}</span>
+    </div>
+  );
+
+  const ChartCard = ({
+    title,
+    children,
+    delay = 0,
+  }: {
+    title: string;
+    children: React.ReactNode;
+    delay?: number;
+  }) => (
+    <div className="dsec dfade" style={{ animationDelay: `${delay}ms` }}>
+      <Card size="small" className="dash-card" title={title}>
+        {children}
+      </Card>
+    </div>
+  );
+
   return (
-    <>
-      <TopDash />
+    <div className="dash">
+      <DashboardHero />
+
       {roleId !== 3 ? (
-        <Row style={{ marginTop: "7px" }} gutter={[10, 10]}>
-          <Col xs={24} sm={24} md={24} lg={8}>
-            <Link to={"/assets/list"}>
-              <Card className="bg-[#ba45ba] text-white card-hover">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    position: "relative",
-                  }}
-                >
-                  <div>
-                    <Typography.Title style={{ color: "white" }} level={5}>
-                      Total Asset
-                    </Typography.Title>
-                    <p
-                      style={{
-                        textAlign: "center",
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        marginTop: "4px",
-                      }}
-                    >
-                      {role_id === 2
-                        ? asset?.data?.user_count || 0
-                        : data?.data?.total_asset || 0}
-                    </p>
-                  </div>
-                  <div>
-                    <div
-                      className="bg-[#cf7dcf]"
-                      style={{
-                        height: "50px",
-                        width: "50px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: "50%",
-                      }}
-                    >
-                      <FaComputer size={30} />
-                    </div>
-                  </div>
-                </div>
-              </Card>
+        /* ===================== Admin / Super Admin / Unit Super Admin ===================== */
+        <>
+          {/* Compact metric strip */}
+          <div style={{ marginTop: 14 }}>
+            <KpiStrip items={adminKpis} />
+          </div>
 
-              <style>
-                {`
-    .card-hover {
-      position: relative;
-      overflow: hidden;
-      border-radius: 15px; /* More rounded corners */
-      transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth zoom-in/out and background transition */
-    }
+          {/* Big charts get the room. On Support takes the prominent
+              top-right slot beside the trend chart. */}
+          <Row style={{ marginTop: 16 }} gutter={[16, 16]}>
+            <Col xs={24} lg={15}>
+              <ChartCard title="Stock vs Disbursement" delay={260}>
+                <GraphChartV2 />
+              </ChartCard>
+            </Col>
+            <Col xs={24} lg={9}>
+              <ChartCard title="Assets by Category" delay={320}>
+                <CategoryPieChart />
+              </ChartCard>
+            </Col>
 
-    .card-hover:hover {
-      transform: scale(1.05);  /* Slight zoom-in effect */
-      background-color: #9f33a0;  /* Subtle background color change */
-    }
-
-    .card-hover::before {
-      content: "";
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
-      border-radius: 15px; /* Matching rounded corners */
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;  /* Prevent interaction with inner border */
-    }
-
-    .card-hover:hover::before {
-      opacity: 0;  /* Fade in the inner border */
-    }
-  `}
-              </style>
-            </Link>
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={8}>
-            <Link to={"/employee/list"}>
-              <Card className="bg-[#ffa500] text-white card-hover-employee">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    position: "relative",
-                  }}
-                >
-                  <div>
-                    <Typography.Title style={{ color: "white" }} level={5}>
-                      Total Employee
-                    </Typography.Title>
-                    <p
-                      style={{
-                        textAlign: "center",
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        marginTop: "4px",
-                      }}
-                    >
-                      {data?.data?.total_employee || 0}
-                    </p>
-                  </div>
-                  <div>
-                    <div
-                      className="bg-[#ffc14d]"
-                      style={{
-                        height: "50px",
-                        width: "50px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: "50%",
-                      }}
-                    >
-                      <LuUsers2 size={30} />
-                    </div>
-                  </div>
-                </div>
-              </Card>
-
-              <style>
-                {`
-    .card-hover-employee {
-      position: relative;
-      overflow: hidden;
-      border-radius: 15px; /* More rounded corners */
-      transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth zoom-in/out and background transition */
-    }
-
-    .card-hover-employee:hover {
-      transform: scale(1.05);  /* Slight zoom-in effect */
-      background-color: #e68900;  /* Slight background color change */
-    }
-
-    .card-hover-employee::before {
-      content: "";
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
-      border-radius: 15px; /* Matching rounded corners */
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;  /* Prevent interaction with inner border */
-    }
-
-    .card-hover-employee:hover::before {
-      opacity: 0;  /* Fade in the inner border */
-    }
-  `}
-              </style>
-            </Link>
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={8}>
-            <Link to={"/assets/distributed"}>
-              <Card className="bg-[#8dc73f] text-white card-hover-disbursements">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    position: "relative",
-                  }}
-                >
-                  <div>
-                    <Typography.Title style={{ color: "white" }} level={5}>
-                      Disbursements
-                    </Typography.Title>
-                    <p
-                      style={{
-                        textAlign: "center",
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        marginTop: "4px",
-                      }}
-                    >
-                      {role_id === 2
-                        ? distributedAsset?.data?.employee_assign_asset_count ||
-                        0
-                        : data?.data?.total_assign_asset || 0}
-                    </p>
-                  </div>
-                  <div>
-                    <div
-                      className="bg-[#acd775]"
-                      style={{
-                        height: "50px",
-                        width: "50px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: "50%",
-                      }}
-                    >
-                      <MdOutlineAssignmentTurnedIn size={30} />
-                    </div>
-                  </div>
-                </div>
-              </Card>
-
-              <style>
-                {`
-    .card-hover-disbursements {
-      position: relative;
-      overflow: hidden;
-      border-radius: 15px; /* More rounded corners */
-      transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth zoom-in/out and background transition */
-    }
-
-    .card-hover-disbursements:hover {
-      transform: scale(1.05);  /* Slight zoom-in effect */
-      background-color: #72b92b;  /* Slight background color change */
-    }
-
-    .card-hover-disbursements::before {
-      content: "";
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
-      border-radius: 15px; /* Matching rounded corners */
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;  /* Prevent interaction with inner border */
-    }
-
-    .card-hover-disbursements:hover::before {
-      opacity: 0;  /* Fade in the inner border */
-    }
-  `}
-              </style>
-            </Link>
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={6}>
-            <Card size="small" title="Ticketing Statistics" style={{ height: "100%" }}>
-              <TicketPieChart />
-            </Card>
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={10}>
-            <Card
-              size="small"
-              title="Asset Category Statistics"
-              style={{ height: "100%" }}
-            >
-              <CategoryPieChart />
-            </Card>
-          </Col>
-          <Col xs={24} sm={24} md={16} lg={8}>
-            <Card title="📢 Announcements" style={{ height: "100%" }}>
-              <AnnouncementSlider />
-            </Card>
-          </Col>
-          <Col xs={24} sm={24} md={24}>
-            <GraphChartV2 />
-          </Col>
-        </Row>
+            {/* Secondary band: on support · ticket status · announcements */}
+            <Col xs={24} md={12} lg={8}>
+              <div className="dsec dfade" style={{ animationDelay: "380ms" }}>
+                <SupportSummaryTile compact />
+              </div>
+            </Col>
+            <Col xs={24} md={12} lg={8}>
+              <ChartCard title="Ticket Status" delay={440}>
+                <TicketPieChart />
+              </ChartCard>
+            </Col>
+            <Col xs={24} md={24} lg={8}>
+              <ChartCard title="📢 Announcements" delay={500}>
+                <AnnouncementSlider />
+              </ChartCard>
+            </Col>
+          </Row>
+        </>
       ) : (
+        /* ===================== Employee ===================== */
+        <>
+          <div style={{ marginTop: 14 }}>
+            <KpiStrip items={employeeKpis} />
+          </div>
 
+          <Row style={{ marginTop: 16 }} gutter={[16, 16]}>
+            <Col xs={24} md={12} lg={9}>
+              <ChartCard title="Available Blood Group" delay={260}>
+                <ApexPieChart />
+              </ChartCard>
+            </Col>
+            <Col xs={24} md={12} lg={15}>
+              <ChartCard title="📢 Announcements" delay={320}>
+                <AnnouncementSlider />
+              </ChartCard>
+            </Col>
 
-        <Row style={{ marginTop: "5px" }} gutter={[12, 6]}>
-          <Col xs={24} sm={24} md={24} lg={6}>
-            <Row gutter={[6, 12]}>
-              <Col xs={24} sm={24} md={24}>
-                <Link to={"/tickets/list"}>
-                  <Card className="bg-[#4c9aff] text-white card-hover-ticket">
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "3px",
-                        position: "relative",
-                      }}
-                    >
-                      <div>
-                        <Typography.Title style={{ color: "white" }} level={5}>
-                          My Tickets
-                        </Typography.Title>
-                        <p
-                          style={{
-                            textAlign: "center",
-                            fontSize: "20px",
-                            fontWeight: "bold",
-                            marginTop: "4px",
-                          }}
-                        >
-                          {countData?.data?.total_ticket || 0}
-                        </p>
-                      </div>
-                      <div>
-                        <div
-                          className="bg-[#7fbfff]"
-                          style={{
-                            height: "70px",
-                            width: "70px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderRadius: "50%",
-                          }}
-                        >
-                          <LuTicket size={50} />
-                        </div>
-                      </div>
+            <Col xs={24}>
+              <div className="dfade" style={{ animationDelay: "380ms" }}>
+                <div className="dinfo">
+                  <div className="dinfo__grid">
+                    <div>
+                      <div className="dinfo__group-title">Your Information</div>
+                      <InfoRow k="Employee ID" v={employee_id} />
+                      <InfoRow k="Designation" v={designation} />
+                      <InfoRow k="Department" v={department} />
+                      <InfoRow
+                        k="Joining Date"
+                        v={
+                          joining_date && dayjs(joining_date).isValid()
+                            ? dayjs(joining_date).format("DD MMM YYYY")
+                            : "—"
+                        }
+                      />
                     </div>
-                  </Card>
-
-                  <style>
-                    {`
-        .card-hover-ticket {
-          position: relative;
-          overflow: hidden;
-          border-radius: 15px;
-          transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        .card-hover-ticket:hover {
-          transform: scale(1.05);
-          background-color: #3b8de5;
-        }
-
-        .card-hover-ticket::before {
-          content: "";
-          position: absolute;
-          top: 10px;
-          left: 10px;
-          right: 10px;
-          bottom: 10px;
-          border: 2px solid rgba(255, 255, 255, 0.1);
-          border-radius: 15px;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          pointer-events: none;
-        }
-
-        .card-hover-ticket:hover::before {
-          opacity: 0;
-        }
-      `}
-                  </style>
-                </Link>
-              </Col>
-
-
-              <Col xs={24} sm={24} md={24}>
-                <Link to={"/employee/distributed"}>
-                  <Card className="bg-[#8dc73f] text-white h-full card-hover-disbursements">
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "3px", // Ensures consistent padding
-                        position: "relative",
-                      }}
-                    >
-                      <div>
-                        <Typography.Title style={{ color: "white" }} level={5}>
-                          My Assets
-                        </Typography.Title>
-                        <p
-                          style={{
-                            textAlign: "center",
-                            fontSize: "20px",
-                            fontWeight: "bold",
-                            marginTop: "4px",
-                          }}
-                        >
-                          {countData?.data?.total_asset || 0}
-                        </p>
-                      </div>
-                      <div>
-                        <div
-                          className="bg-[#acd775]"
-                          style={{
-                            height: "70px",
-                            width: "70px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderRadius: "50%",
-                          }}
-                        >
-                          <MdOutlineAssignmentTurnedIn size={50} />
-                        </div>
-                      </div>
+                    <div>
+                      <div className="dinfo__group-title">Contact Details</div>
+                      <InfoRow k="Phone" v={contact_no} />
+                      <InfoRow k="Email" v={email} />
+                      <InfoRow k="Unit Name" v={unit_name} />
+                      <InfoRow
+                        k="Status"
+                        v={
+                          <span
+                            className={
+                              status === 1
+                                ? "dinfo__status--on"
+                                : "dinfo__status--off"
+                            }
+                          >
+                            {status === 1 ? "Active" : "Inactive"}
+                          </span>
+                        }
+                      />
                     </div>
-
-                    <style>
-                      {`
-      .card-hover-disbursements {
-        position: relative;
-        overflow: hidden;
-        border-radius: 15px; /* Rounded corners */
-        transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth hover transitions */
-      }
-
-      .card-hover-disbursements:hover {
-        transform: scale(1.05); /* Zoom-in effect */
-        background-color: #72b92b; /* Subtle background color change */
-      }
-
-      .card-hover-disbursements::before {
-        content: "";
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-        border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
-        border-radius: 15px; /* Matching rounded corners */
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none; /* Prevent interaction */
-      }
-
-      .card-hover-disbursements:hover::before {
-        opacity: 0; /* Fade-in inner border on hover */
-      }
-    `}
-                    </style>
-                  </Card>
-                </Link>
-              </Col>
-              <Col xs={24} sm={24} md={24}>
-                <Link to={"/employee/employee-list"}>
-                  <Card className="bg-[#ffa500] text-white card-hover-employee">
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "3px", // Ensures padding is applied to the card content
-                        position: "relative",
-                      }}
-                    >
-                      <div>
-                        <Typography.Title style={{ color: "white" }} level={5}>
-                          Address Book
-                        </Typography.Title>
-                        <p
-                          style={{
-                            textAlign: "center",
-                            fontSize: "20px",
-                            fontWeight: "bold",
-                            marginTop: "4px",
-                          }}
-                        >
-                          {countData?.data?.total_user || 0}
-                        </p>
-                      </div>
-                      <div>
-                        <div
-                          className="bg-[#ffc14d]"
-                          style={{
-                            height: "70px",
-                            width: "70px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderRadius: "50%",
-                          }}
-                        >
-                          <LuUsers2 size={50} />
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-
-                  <style>
-                    {`
-    .card-hover-employee {
-      position: relative;
-      overflow: hidden;
-      border-radius: 15px; /* More rounded corners */
-      transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth zoom-in/out and background transition */
-    }
-
-    .card-hover-employee:hover {
-      transform: scale(1.05);  /* Slight zoom-in effect */
-      background-color: #e68900;  /* Slight background color change */
-    }
-
-    .card-hover-employee::before {
-      content: "";
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle inner border */
-      border-radius: 15px; /* Matching rounded corners */
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;  /* Prevent interaction with inner border */
-    }
-
-    .card-hover-employee:hover::before {
-      opacity: 0;  /* Fade in the inner border */
-    }
-  `}
-                  </style>
-                </Link>
-              </Col>
-            </Row>
-          </Col>          
-        
-          <Col xs={24} sm={24} md={16} lg={9}>
-            <Card title="Available Blood Group">
-              <ApexPieChart />
-            </Card>
-          </Col>
-
-          <Col xs={24} sm={24} md={16} lg={9}>
-            <Card title="📢 Announcements">
-              <AnnouncementSlider />
-            </Card>
-          </Col>
-
-          <Col xs={24} sm={24} md={24} lg={24}>
-            <Row style={{ marginTop: "4px" }} justify="center">
-              <Col xs={24} sm={22} md={20} lg={24}>
-                <Card
-                  style={{
-                    background: "linear-gradient(145deg, #ffffff, #f0f4f7)", // Light gray background
-                    border: "1px solid #e0e0e0", // Subtle border
-                    borderRadius: "16px",
-                    boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
-                    padding: "24px",
-                    transition: "all 0.3s ease-in-out",
-                    cursor: "pointer",
-                  }}
-                  className="employee-detail-card"
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-5px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 20px rgba(0, 0, 0, 0.15)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow =
-                      "0 6px 15px rgba(0, 0, 0, 0.1)";
-                  }}
-                >
-                  <Row gutter={[24, 24]}>
-                    {/* Left Section */}
-                    <Col xs={24} sm={12}>
-                      <div>
-                        <h3
-                          style={{
-                            fontSize: "1.2rem",
-                            fontWeight: "600",
-                            marginBottom: "16px",
-                            color: "#333",
-                            borderBottom: "2px solid #d6d6d6",
-                            paddingBottom: "4px",
-                          }}
-                        >
-                          Your Information
-                        </h3>
-                        <div style={{ marginBottom: "12px" }}>
-                          <p
-                            style={{
-                              margin: "0",
-                              color: "#000000",
-                              fontWeight: "500",
-                            }}
-                          >
-                            <strong>Employee ID:</strong> {employee_id}
-                          </p>
-                        </div>
-                        <div style={{ marginBottom: "12px" }}>
-                          <p
-                            style={{
-                              margin: "0",
-                              color: "#000000",
-                              fontWeight: "500",
-                            }}
-                          >
-                            <strong>Designation:</strong> {designation}
-                          </p>
-                        </div>
-                        <div style={{ marginBottom: "12px" }}>
-                          <p
-                            style={{
-                              margin: "0",
-                              color: "#000000",
-                              fontWeight: "500",
-                            }}
-                          >
-                            <strong>Department:</strong> {department}
-                          </p>
-                        </div>
-                        <div style={{ marginBottom: "12px" }}>
-                          <p style={{ margin: "0", color: "#000000", fontWeight: "500" }}>
-                            <strong>Joining Date:</strong>{" "}
-                            {dayjs(joining_date).format("DD-MM-YYYY")}
-                          </p>
-                        </div>
-                      </div>
-                    </Col>
-
-                    {/* Right Section */}
-                    <Col xs={24} sm={12}>
-                      <div>
-                        <h3
-                          style={{
-                            fontSize: "1.2rem",
-                            fontWeight: "600",
-                            marginBottom: "16px",
-                            color: "#333",
-                            borderBottom: "2px solid #d6d6d6",
-                            paddingBottom: "4px",
-                          }}
-                        >
-                          Contact Details
-                        </h3>
-                        <div style={{ marginBottom: "12px" }}>
-                          <p
-                            style={{
-                              margin: "0",
-                              color: "#000000",
-                              fontWeight: "500",
-                            }}
-                          >
-                            <strong>Phone:</strong> {contact_no}
-                          </p>
-                        </div>
-                        <div style={{ marginBottom: "12px" }}>
-                          <p
-                            style={{
-                              margin: "0",
-                              color: "#000000",
-                              fontWeight: "500",
-                            }}
-                          >
-                            <strong>Email:</strong> {email}
-                          </p>
-                        </div>
-                        <div style={{ marginBottom: "12px" }}>
-                          <p
-                            style={{
-                              margin: "0",
-                              color: "#000000",
-                              fontWeight: "500",
-                            }}
-                          >
-                            <strong>Unit Name:</strong> {unit_name}
-                          </p>
-                        </div>
-                        <div style={{ marginBottom: "12px" }}>
-                          <p
-                            style={{
-                              margin: "0",
-                              color: "#000000",
-                              fontWeight: "500",
-                            }}
-                          >
-                            <strong>Status:</strong>{" "}
-                            <span
-                              style={{
-                                fontWeight: "600",
-                                color: status === 1 ? "#28a745" : "#dc3545",
-                              }}
-                            >
-                              {status === 1 ? "Active" : "Inactive"}
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+                  </div>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </>
       )}
-    </>
+    </div>
   );
 };
 

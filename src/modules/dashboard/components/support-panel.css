@@ -1,0 +1,171 @@
+/* Assets On Support — dashboard panel.
+   Status colours reuse the On Support page's language: green=on track,
+   amber=expiring, red=overdue. Flat, hairline; escalates its accent by level. */
+.spanel {
+  --s-line: #e8ecf2;
+  --s-ok: #16a34a;
+  --s-warn: #d97706;
+  --s-danger: #dc2626;
+
+  display: block;
+  padding: 18px 20px;
+  border: 1px solid var(--s-line);
+  border-left: 4px solid #2563eb;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  transition: box-shadow 220ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.spanel:hover {
+  box-shadow: 0 16px 30px -18px rgba(16, 24, 40, 0.5);
+}
+/* The left accent escalates with severity. */
+.spanel--warn { border-left-color: var(--s-warn); }
+.spanel--danger { border-left-color: var(--s-danger); }
+
+/* ---- Header ---- */
+.spanel__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.spanel__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  border-radius: 11px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 19px;
+}
+.spanel--warn .spanel__icon { background: #fffbeb; color: var(--s-warn); }
+.spanel--danger .spanel__icon { background: #fef2f2; color: var(--s-danger); }
+
+.spanel__titles { display: flex; flex-direction: column; min-width: 0; }
+.spanel__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.25;
+}
+.spanel__sub {
+  font-size: 12px;
+  color: #94a3b8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.spanel__total {
+  margin-left: auto;
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.spanel__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding-left: 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #2563eb;
+  white-space: nowrap;
+}
+.spanel__link .anticon { font-size: 10px; transition: transform 200ms ease; }
+.spanel:hover .spanel__link .anticon { transform: translateX(3px); }
+
+/* ---- Proportion bar ---- */
+.spanel__bar {
+  display: flex;
+  gap: 2px;                 /* 2px surface gap between segments */
+  height: 8px;
+  margin: 14px 0 16px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+.spanel__seg {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.spanel__seg--ok { background: var(--s-ok); }
+.spanel__seg--warn { background: var(--s-warn); }
+.spanel__seg--danger { background: var(--s-danger); }
+
+/* ---- Stat blocks ---- */
+.spanel__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.spanel__stat {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-areas:
+    "icon num label"
+    "icon num hint";
+  align-items: center;
+  column-gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--s-line);
+  border-radius: 12px;
+  background: #fafbfc;
+}
+.spanel__stat-icon {
+  grid-area: icon;
+  font-size: 16px;
+}
+.spanel__stat--ok .spanel__stat-icon { color: var(--s-ok); }
+.spanel__stat--warn .spanel__stat-icon { color: var(--s-warn); }
+.spanel__stat--danger .spanel__stat-icon { color: var(--s-danger); }
+
+.spanel__stat-num {
+  grid-area: num;
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.spanel__stat-label {
+  grid-area: label;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #475569;
+  align-self: end;
+}
+.spanel__stat-hint {
+  grid-area: hint;
+  font-size: 11px;
+  color: #94a3b8;
+  align-self: start;
+}
+
+/* Active (non-zero) warning/danger blocks get a tinted surface. */
+.spanel__stat--warn.is-active { background: #fffbeb; border-color: #fde68a; }
+.spanel__stat--danger.is-active { background: #fef2f2; border-color: #fecaca; }
+
+/* Compact mode — for the narrow bottom-row card in the analytics layout.
+   Stats stack vertically and the sub-line drops, so it fits a ~1/3 column. */
+.spanel--compact { height: 100%; }
+.spanel--compact .spanel__sub { display: none; }
+.spanel--compact .spanel__stats { grid-template-columns: 1fr; gap: 8px; }
+.spanel--compact .spanel__stat { padding: 8px 12px; }
+.spanel--compact .spanel__title { font-size: 14px; }
+
+@media (max-width: 640px) {
+  .spanel__sub { display: none; }
+  .spanel__link { display: none; }
+  .spanel__stats { grid-template-columns: 1fr; }
+  .spanel__stat { grid-template-columns: auto auto 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spanel, .spanel__seg, .spanel__link .anticon { transition: none; }
+}

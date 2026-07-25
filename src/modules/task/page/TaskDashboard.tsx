@@ -95,7 +95,7 @@ const TaskDashboard = ({ setTaskStatus, setActiveKey }: TaskDashboardProps) => {
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-4">
             {/* Total Tasks */}
             <div
-              className="bg-purple-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-purple-400/50 cursor-pointer"
+              className="bg-purple-500 text-white rounded-2xl h-20 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-purple-400/50 cursor-pointer"
               onClick={() => {
                 setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
               }}
@@ -111,7 +111,7 @@ const TaskDashboard = ({ setTaskStatus, setActiveKey }: TaskDashboardProps) => {
 
             {/* In Progress */}
             <div
-              className="bg-teal-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-teal-400/50 cursor-pointer"
+              className="bg-teal-500 text-white rounded-2xl h-20 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-teal-400/50 cursor-pointer"
               onClick={() => {
                 setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
                 setTaskStatus && setTaskStatus("inprogress");
@@ -130,7 +130,7 @@ const TaskDashboard = ({ setTaskStatus, setActiveKey }: TaskDashboardProps) => {
 
             {/* Incomplete */}
             <div
-              className="bg-red-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-red-400/50 cursor-pointer"
+              className="bg-red-500 text-white rounded-2xl h-20 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-red-400/50 cursor-pointer"
               onClick={() => {
                 setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
                 setTaskStatus && setTaskStatus("incomplete");
@@ -149,7 +149,7 @@ const TaskDashboard = ({ setTaskStatus, setActiveKey }: TaskDashboardProps) => {
 
             {/* Completed */}
             <div
-              className="bg-sky-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-sky-400/50 cursor-pointer"
+              className="bg-sky-500 text-white rounded-2xl h-20 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-sky-400/50 cursor-pointer"
               onClick={() => {
                 setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
                 setTaskStatus && setTaskStatus("complete");
@@ -168,7 +168,7 @@ const TaskDashboard = ({ setTaskStatus, setActiveKey }: TaskDashboardProps) => {
 
             {/* Overdue */}
             <div
-              className="bg-orange-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-orange-400/50 cursor-pointer"
+              className="bg-orange-500 text-white rounded-2xl h-20 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-orange-400/50 cursor-pointer"
               // onClick={() => {
               //   setActiveKey && setActiveKey(roleID === 1 ? "2" : "5");
               //   setTaskStatus && setTaskStatus("overdue");
@@ -187,7 +187,7 @@ const TaskDashboard = ({ setTaskStatus, setActiveKey }: TaskDashboardProps) => {
             </div>
 
             {/* Avg. Time */}
-            <div className="bg-green-500 text-white rounded-full h-16 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-green-400/50">
+            <div className="bg-green-500 text-white rounded-2xl h-20 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-green-400/50">
               <div className="flex items-center gap-2">
                 <Timer size={24} />
                 <div className="text-center">

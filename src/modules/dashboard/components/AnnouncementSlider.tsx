@@ -260,8 +260,11 @@ const AnnouncementsVerticalList = () => {
     <div
       style={{
         padding: "4px 8px",
-        minHeight: 270,
-        maxHeight: 270,
+        // Fills the card in the dashboard grid, but never taller than the
+        // viewport allows; scrolls internally past that.
+        minHeight: 240,
+        height: "100%",
+        maxHeight: "min(46vh, 420px)",
         overflowY: "auto",
       }}
       className="announcements-scroll"

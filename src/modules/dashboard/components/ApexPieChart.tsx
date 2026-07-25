@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
-import { useGetDashboardBloodDataQuery } from '../api/dashboardEndPoints';
+import {
+  Bar,
+  BarChart,
+  Cell,
+  LabelList,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { useGetDashboardBloodDataQuery } from "../api/dashboardEndPoints";
+import { CHART_INK, SINGLE_HUE } from "./chartTheme";
 
-// Define types for Blood Data and API Response
 interface BloodData {
   total_a_positive: number;
   total_b_positive: number;
@@ -11,131 +19,99 @@ interface BloodData {
   total_a_negative: number;
   total_b_negative: number;
   total_ab_negative: number;
-  total_0_negative: number; // Corrected here to use '0'
+  total_0_negative: number;
 }
 
-interface ApiResponse {
-  data?: BloodData;
-}
-
-// Define type for each data point in the chart
-type ChartDataPoint = {
-  name: string;
-  value: number;
-  fill: string;
-};
-
-// Function to render the active shape of the pie chart
-const renderActiveShape = (props: any) => {
-  const RADIAN = Math.PI / 180;
-  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
-  const sin = Math.sin(-RADIAN * midAngle);
-  const cos = Math.cos(-RADIAN * midAngle);
-  const sx = cx + (outerRadius + 10) * cos;
-  const sy = cy + (outerRadius + 10) * sin;
-  const mx = cx + (outerRadius + 30) * cos;
-  const my = cy + (outerRadius + 30) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  const ey = my;
-  const textAnchor = cos >= 0 ? 'start' : 'end';
-
-  return (
-    <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-        {payload.name}
-      </text>
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-      <Sector
-        cx={cx}
-        cy={cy}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        innerRadius={outerRadius + 6}
-        outerRadius={outerRadius + 10}
-        fill={fill}
-      />
-      <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`${value}`}</text>
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
-        {`(${(percent * 100).toFixed(2)}%)`}
-      </text>
-    </g>
-  );
-};
-
-const ExampleWithAPI = () => {
-  // Fetch data from the API with proper type inference
-  const { data, error, isLoading } = useGetDashboardBloodDataQuery() as {
-    data?: ApiResponse;
+/**
+ * Blood-group distribution.
+ *
+ * Was an 8-slice pie with eight hand-picked colours — no set of 8 hues can pass
+ * the colour-blind all-pairs floors a pie demands, so identity rode on colour
+ * alone and failed for CVD viewers. This is one series (a count) across eight
+ * categories = a magnitude comparison, whose correct form is a bar chart: one
+ * hue, sorted, directly labelled. Colour does no work, so there is nothing to
+ * fail. Sorting also makes "most common group" instantly readable.
+ */
+const BloodGroupChart = () => {
+  const { data, isLoading, error } = useGetDashboardBloodDataQuery() as {
+    data?: { data?: BloodData };
     error?: any;
     isLoading: boolean;
   };
 
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const b = data?.data;
+  const rows = [
+    { name: "A+", value: b?.total_a_positive || 0 },
+    { name: "A-", value: b?.total_a_negative || 0 },
+    { name: "B+", value: b?.total_b_positive || 0 },
+    { name: "B-", value: b?.total_b_negative || 0 },
+    { name: "AB+", value: b?.total_ab_positive || 0 },
+    { name: "AB-", value: b?.total_ab_negative || 0 },
+    { name: "O+", value: b?.total_o_positive || 0 },
+    { name: "O-", value: b?.total_0_negative || 0 },
+  ].sort((x, y) => y.value - x.value);
 
-  // Destructure blood data with default values
-  const {
-    total_a_positive = 0,
-    total_b_positive = 0,
-    total_ab_positive = 0,
-    total_o_positive = 0,
-    total_a_negative = 0,
-    total_b_negative = 0,
-    total_ab_negative = 0,
-    total_0_negative = 0,
-  } = data?.data || {};
+  const max = Math.max(...rows.map((r) => r.value), 1);
 
-  // Chart data
-  const chartData: ChartDataPoint[] = [
-    { name: 'A+', value: total_a_positive, fill: '#FFA500' }, // Orange
-    { name: 'A-', value: total_a_negative, fill: '#1E90FF' }, // Blue
-    { name: 'B+', value: total_b_positive, fill: '#228B22' }, // Bottle Green
-    { name: 'B-', value: total_b_negative, fill: '#4682B4' }, // Deep Blue
-    { name: 'AB+', value: total_ab_positive, fill: '#00C853' }, // Android Green
-    { name: 'AB-', value: total_ab_negative, fill: '#FF6347' }, // Tomato Red
-    { name: 'O+', value: total_o_positive, fill: '#8A2BE2' }, // Purple
-    { name: 'O-', value: total_0_negative, fill: '#6B8E23' }, // Olive Green
-  ];
-
-  // Handle hover event on the pie chart
-  const onPieEnter = (_: ChartDataPoint, index: number) => {
-    setActiveIndex(index);
-  };
-
-  // Reset active index when new data is loaded
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [data]);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
+  if (isLoading)
+    return (
+      <div style={{ padding: "40px 0", textAlign: "center", color: CHART_INK.muted }}>
+        Loading…
+      </div>
+    );
+  if (error)
+    return (
+      <div style={{ padding: "40px 0", textAlign: "center", color: CHART_INK.muted }}>
+        Could not load blood group data
+      </div>
+    );
 
   return (
     <ResponsiveContainer width="100%" height={270}>
-      <PieChart>
-        <Pie
-          activeIndex={activeIndex}
-          activeShape={renderActiveShape}
-          data={chartData}
-          cx="50%"
-          cy="50%"
-          innerRadius={50}
-          outerRadius={90}
-          dataKey="value"
-          onMouseEnter={onPieEnter}
+      <BarChart
+        data={rows}
+        layout="vertical"
+        margin={{ top: 4, right: 30, bottom: 4, left: 8 }}
+        barCategoryGap={6}
+      >
+        <XAxis type="number" hide domain={[0, max]} />
+        <YAxis
+          type="category"
+          dataKey="name"
+          width={38}
+          axisLine={false}
+          tickLine={false}
+          tick={{ fill: CHART_INK.secondary, fontSize: 12, fontWeight: 600 }}
         />
-      </PieChart>
+        <Tooltip
+          cursor={{ fill: "rgba(37,99,235,0.06)" }}
+          contentStyle={{
+            borderRadius: 10,
+            border: `1px solid ${CHART_INK.grid}`,
+            fontSize: 12,
+            boxShadow: "0 8px 24px -12px rgba(16,24,40,.4)",
+          }}
+          formatter={(v: any) => [`${v} people`, "Count"]}
+        />
+        {/* 4px rounded data-end anchored to the baseline. */}
+        <Bar
+          dataKey="value"
+          radius={[0, 5, 5, 0]}
+          maxBarSize={22}
+          isAnimationActive={false}
+        >
+          {rows.map((_, i) => (
+            <Cell key={i} fill={SINGLE_HUE} />
+          ))}
+          <LabelList
+            dataKey="value"
+            position="right"
+            style={{ fill: CHART_INK.secondary, fontSize: 12, fontWeight: 700 }}
+          />
+        </Bar>
+      </BarChart>
     </ResponsiveContainer>
   );
 };
 
-export default ExampleWithAPI;
+export default BloodGroupChart;

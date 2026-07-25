@@ -13,12 +13,15 @@ import { IoCaretForwardCircle } from "react-icons/io5";
 import {
   BarChart,
   Bar,
+  CartesianGrid,
+  Legend,
   XAxis,
   YAxis,
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
 import PieChartWithLabels from "./PieChart";
+import "./ticket-dashboard.css";
 import {
   useGetDashboardBarDataQuery,
   useGetPriorityWiseDashboardDataQuery,
@@ -42,7 +45,8 @@ const TicketDashboard = ({
   setTicketPriorityValue,
   setTicketSolver,
 }: TicketDashboardProps) => {
-  const { md, lg } = Grid.useBreakpoint();
+  const screens = Grid.useBreakpoint();
+  const isXs = !screens.sm; // reactive < 576px
   const { data } = useGetTicketDashboardCountQuery();
   const { data: topSolver } = useGetTopTicketSolverQuery();
   const { data: raiseSolved } = useGetRaiseSolveDashboardDataQuery();
@@ -55,40 +59,40 @@ const TicketDashboard = ({
       title: "Total Ticket",
       value: "",
       data: data?.data?.total_ticket,
-      color: "rgba(61,91,241,255)", // Orange for Total Ticket
-      icon: <FaTicketAlt size={28} />, // Ticket icon for "Total Ticket"
+      color: "rgba(61,91,241,255)",
+      icon: <FaTicketAlt size={28} />,
     },
     {
       id: 2,
       title: "Solved",
       value: "solved",
       data: data?.data?.total_solve,
-      color: "rgba(32,149,135,255)", // Green for Solved
-      icon: <FaCheckCircle size={28} />, // Check circle icon for "Solved"
+      color: "rgba(32,149,135,255)",
+      icon: <FaCheckCircle size={28} />,
     },
     {
       id: 3,
       title: "In Progress",
       value: "inprogress",
       data: data?.data?.total_inprogress,
-      color: "rgba(134,1,176,255)", // Purple for In Progress
-      icon: <ImSpinner9 size={28} />, // Spinner icon for "In Progress"
+      color: "rgba(134,1,176,255)",
+      icon: <ImSpinner9 size={28} />,
     },
     {
       id: 4,
       title: "Unsolved",
       value: "unsolved",
       data: data?.data?.total_unsolved,
-      color: "rgba(254,39,18,255)", // Red for Unsolved
-      icon: <FaExclamationCircle size={28} />, // Exclamation circle for "Unsolved"
+      color: "rgba(254,39,18,255)",
+      icon: <FaExclamationCircle size={28} />,
     },
     {
       id: 5,
       title: "Forward",
       value: "forward",
       data: data?.data?.total_forward,
-      color: "rgba(0,73,153,255)", // Blue for Forward
-      icon: <IoCaretForwardCircle size={28} />, // Arrow icon for "Forward"
+      color: "rgba(0,73,153,255)",
+      icon: <IoCaretForwardCircle size={28} />,
     },
     {
       id: 6,
@@ -103,13 +107,10 @@ const TicketDashboard = ({
   const ticketData = barData?.data || [];
 
   return (
-    <Card style={{ width: "100%" }}>
+    <Card className="tk-dash" style={{ width: "100%" }}>
       <Row gutter={[12, 12]}>
         {ticketPriorityCards?.map((item) => (
-          <Col
-            key={item.id}
-            style={{ width: lg ? "16.6%" : md ? "50%" : "100%" }}
-          >
+          <Col key={item.id} xs={12} sm={8} lg={4}>
             <Card
               className="card-hover-stat"
               onClick={() => {
@@ -146,9 +147,7 @@ const TicketDashboard = ({
                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
               }}
             >
-              <div>
-                {item.icon} {/* Dynamic icon rendering */}
-              </div>
+              <div>{item.icon}</div>
               <h3>{item.title}</h3>
               <h2>{item.data}</h2>
 
@@ -158,12 +157,10 @@ const TicketDashboard = ({
             position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
           }
-
           .card-hover-stat:hover {
             transform: scale(1.05);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
           }
-
           .card-hover-stat::before {
             content: "";
             position: absolute;
@@ -180,16 +177,9 @@ const TicketDashboard = ({
             opacity: 0.9;
             animation: pulse 3s infinite ease-in-out;
           }
-
           @keyframes pulse {
-            0%, 100% {
-              transform: scale(1);
-              opacity: 0.9;
-            }
-            50% {
-              transform: scale(1.05);
-              opacity: 0.7;
-            }
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 0.7; }
           }
         `}
               </style>
@@ -200,143 +190,62 @@ const TicketDashboard = ({
         {/* Priority based */}
         <Col xs={24} sm={24} md={24} lg={5}>
           <Card
-            title={
-              <span
-                style={{ fontWeight: "600", fontSize: "16px", color: "#333" }}
-              >
-                Priority Overview
-              </span>
-            }
-            style={{
-              height: "auto",
-              borderRadius: "16px",
-              boxShadow: "0 6px 15px rgba(0, 0, 0, 0.1)",
-              border: "none",
-            }}
-            bodyStyle={{ padding: "10px" }} // Reduced padding
+            className="tk-card"
+            title="Priority Overview"
+            style={{ height: "380px", display: "flex", flexDirection: "column" }}
+            bodyStyle={{ padding: "12px", flex: 1, minHeight: 0 }}
           >
-            <Space
-              direction="vertical"
-              style={{
-                height: "260px",
-
-                width: "100%",
-                gap: "4px", // Reduced gap between cards
-                marginTop: "0px", // Ensures no extra space above the first card
-              }}
-            >
-              {[
-                {
-                  label: "Urgent",
-                  count: priority?.data?.priority_urgent || 0,
-                  color: "#ff4d4f",
-                  value: "urgent",
-                },
-                {
-                  label: "High",
-                  count: priority?.data?.priority_high || 0,
-                  color: "#1890ff",
-                  value: "high",
-                },
-                {
-                  label: "Medium",
-                  count: priority?.data?.priority_medium || 0,
-                  color: "#faad14",
-                  value: "medium",
-                },
-                {
-                  label: "Low",
-                  count: priority?.data?.priority_low || 0,
-                  color: "#52c41a",
-                  value: "low",
-                },
-              ].map(({ label, count, color, value }) => (
-                <Card
-                  key={label}
-                  onClick={() => {
-                    if (setActiveKey) {
-                      if (roleID === 1) {
-                        setActiveKey("2");
-                      } else if (roleID === 4) {
-                        setActiveKey("13");
-                      } else {
-                        setActiveKey("5");
-                      }
-                    }
-
-                    setTicketPriorityValue && setTicketPriorityValue(value);
-                  }}
-
-                  style={{
-                    borderRadius: "12px",
-                    background: "#fff",
-                    border: "1px solid #f0f0f0",
-                    cursor: "pointer",
-                    overflow: "hidden",
-                  }}
-                  hoverable
-                  bodyStyle={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "7px",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 20px rgba(0, 0, 0, 0.15)";
-                    e.currentTarget.style.transform = "scale(1.02)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow =
-                      "0 4px 10px rgba(0, 0, 0, 0.1)";
-                    e.currentTarget.style.transform = "scale(1)";
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 45,
-                      height: 45,
-                      borderRadius: "50%",
-                      background: color,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "12px",
-                      marginRight: "14px",
-                    }}
-                  >
-                    {count}
-                  </div>
-                  <div>
-                    <span
-                      style={{
-                        fontWeight: "600",
-                        fontSize: "14px",
-                        color: "#333",
+            {(() => {
+              const items = [
+                { label: "Urgent", count: priority?.data?.priority_urgent || 0, color: "#ef4444", value: "urgent" },
+                { label: "High", count: priority?.data?.priority_high || 0, color: "#3b82f6", value: "high" },
+                { label: "Medium", count: priority?.data?.priority_medium || 0, color: "#f59e0b", value: "medium" },
+                { label: "Low", count: priority?.data?.priority_low || 0, color: "#22c55e", value: "low" },
+              ];
+              const total = items.reduce((s, i) => s + i.count, 0) || 1;
+              return (
+                <div className="po-list">
+                  {items.map(({ label, count, color, value }) => (
+                    <button
+                      key={label}
+                      type="button"
+                      className="po-item"
+                      style={{ ["--c" as any]: color }}
+                      onClick={() => {
+                        if (setActiveKey) {
+                          if (roleID === 1) setActiveKey("2");
+                          else if (roleID === 4) setActiveKey("13");
+                          else setActiveKey("5");
+                        }
+                        setTicketPriorityValue && setTicketPriorityValue(value);
                       }}
                     >
-                      {label}
-                    </span>
-                    <br />
-                    <span style={{ fontSize: "12px", color: "#666" }}>
-                      Tickets
-                    </span>
-                  </div>
-                </Card>
-              ))}
-            </Space>
+                      <span className="po-item__badge">{count}</span>
+                      <span className="po-item__body">
+                        <span className="po-item__top">
+                          <span className="po-item__label">{label}</span>
+                          <span className="po-item__pct">
+                            {Math.round((count / total) * 100)}%
+                          </span>
+                        </span>
+                        <span className="po-item__bar">
+                          <span style={{ width: `${(count / total) * 100}%` }} />
+                        </span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              );
+            })()}
           </Card>
         </Col>
 
         {/* Pie Chart Component */}
         <Col xs={24} sm={24} md={24} lg={13}>
           <Card
+            className="tk-card"
             title="Category Wise Tickets"
-            style={{
-              width: "100%",
-              height: "335px",
-            }}
+            style={{ width: "100%", height: "380px" }}
           >
             <PieChartWithLabels />
           </Card>
@@ -357,7 +266,7 @@ const TicketDashboard = ({
                 gap: "8px",
                 color: "#1f2937",
                 fontWeight: "600",
-                fontSize: window.innerWidth < 576 ? "14px" : "16px"
+                fontSize: isXs ? "14px" : "16px"
               }}>
                 <div style={{
                   width: "30px",
@@ -374,11 +283,9 @@ const TicketDashboard = ({
                 Top Ticket Solvers
               </div>
             }
+            className="tk-card tk-solvers"
             style={{
-              height: "335px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-              border: "1px solid #e5e7eb",
+              height: "380px",
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
@@ -391,12 +298,12 @@ const TicketDashboard = ({
               flexDirection: "column"
             }}
           >
-            <div style={{ flex: 1, overflowY: "auto", paddingBottom: "0" }}>
+            <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden", paddingBottom: "0" }}>
               <Table
                 size="small"
                 bordered={false}
                 pagination={false}
-                scroll={{ y: 245 }}
+                scroll={{ y: 290 }}
                 showHeader={false}
                 columns={[
                   {
@@ -408,7 +315,7 @@ const TicketDashboard = ({
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "space-between",
-                          padding: window.innerWidth < 576 ? "10px 6px" : "12px 8px",
+                          padding: isXs ? "10px 6px" : "12px 8px",
                           background: "#ffffff",
                           borderBottom: "1px solid #f3f4f6",
                           transition: "background-color 0.2s ease",
@@ -429,15 +336,15 @@ const TicketDashboard = ({
                       >
                         {/* Rank Number */}
                         <div style={{
-                          width: window.innerWidth < 576 ? "20px" : "24px",
-                          height: window.innerWidth < 576 ? "20px" : "24px",
+                          width: isXs ? "20px" : "24px",
+                          height: isXs ? "20px" : "24px",
                           background: index < 3 ? "#3b82f6" : "#6b7280",
                           color: "white",
                           borderRadius: "50%",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          fontSize: window.innerWidth < 576 ? "10px" : "12px",
+                          fontSize: isXs ? "10px" : "12px",
                           fontWeight: "600",
                           flexShrink: 0
                         }}>
@@ -447,7 +354,7 @@ const TicketDashboard = ({
                         {/* User Info */}
                         <div style={{
                           flex: 1,
-                          marginLeft: window.innerWidth < 576 ? "8px" : "12px",
+                          marginLeft: isXs ? "8px" : "12px",
                           minWidth: 0
                         }}>
                           <AntdTooltip
@@ -478,7 +385,7 @@ const TicketDashboard = ({
                             <div>
                               <div style={{
                                 fontWeight: "500",
-                                fontSize: window.innerWidth < 576 ? "12px" : "14px",
+                                fontSize: isXs ? "12px" : "14px",
                                 color: roleID === 1 ? "#1d4ed8" : "#374151",
                                 marginBottom: "2px",
                                 whiteSpace: "nowrap",
@@ -488,7 +395,7 @@ const TicketDashboard = ({
                                 {record?.solved_by_name}
                               </div>
                               <div style={{
-                                fontSize: window.innerWidth < 576 ? "10px" : "12px",
+                                fontSize: isXs ? "10px" : "12px",
                                 color: "#6b7280",
                                 whiteSpace: "nowrap",
                                 overflow: "hidden",
@@ -505,12 +412,12 @@ const TicketDashboard = ({
                           background: "#f3f4f6",
                           color: "#374151",
                           fontWeight: "600",
-                          fontSize: window.innerWidth < 576 ? "12px" : "14px",
-                          padding: window.innerWidth < 576 ? "3px 6px" : "4px 8px",
+                          fontSize: isXs ? "12px" : "14px",
+                          padding: isXs ? "3px 6px" : "4px 8px",
                           borderRadius: "4px",
-                          minWidth: window.innerWidth < 576 ? "30px" : "40px",
+                          minWidth: isXs ? "30px" : "40px",
                           textAlign: "center",
-                          marginLeft: window.innerWidth < 576 ? "4px" : "8px"
+                          marginLeft: isXs ? "4px" : "8px"
                         }}>
                           {record?.solved_ticket_count}
                         </div>
@@ -531,27 +438,64 @@ const TicketDashboard = ({
 
         {/* Bar Chart */}
         <Col xs={24} sm={24} md={24} lg={18}>
-          <Card title="Last 12 Months Ticket Count">
-            <div style={{ height: 200 }}>
+          <Card className="tk-card" title="Last 12 Months Ticket Count">
+            <div style={{ height: 220 }}>
               <ResponsiveContainer>
-                <BarChart data={ticketData} barGap={0}>
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
+                <BarChart
+                  data={ticketData}
+                  barGap={3}
+                  barCategoryGap="26%"
+                  margin={{ top: 8, right: 8, bottom: 0, left: -14 }}
+                >
+                  <CartesianGrid vertical={false} stroke="#e8ecf2" />
+                  <XAxis
+                    dataKey="name"
+                    axisLine={{ stroke: "#c3c2b7" }}
+                    tickLine={false}
+                    tick={{ fill: "#898781", fontSize: 12 }}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: "#898781", fontSize: 12 }}
+                    width={44}
+                  />
+                  <Tooltip
+                    cursor={{ fill: "rgba(37,99,235,0.06)" }}
+                    contentStyle={{
+                      borderRadius: 10,
+                      border: "1px solid #e8ecf2",
+                      fontSize: 12,
+                      boxShadow: "0 8px 24px -12px rgba(16,24,40,.4)",
+                    }}
+                  />
+                  <Legend
+                    iconType="circle"
+                    wrapperStyle={{ fontSize: 12, color: "#52514e", paddingTop: 4 }}
+                  />
                   <Bar
                     dataKey="raiseTickets"
-                    fill="#1775bb"
+                    fill="#2563eb"
                     name="Raise Tickets"
+                    radius={[3, 3, 0, 0]}
+                    maxBarSize={26}
+                    isAnimationActive={false}
                   />
                   <Bar
                     dataKey="solvedTickets"
-                    fill="#8dc73f"
+                    fill="#1baf7a"
                     name="Solved Tickets"
+                    radius={[3, 3, 0, 0]}
+                    maxBarSize={26}
+                    isAnimationActive={false}
                   />
                   <Bar
                     dataKey="unsolvedTickets"
-                    fill="#ff4d4f"
+                    fill="#e34948"
                     name="Unsolved Tickets"
+                    radius={[3, 3, 0, 0]}
+                    maxBarSize={26}
+                    isAnimationActive={false}
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -561,7 +505,7 @@ const TicketDashboard = ({
 
         {/* Last 30 Days */}
         <Col xs={24} sm={24} md={24} lg={6}>
-          <Card title="Last 30 Days" style={{ height: "100%" }}>
+          <Card className="tk-card" title="Last 30 Days" style={{ height: "100%" }}>
             <Space
               direction="vertical"
               style={{ height: 200, width: "100%", fontSize: "1px" }}
