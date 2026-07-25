@@ -23,6 +23,36 @@ import KpiStrip, { TKpi } from "../components/KpiStrip";
 import DashboardHero from "../components/DashboardHero";
 import "../components/dashboard-ui.css";
 
+/**
+ * Defined at MODULE scope, not inside DashboardCards. When these lived inside
+ * the component, every re-render (each of the ~6 queries resolving in waves)
+ * created a fresh component identity, so React remounted every card and the CSS
+ * entrance animation replayed — which looked like the dashboard "reloading"
+ * two or three times on load.
+ */
+const InfoRow = ({ k, v }: { k: string; v?: React.ReactNode }) => (
+  <div className="dinfo__row">
+    <span className="dinfo__key">{k}</span>
+    <span className="dinfo__val">{v || "—"}</span>
+  </div>
+);
+
+const ChartCard = ({
+  title,
+  children,
+  delay = 0,
+}: {
+  title: string;
+  children: React.ReactNode;
+  delay?: number;
+}) => (
+  <div className="dsec dfade" style={{ animationDelay: `${delay}ms` }}>
+    <Card size="small" className="dash-card" title={title}>
+      {children}
+    </Card>
+  </div>
+);
+
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
   const { data: asset } = useGetDashboardAssetDataForAdminQuery({});
@@ -107,29 +137,6 @@ const DashboardCards = () => {
       icon: <LuUsers2 />,
     },
   ];
-
-  const InfoRow = ({ k, v }: { k: string; v?: React.ReactNode }) => (
-    <div className="dinfo__row">
-      <span className="dinfo__key">{k}</span>
-      <span className="dinfo__val">{v || "—"}</span>
-    </div>
-  );
-
-  const ChartCard = ({
-    title,
-    children,
-    delay = 0,
-  }: {
-    title: string;
-    children: React.ReactNode;
-    delay?: number;
-  }) => (
-    <div className="dsec dfade" style={{ animationDelay: `${delay}ms` }}>
-      <Card size="small" className="dash-card" title={title}>
-        {children}
-      </Card>
-    </div>
-  );
 
   return (
     <div className="dash">
