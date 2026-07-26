@@ -4,7 +4,7 @@ import {
   LaptopOutlined,
   WarningFilled,
 } from "@ant-design/icons";
-import { Button, DatePicker, Form } from "antd";
+import { Button, DatePicker, Form, Input } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -47,12 +47,14 @@ const ExtendSupportModal = ({ loan }: { loan: any }) => {
         })();
 
   const onFinish = (values: any) => {
+    const note = values.note?.trim() || undefined;
     if (mode === "days") {
-      extend({ assignId: loan.assign_id, support_days: tenure });
+      extend({ assignId: loan.assign_id, support_days: tenure, note });
     } else {
       extend({
         assignId: loan.assign_id,
         expected_return: dayjs(values.expected_return).format("YYYY-MM-DD"),
+        note,
       });
     }
   };
@@ -204,6 +206,20 @@ const ExtendSupportModal = ({ loan }: { loan: any }) => {
             days before this date.
           </div>
         </motion.div>
+
+        {/* Optional reason — appended to this asset's support notes. */}
+        <Form.Item
+          name="note"
+          label="Reason for extension (optional)"
+          style={{ marginTop: 14, marginBottom: 0 }}
+        >
+          <Input.TextArea
+            rows={2}
+            maxLength={300}
+            showCount
+            placeholder="e.g. project extended, awaiting replacement unit…"
+          />
+        </Form.Item>
 
         <div className="ae-footer">
           <Button onClick={() => dispatch(setCommonModal())}>Cancel</Button>

@@ -200,7 +200,12 @@ export const assetsEndPoint = api.injectEndpoints({
     }),
     extendSupportLoan: build.mutation<
       unknown,
-      { assignId: number; support_days?: number; expected_return?: string }
+      {
+        assignId: number;
+        support_days?: number;
+        expected_return?: string;
+        note?: string;
+      }
     >({
       query: ({ assignId, ...body }) => ({
         url: `/asset/support-loans/extend/${assignId}`,
