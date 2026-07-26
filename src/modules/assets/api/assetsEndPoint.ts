@@ -127,6 +127,11 @@ export const assetsEndPoint = api.injectEndpoints({
       },
       providesTags: () => ["asset"],
     }),
+    // Every On Support loan (past + present) for one asset, with its note.
+    getAssetSupportHistory: build.query<HTTPResponse<any[]>, number>({
+      query: (assetId) => ({ url: `/asset/support-history/${assetId}` }),
+      providesTags: () => ["asset"],
+    }),
     createAssets: build.mutation<unknown, { data: any }>({
       query: ({ data }) => {
         return {
@@ -304,6 +309,7 @@ export const {
   useGetEmployeeAllDistributedAssetQuery,
   useGetEmployeeAssetQuery,
   useGetSingleAssetsQuery,
+  useGetAssetSupportHistoryQuery,
   useGetCategoryCountsQuery,
   useGetDistributedCategoryCountsQuery,
   useCreateAssetsMutation,

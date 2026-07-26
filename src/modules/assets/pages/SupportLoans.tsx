@@ -406,6 +406,7 @@ const SupportLoans = () => {
               "Return By",
               "Days Left",
               "Status",
+              "Note",
             ]}
             excelData={rows.map((r: any, i: number) => ({
               SL: i + 1,
@@ -431,6 +432,7 @@ const SupportLoans = () => {
                   ? `${Math.abs(r.days_left)} overdue`
                   : r.days_left,
               Status: stateLabel(r.support_state),
+              Note: r.support_note || "",
             }))}
           />
           {hasFilters && (

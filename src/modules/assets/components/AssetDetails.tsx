@@ -1,19 +1,63 @@
-import { Card, Col, Row, Tabs, Tag, Typography, Timeline, Divider } from "antd";
+import { Tabs, Timeline } from "antd";
+import {
+  ProfileOutlined,
+  SettingOutlined,
+  HistoryOutlined,
+  FileTextOutlined,
+  LaptopOutlined,
+  CalendarOutlined,
+} from "@ant-design/icons";
+import { motion } from "framer-motion";
 import dayjs from "dayjs";
 import { Remark } from "../utils/assetVisuals";
-import { useGetSingleAssetsQuery } from "../api/assetsEndPoint";
+import {
+  useGetSingleAssetsQuery,
+  useGetAssetSupportHistoryQuery,
+} from "../api/assetsEndPoint";
+import "./asset-details.css";
 
-const { Text } = Typography;
+const fmt = (d?: string | Date) =>
+  d && dayjs(d).isValid() ? dayjs(d).format("DD MMM YYYY") : "";
 
-const FieldItem = ({ label, value }: { label: string; value?: string | React.ReactNode }) => (
-  <div style={{ marginBottom: 12 }}>
-    <Text strong>{label}: </Text>
-    <Text>{value || "N/A"}</Text>
+/** First + last initial, e.g. "M. A. Quader" → "MQ". */
+const initials = (name?: string) => {
+  const p = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if (!p.length) return "?";
+  return ((p[0][0] || "") + (p.length > 1 ? p[p.length - 1][0] : "")).toUpperCase();
+};
+
+// Fade-in for tab panels; staggered entrance for the support-note cards.
+const panel = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0 } };
+const listStagger = { show: { transition: { staggerChildren: 0.05 } } };
+const cardIn = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } },
+};
+
+/** One label/value cell in the responsive fact grid. */
+const Fact = ({ label, value }: { label: string; value?: React.ReactNode }) => (
+  <div className="adx-fact">
+    <span className="adx-fact__label">{label}</span>
+    <span className={`adx-fact__value${value ? "" : " adx-fact__value--empty"}`}>
+      {value || "Not set"}
+    </span>
+  </div>
+);
+
+/** Full-width text block for long free-text fields. */
+const Block = ({ label, text }: { label: string; text?: string }) => (
+  <div className="adx-block">
+    <div className="adx-block__label">{label}</div>
+    <div className={`adx-block__text${text ? "" : " adx-block__text--empty"}`}>
+      {text || "Not provided"}
+    </div>
   </div>
 );
 
 const AssetDetails = ({ id }: { id: any }) => {
   const { data: singleAsset } = useGetSingleAssetsQuery(id);
+  const { data: supportHistoryRes } = useGetAssetSupportHistoryQuery(Number(id));
+  const supportHistory = supportHistoryRes?.data || [];
 
   const {
     category,
@@ -33,106 +77,206 @@ const AssetDetails = ({ id }: { id: any }) => {
     location_name,
   } = singleAsset?.data || {};
 
-  const assetHistory = history?.map((item: any) => ({
-    children: (
-      <p>
-        <span>{item?.history}</span>
-        <span className="ml-2">
-          (on
-          <span className="px-2 rounded font-bold">
-            {dayjs(item?.asset_assign_date).format("DD-MM-YYYY")}
-          </span>
-          )
-        </span>
-      </p>
-    ),
-    color: item?.status === 1 ? "green" : "red",
-  }));
-
   const items = [
     {
       key: "1",
-      label: "Asset Info",
+      label: (
+        <span>
+          <ProfileOutlined style={{ marginRight: 6 }} />
+          Details
+        </span>
+      ),
       children: (
-        <Row gutter={[16, 16]}>
-          <Col xs={24} md={10}>
-            <Card>
-              <FieldItem label="Asset No" value={asset_no} />
-              <FieldItem label="Category" value={category} />
-              <FieldItem label="Asset Name" value={name} />
-              <FieldItem label="Model" value={model} />
-              <FieldItem label="Serial No" value={serial_number} />
-              <FieldItem label="PO Number" value={po_number} />
-
-
-            </Card>
-          </Col>
-          <Col xs={24} md={14}>
-            <Card>
-
-              <FieldItem label="Buying Unit" value={unit_name} />
-              <FieldItem label="Location" value={location_name} />
-              <FieldItem label="Price" value={price} />
-              <FieldItem label="Purchase Date" value={purchase_date ? dayjs(purchase_date).format("DD-MM-YYYY") : "Not Updated"} />
-              <FieldItem label="Warranty" value={warranty} />
-              <FieldItem
-                label="Status"
-                value={<Remark remarks={remarks} />}
-              />
-            </Card>
-          </Col>
-        </Row>
+        <motion.div
+          className="adx-facts"
+          variants={panel}
+          initial="hidden"
+          animate="show"
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <Fact label="Asset No" value={asset_no} />
+          <Fact label="Asset Name" value={name} />
+          <Fact label="Category" value={category} />
+          <Fact label="Model" value={model} />
+          <Fact label="Serial No" value={serial_number} />
+          <Fact label="PO Number" value={po_number} />
+          <Fact label="Buying Unit" value={unit_name} />
+          <Fact label="Location" value={location_name} />
+          <Fact label="Price" value={price} />
+          <Fact label="Purchase Date" value={fmt(purchase_date)} />
+          <Fact label="Warranty" value={warranty} />
+          <Fact label="Status" value={<Remark remarks={remarks} />} />
+        </motion.div>
       ),
     },
     {
       key: "2",
-      label: "Specifications",
-      children: (
-        <Row gutter={[16, 16]}>
-          <Col span={24}>
-            <Card>
-              <FieldItem label="Specification" value={specification} />
-            </Card>
-          </Col>
-          <Col span={24}>
-            <Card>
-              <FieldItem label="Device Remarks" value={device_remarks} />
-            </Card>
-          </Col>
-        </Row>
+      label: (
+        <span>
+          <SettingOutlined style={{ marginRight: 6 }} />
+          Specifications
+        </span>
       ),
-    }
-    ,
-
-
+      children: (
+        <motion.div
+          variants={panel}
+          initial="hidden"
+          animate="show"
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <Block label="Specification" text={specification} />
+          <Block label="Device Remarks" text={device_remarks} />
+        </motion.div>
+      ),
+    },
     ...(history?.length
       ? [
-        {
-          key: "3",
-          label: "Asset History",
-          children: (
-            <Card>
-              <div style={{ marginBottom: 16 }}>
-                <Typography.Title level={5} style={{ margin: 0 }}>
-                  Purchase Date:{" "}
-                  <span style={{ fontWeight: "normal" }}>
-                    {purchase_date ? dayjs(purchase_date).format("DD-MM-YYYY") : "N/A"}
-                  </span>
-                </Typography.Title>
-              </div>
-              <Timeline items={assetHistory} />
-            </Card>
-          ),
-        },
-      ]
+          {
+            key: "3",
+            label: (
+              <span>
+                <HistoryOutlined style={{ marginRight: 6 }} />
+                Asset History
+              </span>
+            ),
+            children: (
+              <Timeline
+                items={history.map((item: any) => ({
+                  color: item?.status === 1 ? "green" : "red",
+                  children: (
+                    <div>
+                      <div style={{ color: "#334155", fontSize: 13.5 }}>
+                        {item?.history}
+                      </div>
+                      <div style={{ color: "#94a3b8", fontSize: 12, marginTop: 2 }}>
+                        {fmt(item?.asset_assign_date)}
+                      </div>
+                    </div>
+                  ),
+                }))}
+              />
+            ),
+          },
+        ]
       : []),
+    ...(supportHistory.length
+      ? [
+          {
+            key: "support",
+            label: (
+              <span>
+                <FileTextOutlined style={{ marginRight: 6 }} />
+                Support Notes ({supportHistory.length})
+              </span>
+            ),
+            children: (
+              <motion.div
+                className="adx-notes"
+                variants={listStagger}
+                initial="hidden"
+                animate="show"
+              >
+                {supportHistory.map((s: any) => {
+                  const active = Number(s.status) === 1 && !s.returned_at;
+                  const period = `${fmt(s.assign_date) || "—"} → ${
+                    s.returned_at
+                      ? `${fmt(s.returned_at)} · returned`
+                      : s.expected_return
+                      ? `${fmt(s.expected_return)} · due`
+                      : "—"
+                  }`;
+                  return (
+                    <motion.div
+                      key={s.assign_id}
+                      className="adx-note"
+                      variants={cardIn}
+                      whileHover={{ y: -2 }}
+                    >
+                      <span
+                        className="adx-note__av"
+                        data-active={active ? "true" : "false"}
+                      >
+                        {initials(s.user_name)}
+                      </span>
+                      <div className="adx-note__body">
+                        <div className="adx-note__row">
+                          <span className="adx-note__name">
+                            {s.user_name || "—"}
+                            {s.user_id_no && (
+                              <span className="adx-note__id"> · {s.user_id_no}</span>
+                            )}
+                          </span>
+                          <span
+                            className={`adx-note__pill ${
+                              active ? "adx-note__pill--active" : "adx-note__pill--past"
+                            }`}
+                          >
+                            {active
+                              ? "On support"
+                              : s.returned_at
+                              ? "Returned"
+                              : "Ended"}
+                          </span>
+                        </div>
 
+                        <div className="adx-note__meta">
+                          <CalendarOutlined style={{ fontSize: 11, marginRight: 5 }} />
+                          {s.department ? `${s.department} · ` : ""}
+                          {period}
+                        </div>
 
+                        {s.support_note && (
+                          <div className="adx-note__text" title={s.support_note}>
+                            {s.support_note}
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (
-    <div style={{ padding: 16 }}>
-      <Tabs defaultActiveKey="1" type="line" items={items} />
+    <div className="adx">
+      <motion.div
+        className="adx-head"
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <motion.span
+          className="adx-head__icon"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.08, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <LaptopOutlined />
+        </motion.span>
+        <div className="adx-head__main">
+          <div className="adx-head__name">{model || name || "Asset"}</div>
+          <div className="adx-head__sub">
+            {category || "—"}
+            {serial_number ? ` · ${serial_number}` : ""}
+          </div>
+        </div>
+        <span className="adx-head__status">
+          <Remark remarks={remarks} />
+        </span>
+      </motion.div>
+
+      <motion.div
+        className="adx-body"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.14, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <Tabs defaultActiveKey="1" type="line" items={items} />
+      </motion.div>
     </div>
   );
 };

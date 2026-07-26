@@ -1,0 +1,268 @@
+/* Asset details modal — flat, hairline, responsive (matches the profile /
+   dashboard language). Header stays put; the tab content scrolls when long. */
+.adx {
+  --x-line: #e8ecf2;
+  --x-text: #0f172a;
+  --x-text-2: #475569;
+  --x-text-3: #94a3b8;
+}
+
+/* ---- Header ---- */
+.adx-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 16px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--x-line);
+  flex-wrap: wrap;
+}
+.adx-head__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  /* Soft gradient tile + ring — a touch of depth without leaving the flat
+     language. */
+  background: linear-gradient(145deg, #eff6ff, #dbeafe);
+  color: #2563eb;
+  font-size: 22px;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.12),
+    0 6px 14px -8px rgba(37, 99, 235, 0.45);
+}
+.adx-head__main { flex: 1 1 200px; min-width: 0; }
+.adx-head__name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--x-text);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.adx-head__sub {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--x-text-2);
+  overflow-wrap: anywhere;
+}
+.adx-head__status { flex: 0 0 auto; }
+
+/* ---- Tabs: sliding segmented control ----
+   Tabs sit on a grey track; AntD's ink bar is repurposed into a full-height
+   blue pill that SLIDES behind the active tab (AntD animates its position),
+   giving a modern iOS-style segmented control. */
+.adx .ant-tabs-nav { margin-bottom: 16px; }
+.adx .ant-tabs-nav::before { display: none !important; }
+
+.adx .ant-tabs-nav-list {
+  position: relative;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #f1f5f9;
+}
+
+.adx .ant-tabs-tab {
+  margin: 0 !important;
+  padding: 7px 18px !important;
+  border-radius: 999px;
+  background: transparent;
+  z-index: 1; /* text above the sliding pill */
+}
+.adx .ant-tabs-tab .ant-tabs-tab-btn {
+  position: relative;
+  z-index: 1;
+  font-size: 13.5px;
+  font-weight: 500; /* lighter — the bold weight read as "punchy"/cramped */
+  letter-spacing: 0.005em;
+  color: #64748b;
+  transition: color 220ms ease;
+}
+.adx .ant-tabs-tab:hover .ant-tabs-tab-btn { color: #334155; }
+.adx .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  /* Softened off-white rather than stark #fff — reads clearly on the blue pill
+     without being harsh. */
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-weight: 600;
+}
+.adx .ant-tabs-tab.ant-tabs-tab-active .anticon { color: rgba(255, 255, 255, 0.92); }
+
+/* The sliding blue pill (AntD moves it between tabs). */
+.adx .ant-tabs-ink-bar {
+  top: 0 !important;
+  bottom: auto !important;
+  height: 100% !important;
+  background: #2563eb !important;
+  border-radius: 999px !important;
+  z-index: 0 !important;
+  box-shadow: 0 4px 12px -5px rgba(37, 99, 235, 0.5);
+}
+
+/* Long content scrolls inside the modal instead of pushing it off-screen. */
+.adx-body {
+  max-height: 58vh;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.adx-body::-webkit-scrollbar { width: 6px; }
+.adx-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+/* ---- Fact grid ---- */
+.adx-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1px;
+  background: var(--x-line);
+  border: 1px solid var(--x-line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.adx-fact {
+  background: #ffffff;
+  padding: 12px 14px;
+  min-width: 0;
+  transition: background-color 150ms ease;
+}
+.adx-fact:hover { background: #f8fafc; }
+.adx-fact__label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--x-text-3);
+  margin-bottom: 4px;
+}
+.adx-fact__value {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--x-text);
+  overflow-wrap: anywhere;
+}
+.adx-fact__value--empty { color: #cbd5e1; font-weight: 500; }
+
+/* ---- Text blocks (specification / device remarks) ---- */
+.adx-block {
+  border: 1px solid var(--x-line);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.adx-block + .adx-block { margin-top: 12px; }
+.adx-block__label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--x-text-3);
+  margin-bottom: 6px;
+}
+.adx-block__text {
+  font-size: 13.5px;
+  color: #334155;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.adx-block__text--empty { color: #cbd5e1; }
+
+/* ---- Support Notes — avatar cards (no timeline line) ----
+   Single-column list; each card carries an initials avatar, so it scales to
+   many entries and stays fully responsive at any ratio. */
+.adx-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.adx-note {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--x-line);
+  border-radius: 12px;
+  background: #ffffff;
+  min-width: 0;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.adx-note:hover {
+  border-color: #d4dbe6;
+  box-shadow: 0 12px 24px -16px rgba(16, 24, 40, 0.5);
+}
+
+.adx-note__av {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  user-select: none;
+}
+.adx-note__av[data-active="true"] { background: #2563eb; color: #fff; }
+.adx-note__av[data-active="false"] { background: #eef2f7; color: #64748b; }
+
+.adx-note__body { flex: 1 1 auto; min-width: 0; }
+.adx-note__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.adx-note__name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--x-text);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.adx-note__id { font-weight: 400; color: var(--x-text-3); }
+
+.adx-note__pill {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.adx-note__pill--active { background: #eff6ff; color: #1d4ed8; }
+.adx-note__pill--past { background: #f1f5f9; color: #64748b; }
+
+.adx-note__meta {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--x-text-3);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Note as a quiet tinted panel — no left bar. Clamps to two lines, full on
+   hover (title attr). */
+.adx-note__text {
+  margin-top: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #f6f8fb;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #334155;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 575px) {
+  .adx-body { max-height: 64vh; }
+  .adx-head__icon { width: 44px; height: 44px; font-size: 19px; }
+  .adx-head__name { font-size: 16px; }
+  .adx-note { padding: 10px 12px; gap: 10px; }
+  .adx-note__av { width: 34px; height: 34px; font-size: 12px; }
+}

@@ -72,17 +72,6 @@ export const DistributedAssetsTableColumns =
         ),
       },
       {
-        title: "Emp Unit",
-        dataIndex: "employee_unit_name",
-        key: "employee_unit_name",
-        render: (value: string) =>
-          value ? (
-            <span style={{ whiteSpace: "nowrap" }}>{value}</span>
-          ) : (
-            emptyCell
-          ),
-      },
-      {
         // Asset name (primary) with the category beneath; the model shows on
         // hover so the column stays compact.
         title: "Asset",
@@ -108,6 +97,29 @@ export const DistributedAssetsTableColumns =
         key: "serial_number",
         render: (value: string) =>
           value ? <span className="asset-mono">{value}</span> : emptyCell,
+      },
+      {
+        // The asset's owning (buying) unit — asset_unit_name in the view.
+        title: "Buying Unit",
+        dataIndex: "asset_unit_name",
+        key: "asset_unit_name",
+        render: (value: string) =>
+          value ? (
+            <span style={{ whiteSpace: "nowrap" }}>{value}</span>
+          ) : (
+            emptyCell
+          ),
+      },
+      {
+        title: "Location",
+        dataIndex: "location_name",
+        key: "location_name",
+        render: (value: string) =>
+          value ? (
+            <span style={{ whiteSpace: "nowrap" }}>{value}</span>
+          ) : (
+            emptyCell
+          ),
       },
       {
         title: "Actions",

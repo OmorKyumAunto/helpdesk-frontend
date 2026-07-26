@@ -173,7 +173,8 @@ export const AssetRowActions = ({ record }: { record: IAsset }) => {
         />
       </Tooltip>
 
-      {employeeID !== "Assetteam" && (
+      {/* Write Off is terminal — a written-off asset can no longer be edited. */}
+      {employeeID !== "Assetteam" && record.status !== ASSET_STATUS.WRITE_OFF && (
         <Tooltip title="Edit asset" getPopupContainer={() => document.body}>
           <Button
             type="text"

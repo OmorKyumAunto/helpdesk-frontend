@@ -6,7 +6,7 @@ import {
   SwapOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
-import { Button, DatePicker, Form, Select } from "antd";
+import { Button, DatePicker, Form, Input, Select } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -81,6 +81,8 @@ const AssignEmployee = ({
       } else {
         payload.support_days = Number(tenure);
       }
+      const note = values.support_note?.trim();
+      if (note) payload.support_note = note;
     }
 
     update({ data: payload, id });
@@ -304,6 +306,20 @@ const AssignEmployee = ({
                 even after it expires.
               </div>
             </motion.div>
+
+            {/* Optional free-text note for this support loan. */}
+            <Form.Item
+              name="support_note"
+              label="Support Note (optional)"
+              style={{ marginTop: 14, marginBottom: 0 }}
+            >
+              <Input.TextArea
+                rows={2}
+                maxLength={500}
+                showCount
+                placeholder="e.g. reason for the loan, condition, contact person…"
+              />
+            </Form.Item>
           </>
         )}
 

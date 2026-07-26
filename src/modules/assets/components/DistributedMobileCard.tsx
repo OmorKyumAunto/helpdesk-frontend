@@ -81,9 +81,10 @@ const DistributedMobileCard = ({ record }: { record: any }) => {
           />
           <Field label="Category" value={record.category} mono={false} />
           <Field label="Serial No" value={record.serial_number} />
+          <Field label="Location" value={record.location_name} mono={false} />
           <Field
-            label="Emp Unit"
-            value={record.employee_unit_name}
+            label="Buying Unit"
+            value={record.asset_unit_name}
             mono={false}
           />
         </div>
