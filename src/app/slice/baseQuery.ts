@@ -8,7 +8,7 @@ import {
 import { setLogout } from "../features/userSlice";
 import { RootState } from "../store/store";
 
-const baseURL = "http://localhost:3003/api/v1";
+const baseURL = "https://helpdesk.dbl-group.com:3003/api/v1";
 
 export const socket_url = "https://helpdesk.dbl-group.com:3003";
 export const imageURLNew = "https://helpdesk.dbl-group.com:3003";
