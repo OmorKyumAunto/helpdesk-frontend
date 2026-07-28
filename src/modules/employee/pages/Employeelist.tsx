@@ -35,6 +35,7 @@ import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import {
   useDeleteEmployeeMutation,
   useGetEmployeesQuery,
+  useGetDepartmentsQuery,
   useUpdateEmployeeStatusMutation,
 } from "../api/employeeEndPoint";
 import ActionIconButton from "../components/ActionIconButton";
@@ -87,6 +88,8 @@ const EmployeeList = () => {
   }, [page, pageSize, skipValue]);
 
   const { data, isLoading, isFetching } = useGetEmployeesQuery({ ...filter });
+  const { data: deptRes } = useGetDepartmentsQuery();
+  const departments = deptRes?.data || [];
 
   const total = data ? Number(data?.total) : 0;
   const employees: IEmployee[] = data?.data?.length ? data.data : [];
@@ -219,6 +222,7 @@ const EmployeeList = () => {
   const activeFilters = (
     [
       filter.unit_name && { key: "unit_name", label: `Unit: ${filter.unit_name}`, color: "blue" },
+      filter.department && { key: "department", label: `Dept: ${filter.department}`, color: "geekblue" },
       filter.status && {
         key: "status",
         label: `Status: ${filter.status === 1 ? "Active" : "Inactive"}`,
@@ -313,6 +317,22 @@ const EmployeeList = () => {
             {UNIT_NAMES.map((unit) => (
               <Option key={unit} value={unit}>
                 {unit}
+              </Option>
+            ))}
+          </Select>
+          <Select
+            allowClear
+            showSearch
+            size="large"
+            value={filter.department || undefined}
+            style={{ minWidth: 200 }}
+            onChange={(e) => setFilter({ ...filter, department: e, offset: 0 })}
+            placeholder="All Departments"
+            optionFilterProp="children"
+          >
+            {departments.map((dept) => (
+              <Option key={dept} value={dept}>
+                {dept}
               </Option>
             ))}
           </Select>

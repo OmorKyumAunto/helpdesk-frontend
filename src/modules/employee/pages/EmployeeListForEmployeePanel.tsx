@@ -11,7 +11,10 @@ import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { LuUsers2 } from "react-icons/lu";
 import { setCommonModal } from "../../../app/slice/modalSlice";
-import { useGetEmployeesQuery } from "../api/employeeEndPoint";
+import {
+  useGetEmployeesQuery,
+  useGetDepartmentsQuery,
+} from "../api/employeeEndPoint";
 import ActionIconButton from "../components/ActionIconButton";
 import AddressBookGrid from "../components/AddressBookGrid";
 import AddressBookList from "../components/AddressBookList";
@@ -51,6 +54,8 @@ const EmployeeListForEmployeePanel = () => {
   }, [page, pageSize, skipValue]);
 
   const { data, isLoading, isFetching } = useGetEmployeesQuery({ ...filter });
+  const { data: deptRes } = useGetDepartmentsQuery();
+  const departments = deptRes?.data || [];
 
   const total = data ? Number(data?.total) : 0;
   const employees: IEmployee[] = data?.data?.length ? data.data : [];
@@ -163,6 +168,22 @@ const EmployeeListForEmployeePanel = () => {
           </Select>
           <Select
             allowClear
+            showSearch
+            size="large"
+            value={filter.department || undefined}
+            style={{ minWidth: 200 }}
+            onChange={(e) => setFilter({ ...filter, department: e, offset: 0 })}
+            placeholder="All Departments"
+            optionFilterProp="children"
+          >
+            {departments.map((dept) => (
+              <Option key={dept} value={dept}>
+                {dept}
+              </Option>
+            ))}
+          </Select>
+          <Select
+            allowClear
             size="large"
             value={filter.blood_group || undefined}
             style={{ minWidth: 170 }}
@@ -177,7 +198,7 @@ const EmployeeListForEmployeePanel = () => {
           </Select>
         </div>
 
-        {(filter.unit_name || filter.blood_group) && (
+        {(filter.unit_name || filter.department || filter.blood_group) && (
           <div
             style={{
               display: "flex",
@@ -211,6 +232,19 @@ const EmployeeListForEmployeePanel = () => {
                 style={{ borderRadius: 8, padding: "3px 8px", margin: 0 }}
               >
                 Unit: {filter.unit_name}
+              </Tag>
+            )}
+            {filter.department && (
+              <Tag
+                closable
+                color="geekblue"
+                onClose={(e) => {
+                  e.preventDefault();
+                  setFilter({ ...filter, department: undefined, offset: 0 });
+                }}
+                style={{ borderRadius: 8, padding: "3px 8px", margin: 0 }}
+              >
+                Dept: {filter.department}
               </Tag>
             )}
             {filter.blood_group && (

@@ -108,6 +108,7 @@ export interface IEmployeeParams {
   offset?: number;
   key?: string;
   unit_name?: string;
+  department?: string;
   blood_group?: string;
   employee_type?: string;
   status?: number;

@@ -20,6 +20,11 @@ export const employeeEndPoint = api.injectEndpoints({
       providesTags: () => ["employee"],
       // providesTags: () => [{ type: "employee", id: "list" }],
     }),
+    // Distinct departments for the Address Book filter.
+    getDepartments: build.query<HTTPResponse<string[]>, void>({
+      query: () => ({ url: `/employee/departments` }),
+      providesTags: () => ["employee"],
+    }),
     getEmployeesForEmployeePanel: build.query<
       HTTPResponse<IEmployee[]>,
       IEmployeeParams
@@ -207,6 +212,7 @@ export const employeeEndPoint = api.injectEndpoints({
 
 export const {
   useGetEmployeesQuery,
+  useGetDepartmentsQuery,
   useGetEmployeesForEmployeePanelQuery,
   useGetOverallEmployeesQuery,
   useCreateEmployeeMutation,
