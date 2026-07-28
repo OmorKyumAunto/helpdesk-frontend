@@ -67,3 +67,58 @@ export const UNIT_NAMES: string[] = [
 ];
 
 export const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+/**
+ * Collapses a long department list into fewer, prefix-grouped options.
+ *
+ * Departments that share a first word (IT Support, IT Admin, IT Network) fold
+ * into a single "IT" option — the backend prefix-matches it (LIKE 'IT%'), so
+ * picking it shows every department in that family. Departments whose first
+ * word is unique stay as their full name, so specificity isn't lost where there
+ * is no cluster. Grouping is case-insensitive; single-letter first words are
+ * never grouped (too broad).
+ */
+// Placeholder / non-department values that pollute the data — hidden from the
+// filter dropdown (compared trimmed + lowercased).
+const JUNK_DEPARTMENTS = new Set([
+  "n/a",
+  "na",
+  "n\\a",
+  "n.a",
+  "null",
+  "none",
+  "nil",
+  "-",
+  "--",
+  ".",
+  "tbd",
+  "test",
+]);
+
+export const departmentOptions = (list: string[]): string[] => {
+  const byFirst = new Map<string, { first: string; count: number; full: string }>();
+  for (const raw of list) {
+    const d = String(raw || "").trim();
+    if (!d || JUNK_DEPARTMENTS.has(d.toLowerCase())) continue;
+    const first = d.split(/\s+/)[0];
+    const key = first.toLowerCase();
+    const e = byFirst.get(key);
+    if (e) {
+      e.count += 1;
+    } else {
+      byFirst.set(key, { first, count: 1, full: d });
+    }
+  }
+  const options: string[] = [];
+  for (const { first, count, full } of byFirst.values()) {
+    // Group only when several share a first word AND the word is meaningful.
+    // Grouped labels are Capitalised (the DB casing is inconsistent, e.g.
+    // "knitting"); the backend match is case-insensitive so the value is safe.
+    if (count > 1 && first.length > 1) {
+      options.push(first.charAt(0).toUpperCase() + first.slice(1));
+    } else {
+      options.push(full);
+    }
+  }
+  return options.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+};

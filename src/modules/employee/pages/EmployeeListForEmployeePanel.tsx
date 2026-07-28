@@ -21,7 +21,7 @@ import AddressBookList from "../components/AddressBookList";
 import EmployeeDetails from "./EmployeeDetails";
 import { IEmployee, IEmployeeParams } from "../types/employeeTypes";
 import { BRAND_GRADIENT } from "../utils/avatar";
-import { BLOOD_GROUPS, UNIT_NAMES } from "../utils/units";
+import { BLOOD_GROUPS, UNIT_NAMES, departmentOptions } from "../utils/units";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -55,7 +55,7 @@ const EmployeeListForEmployeePanel = () => {
 
   const { data, isLoading, isFetching } = useGetEmployeesQuery({ ...filter });
   const { data: deptRes } = useGetDepartmentsQuery();
-  const departments = deptRes?.data || [];
+  const departments = departmentOptions(deptRes?.data || []);
 
   const total = data ? Number(data?.total) : 0;
   const employees: IEmployee[] = data?.data?.length ? data.data : [];
