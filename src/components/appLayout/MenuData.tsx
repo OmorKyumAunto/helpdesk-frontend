@@ -239,3 +239,39 @@ export const sideBarItems = (employee_id: string, roleId: number) => {
   ];
   return menuData;
 };
+
+/**
+ * The set of route paths a given user is actually allowed to open — derived
+ * from the SAME role logic that builds their menu, so navigation access can
+ * never drift from what the sidebar shows. Used to guard direct-URL access
+ * (typing /assets/list) for roles that don't have the menu item.
+ */
+export const allowedRoutesForUser = (
+  employee_id: string,
+  roleId: number
+): Set<string> => {
+  const keys = new Set<string>();
+  const walk = (nodes: any[]) => {
+    (nodes || []).forEach((n) => {
+      if (!n) return;
+      if (typeof n.key === "string" && n.key.startsWith("/")) keys.add(n.key);
+      if (Array.isArray(n.children)) walk(n.children);
+    });
+  };
+  walk(sideBarItems(employee_id, roleId) as any[]);
+
+  // Always reachable for any authenticated user, regardless of the menu.
+  keys.add("/");
+  keys.add("/setting/profile");
+
+  // Header quick-action routes (not in the sidebar) — mirror AppLayout's
+  // `quickActions` show conditions so the guard matches those buttons.
+  if (employee_id !== "Assetteam") keys.add("/tickets/list");
+  if (roleId !== 3 && employee_id !== "Assetteam") keys.add("/task/list");
+
+  // Sub-routes not shown as their own menu item, gated by a parent permission.
+  if (keys.has("/reports")) keys.add("/combine-report");
+  if (keys.has("/announcements")) keys.add("/announcements/create");
+
+  return keys;
+};

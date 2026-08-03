@@ -55,13 +55,21 @@ const ChartCard = ({
 
 const DashboardCards = () => {
   const { roleId } = useSelector((state: RootState) => state.userSlice);
-  const { data: asset } = useGetDashboardAssetDataForAdminQuery({});
+  // Admin-only data — skipped for employees (role 3), who neither render it nor
+  // have permission for these endpoints, so they don't fire forbidden calls.
+  const isEmployee = roleId === 3;
+  const { data: asset } = useGetDashboardAssetDataForAdminQuery(
+    {},
+    { skip: isEmployee }
+  );
   const { data: distributedAsset } =
-    useGetDashboardDistributedAssetDataForAdminQuery({});
-  const { data } = useGetAllDashboardQuery();
+    useGetDashboardDistributedAssetDataForAdminQuery({}, { skip: isEmployee });
+  const { data } = useGetAllDashboardQuery(undefined, { skip: isEmployee });
   const { data: countData } = useGetAllCountEmployeeQuery();
   const { data: profile } = useGetMeQuery();
-  const { data: support } = useGetSupportLoansQuery();
+  const { data: support } = useGetSupportLoansQuery(undefined, {
+    skip: isEmployee,
+  });
   const {
     employee_id,
     department,

@@ -29,7 +29,8 @@ import {
 } from "antd";
 import { Footer } from "antd/es/layout/layout";
 import { useEffect, useState, useMemo } from "react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { allowedRoutesForUser } from "./MenuData";
 import { setLogout } from "../../app/features/userSlice";
 import { RootState, useAppDispatch } from "../../app/store/store";
 import { menuItems } from "./AppLayoutData";
@@ -179,6 +180,13 @@ export const AppLayout = () => {
   //   (sum: number, c: any) => sum + Number(c.unread_count || 0),
   //   0,
   // );
+
+  // Routes this user may open by URL — derived from the same role logic that
+  // builds the menu, so direct navigation can't bypass the sidebar.
+  const allowedRoutes = useMemo(
+    () => allowedRoutesForUser(employee_id || "", roleId as number),
+    [employee_id, roleId]
+  );
 
   const memoizedMenuItems = useMemo(
     () => menuItems(profile?.data, roleId as number),
@@ -404,6 +412,20 @@ export const AppLayout = () => {
       show: employee_id !== "Assetteam",
     },
   ];
+
+  // Route-level authorization: once the profile is loaded, a user who lands on
+  // a path outside their allowed set (e.g. a role-3 employee typing
+  // /assets/list) is bounced to /unauthorized. Menu-hiding alone did not stop
+  // direct-URL access. Sub-paths of an allowed route stay allowed.
+  const path = location.pathname;
+  const routeAllowed =
+    allowedRoutes.has(path) ||
+    [...allowedRoutes].some(
+      (k) => k !== "/" && (path === k || path.startsWith(`${k}/`))
+    );
+  if (isValidUser && !routeAllowed) {
+    return <Navigate to="/unauthorized" replace />;
+  }
 
   return (
     <Layout style={{ minHeight: "100vh", background: "#f8fafc" }}>
