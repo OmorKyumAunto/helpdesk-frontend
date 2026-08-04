@@ -29,34 +29,37 @@ export const baseQuery = fetchBaseQuery({
   },
 });
 
-// Detects an expired / invalid session, regardless of the HTTP status the
-// backend uses for it. Our API returns HTTP 400 with
-// `{ message: "Timeout Login First" }` when the token has expired, so a plain
-// `status === 401` check is not enough.
+// Detects an EXPIRED / INVALID SESSION only — never a mere permission denial.
+//
+// This distinction matters: `verifyToken` (expired/invalid token) and
+// `routeAccessChecker` (valid token, insufficient permission) can BOTH return
+// 401/403. If we logged out on any 401/403, a role-3 user who touches an
+// endpoint they lack permission for would be kicked to the login screen. So we
+// key off the token-failure MESSAGE, not the status code alone.
+//
+// Our API returns HTTP 400 with `{ message: "Timeout Login First" }` (and
+// similar) when the token has expired, so we scan 400/401/403 for those
+// messages and ignore permission-only rejections.
+const SESSION_FAIL_MESSAGES = [
+  "timeout login first",
+  "login first",
+  "login again",
+  "user not found",
+  "token expired",
+  "jwt expired",
+  "invalid token",
+  "invalid signature",
+  "jwt malformed",
+];
+
 const isSessionExpired = (error?: FetchBaseQueryError): boolean => {
   if (!error) return false;
+  if (error.status !== 400 && error.status !== 401 && error.status !== 403)
+    return false;
 
-  // Standard auth failures.
-  if (error.status === 401 || error.status === 403) return true;
-
-  // Backend-specific: expired token comes back as 400 + this message.
-  if (error.status === 400) {
-    const data = error.data as { message?: string } | undefined;
-    const message = data?.message?.toLowerCase() ?? "";
-    if (
-      message.includes("timeout login first") ||
-      message.includes("login first") ||
-      message.includes("login again") ||
-      message.includes("user not found") ||
-      message.includes("unauthorize") ||
-      message.includes("token expired") ||
-      message.includes("jwt expired")
-    ) {
-      return true;
-    }
-  }
-
-  return false;
+  const data = error.data as { message?: string } | undefined;
+  const message = data?.message?.toLowerCase() ?? "";
+  return SESSION_FAIL_MESSAGES.some((m) => message.includes(m));
 };
 
 // True when the request never reached the server (server down / unreachable /
