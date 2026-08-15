@@ -24,6 +24,9 @@ export interface IAsset {
   device_remarks: string;
   contact_no: string;
   employee_unit_name: string;
+  // 1 when the asset currently has an open repair (out at a vendor). Derived by
+  // the stock list query; such assets can't be assigned until marked back.
+  in_repair?: number;
 }
 export interface IAssetDetails {
   id: number;

@@ -3,6 +3,7 @@ import {
   EyeOutlined,
   InboxOutlined,
   SwapOutlined,
+  ToolOutlined,
 } from "@ant-design/icons";
 import { Tooltip, Button, Popconfirm } from "antd";
 import { TableProps } from "antd/lib";
@@ -12,6 +13,8 @@ import DistributeAssetDetails from "../components/DistributedAssetDetails";
 import { IAsset } from "../types/assetsTypes";
 import UpdateAsset from "../components/UpdateAssets";
 import AssignEmployee from "../components/AssignEmployee";
+import SendRepairModal from "../components/SendRepairModal";
+import SerialCopy from "../components/SerialCopy";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { useReturnAssetToStockMutation } from "../api/assetsEndPoint";
 
@@ -95,8 +98,7 @@ export const DistributedAssetsTableColumns =
         title: "Serial No",
         dataIndex: "serial_number",
         key: "serial_number",
-        render: (value: string) =>
-          value ? <span className="asset-mono">{value}</span> : emptyCell,
+        render: (value: string) => <SerialCopy value={value} />,
       },
       {
         // The asset's owning (buying) unit — asset_unit_name in the view.
@@ -125,7 +127,7 @@ export const DistributedAssetsTableColumns =
         title: "Actions",
         key: "action",
         fixed: "right",
-        width: 164,
+        width: 196,
         render: (record: IAsset) => (
           <div className="asset-actions">
             <Tooltip title="View details" getPopupContainer={() => document.body}>
@@ -147,7 +149,7 @@ export const DistributedAssetsTableColumns =
               />
             </Tooltip>
 
-            {employeeID !== "Assetteam" && (
+            {employeeID !== "Assetteam" && !(record as any).in_repair && (
               <Tooltip
                 title="Assign to another employee"
                 getPopupContainer={() => document.body}
@@ -172,6 +174,53 @@ export const DistributedAssetsTableColumns =
                         ),
                         show: true,
                         width: 640,
+                      })
+                    )
+                  }
+                />
+              </Tooltip>
+            )}
+
+            {!!(record as any).in_repair && (
+              <Tooltip
+                title="Out at a vendor for repair. Mark it back from the Under Repair page before reassigning."
+                getPopupContainer={() => document.body}
+              >
+                <span
+                  className="asset-badge asset-badge--stock"
+                  style={{ cursor: "help" }}
+                >
+                  <span className="asset-badge__dot" />
+                  In Repair
+                </span>
+              </Tooltip>
+            )}
+
+            {employeeID !== "Assetteam" && !(record as any).in_repair && (
+              <Tooltip
+                title="Send for repair"
+                getPopupContainer={() => document.body}
+              >
+                <Button
+                  type="text"
+                  className="asset-iconbtn"
+                  aria-label="Send this asset for repair"
+                  icon={<ToolOutlined />}
+                  onClick={() =>
+                    dispatch(
+                      setCommonModal({
+                        title: "Send for Repair",
+                        content: (
+                          <SendRepairModal
+                            id={record.id}
+                            currentHolder={{
+                              name: (record as any).user_name,
+                              employee_id: (record as any).user_id_no,
+                            }}
+                          />
+                        ),
+                        show: true,
+                        width: "min(720px, 94vw)",
                       })
                     )
                   }

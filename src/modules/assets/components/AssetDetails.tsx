@@ -6,6 +6,7 @@ import {
   FileTextOutlined,
   LaptopOutlined,
   CalendarOutlined,
+  ToolOutlined,
 } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
@@ -13,7 +14,10 @@ import { Remark } from "../utils/assetVisuals";
 import {
   useGetSingleAssetsQuery,
   useGetAssetSupportHistoryQuery,
+  useGetAssetRepairHistoryQuery,
 } from "../api/assetsEndPoint";
+import RepairNotes from "./RepairNotes";
+import SerialCopy from "./SerialCopy";
 import "./asset-details.css";
 
 const fmt = (d?: string | Date) =>
@@ -58,6 +62,8 @@ const AssetDetails = ({ id }: { id: any }) => {
   const { data: singleAsset } = useGetSingleAssetsQuery(id);
   const { data: supportHistoryRes } = useGetAssetSupportHistoryQuery(Number(id));
   const supportHistory = supportHistoryRes?.data || [];
+  const { data: repairHistoryRes } = useGetAssetRepairHistoryQuery(Number(id));
+  const repairHistory = repairHistoryRes?.data || [];
 
   const {
     category,
@@ -98,7 +104,10 @@ const AssetDetails = ({ id }: { id: any }) => {
           <Fact label="Asset Name" value={name} />
           <Fact label="Category" value={category} />
           <Fact label="Model" value={model} />
-          <Fact label="Serial No" value={serial_number} />
+          <Fact
+            label="Serial No"
+            value={serial_number ? <SerialCopy value={serial_number} /> : undefined}
+          />
           <Fact label="PO Number" value={po_number} />
           <Fact label="Buying Unit" value={unit_name} />
           <Fact label="Location" value={location_name} />
@@ -236,6 +245,20 @@ const AssetDetails = ({ id }: { id: any }) => {
                 })}
               </motion.div>
             ),
+          },
+        ]
+      : []),
+    ...(repairHistory.length
+      ? [
+          {
+            key: "repair",
+            label: (
+              <span>
+                <ToolOutlined style={{ marginRight: 6 }} />
+                Repair History ({repairHistory.length})
+              </span>
+            ),
+            children: <RepairNotes rows={repairHistory} />,
           },
         ]
       : []),

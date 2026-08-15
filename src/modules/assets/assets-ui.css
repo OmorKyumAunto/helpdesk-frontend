@@ -1614,3 +1614,39 @@
   color: #b54708;
 }
 .ae-handover strong { font-weight: 700; }
+
+/* Send-for-Repair modal: two fields side by side, stacking on small screens. */
+.rp-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.rp-2col .ant-form-item {
+  margin-bottom: 12px;
+}
+@media (max-width: 520px) {
+  .rp-2col {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* Locked-assignment note (asset out for repair), shown in the Edit modal. */
+.asset-lock-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 12px;
+  margin-bottom: 6px;
+  border: 1px solid #b2ddff;
+  background: #eff8ff;
+  color: #175cd3;
+  border-radius: 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.asset-lock-note .anticon {
+  margin-top: 2px;
+  flex: 0 0 auto;
+}

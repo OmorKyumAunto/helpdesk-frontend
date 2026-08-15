@@ -7,6 +7,7 @@ import {
   EditOutlined,
   ExclamationCircleFilled,
   EyeOutlined,
+  ToolOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +28,7 @@ import { StaticStatus, StatusDot } from "../utils/assetVisuals";
 import AssetDetails from "./AssetDetails";
 import UpdateAsset from "./UpdateAssets";
 import AssignEmployee from "./AssignEmployee";
+import SendRepairModal from "./SendRepairModal";
 
 /**
  * Status shown as a badge (not a form control). Clicking opens a compact menu.
@@ -147,10 +149,22 @@ export const AssetRowActions = ({ record }: { record: IAsset }) => {
   const [deleteAsset] = useDeleteAssetsMutation();
   const screens = Grid.useBreakpoint();
 
+  // Out at a vendor for repair — can't be assigned or sent again until it's
+  // marked back (the backend enforces this too).
+  const inRepair = !!record?.in_repair;
+
   const canAssign =
     employeeID !== "Assetteam" &&
     record?.is_assign === 0 &&
-    record?.status === ASSET_STATUS.ACTIVE;
+    record?.status === ASSET_STATUS.ACTIVE &&
+    !inRepair;
+
+  // Any active (non-disposed / non-written-off) asset can be sent to a vendor,
+  // unless it's already out for repair.
+  const canRepair =
+    employeeID !== "Assetteam" &&
+    record?.status === ASSET_STATUS.ACTIVE &&
+    !inRepair;
 
   return (
     <div className="asset-actions">
@@ -215,6 +229,42 @@ export const AssetRowActions = ({ record }: { record: IAsset }) => {
         >
           Assign
         </Button>
+      )}
+
+      {canRepair && (
+        <Tooltip title="Send for repair" getPopupContainer={() => document.body}>
+          <Button
+            type="text"
+            className="asset-iconbtn"
+            aria-label="Send asset for repair"
+            icon={<ToolOutlined />}
+            onClick={() =>
+              dispatch(
+                setCommonModal({
+                  title: "Send for Repair",
+                  content: <SendRepairModal id={record.id} />,
+                  show: true,
+                  width: "min(720px, 94vw)",
+                })
+              )
+            }
+          />
+        </Tooltip>
+      )}
+
+      {inRepair && (
+        <Tooltip
+          title="This asset is out at a vendor for repair. Mark it back from the Under Repair page before assigning it."
+          getPopupContainer={() => document.body}
+        >
+          <span
+            className="asset-badge asset-badge--stock"
+            style={{ cursor: "help" }}
+          >
+            <span className="asset-badge__dot" />
+            In Repair
+          </span>
+        </Tooltip>
       )}
 
       {(roleId === 1 || roleId === 4) && (

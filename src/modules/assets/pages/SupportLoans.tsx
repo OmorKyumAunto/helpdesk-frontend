@@ -34,6 +34,7 @@ import AssetDetails from "../components/AssetDetails";
 import HolderDetails from "../components/HolderDetails";
 import SupportLoanMobileCard from "../components/SupportLoanMobileCard";
 import CategoryFilterBar from "../components/CategoryFilterBar";
+import SerialCopy from "../components/SerialCopy";
 import { TOP_STOCK_CATEGORIES } from "../utils/assetCategories";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
@@ -199,7 +200,7 @@ const SupportLoans = () => {
     {
       title: "Serial No",
       dataIndex: "serial_number",
-      render: (v: string) => (v ? <span className="asset-mono">{v}</span> : emptyCell),
+      render: (v: string) => <SerialCopy value={v} />,
     },
     {
       title: "Holder",

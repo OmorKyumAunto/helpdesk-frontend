@@ -1,7 +1,7 @@
 import { Card, Col, Row } from "antd";
 import dayjs from "dayjs";
 import { FaComputer } from "react-icons/fa6";
-import { LuUsers2, LuTicket, LuClock } from "react-icons/lu";
+import { LuUsers2, LuTicket, LuClock, LuWrench } from "react-icons/lu";
 import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useGetMeQuery } from "../../../app/api/userApi";
@@ -12,7 +12,10 @@ import {
   useGetDashboardAssetDataForAdminQuery,
   useGetDashboardDistributedAssetDataForAdminQuery,
 } from "../api/dashboardEndPoints";
-import { useGetSupportLoansQuery } from "../../assets/api/assetsEndPoint";
+import {
+  useGetSupportLoansQuery,
+  useGetRepairsQuery,
+} from "../../assets/api/assetsEndPoint";
 import ApexPieChart from "../components/ApexPieChart";
 import GraphChartV2 from "../components/GraphChartV2";
 import CategoryPieChart from "../components/CategoryPieChat";
@@ -70,6 +73,9 @@ const DashboardCards = () => {
   const { data: support } = useGetSupportLoansQuery(undefined, {
     skip: isEmployee,
   });
+  const { data: repairs } = useGetRepairsQuery(undefined, {
+    skip: isEmployee,
+  });
   const {
     employee_id,
     department,
@@ -90,6 +96,7 @@ const DashboardCards = () => {
       ? distributedAsset?.data?.employee_assign_asset_count || 0
       : data?.data?.total_assign_asset || 0;
   const supportTotal = Number(support?.summary?.total) || 0;
+  const repairTotal = Number(repairs?.summary?.total) || 0;
 
   const adminKpis: TKpi[] = [
     {
@@ -119,6 +126,13 @@ const DashboardCards = () => {
       label: "On Support",
       value: supportTotal,
       icon: <LuClock />,
+    },
+    {
+      to: "/assets/under-repair",
+      tone: "amber",
+      label: "Under Repair",
+      value: repairTotal,
+      icon: <LuWrench />,
     },
   ];
 

@@ -266,3 +266,23 @@
   .adx-note { padding: 10px 12px; gap: 10px; }
   .adx-note__av { width: 34px; height: 34px; font-size: 12px; }
 }
+
+/* Repair History — cost line (its own row, not appended to the date meta). */
+.adx-note__cost {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #64748b;
+}
+.adx-note__cost-k {
+  color: #94a3b8;
+  font-weight: 600;
+  margin-right: 6px;
+}
+.adx-note__cost-v {
+  color: #0f172a;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

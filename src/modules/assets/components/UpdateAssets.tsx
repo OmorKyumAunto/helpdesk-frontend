@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Col, Form, Input, InputNumber, Row, Select } from "antd";
+import { ToolOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
 import { useEffect } from "react";
@@ -44,6 +45,9 @@ const UpdateAsset = ({
   const { data: singleAsset } = useGetSingleAssetsQuery(Number(asset?.id));
   // A disposed asset can never be assigned, so the Assignment section is hidden.
   const isDisposed = asset?.status === ASSET_STATUS.DISPOSED;
+  // Out at a vendor for repair — assignment is locked until it's marked back
+  // (the backend rejects an assign change on a repairing asset too).
+  const inRepair = !!asset?.in_repair;
   const { data: unitData } = useGetUnitsQuery({ status: "active" });
 
   const {
@@ -301,13 +305,22 @@ const UpdateAsset = ({
 
       {!isDisposed && (
       <Group title="Assignment">
+        {inRepair && (
+          <Col xs={24}>
+            <div className="asset-lock-note">
+              <ToolOutlined />
+              This asset is out at a vendor for repair — its assignment is locked
+              until you mark it back from the Under Repair page.
+            </div>
+          </Col>
+        )}
         <Col xs={24} md={12}>
           <Form.Item
             label="Assign"
             name="assign_update"
             rules={[{ required: true, message: "Please Select Assign Type" }]}
           >
-            <Select placeholder="Select Assign">
+            <Select placeholder="Select Assign" disabled={inRepair}>
               <Option value={1}>Yes</Option>
               <Option value={0}>No</Option>
             </Select>
@@ -324,6 +337,7 @@ const UpdateAsset = ({
               >
                 <Select
                   placeholder="Select Employee"
+                  disabled={inRepair}
                   showSearch
                   optionFilterProp="children"
                   filterOption={(

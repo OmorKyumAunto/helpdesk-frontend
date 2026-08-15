@@ -4,6 +4,7 @@ import {
   AssetRowActions,
   AssetStatusControl,
 } from "../components/AssetRowActions";
+import SerialCopy from "../components/SerialCopy";
 import { Remark } from "./assetVisuals";
 
 const emptyCell = <span className="asset-empty">—</span>;
@@ -25,8 +26,7 @@ export const AssetsTableColumns = (): TableProps<IAsset>["columns"] => {
       title: "Serial No",
       dataIndex: "serial_number",
       key: "serial_number",
-      render: (value: string) =>
-        value ? <span className="asset-mono">{value}</span> : emptyCell,
+      render: (value: string) => <SerialCopy value={value} />,
     },
     {
       title: "Remarks",

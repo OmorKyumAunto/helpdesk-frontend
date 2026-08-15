@@ -233,6 +233,94 @@ export const assetsEndPoint = api.injectEndpoints({
       },
       invalidatesTags: () => ["asset", { type: "dashboardTypes", id: "dashboard" }],
     }),
+    // ---- Vendors (reused by the Send-for-Repair dropdown) ----
+    getVendors: build.query<HTTPResponse<any[]>, void>({
+      query: () => ({ url: `/asset/vendors` }),
+      providesTags: () => ["vendor"],
+    }),
+    addVendor: build.mutation<
+      HTTPResponse<{ id: number; name: string; contact?: string }>,
+      { name: string; contact?: string }
+    >({
+      query: (body) => ({
+        url: `/asset/vendors`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: () => ["vendor"],
+    }),
+    // ---- Under Repair (asset servicing) ----
+    getRepairs: build.query<any, { state?: string; unit?: number } | void>({
+      query: (params) => ({
+        url: `/asset/repairs`,
+        params: (params as any) || undefined,
+      }),
+      providesTags: () => ["asset"],
+    }),
+    // Every repair (past + present) for one asset — powers the Repair History tab.
+    getAssetRepairHistory: build.query<HTTPResponse<any[]>, number>({
+      query: (assetId) => ({ url: `/asset/repair-history/${assetId}` }),
+      providesTags: () => ["asset"],
+    }),
+    sendAssetForRepair: build.mutation<unknown, { data: any }>({
+      query: ({ data }) => ({
+        url: `/asset/repairs`,
+        method: "POST",
+        body: data,
+      }),
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Asset sent for repair");
+        });
+      },
+      invalidatesTags: () => [
+        "asset",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
+    }),
+    extendRepair: build.mutation<
+      unknown,
+      {
+        repairId: number;
+        repair_days?: number;
+        expected_return?: string;
+        note?: string;
+      }
+    >({
+      query: ({ repairId, ...body }) => ({
+        url: `/asset/repairs/extend/${repairId}`,
+        method: "PUT",
+        body,
+      }),
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Repair period extended");
+        });
+      },
+      invalidatesTags: () => ["asset"],
+    }),
+    returnRepair: build.mutation<
+      unknown,
+      { repairId: number; estimated_cost?: number }
+    >({
+      query: ({ repairId, ...body }) => ({
+        url: `/asset/repairs/return/${repairId}`,
+        method: "PUT",
+        body,
+      }),
+      onQueryStarted: async (_arg, { queryFulfilled }) => {
+        asyncWrapper(async () => {
+          await queryFulfilled;
+          notification("success", "Asset marked back from repair");
+        });
+      },
+      invalidatesTags: () => [
+        "asset",
+        { type: "dashboardTypes", id: "dashboard" },
+      ],
+    }),
     returnAssetToStock: build.mutation<unknown, { assetId: number }>({
       query: ({ assetId }) => ({
         url: `/asset/return-to-stock/${assetId}`,
@@ -325,5 +413,12 @@ export const {
   useGetSupportLoansQuery,
   useExtendSupportLoanMutation,
   useReturnSupportLoanMutation,
+  useGetRepairsQuery,
+  useGetAssetRepairHistoryQuery,
+  useSendAssetForRepairMutation,
+  useExtendRepairMutation,
+  useReturnRepairMutation,
+  useGetVendorsQuery,
+  useAddVendorMutation,
   useReturnAssetToStockMutation,
 } = assetsEndPoint;

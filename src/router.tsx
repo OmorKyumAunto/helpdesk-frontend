@@ -16,6 +16,7 @@ import AdminPanel from "./modules/admin/pages/AdminPanel";
 import AssetsList from "./modules/assets/pages/AssetsList";
 import DistributedAsset from "./modules/assets/pages/DistributedAsset";
 import SupportLoans from "./modules/assets/pages/SupportLoans";
+import UnderRepair from "./modules/assets/pages/UnderRepair";
 import DisposedAssets from "./modules/assets/pages/DisposedAssets";
 import EmployeeDistributedAsset from "./modules/assets/pages/EmployeeDistributedAsset";
 import CTCList from "./modules/ctc/pages/CTCLIst";
@@ -102,6 +103,7 @@ export const routers = createBrowserRouter([
       { path: "/assets/list",           element: <AssetsList /> },
       { path: "/assets/distributed",    element: <DistributedAsset /> },
       { path: "/assets/support",        element: <SupportLoans /> },
+      { path: "/assets/under-repair",   element: <UnderRepair /> },
       { path: "/assets/disposed",       element: <DisposedAssets /> },
       { path: "/employee/distributed",  element: <EmployeeDistributedAsset /> },
       { path: "/employee/list",         element: <EmployeeList /> },
