@@ -1,4 +1,4 @@
-import { Tabs, Timeline } from "antd";
+import { Empty, Tabs, Timeline } from "antd";
 import {
   ProfileOutlined,
   SettingOutlined,
@@ -7,6 +7,7 @@ import {
   LaptopOutlined,
   CalendarOutlined,
   ToolOutlined,
+  ClockCircleOutlined,
 } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
@@ -15,8 +16,10 @@ import {
   useGetSingleAssetsQuery,
   useGetAssetSupportHistoryQuery,
   useGetAssetRepairHistoryQuery,
+  useGetAssetActivityQuery,
 } from "../api/assetsEndPoint";
 import RepairNotes from "./RepairNotes";
+import ActivityTimeline from "./ActivityTimeline";
 import SerialCopy from "./SerialCopy";
 import "./asset-details.css";
 
@@ -64,6 +67,8 @@ const AssetDetails = ({ id }: { id: any }) => {
   const supportHistory = supportHistoryRes?.data || [];
   const { data: repairHistoryRes } = useGetAssetRepairHistoryQuery(Number(id));
   const repairHistory = repairHistoryRes?.data || [];
+  const { data: activityRes } = useGetAssetActivityQuery(Number(id));
+  const activity = activityRes?.data || [];
 
   const {
     category,
@@ -138,36 +143,40 @@ const AssetDetails = ({ id }: { id: any }) => {
         </motion.div>
       ),
     },
-    ...(history?.length
-      ? [
-          {
-            key: "3",
-            label: (
-              <span>
-                <HistoryOutlined style={{ marginRight: 6 }} />
-                Asset History
-              </span>
-            ),
+    {
+      // Always visible — a disposed / write-off asset must still show its
+      // history (who held it before it left stock), even if empty.
+      key: "3",
+      label: (
+        <span>
+          <HistoryOutlined style={{ marginRight: 6 }} />
+          Asset History
+        </span>
+      ),
+      children: history?.length ? (
+        <Timeline
+          items={history.map((item: any) => ({
+            color: item?.status === 1 ? "green" : "red",
             children: (
-              <Timeline
-                items={history.map((item: any) => ({
-                  color: item?.status === 1 ? "green" : "red",
-                  children: (
-                    <div>
-                      <div style={{ color: "#334155", fontSize: 13.5 }}>
-                        {item?.history}
-                      </div>
-                      <div style={{ color: "#94a3b8", fontSize: 12, marginTop: 2 }}>
-                        {fmt(item?.asset_assign_date)}
-                      </div>
-                    </div>
-                  ),
-                }))}
-              />
+              <div>
+                <div style={{ color: "#334155", fontSize: 13.5 }}>
+                  {item?.history}
+                </div>
+                <div style={{ color: "#94a3b8", fontSize: 12, marginTop: 2 }}>
+                  {fmt(item?.asset_assign_date)}
+                </div>
+              </div>
             ),
-          },
-        ]
-      : []),
+          }))}
+        />
+      ) : (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="No history recorded yet"
+          style={{ padding: "24px 0" }}
+        />
+      ),
+    },
     ...(supportHistory.length
       ? [
           {
@@ -259,6 +268,20 @@ const AssetDetails = ({ id }: { id: any }) => {
               </span>
             ),
             children: <RepairNotes rows={repairHistory} />,
+          },
+        ]
+      : []),
+    ...(activity.length
+      ? [
+          {
+            key: "activity",
+            label: (
+              <span>
+                <ClockCircleOutlined style={{ marginRight: 6 }} />
+                Activity ({activity.length})
+              </span>
+            ),
+            children: <ActivityTimeline rows={activity} />,
           },
         ]
       : []),

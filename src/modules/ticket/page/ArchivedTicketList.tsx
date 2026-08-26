@@ -30,6 +30,7 @@ import {
 import { TiArrowLoop } from "react-icons/ti";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { useDispatch } from "react-redux";
+import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import {
     useGetArchivedTicketSuperAdminWiseQuery,
     useGetAdminArchivedTicketQuery, useGetEmployeeWiseArchivedQuery
@@ -130,6 +131,39 @@ const ArchivedTicketList = ({
         }));
     }, [ticketValue, ticketPriorityValue]);
 
+    // Export the currently loaded page. Raise the page size (up to 1000) to
+    // export more rows at once.
+    const excelHead = [
+        "SL", "Ticket ID", "Subject", "Status", "Priority", "Category",
+        "Asset", "Serial No", "Unit", "Location", "Ticket Owner", "Owner ID",
+        "Solved By", "Solved By ID", "Created At", "Updated At",
+    ];
+    const excelRows = (data?.data || []).map((t: any, i: number) => ({
+        SL: i + 1,
+        "Ticket ID": t.ticket_id || "",
+        Subject: t.subject || "",
+        Status: t.ticket_status || "",
+        Priority: t.priority || "",
+        Category: t.ticket_category_title || t.category_name || "",
+        Asset: t.asset_name || "",
+        "Serial No": t.asset_serial_number || t.serial_number || "",
+        Unit: t.seating_unit_name || t.asset_unit_title || t.unit_name || "",
+        Location:
+            t.complex_name && t.seating_location_name
+                ? `${t.complex_name} - ${t.seating_location_name}`
+                : t.complex_name || t.seating_location_name || "",
+        "Ticket Owner": t.ticket_created_employee_name || "",
+        "Owner ID": t.ticket_created_employee_id || "",
+        "Solved By": t.ticket_solved_employee_name || "",
+        "Solved By ID": t.ticket_solved_employee_id || "",
+        "Created At": t.ticket_created_at
+            ? dayjs(t.ticket_created_at).format("DD-MM-YYYY HH:mm")
+            : "",
+        "Updated At": t.ticket_updated_at
+            ? dayjs(t.ticket_updated_at).format("DD-MM-YYYY HH:mm")
+            : "",
+    }));
+
     return (
         <Card
             loading={isLoading}
@@ -139,11 +173,11 @@ const ArchivedTicketList = ({
                 <Space direction={!sm ? "vertical" : "horizontal"}>
                     <Input
                         prefix={<SearchOutlined />}
-                        style={{ width: "160px" }}
+                        style={{ width: "180px" }}
                         onChange={(e) =>
                             setFilter({ ...filter, key: e.target.value, offset: 0 })
                         }
-                        placeholder="Search..."
+                        placeholder="Search ID, subject, solved by..."
                     />
                     <Select
                         allowClear
@@ -158,6 +192,11 @@ const ArchivedTicketList = ({
                         <Option value="high">High</Option>
                         <Option value="urgent">Urgent</Option>
                     </Select>
+                    <ExcelDownload
+                        excelName="archived-tickets"
+                        excelTableHead={excelHead}
+                        excelData={excelRows}
+                    />
                 </Space>
             }
         >
@@ -766,7 +805,7 @@ const ArchivedTicketList = ({
             <Pagination
                 size="small"
                 align="end"
-                pageSizeOptions={["10", "20", "30", "50", "100"]}
+                pageSizeOptions={["10", "20", "30", "50", "100", "500", "1000", "2000"]}
                 current={page}
                 pageSize={pageSize}
                 total={data?.total || 0}

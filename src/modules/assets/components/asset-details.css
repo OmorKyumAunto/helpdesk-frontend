@@ -286,3 +286,67 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
+
+/* Activity timeline — flat rows, no connecting spine. */
+.acx {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Clearance so the dots' 4px glow ring isn't clipped by the panel edge. */
+  padding: 2px 2px 2px 6px;
+}
+.acx-row {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+}
+.acx-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex: 0 0 auto;
+}
+.acx-dot--blue { background: #2563eb; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
+.acx-dot--amber { background: #f79009; box-shadow: 0 0 0 4px rgba(247, 144, 9, 0.14); }
+.acx-dot--green { background: #12b76a; box-shadow: 0 0 0 4px rgba(18, 183, 106, 0.14); }
+.acx-dot--grey { background: #98a2b3; box-shadow: 0 0 0 4px rgba(152, 162, 179, 0.14); }
+
+.acx-body { min-width: 0; flex: 1; }
+.acx-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.acx-label { font-size: 13.5px; font-weight: 700; color: #101828; }
+.acx-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+.acx-tag--repair { color: #175cd3; background: #eff8ff; }
+.acx-tag--support { color: #0e7090; background: #ecfdff; }
+.acx-detail { margin-top: 3px; font-size: 12.5px; color: #475467; line-height: 1.5; }
+.acx-meta {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 12px;
+}
+.acx-by { color: #475467; font-weight: 600; }
+.acx-when {
+  color: #98a2b3;
+  white-space: nowrap;
+}
+.acx-when::before {
+  content: "·";
+  margin-right: 8px;
+  color: #cbd5e1;
+}
+.acx-when:first-child::before { content: none; }

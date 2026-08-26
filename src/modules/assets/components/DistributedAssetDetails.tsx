@@ -7,6 +7,7 @@ import {
   LaptopOutlined,
   CalendarOutlined,
   ToolOutlined,
+  ClockCircleOutlined,
 } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
@@ -15,8 +16,10 @@ import {
   useGetSingleDistributedAssetQuery,
   useGetAssetSupportHistoryQuery,
   useGetAssetRepairHistoryQuery,
+  useGetAssetActivityQuery,
 } from "../api/assetsEndPoint";
 import RepairNotes from "./RepairNotes";
+import ActivityTimeline from "./ActivityTimeline";
 import SerialCopy from "./SerialCopy";
 import "./asset-details.css";
 
@@ -61,6 +64,8 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
   const supportHistory = supportHistoryRes?.data || [];
   const { data: repairHistoryRes } = useGetAssetRepairHistoryQuery(Number(id));
   const repairHistory = repairHistoryRes?.data || [];
+  const { data: activityRes } = useGetAssetActivityQuery(Number(id));
+  const activity = activityRes?.data || [];
 
   if (isLoading) return <Spin tip="Loading asset details..." />;
   if (error) return <Alert message="Failed to load asset data." type="error" showIcon />;
@@ -253,6 +258,20 @@ const DistributeAssetDetails = ({ id }: { id: any }) => {
               </span>
             ),
             children: <RepairNotes rows={repairHistory} />,
+          },
+        ]
+      : []),
+    ...(activity.length
+      ? [
+          {
+            key: "activity",
+            label: (
+              <span>
+                <ClockCircleOutlined style={{ marginRight: 6 }} />
+                Activity ({activity.length})
+              </span>
+            ),
+            children: <ActivityTimeline rows={activity} />,
           },
         ]
       : []),

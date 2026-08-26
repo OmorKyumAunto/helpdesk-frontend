@@ -262,6 +262,11 @@ export const assetsEndPoint = api.injectEndpoints({
       query: (assetId) => ({ url: `/asset/repair-history/${assetId}` }),
       providesTags: () => ["asset"],
     }),
+    // Full who-did-what action trail (support + repair) for one asset.
+    getAssetActivity: build.query<HTTPResponse<any[]>, number>({
+      query: (assetId) => ({ url: `/asset/activity/${assetId}` }),
+      providesTags: () => ["asset"],
+    }),
     sendAssetForRepair: build.mutation<unknown, { data: any }>({
       query: ({ data }) => ({
         url: `/asset/repairs`,
@@ -415,6 +420,7 @@ export const {
   useReturnSupportLoanMutation,
   useGetRepairsQuery,
   useGetAssetRepairHistoryQuery,
+  useGetAssetActivityQuery,
   useSendAssetForRepairMutation,
   useExtendRepairMutation,
   useReturnRepairMutation,

@@ -306,6 +306,19 @@ const UnderRepair = () => {
       render: (s: string) => <StateBadge state={s} />,
     },
     {
+      title: "Handled By",
+      key: "handled_by",
+      width: 150,
+      render: (r: any) => (
+        <div style={{ minWidth: 0 }}>
+          <div className="asset-cell-title">{r.sent_by || emptyCell}</div>
+          {r.last_action_by && r.last_action_by !== r.sent_by && (
+            <div className="asset-cell-sub">last: {r.last_action_by}</div>
+          )}
+        </div>
+      ),
+    },
+    {
       title: "Actions",
       key: "action",
       fixed: "right" as const,
@@ -434,6 +447,8 @@ const UnderRepair = () => {
               "Days Left",
               "Est. Cost",
               "Status",
+              "Sent By",
+              "Last Action By",
               "Issue Note",
             ]}
             excelData={rows.map((r: any, i: number) => ({
@@ -462,6 +477,8 @@ const UnderRepair = () => {
                   : r.days_left,
               "Est. Cost": r.estimated_cost ?? "",
               Status: stateLabel(r.repair_state),
+              "Sent By": r.sent_by || "",
+              "Last Action By": r.last_action_by || "",
               "Issue Note": r.issue_note || "",
             }))}
           />

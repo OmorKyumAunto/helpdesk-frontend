@@ -271,6 +271,19 @@ const SupportLoans = () => {
       render: (s: string) => <StateBadge state={s} />,
     },
     {
+      title: "Handled By",
+      key: "handled_by",
+      width: 150,
+      render: (r: any) => (
+        <div style={{ minWidth: 0 }}>
+          <div className="asset-cell-title">{r.sent_by || emptyCell}</div>
+          {r.last_action_by && r.last_action_by !== r.sent_by && (
+            <div className="asset-cell-sub">last: {r.last_action_by}</div>
+          )}
+        </div>
+      ),
+    },
+    {
       title: "Actions",
       key: "action",
       fixed: "right" as const,
@@ -407,6 +420,8 @@ const SupportLoans = () => {
               "Return By",
               "Days Left",
               "Status",
+              "Sent By",
+              "Last Action By",
               "Note",
             ]}
             excelData={rows.map((r: any, i: number) => ({
@@ -433,6 +448,8 @@ const SupportLoans = () => {
                   ? `${Math.abs(r.days_left)} overdue`
                   : r.days_left,
               Status: stateLabel(r.support_state),
+              "Sent By": r.sent_by || "",
+              "Last Action By": r.last_action_by || "",
               Note: r.support_note || "",
             }))}
           />
