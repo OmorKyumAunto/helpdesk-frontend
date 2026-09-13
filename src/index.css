@@ -17,7 +17,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: var(--app-vh, 100vh);
   text-align: center;
   background: rgba(0, 0, 0, 0.05);
   border-radius: 4px;
@@ -342,4 +342,20 @@ code {
 }
 .ant-table-tbody > tr.table-row-striped:hover > td {
   background-color: #f0f7ff;
+}
+
+/* ── Global fit-to-width scaling ──────────────────────────────────────────
+   useAppScale() writes --app-scale and --app-vh onto <html> and sets
+   html { zoom } so every desktop size renders the layout at the same design
+   width. These are the defaults used before that hook has run (and below the
+   1024px cut-off, where the app keeps its normal responsive behaviour). */
+:root {
+  --app-scale: 1;
+}
+
+/* Print and PDF export must come out at 1:1, never at the screen's zoom. */
+@media print {
+  html {
+    zoom: 1 !important;
+  }
 }

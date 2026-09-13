@@ -131,7 +131,7 @@ export const loadingIndicator = (
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100vh',
+      height: 'var(--app-vh, 100vh)',
     }}
   >
     <Loading />

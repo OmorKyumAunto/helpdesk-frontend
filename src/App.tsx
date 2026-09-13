@@ -8,9 +8,12 @@ import { globalTheme } from "./app/slice/themeSlice";
 import { useRef } from "react";
 import "./App.css";
 import CommonModal from "./components/modal/CommonModal";
+import useAppScale from "./hooks/useAppScale";
 
 function MyApp() {
   const themeApp = useAppSelector(globalTheme);
+  // Renders the app at a fixed design width on every desktop size.
+  useAppScale();
   const modalContainerRef = useRef<HTMLDivElement>(null);
   return (
     <ConfigProvider

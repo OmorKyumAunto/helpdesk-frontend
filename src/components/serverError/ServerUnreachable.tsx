@@ -14,7 +14,7 @@ export default function ServerUnreachable({ onRetry }: Props) {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        minHeight: "var(--app-vh, 100vh)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

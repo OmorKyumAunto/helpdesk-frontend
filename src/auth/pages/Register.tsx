@@ -188,7 +188,7 @@ const Register = () => {
 export default Register;
 
 const WrapperStyle = styled.div`
-  min-height: 100vh;
+  min-height: var(--app-vh, 100vh);
   width: 100%;
   display: flex;
   justify-content: center;

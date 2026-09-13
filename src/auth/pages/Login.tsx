@@ -38,7 +38,7 @@ export const Login = () => {
         transition={{ duration: 0.5 }}
         style={{
           background: "#F0F7FF",
-          minHeight: "100vh",
+          minHeight: "var(--app-vh, 100vh)",
           position: "relative",
           overflow: "hidden",
           display: "flex",

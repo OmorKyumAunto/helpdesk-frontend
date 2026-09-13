@@ -6,7 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: var(--app-vh, 100vh);
   /* background: linear-gradient(
     90deg,
     hsla(210, 90%, 80%, 1) 0%,

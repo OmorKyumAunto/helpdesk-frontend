@@ -428,7 +428,7 @@ export const AppLayout = () => {
   }
 
   return (
-    <Layout style={{ minHeight: "100vh", background: "#f8fafc" }}>
+    <Layout style={{ minHeight: "var(--app-vh, 100vh)", background: "#f8fafc" }}>
       {/* Sidebar for Desktop */}
       {!gridBreak.xs && (
         <Sider
@@ -439,7 +439,7 @@ export const AppLayout = () => {
           style={{
             ...professionalStyles.sidebar,
             overflow: "auto",
-            height: "100vh",
+            height: "var(--app-vh, 100vh)",
             position: "sticky",
             top: 0,
             left: 0,
