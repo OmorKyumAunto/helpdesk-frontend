@@ -6,7 +6,6 @@ import {
 } from "@ant-design/icons";
 import {
   Col,
-  DatePicker,
   Input,
   Row,
   Select,
@@ -21,7 +20,7 @@ import {
 import { useEffect, useState, useMemo } from "react";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
-import { rangePreset } from "../../../common/rangePreset";
+import DateRangeFilter from "../../../common/DateRangeFilter/DateRangeFilter";
 import { useGetCategoryListQuery } from "../../Category/api/categoryEndPoint";
 import { useGetTicketReportQuery } from "../../ticket/api/ticketEndpoint";
 import TicketReportPDFDownload from "./TicketReportPDFDownload";
@@ -340,6 +339,8 @@ const TicketReportModal = () => {
                   "Raiser Seating Location",
                   "Solved By",
                   "Admin ID",
+                  "Creation Date",
+                  "Solving Date",
                   "Resolve SLA Time",
                   "Solving Time",
                   "Overdue Time",
@@ -367,6 +368,20 @@ const TicketReportModal = () => {
                           "Raiser Seating Location": item.seating_location_name,
                           "Solved By": item.ticket_solved_employee_name,
                           "Admin ID": item.ticket_solved_employee_id,
+                          "Creation Date": item.ticket_created_at
+                            ? dayjs(item.ticket_created_at).format(
+                                "DD-MM-YYYY hh:mm A",
+                              )
+                            : "N/A",
+                          // No solved_at column: the last update of a solved
+                          // ticket is its solve time (same as "Solving Time").
+                          "Solving Date":
+                            item.ticket_status === "solved" &&
+                            item.ticket_updated_at
+                              ? dayjs(item.ticket_updated_at).format(
+                                  "DD-MM-YYYY hh:mm A",
+                                )
+                              : "N/A",
                           "Resolve SLA Time":
                             formatMinutesToText(resolveSLAMinutes),
                           "Solving Time": formatMinutesToText(solvingMinutes),
@@ -837,7 +852,7 @@ const TicketReportModal = () => {
             </Space>
           </Col>
 
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={12} md={12}>
             <Space direction="vertical" size={2} style={{ width: "100%" }}>
               <Text
                 style={{
@@ -863,7 +878,7 @@ const TicketReportModal = () => {
             </Space>
           </Col>
 
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={12} md={12}>
             <Space direction="vertical" size={2} style={{ width: "100%" }}>
               <Text
                 style={{
@@ -889,38 +904,15 @@ const TicketReportModal = () => {
             </Space>
           </Col>
 
-          <Col xs={24} sm={24} md={8}>
-            <Space direction="vertical" size={2} style={{ width: "100%" }}>
-              <Text
-                style={{
-                  fontSize: "clamp(11px, 1.5vw, 12px)",
-                  fontWeight: 500,
-                  color: "#595959",
-                }}
-              >
-                Date Range
-              </Text>
-              <DatePicker.RangePicker
-                presets={rangePreset}
-                style={{ width: "100%" }}
-                placeholder={["Start Date", "End Date"]}
-                onChange={(_, e) =>
-                  setFilter({
-                    ...filter,
-                    start_date: e[0],
-                    end_date: e[1],
-                  })
-                }
-                value={
-                  filter.start_date && filter.end_date
-                    ? [dayjs(filter.start_date), dayjs(filter.end_date)]
-                    : undefined
-                }
-                disabledDate={(current) =>
-                  current && current > dayjs().endOf("day")
-                }
-              />
-            </Space>
+          <Col xs={24}>
+            <DateRangeFilter
+              label="Date Range"
+              start={filter.start_date}
+              end={filter.end_date}
+              onChange={(start_date, end_date) =>
+                setFilter({ ...filter, start_date, end_date })
+              }
+            />
           </Col>
         </Row>
       </Card>

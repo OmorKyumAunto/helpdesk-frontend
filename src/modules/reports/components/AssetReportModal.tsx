@@ -1,6 +1,5 @@
 import {
   Col,
-  DatePicker,
   Input,
   Row,
   Select,
@@ -27,7 +26,7 @@ import Lottie from "lottie-react";
 import { useGetUnitsQuery } from "../../Unit/api/unitEndPoint";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import { useGetAssetReportQuery } from "../api/reportsEndPoints";
-import { rangePreset } from "../../../common/rangePreset";
+import DateRangeFilter from "../../../common/DateRangeFilter/DateRangeFilter";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
 import PDFDownload from "../../../common/PDFDownload/PDFDownload";
 import dayjs from "dayjs";
@@ -757,7 +756,7 @@ const AssetReportModal = () => {
       >
         <Row gutter={[12, 12]}>
           {/* Search */}
-          <Col xs={24} sm={24} md={12}>
+          <Col xs={24}>
             <Space direction="vertical" size={2} style={{ width: "100%" }}>
               <Text
                 style={{
@@ -780,7 +779,7 @@ const AssetReportModal = () => {
           </Col>
 
           {/* Unit Name */}
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} sm={12} md={8}>
             <Space direction="vertical" size={2} style={{ width: "100%" }}>
               <Text
                 style={{
@@ -810,7 +809,7 @@ const AssetReportModal = () => {
           </Col>
 
           {/* Category */}
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} sm={12} md={8}>
             <Space direction="vertical" size={2} style={{ width: "100%" }}>
               <Text
                 style={{
@@ -864,7 +863,7 @@ const AssetReportModal = () => {
           </Col>
 
           {/* Status */}
-          <Col xs={24} sm={12} md={6}>
+          <Col xs={24} sm={12} md={8}>
             <Space direction="vertical" size={2} style={{ width: "100%" }}>
               <Text
                 style={{
@@ -890,74 +889,27 @@ const AssetReportModal = () => {
           </Col>
 
           {/* Creation Date Range */}
-          <Col xs={24} sm={12} md={9}>
-            <Space direction="vertical" size={2} style={{ width: "100%" }}>
-              <Text
-                style={{
-                  fontSize: "clamp(11px, 1.5vw, 12px)",
-                  fontWeight: 500,
-                  color: "#595959",
-                }}
-              >
-                Creation Date Range
-              </Text>
-              <DatePicker.RangePicker
-                size="middle"
-                presets={rangePreset}
-                style={{ width: "100%" }}
-                placeholder={["Start Date", "End Date"]}
-                onChange={(_, e) =>
-                  setFilter({
-                    ...filter,
-                    start_date: e[0],
-                    end_date: e[1],
-                  })
-                }
-                value={
-                  filter.start_date && filter.end_date
-                    ? [dayjs(filter.start_date), dayjs(filter.end_date)]
-                    : undefined
-                }
-                disabledDate={(current) => current && current > dayjs().endOf("day")}
-              />
-            </Space>
+          <Col xs={24} md={12}>
+            <DateRangeFilter
+              label="Creation Date Range"
+              start={filter.start_date}
+              end={filter.end_date}
+              onChange={(start_date, end_date) =>
+                setFilter({ ...filter, start_date, end_date })
+              }
+            />
           </Col>
 
           {/* Purchase Date Range */}
-          <Col xs={24} sm={12} md={9}>
-            <Space direction="vertical" size={2} style={{ width: "100%" }}>
-              <Text
-                style={{
-                  fontSize: "clamp(11px, 1.5vw, 12px)",
-                  fontWeight: 500,
-                  color: "#595959",
-                }}
-              >
-                Purchase Date Range
-              </Text>
-              <DatePicker.RangePicker
-                size="middle"
-                presets={rangePreset}
-                style={{ width: "100%" }}
-                placeholder={["Start Date", "End Date"]}
-                onChange={(_, e) =>
-                  setFilter({
-                    ...filter,
-                    start_purchase_date: e[0],
-                    end_purchase_date: e[1],
-                  })
-                }
-                value={
-                  filter.start_purchase_date && filter.end_purchase_date
-                    ? [
-                      dayjs(filter.start_purchase_date),
-                      dayjs(filter.end_purchase_date),
-                    ]
-                    : undefined
-                }
-                disabledDate={(current) => current && current > dayjs().endOf("day")}
-              />
-            </Space>
+          <Col xs={24} md={12}>
+            <DateRangeFilter
+              label="Purchase Date Range"
+              start={filter.start_purchase_date}
+              end={filter.end_purchase_date}
+              onChange={(start_purchase_date, end_purchase_date) =>
+                setFilter({ ...filter, start_purchase_date, end_purchase_date })
+              }
+            />
           </Col>
 
         </Row>

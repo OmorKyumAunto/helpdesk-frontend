@@ -5,7 +5,6 @@ import {
 } from "@ant-design/icons";
 import {
   Col,
-  DatePicker,
   Row,
   Select,
   Card,
@@ -19,7 +18,7 @@ import {
 import { useState, useEffect, useMemo } from "react";
 import { useGetMeQuery } from "../../../app/api/userApi";
 import ExcelDownload from "../../../common/ExcelDownload/ExcelDownload";
-import { rangePreset } from "../../../common/rangePreset";
+import DateRangeFilter from "../../../common/DateRangeFilter/DateRangeFilter";
 import {
   useGetAdminWiseUnitsQuery,
   useGetUnitsQuery,
@@ -333,7 +332,8 @@ const TaskReportModal = () => {
                   "Quantity",
                   "User Name",
                   "User Employee ID",
-                  "Created At",
+                  "Creation Date",
+                  "Solving Date",
                   "Overdue",
                   "Overdue Time",
                 ]}
@@ -408,7 +408,18 @@ const TaskReportModal = () => {
                             Quantity: quantity,
                             "User Name": user_name,
                             "User Employee ID": user_employee_id,
-                            "Created At": created_at,
+                            "Creation Date": created_at
+                              ? dayjs(created_at).format("DD-MM-YYYY hh:mm A")
+                              : "N/A",
+                            "Solving Date":
+                              task_status === "complete" &&
+                              task_end_date &&
+                              task_end_time
+                                ? getDateTime(
+                                    task_end_date,
+                                    task_end_time
+                                  )?.format("DD-MM-YYYY hh:mm A")
+                                : "N/A",
                             Overdue: overdue === 1 ? "Yes" : "No",
                             "Overdue Time":
                               overdue === 1 && overdueMinutes !== null
@@ -877,7 +888,7 @@ const TaskReportModal = () => {
             </Space>
           </Col>
 
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={12} md={12}>
             <Space direction="vertical" size={2} style={{ width: "100%" }}>
               <Text
                 style={{
@@ -903,7 +914,7 @@ const TaskReportModal = () => {
             </Space>
           </Col>
 
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={12} md={12}>
             <Space direction="vertical" size={2} style={{ width: "100%" }}>
               <Text
                 style={{
@@ -929,38 +940,15 @@ const TaskReportModal = () => {
             </Space>
           </Col>
 
-          <Col xs={24} sm={24} md={8}>
-            <Space direction="vertical" size={2} style={{ width: "100%" }}>
-              <Text
-                style={{
-                  fontSize: "clamp(11px, 1.5vw, 12px)",
-                  fontWeight: 500,
-                  color: "#595959",
-                }}
-              >
-                Date Range
-              </Text>
-              <DatePicker.RangePicker
-                presets={rangePreset}
-                style={{ width: "100%" }}
-                placeholder={["Start Date", "End Date"]}
-                onChange={(_, e) =>
-                  setFilter({
-                    ...filter,
-                    start_date: e[0],
-                    end_date: e[1],
-                  })
-                }
-                value={
-                  filter.start_date && filter.end_date
-                    ? [dayjs(filter.start_date), dayjs(filter.end_date)]
-                    : undefined
-                }
-                disabledDate={(current) =>
-                  current && current > dayjs().endOf("day")
-                }
-              />
-            </Space>
+          <Col xs={24}>
+            <DateRangeFilter
+              label="Date Range"
+              start={filter.start_date}
+              end={filter.end_date}
+              onChange={(start_date, end_date) =>
+                setFilter({ ...filter, start_date, end_date })
+              }
+            />
           </Col>
         </Row>
       </Card>
