@@ -248,6 +248,7 @@ const DistributedAsset = () => {
                 "Location",
                 "Asset Type",
                 "Serial No",
+                "Specification",
                 "Assigning Date",
               ]}
               excelData={
@@ -260,6 +261,7 @@ const DistributedAsset = () => {
                       category,
                       assign_date,
                       serial_number,
+                      specification,
                       employee_unit_name,
                       location_name,
                     }: any) => {
@@ -271,6 +273,7 @@ const DistributedAsset = () => {
                         Location: location_name,
                         "Asset Type": category,
                         "Serial No": serial_number,
+                        Specification: specification,
                         "Assigning Date":
                           dayjs(assign_date).format("DD-MM-YYYY"),
                       };
