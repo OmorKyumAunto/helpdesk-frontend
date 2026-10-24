@@ -123,7 +123,7 @@ const CreateAsset = () => {
                     <Option value="TV">TV</Option>
                     <Option value="Ipad/Tab">Ipad/Tab</Option>
                     <Option value="Projector">Projector</Option>
-                    <Option value="Attendence Machine">Attendence Machine</Option>
+                    <Option value="Attendance Machine">Attendance Machine</Option>
                     <Option value="Speaker">Speaker</Option>
                     <Option value="Scanner">Scanner</Option>
                     <Option value="Camera">Camera</Option>

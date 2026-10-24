@@ -10,7 +10,7 @@ export const ASSET_CATEGORIES: string[] = [
   "TV",
   "Ipad/Tab",
   "Projector",
-  "Attendence Machine",
+  "Attendance Machine",
   "Speaker",
   "Scanner",
   "Camera",
@@ -50,5 +50,5 @@ export const TOP_DISBURSEMENT_CATEGORIES: string[] = [
   "Laptop",
   "Accessories",
   "Printer",
-  "Attendence Machine",
+  "Attendance Machine",
 ];

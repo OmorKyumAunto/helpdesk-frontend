@@ -45,7 +45,7 @@ const CATEGORY_ICON: Record<string, React.ReactNode> = {
   TV: <DesktopOutlined />,
   "Ipad/Tab": <TabletOutlined />,
   Projector: <FundProjectionScreenOutlined />,
-  "Attendence Machine": <ClockCircleOutlined />,
+  "Attendance Machine": <ClockCircleOutlined />,
   Speaker: <SoundOutlined />,
   Scanner: <ScanOutlined />,
   Camera: <CameraOutlined />,
@@ -153,7 +153,7 @@ const CategoryFilterBar = ({
     const observer = new ResizeObserver(onResize);
     observer.observe(el);
     // Web-font swap changes chip widths without changing the rail's box.
-    document.fonts?.ready.then(onResize).catch(() => {});
+    document.fonts?.ready.then(onResize).catch(() => { });
     return () => observer.disconnect();
   }, [syncOverflow, measurePill, categories]);
 
@@ -225,9 +225,8 @@ const CategoryFilterBar = ({
         {/* The single travelling selection pill. */}
         <span
           aria-hidden="true"
-          className={`cat-pill${pill.shown ? " cat-pill--shown" : ""}${
-            settled ? "" : " cat-pill--init"
-          }`}
+          className={`cat-pill${pill.shown ? " cat-pill--shown" : ""}${settled ? "" : " cat-pill--init"
+            }`}
           style={{
             width: pill.w,
             transform: `translate3d(${pill.x}px,0,0)`,
