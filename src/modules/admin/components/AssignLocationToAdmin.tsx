@@ -23,6 +23,9 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectedComplexIds, setSelectedComplexIds] = useState<number[]>([]);
   const [buildingIds, setBuildingIds] = useState<number[] | typeof skipToken>(skipToken);
+  // Set by "Select all complexes & locations": once the locations for the newly
+  // selected complexes have loaded, select all of them too.
+  const [selectAllLocationsPending, setSelectAllLocationsPending] = useState(false);
 
   const [assignLocation, { isLoading, isSuccess, isError, error }] =
     useAssignLocationToAdminMutation();
@@ -49,7 +52,7 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
     );
 
   // Fetch locations for selected complexes
-  const { data: unitOptionsData, isLoading: unitLoading, isError: unitError } =
+  const { data: unitOptionsData, isLoading: unitLoading, isFetching: unitFetching, isError: unitError } =
     useGetBuildingWiseLocationQuery(
       Array.isArray(buildingIds) && buildingIds.length > 0
         ? buildingIds
@@ -110,6 +113,9 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
 
   const handleComplexChange = (complexIds: number[]) => {
     setSelectedComplexIds(complexIds);
+    // Keep the Form value in sync (the Select is bound via Form.Item name, so the
+    // Form value wins over the `value` prop when set programmatically).
+    form.setFieldValue("complex_id", complexIds);
 
     // If no complex selected, clear locations
     if (complexIds.length === 0) {
@@ -127,6 +133,37 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
     setSelectedItems(locationIds);
     form.setFieldValue("unit_id", locationIds);
   };
+
+  // Select every complex available for the admin's units
+  const selectAllComplexes = () => {
+    const allComplexIds = complexOptions.map((c: { value: number }) => c.value);
+    if (allComplexIds.length === 0) return;
+    handleComplexChange(allComplexIds);
+  };
+
+  // Select every location of the currently selected complexes
+  const selectAllLocations = () => {
+    const allLocationIds = unitOptions.map((u: { value: number }) => u.value);
+    if (allLocationIds.length === 0) return;
+    handleLocationChange(allLocationIds);
+  };
+
+  // One click: all complexes, then (once their locations load) all locations
+  const selectAllComplexesAndLocations = () => {
+    selectAllComplexes();
+    setSelectAllLocationsPending(true);
+  };
+
+  useEffect(() => {
+    if (!selectAllLocationsPending) return;
+    if (unitFetching || unitLoading) return;
+    if (!Array.isArray(buildingIds) || buildingIds.length === 0) return;
+    const allLocationIds = unitOptions.map((u: { value: number }) => u.value);
+    if (allLocationIds.length === 0) return;
+    handleLocationChange(allLocationIds);
+    setSelectAllLocationsPending(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectAllLocationsPending, unitFetching, unitLoading, unitOptions, buildingIds]);
 
   const onFinish = () => {
     if (selectedItems.length === 0) {
@@ -168,6 +205,20 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
       <Col xs={24}>
         <Form layout="vertical" form={form} onFinish={onFinish}>
           <Card className="border" style={{ marginBottom: 16, marginTop: 16 }}>
+            <Row gutter={[5, 16]} style={{ marginBottom: 8 }}>
+              <Col xs={24} style={{ textAlign: "end" }}>
+                <Button
+                  size="small"
+                  type="dashed"
+                  onClick={selectAllComplexesAndLocations}
+                  disabled={complexOptions.length === 0}
+                  loading={selectAllLocationsPending && (unitFetching || unitLoading)}
+                >
+                  Select all complexes &amp; locations
+                </Button>
+              </Col>
+            </Row>
+
             <Row gutter={[5, 16]}>
               <Col xs={24}>
                 <Form.Item label="Assigned Units">
@@ -185,7 +236,17 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
             <Row gutter={[5, 16]}>
               <Col xs={24}>
                 <Form.Item
-                  label="Choose Complex"
+                  label={
+                    <span>
+                      Choose Complex
+                      <Button type="link" size="small" onClick={selectAllComplexes} disabled={complexOptions.length === 0}>
+                        Select all ({complexOptions.length})
+                      </Button>
+                      <Button type="link" size="small" onClick={() => handleComplexChange([])} disabled={selectedComplexIds.length === 0}>
+                        Clear
+                      </Button>
+                    </span>
+                  }
                   name="complex_id"
                   rules={[{ required: true, message: "Please Select Complex" }]}
                 >
@@ -197,6 +258,8 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
                     loading={unitWiseLoading}
                     style={{ width: "100%" }}
                     options={complexOptions}
+                    maxTagCount={30}
+                    maxTagPlaceholder={(omitted) => `+ ${omitted.length} more`}
                     allowClear
                   />
                 </Form.Item>
@@ -206,7 +269,18 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
             <Row gutter={[5, 16]}>
               <Col xs={24}>
                 <Form.Item
-                  label="Assign New Locations"
+                  label={
+                    <span>
+                      Assign New Locations
+                      <Button type="link" size="small" onClick={selectAllLocations} disabled={unitOptions.length === 0}>
+                        Select all ({unitOptions.length})
+                      </Button>
+                      <Button type="link" size="small" onClick={() => handleLocationChange([])} disabled={selectedItems.length === 0}>
+                        Clear
+                      </Button>
+                      <span style={{ color: "#888", fontSize: 12 }}>{selectedItems.length} selected</span>
+                    </span>
+                  }
                   name="unit_id"
                   rules={[{ required: true, message: "Please Select Location" }]}
                 >
@@ -219,10 +293,12 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
                     }
                     value={selectedItems}
                     onChange={handleLocationChange}
-                    loading={unitLoading}
+                    loading={unitLoading || unitFetching}
                     disabled={selectedComplexIds.length === 0 || unitOptions.length === 0}
                     style={{ width: "100%" }}
                     options={unitOptions}
+                    maxTagCount={30}
+                    maxTagPlaceholder={(omitted) => `+ ${omitted.length} more`}
                     filterOption={(input, option) =>
                       (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                     }

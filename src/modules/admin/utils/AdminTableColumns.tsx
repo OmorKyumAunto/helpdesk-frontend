@@ -90,11 +90,10 @@ export const AdminTableColumns = (): TableProps<IAdmin>["columns"] => {
               </Button>
             )}
 
-            {/* Hide Assign Location for roleID 1 */}
-            {/* Assign Location button: shown to unit super admins (role 4) even when the
-                admin already has locations, so they can edit/re-assign. The backend still
-                rejects admins that belong to another unit super admin. */}
-            {roleID !== 1 && (
+            {/* Assign Location button: shown to super admins (role 1) and unit super
+                admins (role 4) on every row. For role 4 the backend still rejects admins
+                that belong to another unit super admin; role 1 can edit any admin. */}
+            {(
               <Button
                 size="small"
                 type="primary"
