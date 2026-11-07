@@ -24,7 +24,7 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
   const [selectedComplexIds, setSelectedComplexIds] = useState<number[]>([]);
   const [buildingIds, setBuildingIds] = useState<number[] | typeof skipToken>(skipToken);
 
-  const [assignLocation, { isLoading, isSuccess, isError }] =
+  const [assignLocation, { isLoading, isSuccess, isError, error }] =
     useAssignLocationToAdminMutation();
 
   // Fetch user unit building info
@@ -154,9 +154,11 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
       message.success("Location assigned successfully");
     }
     if (isError) {
-      message.error("Failed to assign location. Please try again.");
+      // Surface the backend reason (e.g. "This admin already selected by another super admin.")
+      const serverMessage = (error as any)?.data?.message;
+      message.error(serverMessage || "Failed to assign location. Please try again.");
     }
-  }, [isSuccess, isError, dispatch]);
+  }, [isSuccess, isError, error, dispatch]);
 
   if (complexLoading || unitWiseLoading || unitLoading) return <Spin tip="Loading..." />;
   if (complexError || unitWiseError || unitError) return <div>Error loading data</div>;
