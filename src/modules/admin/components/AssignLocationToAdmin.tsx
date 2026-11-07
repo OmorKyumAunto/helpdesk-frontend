@@ -1,5 +1,5 @@
 import { SendOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Row, Select, Modal, message, Spin } from "antd";
+import { Button, Card, Checkbox, Col, Divider, Form, Row, Select, Modal, message, Spin, Typography } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCommonModal } from "../../../app/slice/modalSlice";
@@ -154,6 +154,46 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
     setSelectAllLocationsPending(true);
   };
 
+  const clearAll = () => {
+    setSelectAllLocationsPending(false);
+    handleComplexChange([]);
+  };
+
+  const allComplexesSelected =
+    complexOptions.length > 0 && selectedComplexIds.length === complexOptions.length;
+  const allLocationsSelected =
+    unitOptions.length > 0 && selectedItems.length === unitOptions.length;
+  const everythingSelected = allComplexesSelected && allLocationsSelected;
+  const somethingSelected = selectedComplexIds.length > 0 || selectedItems.length > 0;
+
+  // "Select all" checkbox rendered at the top of a Select's dropdown
+  const withSelectAllHeader =
+    (opts: { checked: boolean; indeterminate: boolean; label: string; onToggle: (checked: boolean) => void }) =>
+    (menu: React.ReactElement) => (
+      <>
+        <div style={{ padding: "4px 12px" }}>
+          <Checkbox
+            checked={opts.checked}
+            indeterminate={opts.indeterminate}
+            onChange={(e) => opts.onToggle(e.target.checked)}
+          >
+            {opts.label}
+          </Checkbox>
+        </div>
+        <Divider style={{ margin: "4px 0" }} />
+        {menu}
+      </>
+    );
+
+  const countLabel = (title: string, selected: number, total: number) => (
+    <span>
+      {title}
+      <Typography.Text type="secondary" style={{ marginLeft: 8, fontSize: 12, fontWeight: "normal" }}>
+        {selected} of {total} selected
+      </Typography.Text>
+    </span>
+  );
+
   useEffect(() => {
     if (!selectAllLocationsPending) return;
     if (unitFetching || unitLoading) return;
@@ -205,20 +245,6 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
       <Col xs={24}>
         <Form layout="vertical" form={form} onFinish={onFinish}>
           <Card className="border" style={{ marginBottom: 16, marginTop: 16 }}>
-            <Row gutter={[5, 16]} style={{ marginBottom: 8 }}>
-              <Col xs={24} style={{ textAlign: "end" }}>
-                <Button
-                  size="small"
-                  type="dashed"
-                  onClick={selectAllComplexesAndLocations}
-                  disabled={complexOptions.length === 0}
-                  loading={selectAllLocationsPending && (unitFetching || unitLoading)}
-                >
-                  Select all complexes &amp; locations
-                </Button>
-              </Col>
-            </Row>
-
             <Row gutter={[5, 16]}>
               <Col xs={24}>
                 <Form.Item label="Assigned Units">
@@ -235,18 +261,37 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
 
             <Row gutter={[5, 16]}>
               <Col xs={24}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "8px 12px",
+                    marginBottom: 16,
+                    background: "#fafafa",
+                    border: "1px solid #f0f0f0",
+                    borderRadius: 8,
+                  }}
+                >
+                  <Checkbox
+                    checked={everythingSelected}
+                    indeterminate={!everythingSelected && somethingSelected}
+                    disabled={complexOptions.length === 0}
+                    onChange={(e) => (e.target.checked ? selectAllComplexesAndLocations() : clearAll())}
+                  >
+                    Select all complexes and locations
+                  </Checkbox>
+                  {selectAllLocationsPending && (unitFetching || unitLoading) ? (
+                    <Spin size="small" />
+                  ) : (
+                    <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                      {complexOptions.length} complexes available
+                    </Typography.Text>
+                  )}
+                </div>
+
                 <Form.Item
-                  label={
-                    <span>
-                      Choose Complex
-                      <Button type="link" size="small" onClick={selectAllComplexes} disabled={complexOptions.length === 0}>
-                        Select all ({complexOptions.length})
-                      </Button>
-                      <Button type="link" size="small" onClick={() => handleComplexChange([])} disabled={selectedComplexIds.length === 0}>
-                        Clear
-                      </Button>
-                    </span>
-                  }
+                  label={countLabel("Choose Complex", selectedComplexIds.length, complexOptions.length)}
                   name="complex_id"
                   rules={[{ required: true, message: "Please Select Complex" }]}
                 >
@@ -260,6 +305,12 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
                     options={complexOptions}
                     maxTagCount={30}
                     maxTagPlaceholder={(omitted) => `+ ${omitted.length} more`}
+                    dropdownRender={withSelectAllHeader({
+                      checked: allComplexesSelected,
+                      indeterminate: !allComplexesSelected && selectedComplexIds.length > 0,
+                      label: `Select all complexes (${complexOptions.length})`,
+                      onToggle: (checked) => (checked ? selectAllComplexes() : handleComplexChange([])),
+                    })}
                     allowClear
                   />
                 </Form.Item>
@@ -269,18 +320,7 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
             <Row gutter={[5, 16]}>
               <Col xs={24}>
                 <Form.Item
-                  label={
-                    <span>
-                      Assign New Locations
-                      <Button type="link" size="small" onClick={selectAllLocations} disabled={unitOptions.length === 0}>
-                        Select all ({unitOptions.length})
-                      </Button>
-                      <Button type="link" size="small" onClick={() => handleLocationChange([])} disabled={selectedItems.length === 0}>
-                        Clear
-                      </Button>
-                      <span style={{ color: "#888", fontSize: 12 }}>{selectedItems.length} selected</span>
-                    </span>
-                  }
+                  label={countLabel("Assign New Locations", selectedItems.length, unitOptions.length)}
                   name="unit_id"
                   rules={[{ required: true, message: "Please Select Location" }]}
                 >
@@ -299,6 +339,12 @@ const AssignLocationToAdmin: React.FC<IAssignLocationProps> = ({ id }) => {
                     options={unitOptions}
                     maxTagCount={30}
                     maxTagPlaceholder={(omitted) => `+ ${omitted.length} more`}
+                    dropdownRender={withSelectAllHeader({
+                      checked: allLocationsSelected,
+                      indeterminate: !allLocationsSelected && selectedItems.length > 0,
+                      label: `Select all locations (${unitOptions.length})`,
+                      onToggle: (checked) => (checked ? selectAllLocations() : handleLocationChange([])),
+                    })}
                     filterOption={(input, option) =>
                       (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                     }
